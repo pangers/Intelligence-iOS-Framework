@@ -1,0 +1,6 @@
+# Ignoring Xcode files
+
+*.xcuserstate
+*.xccheckout
+xcuserdata
+
