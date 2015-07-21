@@ -10,16 +10,6 @@ import XCTest
 @testable import PhoenixSDK
 
 class PhoenixConfigurationTestCase: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
     
     func testConfigurationFromFileAndBundle() {
         let clientID="CLIENT_ID" // as in file
@@ -51,14 +41,5 @@ class PhoenixConfigurationTestCase: XCTestCase {
             XCTAssert(false, "Unexpected exception type.")
         }
     }
-    
-//    func testConfigurationProgrammatically() {
-//        let clientID="CLIENT_ID"
-//        let clientSecret="CLIENT_Secret"
-//        let config = PhoenixConfiguration(clientId:clientID, clientSecret:clientSecret)
-//        
-//        XCTAssert(config.clientId == clientID, "The client ID is incorrect")
-//        XCTAssert(config.clientSecret == clientSecret, "The client secret is incorrect")
-//    }
-//
+
 }
