@@ -14,8 +14,12 @@ read the configuration from a plist file, and allows.
 */
 public class PhoenixConfiguration
 {
-    private static let clientIdKey = "PhoenixSDKClientID";
-    private static let clientSecretKey = "PhoenixSDKClientSecret";
+    private static let clientIdKey = "phoenix_client_id";
+    private static let clientSecretKey = "phoenix_client_secret";
+    private static let phoenixProjectIdKey = "phoenix_project_id";
+    private static let phoenixApplicationIdKey = "phoenix_application_id";
+    private static let phoenixRegionKey = "phoenix_region";
+    private static let phoenixEnvironmentKey = "phoenix_environment";
     
     /// The client ID
     public var clientId:String!;
