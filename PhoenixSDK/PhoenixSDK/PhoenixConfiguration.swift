@@ -24,6 +24,7 @@ public enum Region {
     
 
     /// Provides the base url for the given Region.
+    ///
     /// - Returns String: to the base url to use (including protocol).
     func baseURL() -> String {
         switch (self) {
@@ -65,6 +66,7 @@ public class PhoenixConfiguration
 public extension PhoenixConfiguration {
     
     /// Copy initialiser.
+    ///
     /// - Parameter PhoenixConfiguration: The phoenix configuration to copy.
     convenience public init(copying:PhoenixConfiguration){
         self.init()
@@ -89,6 +91,7 @@ public extension PhoenixConfiguration {
     private static let regionKey = "region"
     
     /// Initialises the configuration with a plist with the file name specified in the main
+    ///
     /// - Parameters
     ///     - fromFile: The file name to read.
     ///     - inBundle: The bundle in which we will look for the file.
@@ -98,7 +101,8 @@ public extension PhoenixConfiguration {
     }
     
     /// Reads the given file in the main bundle into the configuration.
-    /// Throws a PhoenixGenericErrors.NoSuchConfigFile error if the file is not found.
+    ///
+    /// **Throws a PhoenixGenericErrors.NoSuchConfigFile** error if the file is not found.
     /// - Parameters:
     ///     - fileName: The name of the file with the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
@@ -110,6 +114,7 @@ public extension PhoenixConfiguration {
     }
     
     /// Reads a plist file at the given path into the configuration
+    ///
     /// - Parameter plistResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
     /// - Returns: A boolean with true if and only if the file in `plistResourcePath` is found and data is loaded from it.
     private func readFromPlistPath(plistResourcePath:String!) -> Bool {
