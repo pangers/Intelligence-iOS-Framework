@@ -23,9 +23,7 @@ public enum Region {
     /// SG Region
     case Singapore
 
-    /// Provides the base url for the given Region.
-    ///
-    /// - Returns String: to the base url to use (including protocol).
+    /// - Returns: String to the base url to use (including protocol).
     func baseURL() -> String {
         switch (self) {
         case .UnitedStates:
@@ -101,8 +99,8 @@ public extension PhoenixConfiguration {
     }
     
     /// Reads the given json file in the main bundle into the configuration.
-    ///
-    /// **Throws a PhoenixGenericErrors.NoSuchConfigFile** error if the file is not found.
+    /// #### Throws
+    /// **PhoenixErrors.NoSuchConfigFile** error if the file is not found.
     /// - Parameters:
     ///     - fileName: The name of the file with the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
@@ -110,7 +108,7 @@ public extension PhoenixConfiguration {
         if let jsonResourcePath = bundle.pathForResource(fileName, ofType: "json") {
             readFromJSONPath(jsonResourcePath)
         }
-        throw PhoenixGenericErrors.NoSuchConfigFile
+        throw PhoenixErrors.NoSuchConfigFile
     }
     
     /// Reads a json file at the given path into the configuration

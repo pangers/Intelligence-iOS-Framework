@@ -11,6 +11,6 @@ import Foundation
 /**
 Enumeration with the possible errors raised by the Phoenix SDK.
 */
-public enum PhoenixGenericErrors : ErrorType {
+public enum PhoenixErrors : ErrorType {
     case NoSuchConfigFile
 }

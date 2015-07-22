@@ -15,6 +15,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         let clientID="CLIENT_ID" // as in file
         let clientSecret="CLIENT_Secret" // as in file
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
+        
         do {
             let config = try PhoenixConfiguration(fromFile: "config", inBundle: bundle);
             
@@ -23,6 +24,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         }
         catch {
             // nop
+            XCTAssert(false, "Couldn't read the file.")
         }
     }
     
@@ -33,7 +35,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
             try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch PhoenixGenericErrors.NoSuchConfigFile {
+        catch PhoenixErrors.NoSuchConfigFile {
             // nop
         }
         catch let error {
