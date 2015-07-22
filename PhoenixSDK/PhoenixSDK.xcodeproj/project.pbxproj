@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
+		BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = BB27B5AF1B5FFF0A005221EF /* wrongjson.json */; };
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
@@ -35,6 +36,7 @@
 		A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDK-Info.plist"; sourceTree = "<group>"; };
 		A07FACBA1B5D0C4200482BB7 /* PhoenixSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDKTests-Info.plist"; sourceTree = "<group>"; };
+		BB27B5AF1B5FFF0A005221EF /* wrongjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wrongjson.json; sourceTree = "<group>"; };
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */,
 				FE22F88B1B5FF71600711EBF /* config.json */,
+				BB27B5AF1B5FFF0A005221EF /* wrongjson.json */,
 				FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */,
 				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
 				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE22F88C1B5FF71600711EBF /* config.json in Resources */,
+				BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
