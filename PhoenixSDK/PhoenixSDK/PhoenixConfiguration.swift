@@ -10,6 +10,7 @@ import Foundation
 
 /// An enum with the regions to which the SDK can be pointing to.
 public enum Region {
+    
     /// US Region
     case UnitedStates
     
@@ -21,7 +22,6 @@ public enum Region {
     
     /// SG Region
     case Singapore
-    
 
     /// Provides the base url for the given Region.
     ///
