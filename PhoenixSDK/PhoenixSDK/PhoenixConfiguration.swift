@@ -8,6 +8,36 @@
 
 import Foundation
 
+public enum Region {
+    /// US Region
+    case UnitedStates
+    
+    /// AU Region
+    case Australia
+    
+    /// EU Region
+    case Europe
+    
+    /// SG Region
+    case Singapore
+    
+
+    /// Provides the base url for the given Region.
+    ///  String to the base url to use (including protocol).
+    func baseURL() -> String {
+        switch (self) {
+        case .UnitedStates:
+            return ""
+        case .Australia:
+            return ""
+        case .Europe:
+            return ""
+        case .Singapore:
+            return ""
+        }
+    }
+}
+
 /// This class holds the data to configure the phoenix SDK. It provides initialisers to
 /// read the configuration from a plist file, and allows.
 public class PhoenixConfiguration
@@ -18,6 +48,15 @@ public class PhoenixConfiguration
     
     /// The client secret
     public var clientSecret:String!;
+
+    /// The project ID
+    public var projectId:String!;
+
+    /// The application ID
+    public var applicationID:String!;
+
+    /// The region
+    public var region:Region!;
 
 }
 
@@ -39,9 +78,9 @@ public extension PhoenixConfiguration {
     // Constants to load from a config file.
     private static let clientIdKey = "client_id"
     private static let clientSecretKey = "client_secret"
-    private static let phoenixProjectIdKey = "project_id"
-    private static let phoenixApplicationIdKey = "application_id"
-    private static let phoenixRegionKey = "region"
+    private static let projectIdKey = "project_id"
+    private static let applicationIdKey = "application_id"
+    private static let regionKey = "region"
     
     /// Initialises the configuration with a plist with the file name specified in the main
     convenience public init (fromFile fileName:String!,inBundle bundle:NSBundle!) throws {
