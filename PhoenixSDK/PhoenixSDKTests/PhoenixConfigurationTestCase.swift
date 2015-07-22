@@ -13,9 +13,9 @@ class PhoenixConfigurationTestCase: XCTestCase {
     
     func testConfigurationFromFileAndBundle() {
         let clientID="CLIENT_ID" // as in file
-        let clientSecret="CLIENT_Secret" // as in file
+        let clientSecret="CLIENT_SECRET" // as in file
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
-        let region: Phoenix.Region = .UnitedStates
+        let region: Phoenix.Region = .Europe
         let applicationId = 10
         let projectId = 20
         
@@ -34,18 +34,30 @@ class PhoenixConfigurationTestCase: XCTestCase {
     }
     
     func testFileNotFoundInReadFromFile() {
-        let config = PhoenixConfiguration();
+        let config = Phoenix.Configuration();
         
         do {
             try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch PhoenixError.NoSuchConfigFile {
-            // nop
+        catch let err as ConfigurationError where err == .FileNotFoundError {
+            print(err)
         }
         catch let error {
             print(error)
             XCTAssert(false, "Unexpected exception type.")
+        }
+    }
+    
+    func testConfigurationIsValid() {
+        let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
+        do {
+            let config = try Phoenix.Configuration(fromFile: "config", inBundle: bundle);
+            XCTAssert(config.validate(), "The configuration provided is invalid")
+        }
+        catch {
+            // nop
+            XCTAssert(false, "Couldn't read the file.")
         }
     }
 
