@@ -100,15 +100,15 @@ public extension PhoenixConfiguration {
         try readFromFile(fileName, inBundle:bundle)
     }
     
-    /// Reads the given file in the main bundle into the configuration.
+    /// Reads the given json file in the main bundle into the configuration.
     ///
     /// **Throws a PhoenixGenericErrors.NoSuchConfigFile** error if the file is not found.
     /// - Parameters:
     ///     - fileName: The name of the file with the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
     public func readFromFile(fileName:String!, inBundle bundle:NSBundle!) throws {
-        if let plistResourcePath = bundle.pathForResource(fileName, ofType: "plist") {
-            readFromPlistPath(plistResourcePath)
+        if let jsonResourcePath = bundle.pathForResource(fileName, ofType: "json") {
+            readFromJSONPath(jsonResourcePath)
         }
         throw PhoenixGenericErrors.NoSuchConfigFile
     }
@@ -117,8 +117,8 @@ public extension PhoenixConfiguration {
     ///
     /// - Parameter plistResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
     /// - Returns: A boolean with true if and only if the file in `plistResourcePath` is found and data is loaded from it.
-    private func readFromPlistPath(plistResourcePath:String!) -> Bool {
-        if let plistData = NSDictionary(contentsOfFile: plistResourcePath) {
+    private func readFromJSONPath(jsonResourcePath:String!) -> Bool {
+        if let plistData = NSDictionary(contentsOfFile: jsonResourcePath) {
             
             if plistData[PhoenixConfiguration.clientIdKey] != nil {
                 self.clientId = String(plistData[PhoenixConfiguration.clientIdKey]!)
