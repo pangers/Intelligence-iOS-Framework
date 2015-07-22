@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// An enum with the regions to which the SDK can be pointing to.
 public enum Region {
     /// US Region
     case UnitedStates
@@ -23,17 +24,17 @@ public enum Region {
     
 
     /// Provides the base url for the given Region.
-    ///  String to the base url to use (including protocol).
+    /// - Returns String: to the base url to use (including protocol).
     func baseURL() -> String {
         switch (self) {
         case .UnitedStates:
-            return ""
+            return "TODO"
         case .Australia:
-            return ""
+            return "TODO"
         case .Europe:
-            return ""
+            return "TODO"
         case .Singapore:
-            return ""
+            return "TODO"
         }
     }
 }
@@ -63,10 +64,15 @@ public class PhoenixConfiguration
 /// Extension to provide copy initializer
 public extension PhoenixConfiguration {
     
+    /// Copy initialiser.
+    /// - Parameter PhoenixConfiguration: The phoenix configuration to copy.
     convenience public init(copying:PhoenixConfiguration){
         self.init()
         self.clientId = copying.clientId
         self.clientSecret = copying.clientSecret
+        self.projectId = copying.projectId
+        self.applicationID = copying.applicationID
+        self.region = copying.region
     }
     
 }
@@ -83,12 +89,17 @@ public extension PhoenixConfiguration {
     private static let regionKey = "region"
     
     /// Initialises the configuration with a plist with the file name specified in the main
+    /// - Parameter fromFile: The file name to read.
+    /// - Parameter inBundle: The bundle in which we will look for the file.
     convenience public init (fromFile fileName:String!,inBundle bundle:NSBundle!) throws {
         self.init();
         try readFromFile(fileName, inBundle:bundle)
     }
     
     /// Reads the given file in the main bundle into the configuration.
+    /// Throws a PhoenixGenericErrors.NoSuchConfigFile error if the file is not found.
+    /// - Parameter fileName: The name of the file with the configuration.
+    /// - Parameter inBundle: The bundle in which we will look for the file.
     public func readFromFile(fileName:String!, inBundle bundle:NSBundle!) throws {
         if let plistResourcePath = bundle.pathForResource(fileName, ofType: "plist") {
             readFromPlistPath(plistResourcePath)
@@ -96,6 +107,9 @@ public extension PhoenixConfiguration {
         throw PhoenixGenericErrors.NoSuchConfigFile
     }
     
+    /// Reads a plist file at the given path into the configuration
+    /// - Parameter plistResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
+    /// - Returns: A boolean with true if and only if the file is found and data is loaded from it.
     private func readFromPlistPath(plistResourcePath:String!) -> Bool {
         if let plistData = NSDictionary(contentsOfFile: plistResourcePath) {
             
@@ -106,6 +120,8 @@ public extension PhoenixConfiguration {
             if plistData[PhoenixConfiguration.clientSecretKey] != nil {
                 self.clientSecret = String(plistData[PhoenixConfiguration.clientSecretKey]!)
             }
+            
+            return true;
         }
         
         return false;
