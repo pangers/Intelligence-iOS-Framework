@@ -9,16 +9,21 @@
 import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
-public class Phoenix {
+public class Phoenix: NSObject {
 
     /// Private configuration. Can't be modified once initialized.
-    private let configuration:PhoenixConfiguration
+    private let configuration: Configuration
+    
+    /// - Returns: A **copy** of the configuration.
+    public var currentConfiguration: Configuration {
+        return configuration.copy() as! Configuration
+    }
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
     /// will be copied to avoid future mutability.
-    public init(phoenixConfiguration:PhoenixConfiguration){
-        self.configuration = PhoenixConfiguration(copying: phoenixConfiguration)
+    public init(withConfiguration cfg: Configuration) {
+        self.configuration = cfg.copy() as! Configuration
     }
     
     /// Provides a convenience initializer with a file and bundle.
@@ -27,12 +32,7 @@ public class Phoenix {
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
-    convenience public init(withFile:String, inBundle:NSBundle=NSBundle.mainBundle()) throws {
-        try! self.init(phoenixConfiguration: PhoenixConfiguration(fromFile: withFile, inBundle: inBundle))
-    }
-    
-    /// - Returns: A **copy** of the configuration.
-    public func getConfiguration() -> PhoenixConfiguration {
-        return PhoenixConfiguration(copying: self.configuration)
+    convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
+        try! self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
     }
 }

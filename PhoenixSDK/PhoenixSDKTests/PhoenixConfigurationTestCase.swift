@@ -15,18 +15,17 @@ class PhoenixConfigurationTestCase: XCTestCase {
         let clientID="CLIENT_ID" // as in file
         let clientSecret="CLIENT_Secret" // as in file
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
-        let region:Region = .UnitedStates
+        let region: Phoenix.Region = .UnitedStates
         let applicationId = 10
         let projectId = 20
         
         do {
-            let config = try PhoenixConfiguration(fromFile: "config", inBundle: bundle);
-            
-            XCTAssert(config.clientId == clientID, "The client ID is incorrect")
+            let config = try Phoenix.Configuration(fromFile: "config", inBundle: bundle);
+            XCTAssert(config.clientID == clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == region, "The region is incorrect")
             XCTAssert(config.applicationID == applicationId , "The application Id is incorrect")
-            XCTAssert(config.projectId == projectId, "The project Id is incorrect")
+            XCTAssert(config.projectID == projectId, "The project Id is incorrect")
         }
         catch {
             // nop
