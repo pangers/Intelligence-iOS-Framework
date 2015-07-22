@@ -19,7 +19,6 @@ public class PhoenixConfiguration
     private static let phoenixProjectIdKey = "phoenix_project_id";
     private static let phoenixApplicationIdKey = "phoenix_application_id";
     private static let phoenixRegionKey = "phoenix_region";
-    private static let phoenixEnvironmentKey = "phoenix_environment";
     
     /// The client ID
     public var clientId:String!;
