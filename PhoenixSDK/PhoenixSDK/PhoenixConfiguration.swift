@@ -9,50 +9,6 @@
 import Foundation
 
 public extension Phoenix {
-    
-    /// An enum with the regions to which the SDK can be pointing to.
-    public enum Region {
-        /// US Region
-        case UnitedStates
-        
-        /// AU Region
-        case Australia
-        
-        /// EU Region
-        case Europe
-        
-        /// SG Region
-        case Singapore
-        
-        /// - Returns: String to the base url to use (including protocol).
-        func baseURL() -> String {
-            switch (self) {
-            case .UnitedStates: return "https://api.phoenixplatform.com"
-            case .Australia:    return "https://api.phoenixplatform.com.au"
-            case .Europe:       return "https://api.phoenixplatform.eu"
-            case .Singapore:    return "https://api.phoenixplatform.com.sg"
-            }
-        }
-        
-        static func fromString(str: String) -> Region? {
-            switch str {
-            case "US": return .UnitedStates
-            case "AU": return .Australia
-            case "EU": return .Europe
-            case "SG": return .Singapore
-            default:   return nil
-            }
-        }
-    }
-
-    /// Errors that can occur during Configuration.
-    public enum ConfigurationError: Int, ErrorType {
-        case FileNotFoundError
-        case InvalidPropertyError
-        case InvalidFileError
-        case MissingPropertyError
-    }
-    
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file, and allows.
     @objc(PHXConfiguration)
