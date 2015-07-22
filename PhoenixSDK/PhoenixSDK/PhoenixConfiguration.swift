@@ -89,8 +89,9 @@ public extension PhoenixConfiguration {
     private static let regionKey = "region"
     
     /// Initialises the configuration with a plist with the file name specified in the main
-    /// - Parameter fromFile: The file name to read.
-    /// - Parameter inBundle: The bundle in which we will look for the file.
+    /// - Parameters
+    ///     - fromFile: The file name to read.
+    ///     - inBundle: The bundle in which we will look for the file.
     convenience public init (fromFile fileName:String!,inBundle bundle:NSBundle!) throws {
         self.init();
         try readFromFile(fileName, inBundle:bundle)
@@ -98,8 +99,9 @@ public extension PhoenixConfiguration {
     
     /// Reads the given file in the main bundle into the configuration.
     /// Throws a PhoenixGenericErrors.NoSuchConfigFile error if the file is not found.
-    /// - Parameter fileName: The name of the file with the configuration.
-    /// - Parameter inBundle: The bundle in which we will look for the file.
+    /// - Parameters:
+    ///     - fileName: The name of the file with the configuration.
+    ///     - inBundle: The bundle in which we will look for the file.
     public func readFromFile(fileName:String!, inBundle bundle:NSBundle!) throws {
         if let plistResourcePath = bundle.pathForResource(fileName, ofType: "plist") {
             readFromPlistPath(plistResourcePath)
@@ -109,7 +111,7 @@ public extension PhoenixConfiguration {
     
     /// Reads a plist file at the given path into the configuration
     /// - Parameter plistResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
-    /// - Returns: A boolean with true if and only if the file is found and data is loaded from it.
+    /// - Returns: A boolean with true if and only if the file in `plistResourcePath` is found and data is loaded from it.
     private func readFromPlistPath(plistResourcePath:String!) -> Bool {
         if let plistData = NSDictionary(contentsOfFile: plistResourcePath) {
             
