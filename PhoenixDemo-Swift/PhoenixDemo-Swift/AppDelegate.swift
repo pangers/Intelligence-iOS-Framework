@@ -8,14 +8,25 @@
 
 import UIKit
 
+import PhoenixSDK
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-
+    var phoenix:Phoenix?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
+        
+        do {
+            let configuration = try PhoenixConfiguration(fromFile: "config", inBundle: NSBundle.mainBundle())
+            self.phoenix = Phoenix(phoenixConfiguration: configuration);
+        }
+        catch {
+            // Treat the error with care!
+        }
+        
 		return true
 	}
 
