@@ -41,7 +41,7 @@ public enum Region {
 }
 
 /// This class holds the data to configure the phoenix SDK. It provides initialisers to
-/// read the configuration from a plist file, and allows.
+/// read the configuration from a JSON file, and allows.
 public class PhoenixConfiguration
 {
 
@@ -90,7 +90,7 @@ public extension PhoenixConfiguration {
     private static let applicationIdKey = "application_id"
     private static let regionKey = "region"
     
-    /// Initialises the configuration with a plist with the file name specified in the main
+    /// Initialises the configuration with a JSON with the file name specified in the main
     ///
     /// - Parameters
     ///     - fromFile: The file name to read.
@@ -113,10 +113,10 @@ public extension PhoenixConfiguration {
         throw PhoenixGenericErrors.NoSuchConfigFile
     }
     
-    /// Reads a plist file at the given path into the configuration
+    /// Reads a json file at the given path into the configuration
     ///
-    /// - Parameter plistResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
-    /// - Returns: A boolean with true if and only if the file in `plistResourcePath` is found and data is loaded from it.
+    /// - Parameter jsonResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
+    /// - Returns: A boolean with true if and only if the file in `jsonResourcePath` is found and data is loaded from it.
     private func readFromJSONPath(jsonResourcePath:String!) -> Bool {
         if let plistData = NSDictionary(contentsOfFile: jsonResourcePath) {
             
