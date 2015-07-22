@@ -29,13 +29,13 @@ public enum Region {
     func baseURL() -> String {
         switch (self) {
         case .UnitedStates:
-            return "TODO"
+            return "https://api.phoenixplatform.com"
         case .Australia:
-            return "TODO"
+            return "https://api.phoenixplatform.com.au"
         case .Europe:
-            return "TODO"
+            return "https://api.phoenixplatform.eu"
         case .Singapore:
-            return "TODO"
+            return "https://api.phoenixplatform.com.sg"
         }
     }
 }
@@ -52,10 +52,10 @@ public class PhoenixConfiguration
     public var clientSecret:String!;
 
     /// The project ID
-    public var projectId:String!;
+    public var projectId:Int!;
 
     /// The application ID
-    public var applicationID:String!;
+    public var applicationID:Int!;
 
     /// The region
     public var region:Region!;
