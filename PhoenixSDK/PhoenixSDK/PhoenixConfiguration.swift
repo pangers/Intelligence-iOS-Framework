@@ -9,10 +9,12 @@
 import Foundation
 
 public extension Phoenix {
+    
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file, and allows.
     @objc(PHXConfiguration)
     public class Configuration: NSObject {
+        
         private enum ConfigurationKey: String {
             case ClientID = "client_id"
             case ClientSecret = "client_secret"
@@ -23,12 +25,16 @@ public extension Phoenix {
         
         /// The client ID
         public var clientID: String = ""
+        
         /// The client secret
         public var clientSecret: String = ""
+        
         /// The project ID
         public var projectID: Int = 0
+        
         /// The application ID
         public var applicationID: Int = 0
+        
         /// The region
         public var region: Region?
         
@@ -60,31 +66,44 @@ public extension Phoenix {
         /// - Parameter jsonResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
         /// - Returns: A boolean with true if and only if the file in `jsonResourcePath` is found and data is loaded from it.
         private func readFromJSONPath(path: String) throws {
+            
             guard let data = NSData(contentsOfFile: path) else {
                 throw ConfigurationError.FileNotFoundError
             }
-            let contents: NSDictionary
-            do {
-                if let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary {
-                    contents = jsonData
-                } else {
-                    throw ConfigurationError.InvalidFileError
+            
+            // Helper function to parse the data and return an optional instead of an error
+            func optionalJSONData(data:NSData) -> NSDictionary? {
+                do {
+                    if let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary {
+                        return jsonData
+                    }
                 }
-            } catch {
-                // Return InvalidFileError
+                catch {
+                    // Swallow the error
+                }
+                
+                return nil
+            }
+            
+            // Guard that we have the json data parsed correctly
+            guard let contents = optionalJSONData(data) else {
                 throw ConfigurationError.InvalidFileError
             }
-            func value(forKey key: ConfigurationKey) throws -> String {
+            
+            // Helper function to load a value from a dictionary.
+            func value(forKey key: ConfigurationKey, inContents contents:NSDictionary) throws -> String {
                 guard let value = contents[key.rawValue] as? String where !value.isEmpty else {
                     throw ConfigurationError.InvalidPropertyError
                 }
                 return value
             }
-            clientID = try value(forKey: .ClientID)
-            clientSecret = try value(forKey: .ClientSecret)
-            projectID = try Int(value(forKey: .ProjectID)) ?? 0
-            applicationID = try Int(value(forKey: .ApplicationID)) ?? 0
-            region = try Region.fromString(value(forKey: .Region))
+
+            // Fetch from the contents dictionary
+            clientID = try value(forKey: .ClientID, inContents:contents)
+            clientSecret = try value(forKey: .ClientSecret, inContents:contents)
+            projectID = try Int(value(forKey: .ProjectID, inContents:contents)) ?? 0
+            applicationID = try Int(value(forKey: .ApplicationID, inContents:contents)) ?? 0
+            region = try Region.fromString(value(forKey: .Region, inContents:contents))
         }
         
         /// Internal function used by Phoenix initialization to determine if Configuration object provided passes validation.
@@ -93,6 +112,7 @@ public extension Phoenix {
                 applicationID > 0 && region != nil
         }
         
+        // NSCopying
         public override func copy() -> AnyObject {
             let copy = Configuration()
             copy.region = self.region
