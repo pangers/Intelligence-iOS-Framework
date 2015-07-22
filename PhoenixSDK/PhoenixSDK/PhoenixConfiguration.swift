@@ -50,7 +50,9 @@ public extension Phoenix {
         
         /// Reads the given json file in the main bundle into the configuration.
         /// #### Throws
-        /// **PhoenixError.NoSuchConfigFile** error if the file is not found.
+        /// **ConfigurationError.FileNotFoundError** error if the file is not found.
+        /// **ConfigurationError.InvalidFileError** error if the file is in an invalid format.
+        /// **ConfigurationError.InvalidPropertyError** error if a property in the file is invalid.
         /// - Parameters:
         ///     - fileName: The name of the file with the configuration.
         ///     - inBundle: The bundle in which we will look for the file.

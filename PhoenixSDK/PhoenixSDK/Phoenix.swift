@@ -27,8 +27,10 @@ public class Phoenix: NSObject {
     }
     
     /// Provides a convenience initializer with a file and bundle.
-    /// ### Throws 
-    /// Throws a PhoenixError.NoSuchConfigFile if the configuration file is not found.
+    /// #### Throws
+    /// **ConfigurationError.FileNotFoundError** error if the file is not found.
+    /// **ConfigurationError.InvalidFileError** error if the file is in an invalid format.
+    /// **ConfigurationError.InvalidPropertyError** error if a property in the file is invalid.
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
