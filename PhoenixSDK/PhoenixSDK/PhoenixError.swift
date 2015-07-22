@@ -1,5 +1,5 @@
 //
-//  PhoenixErrors.swift
+//  PhoenixError.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 21/07/2015.
@@ -11,6 +11,6 @@ import Foundation
 /**
 Enumeration with the possible errors raised by the Phoenix SDK.
 */
-public enum PhoenixErrors : ErrorType {
+public enum PhoenixError : ErrorType {
     case NoSuchConfigFile
 }

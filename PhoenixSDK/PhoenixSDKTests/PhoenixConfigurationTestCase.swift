@@ -41,7 +41,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
             try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch PhoenixErrors.NoSuchConfigFile {
+        catch PhoenixError.NoSuchConfigFile {
             // nop
         }
         catch let error {

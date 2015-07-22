@@ -100,7 +100,7 @@ public extension PhoenixConfiguration {
     
     /// Reads the given json file in the main bundle into the configuration.
     /// #### Throws
-    /// **PhoenixErrors.NoSuchConfigFile** error if the file is not found.
+    /// **PhoenixError.NoSuchConfigFile** error if the file is not found.
     /// - Parameters:
     ///     - fileName: The name of the file with the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
@@ -108,7 +108,7 @@ public extension PhoenixConfiguration {
         if let jsonResourcePath = bundle.pathForResource(fileName, ofType: "json") {
             readFromJSONPath(jsonResourcePath)
         }
-        throw PhoenixErrors.NoSuchConfigFile
+        throw PhoenixError.NoSuchConfigFile
     }
     
     /// Reads a json file at the given path into the configuration
