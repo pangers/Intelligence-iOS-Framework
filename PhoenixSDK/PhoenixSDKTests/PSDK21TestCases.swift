@@ -47,8 +47,7 @@ class PSDK21TestCases: XCTestCase {
         catch ConfigurationError.MissingPropertyError {
             // Correct path
         }
-        catch let err {
-            print(err)
+        catch {
             XCTAssert(false, "Unexpected exception")
         }
     }
