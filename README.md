@@ -161,20 +161,9 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
 ```
 #!objc
 
-
-        // Attempt to instantiate configuration from file.
+        // Attempt to instantiate Phoenix using a JSON file.
         NSError *err;
-        Configuration *configuration = [[Configuration alloc] initFromFile:@"PhoenixConfiguration"
-                                                                  inBundle:[NSBundle mainBundle]
-                                                                     error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error configuring Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && configuration != nil);
-        // Create instance using Configuration object above.
-        instance = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
+        instance = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
         if (nil != err) {
             // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
             // and generally indicate that something has gone wrong and needs to be resolved.
