@@ -87,7 +87,7 @@ public extension Phoenix.Configuration {
         
         guard
             let path = bundle.pathForResource(fileName, ofType: "json"),
-            let data = NSData(contentsOfFile: path)  else
+            data = NSData(contentsOfFile: path)  else
         {
             throw ConfigurationError.FileNotFoundError
         }
