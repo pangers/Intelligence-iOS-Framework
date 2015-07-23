@@ -87,19 +87,11 @@ public extension Phoenix.Configuration {
     ///     - fileName: The name of the file with the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
     public func readFromFile(fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
-        guard let jsonResourcePath = bundle.pathForResource(fileName, ofType: "json") else {
-            throw ConfigurationError.FileNotFoundError
-        }
-        try readFromJSONPath(jsonResourcePath)
-    }
-    
-    /// Reads a json file at the given path into the configuration
-    ///
-    /// - Parameter jsonResourcePath: The path to the file. Obtained via NSBundle.pathForResource.
-    /// - Returns: A boolean with true if and only if the file in `jsonResourcePath` is found and data is loaded from it.
-    private func readFromJSONPath(path: String) throws {
         
-        guard let data = NSData(contentsOfFile: path) else {
+        guard
+            let path = bundle.pathForResource(fileName, ofType: "json"),
+            let data = NSData(contentsOfFile: path)  else
+        {
             throw ConfigurationError.FileNotFoundError
         }
         

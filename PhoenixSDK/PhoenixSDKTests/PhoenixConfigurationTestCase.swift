@@ -49,7 +49,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         }
     }
     
-    func testFileInvalidConfiguration() {
+    func testFileInvalidFileConfiguration() {
         let config = Phoenix.Configuration();
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
         
@@ -57,8 +57,25 @@ class PhoenixConfigurationTestCase: XCTestCase {
             try config.readFromFile("wrongjson", inBundle: bundle)
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch let err as ConfigurationError where err == .InvalidFileError {
-            print(err)
+        catch ConfigurationError.InvalidFileError {
+            // correct path
+        }
+        catch let error {
+            print(error)
+            XCTAssert(false, "Unexpected exception type.")
+        }
+    }
+    
+    func testFileInvalidPropertyConfiguration() {
+        let config = Phoenix.Configuration();
+        let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
+        
+        do {
+            try config.readFromFile("invalidproperty", inBundle: bundle)
+            XCTAssert(false, "File not found, but exception not thrown")
+        }
+        catch ConfigurationError.InvalidPropertyError {
+            // correct path
         }
         catch let error {
             print(error)
