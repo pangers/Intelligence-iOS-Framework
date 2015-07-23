@@ -31,4 +31,17 @@ class PhoenixTestCase: XCTestCase {
         }
     }
     
+    func testPhoenixConfigurationInitializer(){
+        let bundle = NSBundle(forClass: PhoenixTestCase.self)
+        
+        do {
+            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
+            let phoenix = Phoenix(withConfiguration: configuration)
+            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
+        }
+        catch {
+            XCTAssert(false, "There was an error reading the file.")
+        }
+    }
+    
 }

@@ -1,14 +1,110 @@
-**TODO - We should explain how to format or where to obtain the json file, and also to embed it in the project.**
-
 # Phoenix SDK #
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
 
 ## Getting Started ##
 
-
-
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
+
+### Configuration ###
+
+The Phoenix SDK requires a few configuration properties in order to initialize itself. There are a few different ways of creating the configuration:
+
+1- Initialize Phoenix with a configuration file:
+
+
+```
+#!swift
+
+        do {
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+        }
+        catch {
+            // Treat the error with care!
+        }
+
+```
+
+2- Initialize a configuration object, read a file and pass it to Phoenix:
+
+
+```
+#!swift
+
+        let bundle = NSBundle.mainBundle()
+        
+        do {
+            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
+            let phoenix = Phoenix(withConfiguration: configuration)
+        }
+        catch {
+            // Treat the error with care!
+        }
+
+```
+
+3- Programmatically set the required parameters in the configuration, and initialize Phoenix with it.
+
+
+```
+#!swift
+
+        let configuration = Phoenix.Configuration()
+        
+        configuration.clientID = "YOUR_CLIENT_ID"
+        configuration.clientSecret = "YOUR_CLIENT_SECRET"
+        configuration.projectID = 123456789
+        configuration.applicationID = 987654321
+        configuration.region = Phoenix.Region.Europe
+
+```
+
+4- Hybrid initialization of the configuration file, reading a file and customizing programmatically some of its properties:
+
+
+```
+#!swift
+
+        let bundle = NSBundle.mainBundle()
+        
+        do {
+            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
+            configuration.region = Phoenix.Region.Europe
+
+            let phoenix = Phoenix(withConfiguration: configuration)
+        }
+        catch {
+            // Treat the error with care!
+        }
+
+```
+
+### Configuration file format ###
+
+The configuration file is a JSON file with the following keys:
+
+1. "client_id" with a String value
+2. "client_secret" with a String value
+3. "application_id" with an Integer value
+4. "project_id" with an Integer value
+5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
+
+As an example, your configuration file will look like:
+
+
+```
+#!JSON
+
+{
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "application_id": "10",
+    "project_id": "20",
+    "region": "EU"
+}
+
+```
+
 
 ### Swift ###
 
@@ -49,4 +145,3 @@ Consider that the Phoenix.Configuration can throw exceptions if you haven't conf
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
 ### Objective-C ###
-
