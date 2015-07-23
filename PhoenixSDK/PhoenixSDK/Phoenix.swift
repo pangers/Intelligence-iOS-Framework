@@ -26,19 +26,19 @@ public class Phoenix: NSObject {
         self.configuration = cfg.copy() as! Configuration
         super.init()
 
-        if ( !cfg.hasMissingProperty() )
+        if ( cfg.hasMissingProperty() )
         {
             throw ConfigurationError.MissingPropertyError
         }
 
-        if ( !cfg.validate() )
+        if ( !cfg.isValid() )
         {
             throw ConfigurationError.InvalidPropertyError
         }
     }
     
     /// Provides a convenience initializer with a file and bundle.
-    /// #### Throws
+    /// - Throws:
     /// **ConfigurationError.FileNotFoundError** error if the file is not found.
     /// **ConfigurationError.InvalidFileError** error if the file is in an invalid format.
     /// **ConfigurationError.InvalidPropertyError** error if a property in the file is invalid.
@@ -46,6 +46,6 @@ public class Phoenix: NSObject {
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
-        try! self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
+        try self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
     }
 }

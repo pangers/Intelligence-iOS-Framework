@@ -44,4 +44,17 @@ class PhoenixTestCase: XCTestCase {
         }
     }
     
+    // Mock configuration fakes an invalid configuration
+    func testPhoenixInitializerWithMockConfiguration() {
+        do {
+            let _ = try Phoenix(withConfiguration: MockConfiguration())
+            XCTAssert(false, "No exception thrown")
+        }
+        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
+            // correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception thrown")
+        }
+    }
 }

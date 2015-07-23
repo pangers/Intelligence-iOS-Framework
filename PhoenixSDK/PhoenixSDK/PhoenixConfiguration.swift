@@ -13,7 +13,6 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    @objc(PHXConfiguration)
     public class Configuration: NSObject {
         
         /// The client ID
@@ -44,15 +43,15 @@ public extension Phoenix {
         
         /// - Returns: True if the configuration is correct and can be used to initialize
         /// the Phoenix SDK.
-        func validate() -> Bool {
+        public func isValid() -> Bool {
             // For now only check if there is a missing property.
-            return self.hasMissingProperty()
+            return !self.hasMissingProperty()
         }
         
         /// - Returns: True if there is a missing property in the configuration
-        func hasMissingProperty() -> Bool {
-            return !clientID.isEmpty && !clientSecret.isEmpty && projectID > 0 &&
-                applicationID > 0 && region != nil
+        public func hasMissingProperty() -> Bool {
+            return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
+                applicationID <= 0 || region == nil
         }
     }
 }
