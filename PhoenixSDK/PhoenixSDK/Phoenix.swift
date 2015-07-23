@@ -26,12 +26,12 @@ public class Phoenix: NSObject {
         self.configuration = cfg.copy() as! Configuration
         super.init()
 
-        if ( cfg.hasMissingProperty() )
+        if (cfg.hasMissingProperty)
         {
             throw ConfigurationError.MissingPropertyError
         }
 
-        if ( !cfg.isValid() )
+        if (!cfg.isValid)
         {
             throw ConfigurationError.InvalidPropertyError
         }

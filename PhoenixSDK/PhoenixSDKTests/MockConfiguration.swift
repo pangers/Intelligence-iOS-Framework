@@ -12,11 +12,11 @@ import PhoenixSDK
 
     public class MockConfiguration: Phoenix.Configuration {
         
-        override public func isValid() -> Bool {
+        override public var isValid: Bool {
             return false
         }
         
-        override public func hasMissingProperty() -> Bool {
+        override public var hasMissingProperty: Bool {
             return false
         }
     }
