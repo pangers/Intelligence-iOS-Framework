@@ -1,5 +1,3 @@
-**TODO - We should explain how to format or where to obtain the json file, and also to embed it in the project.**
-
 # Phoenix SDK #
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
