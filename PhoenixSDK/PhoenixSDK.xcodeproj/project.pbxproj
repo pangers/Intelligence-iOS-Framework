@@ -12,6 +12,7 @@
 		BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = BB27B5AF1B5FFF0A005221EF /* wrongjson.json */; };
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
+		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
 		BBAA74141B60E6A100EDADA4 /* PSDK21TestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74131B60E6A100EDADA4 /* PSDK21TestCases.swift */; };
 		BBAA74161B60FC1200EDADA4 /* PSDK22TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */; };
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
@@ -42,6 +43,7 @@
 		BB27B5AF1B5FFF0A005221EF /* wrongjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wrongjson.json; sourceTree = "<group>"; };
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
+		BB8FFC501B611A5E00E37146 /* invalidproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = invalidproperty.json; sourceTree = "<group>"; };
 		BBAA74131B60E6A100EDADA4 /* PSDK21TestCases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSDK21TestCases.swift; sourceTree = "<group>"; };
 		BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSDK22TestCase.swift; sourceTree = "<group>"; };
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
@@ -106,10 +108,9 @@
 		A07FACBE1B5D0C4200482BB7 /* PhoenixSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				BB8FFC521B611A6500E37146 /* Configuration files */,
 				BBAA74171B60FCCF00EDADA4 /* MockObjects */,
 				A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */,
-				FE22F88B1B5FF71600711EBF /* config.json */,
-				BB27B5AF1B5FFF0A005221EF /* wrongjson.json */,
 				FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */,
 				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
 				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
@@ -117,6 +118,16 @@
 				BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */,
 			);
 			path = PhoenixSDKTests;
+			sourceTree = "<group>";
+		};
+		BB8FFC521B611A6500E37146 /* Configuration files */ = {
+			isa = PBXGroup;
+			children = (
+				FE22F88B1B5FF71600711EBF /* config.json */,
+				BB27B5AF1B5FFF0A005221EF /* wrongjson.json */,
+				BB8FFC501B611A5E00E37146 /* invalidproperty.json */,
+			);
+			name = "Configuration files";
 			sourceTree = "<group>";
 		};
 		BBAA74171B60FCCF00EDADA4 /* MockObjects */ = {
@@ -224,6 +235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */,
 				FE22F88C1B5FF71600711EBF /* config.json in Resources */,
 				BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */,
 			);
