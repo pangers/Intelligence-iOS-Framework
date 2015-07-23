@@ -13,14 +13,14 @@ import Foundation
 public enum ConfigurationError: Int, ErrorType {
     
     /// Configuration file does not exist.
-    case FileNotFoundError
+    case FileNotFoundError = 1001
     
     /// Property is invalid.
-    case InvalidPropertyError
+    case InvalidPropertyError = 1002
     
     /// Configuration file is in incorrect format.
-    case InvalidFileError
+    case InvalidFileError = 1003
     
     /// Property is missing.
-    case MissingPropertyError
+    case MissingPropertyError = 1004
 }
