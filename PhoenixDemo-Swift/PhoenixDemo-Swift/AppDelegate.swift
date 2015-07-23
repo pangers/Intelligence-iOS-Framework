@@ -20,8 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
         
         do {
-            let configuration = try PhoenixConfiguration(fromFile: "config", inBundle: NSBundle.mainBundle())
-            self.phoenix = Phoenix(phoenixConfiguration: configuration);
+            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle.mainBundle())
+            self.phoenix = Phoenix(withConfiguration: configuration);
         }
         catch {
             // Treat the error with care!

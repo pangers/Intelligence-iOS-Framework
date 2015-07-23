@@ -38,4 +38,17 @@ class PhoenixRegionTestCase: XCTestCase {
 
     }
     
+    func testRegionBaseURL(){
+        let correctAssignments:[Phoenix.Region: String] = [
+            .UnitedStates   : "https://api.phoenixplatform.com",
+            .Australia      : "https://api.phoenixplatform.com.au",
+            .Europe         : "https://api.phoenixplatform.eu",
+            .Singapore      : "https://api.phoenixplatform.com.sg"
+        ]
+        
+        for (region, value) in correctAssignments {
+            XCTAssert(region.baseURL() == value, "Incorrect url value from region \(region)")
+        }
+    }
+    
 }
