@@ -99,7 +99,7 @@ public extension Phoenix.Configuration {
         }
         
         // Helper function to parse the data and return an optional instead of an error
-        func optionalJSONData(data:NSData) -> NSDictionary? {
+        func optionalJSONData(data: NSData) -> NSDictionary? {
             do {
                 if let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary {
                     return jsonData
@@ -129,6 +129,6 @@ public extension Phoenix.Configuration {
         clientSecret = try value(forKey: .ClientSecret, inContents:contents)
         projectID = try value(forKey: .ProjectID, inContents:contents)
         applicationID = try value(forKey: .ApplicationID, inContents:contents)
-        region = try Phoenix.Region(string: value(forKey: .Region, inContents:contents))
+        region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
     }
 }

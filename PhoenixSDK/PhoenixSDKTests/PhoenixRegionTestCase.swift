@@ -31,10 +31,10 @@ class PhoenixRegionTestCase: XCTestCase {
         ]
         
         for (code, value) in correctAssignments {
-            XCTAssert(Phoenix.Region.fromString(code) == value, "Incorrect enum value from string")
+            XCTAssert(Phoenix.Region(code:code) == value, "Incorrect enum value from string")
         }
         
-        XCTAssert(Phoenix.Region.fromString("Wrong code") == nil, "Incorrect enum value from string")
+        XCTAssert(Phoenix.Region(code:"Wrong code") == nil, "Incorrect enum value from string")
 
     }
     

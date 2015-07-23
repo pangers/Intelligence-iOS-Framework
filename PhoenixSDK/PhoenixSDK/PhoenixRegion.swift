@@ -39,8 +39,10 @@ public extension Phoenix {
             }
         }
         
-        init?(string: String) {
-            switch string {
+        /// - Returns: The region that a specific code represents. Can return nil if the
+        /// code does not match any region.
+        init?(code: String) {
+            switch code {
             case "US":
                 self = .UnitedStates
             case "AU":
@@ -49,23 +51,6 @@ public extension Phoenix {
                 self = .Europe
             case "SG":
                 self = .Singapore
-            default:
-                return nil
-            }
-        }
-        
-        /// - Returns: The region that a specific code represents. Can return nil if the
-        /// code does not match any region.
-        static func fromString(str: String) -> Region? {
-            switch str {
-            case "US":
-                return .UnitedStates
-            case "AU":
-                return .Australia
-            case "EU":
-                return .Europe
-            case "SG":
-                return .Singapore
             default:
                 return nil
             }
