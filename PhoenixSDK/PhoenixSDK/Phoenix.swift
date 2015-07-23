@@ -22,6 +22,7 @@ public class Phoenix: NSObject {
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
     /// will be copied to avoid future mutability.
+    /// - Throws: **ConfigurationError** if the configuration is invalid
     public init(withConfiguration cfg: Configuration) throws {
         self.configuration = cfg.copy() as! Configuration
         super.init()
@@ -37,11 +38,9 @@ public class Phoenix: NSObject {
         }
     }
     
-    /// Provides a convenience initializer with a file and bundle.
-    /// - Throws:
-    /// **ConfigurationError.FileNotFoundError** error if the file is not found.
-    /// **ConfigurationError.InvalidFileError** error if the file is in an invalid format.
-    /// **ConfigurationError.InvalidPropertyError** error if a property in the file is invalid.
+    /// Provides a convenience initializer to load the configuration from a JSON file
+    /// - Throws: **ConfigurationError** if the configuration is invalid or there is a problem
+    /// reading the file.
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.

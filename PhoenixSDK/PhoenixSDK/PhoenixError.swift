@@ -8,19 +8,21 @@
 
 import Foundation
 
-// TODO: Improve these descriptions.
-/// Errors that can occur during Configuration.
+/// Enumeration that defines the possible errors that can occur during
+/// the initial setup of Phoenix's configuration.
+/// Refer to the Readme file to obtain further instructions on setup.
 public enum ConfigurationError: Int, ErrorType {
     
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
     
-    /// Property is invalid.
+    /// A property is invalid.
     case InvalidPropertyError = 1002
     
-    /// Configuration file is in incorrect format.
+    /// Configuration file is invalid
+    /// (Couldn't parse into a JSON or had an issue while reading it)
     case InvalidFileError = 1003
     
-    /// Property is missing.
+    /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
 }

@@ -69,8 +69,8 @@ public extension Phoenix.Configuration {
     }
     
     /// Initialises the configuration with a JSON with the file name specified in the main
-    ///
-    /// - Parameters
+    /// - Throws: **ConfigurationError** if there was any error while reading and parsing the file.
+    /// - Parameters:
     ///     - fromFile: The file name to read.
     ///     - inBundle: The bundle in which we will look for the file.
     convenience public init(fromFile fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
@@ -78,13 +78,10 @@ public extension Phoenix.Configuration {
         try readFromFile(fileName, inBundle:bundle)
     }
     
-    /// Reads the given json file in the main bundle into the configuration.
-    /// #### Throws
-    /// **ConfigurationError.FileNotFoundError** error if the file is not found.
-    /// **ConfigurationError.InvalidFileError** error if the file is in an invalid format.
-    /// **ConfigurationError.InvalidPropertyError** error if a property in the file is invalid.
+    /// Parses the JSON configuration file passed as parameter into the configuration object.
+    /// - Throws: **ConfigurationError** if there was any error while reading and parsing the file.
     /// - Parameters:
-    ///     - fileName: The name of the file with the configuration.
+    ///     - fileName: The name of the JSON file containing the configuration.
     ///     - inBundle: The bundle in which we will look for the file.
     public func readFromFile(fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
         
@@ -98,9 +95,7 @@ public extension Phoenix.Configuration {
         // Helper function to parse the data and return an optional instead of an error
         func optionalJSONData(data: NSData) -> NSDictionary? {
             do {
-                if let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary {
-                    return jsonData
-                }
+                return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
             }
             catch {
                 // Swallow the error
