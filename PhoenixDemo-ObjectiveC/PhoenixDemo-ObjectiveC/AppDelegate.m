@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import <PhoenixSDK/PhoenixSDK.h>
+#import "Phoenix+Manager.h"
 
 @interface AppDelegate ()
 
@@ -18,13 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
-    
-    NSError *err;
-    Configuration *configuration = [[Configuration alloc] initFromFile:@"PhoenixConfiguration"
-                                                              inBundle:[NSBundle mainBundle]
-                                                                 error:&err];
-    NSParameterAssert(err == nil && configuration != nil);
-    Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration];
+    [Phoenix sharedInstance];
 	return YES;
 }
 
