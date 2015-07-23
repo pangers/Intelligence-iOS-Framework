@@ -68,7 +68,7 @@ public extension Phoenix.Configuration {
     /// - Parameters
     ///     - fromFile: The file name to read.
     ///     - inBundle: The bundle in which we will look for the file.
-    convenience public init(fromFile fileName:String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
+    convenience public init(fromFile fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
         self.init();
         try readFromFile(fileName, inBundle:bundle)
     }
@@ -117,7 +117,7 @@ public extension Phoenix.Configuration {
         }
         
         // Helper function to load a value from a dictionary.
-        func value<T>(forKey key: ConfigurationKey, inContents contents:NSDictionary) throws -> T {
+        func value<T>(forKey key: ConfigurationKey, inContents contents: NSDictionary) throws -> T {
             guard let output = contents[key.rawValue] as? T else {
                 throw ConfigurationError.InvalidPropertyError
             }

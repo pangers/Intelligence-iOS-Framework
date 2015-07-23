@@ -18,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
+    
+    // Instantiate Phoenix using PhoenixConfiguration.json file.
     [Phoenix sharedInstance];
 	return YES;
 }
