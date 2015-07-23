@@ -133,6 +133,18 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         do {
             self.phoenix = try Phoenix(withFile: "config");
         }
+        catch PhoenixSDK.ConfigurationError.FileNotFoundError {
+            // The file you specified does not exist!
+        }
+        catch PhoenixSDK.ConfigurationError.InvalidFileError {
+            // The file is invalid! Check that the JSON provided is correct.
+        }
+        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
+            // You missed a property!
+        }
+        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
+            // There is an invalid property!
+        }
         catch {
             // Treat the error with care!
         }
