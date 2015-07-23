@@ -27,7 +27,7 @@ class PhoenixTestCase: XCTestCase {
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
-            XCTAssert(false, "There was an error reading the file.")
+            XCTAssert(false, "There was an error reading the file or initializing phoenix.")
         }
     }
     
@@ -36,11 +36,11 @@ class PhoenixTestCase: XCTestCase {
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = Phoenix(withConfiguration: configuration)
+            let phoenix = try Phoenix(withConfiguration: configuration)
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
-            XCTAssert(false, "There was an error reading the file.")
+            XCTAssert(false, "There was an error reading the file or initializing Phoenix")
         }
     }
     

@@ -45,6 +45,12 @@ public extension Phoenix {
         /// - Returns: True if the configuration is correct and can be used to initialize
         /// the Phoenix SDK.
         func validate() -> Bool {
+            // For now only check if there is a missing property.
+            return self.hasMissingProperty()
+        }
+        
+        /// - Returns: True if there is a missing property in the configuration
+        func hasMissingProperty() -> Bool {
             return !clientID.isEmpty && !clientSecret.isEmpty && projectID > 0 &&
                 applicationID > 0 && region != nil
         }

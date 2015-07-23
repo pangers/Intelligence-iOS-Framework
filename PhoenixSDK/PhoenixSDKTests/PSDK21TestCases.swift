@@ -41,13 +41,14 @@ class PSDK21TestCases: XCTestCase {
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
             
-            let _ = Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
             // Correct path
         }
-        catch {
+        catch let err {
+            print(err)
             XCTAssert(false, "Unexpected exception")
         }
     }
@@ -60,7 +61,7 @@ class PSDK21TestCases: XCTestCase {
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
             
-            let _ = Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -79,7 +80,7 @@ class PSDK21TestCases: XCTestCase {
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
             
-            let _ = Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -98,7 +99,7 @@ class PSDK21TestCases: XCTestCase {
             configuration.projectID = 42131;
             configuration.region = .UnitedStates;
             
-            let _ = Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -117,7 +118,7 @@ class PSDK21TestCases: XCTestCase {
             configuration.projectID = 42131;
             configuration.applicationID = 123;
             
-            let _ = Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {

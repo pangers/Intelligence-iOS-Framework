@@ -22,8 +22,19 @@ public class Phoenix: NSObject {
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
     /// will be copied to avoid future mutability.
-    public init(withConfiguration cfg: Configuration) {
+    public init(withConfiguration cfg: Configuration) throws {
         self.configuration = cfg.copy() as! Configuration
+        super.init()
+
+        if ( !cfg.hasMissingProperty() )
+        {
+            throw ConfigurationError.MissingPropertyError
+        }
+
+        if ( !cfg.validate() )
+        {
+            throw ConfigurationError.InvalidPropertyError
+        }
     }
     
     /// Provides a convenience initializer with a file and bundle.
