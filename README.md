@@ -81,6 +81,33 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
+### Configuration file format ###
+
+The configuration file is a JSON file with the following keys:
+
+1. "client_id" with a String value
+2. "client_secret" with a String value
+3. "application_id" with an Integer value
+4. "project_id" with an Integer value
+5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
+
+As an example, your configuration file will look like:
+
+
+```
+#!JSON
+
+{
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "application_id": "10",
+    "project_id": "20",
+    "region": "EU"
+}
+
+```
+
+
 ### Swift ###
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
