@@ -98,8 +98,8 @@ As an example, your configuration file will look like:
 {
     "client_id": "CLIENT_ID",
     "client_secret": "CLIENT_SECRET",
-    "application_id": "10",
-    "project_id": "20",
+    "application_id": 10,
+    "project_id": 20,
     "region": "EU"
 }
 
