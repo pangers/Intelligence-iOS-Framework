@@ -6,7 +6,7 @@
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import <PhoenixSDK/PhoenixSDK.h>
+@import PhoenixSDK;
 
 @interface Phoenix (Manager)
 
