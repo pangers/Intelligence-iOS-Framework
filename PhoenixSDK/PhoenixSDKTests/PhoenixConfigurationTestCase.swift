@@ -87,7 +87,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
         do {
             let config = try Phoenix.Configuration(fromFile: "config", inBundle: bundle);
-            XCTAssert(config.isValid(), "The configuration provided is invalid")
+            XCTAssert(config.isValid, "The configuration provided is invalid")
         }
         catch {
             // nop

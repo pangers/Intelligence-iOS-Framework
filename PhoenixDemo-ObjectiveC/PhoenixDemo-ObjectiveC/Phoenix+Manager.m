@@ -26,7 +26,13 @@
         }
         NSParameterAssert(err == nil && configuration != nil);
         // Create instance using Configuration object above.
-        instance = [[Phoenix alloc] initWithConfiguration:configuration];
+        instance = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
+        if (nil != err) {
+            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+            // and generally indicate that something has gone wrong and needs to be resolved.
+            NSLog(@"Error initialising Phoenix: %zd", err.code);
+        }
+        NSParameterAssert(err == nil && instance != nil);
     });
     return instance;
 }
