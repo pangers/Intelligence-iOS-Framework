@@ -105,8 +105,7 @@ As an example, your configuration file will look like:
 
 ```
 
-
-### Swift ###
+### Initialising Phoenix ###
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
 
@@ -114,9 +113,9 @@ Once you get a workspace with both projects coexisting in it, add the SDK in the
 
 ![Linked Frameworks and Libraries](https://bitbucket.org/repo/4z6Eb8/images/3275432151-Screen%20Shot%202015-07-22%20at%2017.55.51.png)
 
-With this you should be able to import into your swift the PhoenixSDK namespace by using:
+Next, import the PhoenixSDK framework.
 
-
+**Swift:**
 ```
 #!swift
 
@@ -124,9 +123,15 @@ import PhoenixSDK
 
 ```
 
+**Objective-C:**
+```
+#!objc
+@import PhoenixSDK;
+```
+
 Finally, to initialise the SDK you'll have to add in the application didFinishLaunchingWithOptions: the following lines:
 
-
+**Swift:**
 ```
 #!swift
         
@@ -151,8 +156,29 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         
 ```
 
+**Objective-C:**
+
+```
+#!objc
+
+
+        // Attempt to instantiate configuration from file.
+        NSError *err;
+        Configuration *configuration = [[Configuration alloc] initFromFile:@"PhoenixConfiguration"
+                                                                  inBundle:[NSBundle mainBundle]
+                                                                     error:&err];
+        if (nil != err) {
+            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+            // and generally indicate that something has gone wrong and needs to be resolved.
+            NSLog(@"Error configuring Phoenix: %zd", err.code);
+        }
+        NSParameterAssert(err == nil && configuration != nil);
+        // Create instance using Configuration object above.
+        instance = [[Phoenix alloc] initWithConfiguration:configuration];
+```
+
+
+
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
-
-### Objective-C ###
