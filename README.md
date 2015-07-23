@@ -131,8 +131,7 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
 #!swift
         
         do {
-            let configuration = try Phoenix.Configuration(fromFile: "phoenixConfig", inBundle: NSBundle.mainBundle())
-            self.phoenix = Phoenix(withConfiguration: configuration);
+            self.phoenix = try Phoenix(withFile: "config");
         }
         catch {
             // Treat the error with care!
