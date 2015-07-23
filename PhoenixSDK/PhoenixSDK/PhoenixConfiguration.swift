@@ -93,18 +93,18 @@ public extension Phoenix {
             }
             
             // Helper function to load a value from a dictionary.
-            func value(forKey key: ConfigurationKey, inContents contents:NSDictionary) throws -> String {
-                guard let value = contents[key.rawValue] as? String where !value.isEmpty else {
+            func value<T>(forKey key: ConfigurationKey, inContents contents:NSDictionary) throws -> T {
+                guard let output = contents[key.rawValue] as? T else {
                     throw ConfigurationError.InvalidPropertyError
                 }
-                return value
+                return output
             }
 
             // Fetch from the contents dictionary
             clientID = try value(forKey: .ClientID, inContents:contents)
             clientSecret = try value(forKey: .ClientSecret, inContents:contents)
-            projectID = try Int(value(forKey: .ProjectID, inContents:contents)) ?? 0
-            applicationID = try Int(value(forKey: .ApplicationID, inContents:contents)) ?? 0
+            projectID = try value(forKey: .ProjectID, inContents:contents)
+            applicationID = try value(forKey: .ApplicationID, inContents:contents)
             region = try Region.fromString(value(forKey: .Region, inContents:contents))
         }
         
