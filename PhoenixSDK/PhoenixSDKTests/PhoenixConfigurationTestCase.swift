@@ -9,6 +9,8 @@
 import XCTest
 @testable import PhoenixSDK
 
+// Refers to test case https://tigerspike.atlassian.net/browse/PSDK-21
+// Refers to test case https://tigerspike.atlassian.net/browse/PSDK-22
 class PhoenixConfigurationTestCase: XCTestCase {
     
     func testConfigurationFromFileAndBundle() {
@@ -92,6 +94,101 @@ class PhoenixConfigurationTestCase: XCTestCase {
         catch {
             // nop
             XCTAssert(false, "Couldn't read the file.")
+        }
+    }
+    
+    func testPSDK21Case5() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientSecret = "Secret";
+            configuration.projectID = 212;
+            configuration.applicationID = 42131;
+            configuration.region = .UnitedStates;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+    
+    func testPSDK21Case6() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID";
+            configuration.projectID = 212;
+            configuration.applicationID = 42131;
+            configuration.region = .UnitedStates;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+    
+    func testPSDK21Case7() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID";
+            configuration.clientSecret = "SECRET";
+            configuration.applicationID = 42131;
+            configuration.region = .UnitedStates;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+    
+    func testPSDK21Case8() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID";
+            configuration.clientSecret = "SECRET";
+            configuration.projectID = 42131;
+            configuration.region = .UnitedStates;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+    
+    func testPSDK21Case9() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID";
+            configuration.clientSecret = "SECRET";
+            configuration.projectID = 42131;
+            configuration.applicationID = 123;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
         }
     }
 

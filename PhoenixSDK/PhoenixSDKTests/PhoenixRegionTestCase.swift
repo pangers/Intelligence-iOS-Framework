@@ -22,6 +22,26 @@ class PhoenixRegionTestCase: XCTestCase {
         super.tearDown()
     }
     
+    func testPSDK21Case1() {
+        XCTAssert(Phoenix.Region.UnitedStates.baseURL() == "https://api.phoenixplatform.com",
+            "United states url does not point to https://api.phoenixplatform.com")
+    }
+    
+    func testPSDK21Case2() {
+        XCTAssert(Phoenix.Region.Europe.baseURL() == "https://api.phoenixplatform.eu",
+            "Europe url does not point to https://api.phoenixplatform.eu")
+    }
+    
+    func testPSDK21Case3() {
+        XCTAssert(Phoenix.Region.Singapore.baseURL() == "https://api.phoenixplatform.com.sg",
+            "Singapore url does not point to https://api.phoenixplatform.com.sg")
+    }
+    
+    func testPSDK21Case4() {
+        XCTAssert(Phoenix.Region.Australia.baseURL() == "https://api.phoenixplatform.com.au",
+            "Australia url does not point to https://api.phoenixplatform.com.au")
+    }
+    
     func testRegionFromString() {
         let correctAssignments = [
             "US" : Phoenix.Region.UnitedStates,

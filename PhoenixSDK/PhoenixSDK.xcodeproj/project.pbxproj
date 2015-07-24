@@ -13,8 +13,6 @@
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
 		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
-		BBAA74141B60E6A100EDADA4 /* PSDK21TestCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74131B60E6A100EDADA4 /* PSDK21TestCases.swift */; };
-		BBAA74161B60FC1200EDADA4 /* PSDK22TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */; };
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
 		BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */; };
@@ -44,8 +42,6 @@
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		BB8FFC501B611A5E00E37146 /* invalidproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = invalidproperty.json; sourceTree = "<group>"; };
-		BBAA74131B60E6A100EDADA4 /* PSDK21TestCases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSDK21TestCases.swift; sourceTree = "<group>"; };
-		BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSDK22TestCase.swift; sourceTree = "<group>"; };
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
 		BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfiguration.swift; sourceTree = "<group>"; };
@@ -114,8 +110,6 @@
 				FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */,
 				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
 				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
-				BBAA74131B60E6A100EDADA4 /* PSDK21TestCases.swift */,
-				BBAA74151B60FC1200EDADA4 /* PSDK22TestCase.swift */,
 			);
 			path = PhoenixSDKTests;
 			sourceTree = "<group>";
@@ -260,11 +254,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */,
-				BBAA74141B60E6A100EDADA4 /* PSDK21TestCases.swift in Sources */,
 				BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */,
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
-				BBAA74161B60FC1200EDADA4 /* PSDK22TestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
