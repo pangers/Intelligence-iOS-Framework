@@ -57,7 +57,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         
         do {
             try config.readFromFile("wrongjson", inBundle: bundle)
-            XCTAssert(false, "File not found, but exception not thrown")
+            XCTAssert(false, "File is invalid, but the exception is not thrown")
         }
         catch ConfigurationError.InvalidFileError {
             // correct path
@@ -74,7 +74,7 @@ class PhoenixConfigurationTestCase: XCTestCase {
         
         do {
             try config.readFromFile("invalidproperty", inBundle: bundle)
-            XCTAssert(false, "File not found, but exception not thrown")
+            XCTAssert(false, "File has invalid properties, but the exception is not thrown")
         }
         catch ConfigurationError.InvalidPropertyError {
             // correct path
