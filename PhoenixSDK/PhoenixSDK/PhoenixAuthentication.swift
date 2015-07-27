@@ -27,18 +27,21 @@ extension Phoenix {
                 }
                 _accessToken = newValue
             }
+            // TODO: Store access token
         }
         var anonymous: Bool {
             return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
         }
         var username: String?
         var password: String?
+        // TODO: Store refresh token
         var refreshToken: String?
         var requiresAuthentication: Bool {
             return accessToken != nil ? accessTokenExpired : true
         }
         func expiresIn(seconds: Double) {
             accessTokenExpirationDate = NSDate(timeInterval: seconds, sinceDate: NSDate())
+            // TODO: Store expiration date as NSTimeInterval (timeSinceReferenceDate)
         }
         func expireAccessToken() {
             // Refresh token may still be valid but access token has expired
