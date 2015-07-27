@@ -55,25 +55,27 @@ extension Phoenix {
         /// Currently intercepts 401 and 403.
         private func interceptCallback(data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
             // If error is 401, enqueue authentication operation (or piggyback on existing)
-            let httpResponse = response as! NSHTTPURLResponse
-            // Intercepted responses:
-            // - 'token_expired' is 401 (EXPIRE token, need to refresh)
-            // - 'invalid_token' is 403 (NULL out token, need to reauthenticate)
-            switch httpResponse.statusCode {
-            case HTTPStatusTokenExpired:   // 'token_expired' in 'error' field of response
-                authentication.expireAccessToken()
-                // Token expired, try to refresh
-                fallthrough
-            case HTTPStatusTokenInvalid:   // 'invalid_token' in 'error' field of response
-                authentication.invalidateTokens()
-                // Token invalid, try to authenticate again
-                enqueueAuthenticationOperationIfRequired()
-                // Do not handle elsewhere
-                return true
-            default:
-                // Pass callback through to other logic
-                return false
+            if let httpResponse = response as? NSHTTPURLResponse {
+                // Intercepted responses:
+                // - 'token_expired' is 401 (EXPIRE token, need to refresh)
+                // - 'invalid_token' is 403 (NULL out token, need to reauthenticate)
+                switch httpResponse.statusCode {
+                case HTTPStatusTokenExpired:   // 'token_expired' in 'error' field of response
+                    authentication.expireAccessToken()
+                    // Token expired, try to refresh
+                    fallthrough
+                case HTTPStatusTokenInvalid:   // 'invalid_token' in 'error' field of response
+                    authentication.invalidateTokens()
+                    // Token invalid, try to authenticate again
+                    enqueueAuthenticationOperationIfRequired()
+                    // Do not handle elsewhere
+                    return true
+                default:
+                    // Pass callback through to other logic
+                    return false
+                }
             }
+            return false
         }
         
         /// Create a request operation from a NSURLRequest.
@@ -130,10 +132,8 @@ extension Phoenix {
             if authenticationOperation == nil {
                 if let request = NSURLRequest.requestForAuthentication(authentication, configuration: config) {
                     let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
-                        // Response must be NSHTTPURLResponse
-                        let httpResponse = response as! NSHTTPURLResponse
                         // Regardless of how we hit this method, we should update our authentication headers
-                        if let this = self where httpResponse.statusCode == HTTPStatusSuccess {
+                        if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
                             guard let json = data?.jsonDictionary, accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
                                 // TODO: Fail invalid response, retry?
                                 print("Invalid response")
@@ -187,15 +187,15 @@ extension NSURLRequest {
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
     private func mutateRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest? {
-        guard let accessToken = authentication.accessToken, mutable = mutableCopy() as? NSMutableURLRequest else {
+        guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
         let applicationJSON = "application/json"
-        mutable.allHTTPHeaderFields = [
-            "Accept": applicationJSON,
-            "Content-Type": applicationJSON,
-            "Authorization": "Bearer \(accessToken)"
-        ]
+        var headerFields = ["Accept": applicationJSON, "Content-Type": applicationJSON]
+        if let token = authentication.accessToken {
+            headerFields["Authorization"] = "Bearer \(token)"
+        }
+        mutable.allHTTPHeaderFields = headerFields
         return mutable
     }
     
