@@ -35,7 +35,7 @@ extension Phoenix {
         var password: String?
         var refreshToken: String?
         var requiresAuthentication: Bool {
-            return accessToken != nil ? accessTokenExpired : false
+            return accessToken != nil ? accessTokenExpired : true
         }
         func expiresIn(seconds: Double) {
             accessTokenExpirationDate = NSDate(timeInterval: seconds, sinceDate: NSDate())
