@@ -187,7 +187,7 @@ extension Phoenix {
 extension NSURLRequest {
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
-    private func mutateRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest? {
+    func mutateRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest? {
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
