@@ -134,7 +134,7 @@ extension Phoenix {
                         let httpResponse = response as! NSHTTPURLResponse
                         // Regardless of how we hit this method, we should update our authentication headers
                         if let this = self where httpResponse.statusCode == HTTPStatusSuccess {
-                            guard let json = data?.toJsonDictionary(), accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
+                            guard let json = data?.jsonDictionary, accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
                                 // TODO: Fail invalid response, retry?
                                 print("Invalid response")
                                 return
