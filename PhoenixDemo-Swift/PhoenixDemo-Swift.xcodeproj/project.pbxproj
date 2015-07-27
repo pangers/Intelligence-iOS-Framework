@@ -12,6 +12,7 @@
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
 		7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */; };
+		BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAAE61B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../../../Library/Developer/Xcode/DerivedData/PhoenixSDK-crtfqvcfmeujokezpbpaskdrsxjl/Build/Products/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +41,7 @@
 		7FDAAAD01B5D35AE00DF2BE6 = {
 			isa = PBXGroup;
 			children = (
+				BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */,
 				7FDAAADB1B5D35AE00DF2BE6 /* PhoenixDemo-Swift */,
 				7FDAAADA1B5D35AE00DF2BE6 /* Products */,
 			);
