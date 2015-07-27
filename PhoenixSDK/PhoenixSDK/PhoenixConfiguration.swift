@@ -8,17 +8,6 @@
 
 import Foundation
 
-public protocol PhoenixConfigurationProtocol {
-    var clientID: String { get set }
-    var clientSecret: String { get set }
-    var projectID: Int { get set }
-    var applicationID: Int { get set }
-    var region: Phoenix.Region? { get set }
-    
-    var isValid: Bool { get }
-    var hasMissingProperty: Bool { get }
-}
-
 public protocol PhoenixConfigurationInputProtocol {
     func readFromFile(fileName: String, inBundle bundle: NSBundle) throws
 }
@@ -28,7 +17,7 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public class Configuration: NSObject, PhoenixConfigurationProtocol {
+    public class Configuration: NSObject {
         
         // TODO: Add company ID to configuration as mandatory
         
