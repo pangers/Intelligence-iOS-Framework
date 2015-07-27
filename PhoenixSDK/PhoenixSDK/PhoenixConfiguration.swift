@@ -8,12 +8,29 @@
 
 import Foundation
 
+public protocol PhoenixConfigurationProtocol {
+    var clientID: String { get set }
+    var clientSecret: String { get set }
+    var projectID: Int { get set }
+    var applicationID: Int { get set }
+    var region: Phoenix.Region? { get set }
+    
+    var isValid: Bool { get }
+    var hasMissingProperty: Bool { get }
+}
+
+public protocol PhoenixConfigurationInputProtocol {
+    func readFromFile(fileName: String, inBundle bundle: NSBundle) throws
+}
+
 public extension Phoenix {
     
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public class Configuration: NSObject {
+    public class Configuration: NSObject, PhoenixConfigurationProtocol {
+        
+        // TODO: Add company ID to configuration as mandatory
         
         /// The client ID
         public var clientID: String = ""
@@ -53,11 +70,19 @@ public extension Phoenix {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
                 applicationID <= 0 || region == nil
         }
+        
+        /// - Returns: Base URL to call.
+        public var baseURL: NSURL? {
+            guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
+                return nil
+            }
+            return URL
+        }
     }
 }
 
 // Extension to add JSON file reading functionality.
-public extension Phoenix.Configuration {
+extension Phoenix.Configuration: PhoenixConfigurationInputProtocol {
     
     // Constants used to parse the JSON file.
     private enum ConfigurationKey: String {

@@ -13,6 +13,7 @@ public class Phoenix: NSObject {
 
     /// Private configuration. Can't be modified once initialized.
     private let configuration: Configuration
+    private let network: Network
     
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: Configuration {
@@ -25,6 +26,7 @@ public class Phoenix: NSObject {
     /// - Throws: **ConfigurationError** if the configuration is invalid
     public init(withConfiguration cfg: Configuration) throws {
         self.configuration = cfg.copy() as! Configuration
+        self.network = Network(withConfiguration: self.configuration)
         super.init()
 
         if (cfg.hasMissingProperty)

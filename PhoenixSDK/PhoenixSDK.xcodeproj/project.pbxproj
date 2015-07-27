@@ -20,6 +20,9 @@
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
 		FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */; };
+		FEEE79EA1B661AFB0047905D /* PhoenixNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */; };
+		FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */; };
+		FEF7EF751B6671C700066AA3 /* NSDataToJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
 		FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegionTestCase.swift; sourceTree = "<group>"; };
+		FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworking.swift; sourceTree = "<group>"; };
+		FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthentication.swift; sourceTree = "<group>"; };
+		FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataToJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,9 +100,12 @@
 				A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */,
 				A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */,
 				BB7276681B5FB53200F098DA /* Phoenix.swift */,
+				FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */,
 				BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */,
+				FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */,
 				FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */,
 				BB653F711B5E59C40003C0C9 /* PhoenixError.swift */,
+				FEF7EF721B6671C700066AA3 /* Extensions */,
 			);
 			path = PhoenixSDK;
 			sourceTree = "<group>";
@@ -130,6 +139,22 @@
 				BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */,
 			);
 			name = MockObjects;
+			sourceTree = "<group>";
+		};
+		FEF7EF721B6671C700066AA3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FEF7EF731B6671C700066AA3 /* Foundation */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FEF7EF731B6671C700066AA3 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */,
+			);
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +269,9 @@
 			files = (
 				BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */,
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
+				FEF7EF751B6671C700066AA3 /* NSDataToJSON.swift in Sources */,
+				FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */,
+				FEEE79EA1B661AFB0047905D /* PhoenixNetworking.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
