@@ -12,6 +12,12 @@ private let HTTPStatusSuccess = 200
 private let HTTPStatusTokenExpired = 401
 private let HTTPStatusTokenInvalid = 403
 
+private let kAccessToken = "access_token"
+private let kExpiresIn = "expires_in"
+private let kRefreshToken = "refresh_token"
+
+private let kApplicationJSON = "application/json"
+
 public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
 
 extension Phoenix {
@@ -33,7 +39,6 @@ extension Phoenix {
         //         -> Return to call
         //       -> Failure
         //         -> Cannot continue (try later?)
-        
         
         private lazy var workerQueue = NSOperationQueue()
         private lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -138,12 +143,14 @@ extension Phoenix {
             let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
-                    guard let json = data?.jsonDictionary, accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
+                    guard let json = data?.jsonDictionary,
+                        accessToken = json[kAccessToken] as? String,
+                        expiresIn = json[kExpiresIn] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
                         // TODO: Fail invalid response, retry?
                         print("Invalid response")
                         return
                     }
-                    if let refreshToken = json["refresh_token"] as? String {
+                    if let refreshToken = json[kRefreshToken] as? String {
                         // Optionally returned by server (only for 'password' grant type?)
                         this.authentication.refreshToken = refreshToken
                     }
@@ -191,8 +198,7 @@ extension NSURLRequest {
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
-        let applicationJSON = "application/json"
-        var headerFields = ["Accept": applicationJSON, "Content-Type": applicationJSON]
+        var headerFields = ["Accept": kApplicationJSON, "Content-Type": kApplicationJSON]
         if let token = authentication.accessToken {
             headerFields["Authorization"] = "Bearer \(token)"
         }
