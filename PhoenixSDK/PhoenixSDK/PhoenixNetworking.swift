@@ -129,38 +129,39 @@ extension Phoenix {
         /// - Parameter callback: Contains data, response, and error information from request.
         /// - Returns: `nil` or `NSOperation` depending on if authentication is necessary (determined by `authentication` objects state).
         private func createAuthenticationOperationIfNecessary(callback: PhoenixNetworkingCallback) -> NSOperation? {
-            if authenticationOperation == nil {
-                if let request = NSURLRequest.requestForAuthentication(authentication, configuration: config) {
-                    let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
-                        // Regardless of how we hit this method, we should update our authentication headers
-                        if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
-                            guard let json = data?.jsonDictionary, accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
-                                // TODO: Fail invalid response, retry?
-                                print("Invalid response")
-                                return
-                            }
-                            if let refreshToken = json["refresh_token"] as? String {
-                                // Optionally returned by server (only for 'password' grant type?)
-                                this.authentication.refreshToken = refreshToken
-                            }
-                            // Store new state
-                            this.authentication.accessToken = accessToken
-                            this.authentication.expiresIn(expiresIn)
-                            
-                            // Continue worker queue
-                            this.workerQueue.suspended = false
-                        }
-                        // Execute callback with data from request
-                        callback(data: data, response: response, error: error)
-                    })
-                    op.completionBlock = { [weak self] in
-                        // Clear pointer
-                        self?.authenticationOperation = nil
-                    }
-                    return op
-                }
+            if authenticationOperation != nil {
+                return nil
             }
-            return nil
+            guard let request = NSURLRequest.requestForAuthentication(authentication, configuration: config) else {
+                return nil
+            }
+            let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
+                // Regardless of how we hit this method, we should update our authentication headers
+                if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
+                    guard let json = data?.jsonDictionary, accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
+                        // TODO: Fail invalid response, retry?
+                        print("Invalid response")
+                        return
+                    }
+                    if let refreshToken = json["refresh_token"] as? String {
+                        // Optionally returned by server (only for 'password' grant type?)
+                        this.authentication.refreshToken = refreshToken
+                    }
+                    // Store new state
+                    this.authentication.accessToken = accessToken
+                    this.authentication.expiresIn(expiresIn)
+                    
+                    // Continue worker queue
+                    this.workerQueue.suspended = false
+                }
+                // Execute callback with data from request
+                callback(data: data, response: response, error: error)
+                })
+            op.completionBlock = { [weak self] in
+                // Clear pointer
+                self?.authenticationOperation = nil
+            }
+            return op
         }
         
         /// Handles enqueuing an authentication operation, returns false if unnecessary.
