@@ -11,24 +11,20 @@ import Foundation
 extension NSData {
     typealias JSONArray = [JSONDictionary]
     typealias JSONDictionary = [String: AnyObject]
-    func toJsonArray() -> JSONArray? {
+    private func tryJSON() -> AnyObject? {
         do {
-            if let json = try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments) as? JSONArray {
-                return json
-            }
+            return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)
         } catch let err {
             print(err)
         }
         return nil
     }
-    func toJsonDictionary() -> JSONDictionary? {
-        do {
-            if let json = try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments) as? JSONDictionary {
-                return json
-            }
-        } catch let err {
-            print(err)
-        }
-        return nil
+    var jsonArray: JSONArray? {
+        guard let arr = tryJSON() as? JSONArray else { return nil }
+        return arr
+    }
+    var jsonDictionary: JSONDictionary? {
+        guard let dict = tryJSON() as? JSONDictionary else { return nil }
+        return dict
     }
 }
