@@ -113,6 +113,13 @@ extension Phoenix {
             enqueueRequestOperation(operation)
         }
         
+        func tryLogin(callback: PhoenixNetworkingCallback) {
+            authenticationOperation = createAuthenticationOperationIfNecessary(callback)
+            if authenticationOperation != nil {
+                authenticateQueue.addOperation(authenticationOperation!)
+            }
+        }
+        
         /// Enqueue operation in worker queue, will suspend worker queue if authentication is required.
         /// - Parameter operation: Operation created using
         private func enqueueRequestOperation(operation: NSOperation) {

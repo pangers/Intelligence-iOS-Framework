@@ -40,6 +40,11 @@ public class Phoenix: NSObject {
         }
     }
     
+    public func tryLogin(callback: PhoenixNetworkingCallback) {
+        // TODO: Strip this out, for testing from App only
+        network.tryLogin(callback)
+    }
+    
     /// Provides a convenience initializer to load the configuration from a JSON file
     /// - Throws: **ConfigurationError** if the configuration is invalid or there is a problem
     /// reading the file.

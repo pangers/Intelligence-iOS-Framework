@@ -23,6 +23,12 @@
             NSLog(@"Error initialising Phoenix: %zd", err.code);
         }
         NSParameterAssert(err == nil && instance != nil);
+        [instance tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
+            NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"Error = %@", error.localizedDescription);
+            NSLog(@"Response = %@", response);
+            NSLog(@"Data = %@", newStr);
+        }];
     });
     return instance;
 }
