@@ -12,10 +12,6 @@ private let HTTPStatusSuccess = 200
 private let HTTPStatusTokenExpired = 401
 private let HTTPStatusTokenInvalid = 403
 
-private let kAccessToken = "access_token"
-private let kExpiresIn = "expires_in"
-private let kRefreshToken = "refresh_token"
-
 private let kApplicationJSON = "application/json"
 
 public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
@@ -42,18 +38,17 @@ extension Phoenix {
         
         private lazy var workerQueue = NSOperationQueue()
         private lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        private let config: Phoenix.Configuration
+        private let config: Configuration
         
-        private let authentication: Phoenix.Authentication
+        private var authentication: Authentication?
         private var authenticationOperation: NSOperation?
         private let authenticateQueue: NSOperationQueue
         
         /// Initialize new instance of Phoenix Networking class
-        init(withConfiguration configuration: Phoenix.Configuration) {
+        init(withConfiguration configuration: Configuration) {
             authenticateQueue = NSOperationQueue()
             authenticateQueue.maxConcurrentOperationCount = 1
             config = configuration
-            authentication = Phoenix.Authentication()
         }
         
         /// Intercept a callback before passing it on, if true we will not pass it on.
@@ -66,11 +61,11 @@ extension Phoenix {
                 // - 'invalid_token' is 403 (NULL out token, need to reauthenticate)
                 switch httpResponse.statusCode {
                 case HTTPStatusTokenExpired:   // 'token_expired' in 'error' field of response
-                    authentication.expireAccessToken()
+                    authentication?.expireAccessToken()
                     // Token expired, try to refresh
                     fallthrough
                 case HTTPStatusTokenInvalid:   // 'invalid_token' in 'error' field of response
-                    authentication.invalidateTokens()
+                    authentication?.invalidateTokens()
                     // Token invalid, try to authenticate again
                     enqueueAuthenticationOperationIfRequired()
                     // Do not handle elsewhere
@@ -143,20 +138,11 @@ extension Phoenix {
             let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
-                    guard let json = data?.jsonDictionary,
-                        accessToken = json[kAccessToken] as? String,
-                        expiresIn = json[kExpiresIn] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
-                        // TODO: Fail invalid response, retry?
+                    guard let json = data?.jsonDictionary, auth = Authentication(json: json) else {
                         print("Invalid response")
                         return
                     }
-                    if let refreshToken = json[kRefreshToken] as? String {
-                        // Optionally returned by server (only for 'password' grant type?)
-                        this.authentication.refreshToken = refreshToken
-                    }
-                    // Store new state
-                    this.authentication.accessToken = accessToken
-                    this.authentication.expiresIn(expiresIn)
+                    this.authentication = auth
                     
                     // Continue worker queue
                     this.workerQueue.suspended = false
@@ -194,12 +180,12 @@ extension Phoenix {
 extension NSURLRequest {
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
-    func mutateRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest? {
+    func mutateRequest(withAuthentication authentication: Phoenix.Authentication?) -> NSURLRequest? {
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
         var headerFields = ["Accept": kApplicationJSON, "Content-Type": kApplicationJSON]
-        if let token = authentication.accessToken {
+        if let token = authentication?.accessToken {
             headerFields["Authorization"] = "Bearer \(token)"
         }
         mutable.allHTTPHeaderFields = headerFields
@@ -209,24 +195,29 @@ extension NSURLRequest {
     /// Request with URL constructed using current Authentication and Configuration.
     /// - Parameter authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
     /// - Parameter configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
-    class func requestForAuthentication(authentication: Phoenix.Authentication, configuration: Phoenix.Configuration) -> NSURLRequest? {
+    class func requestForAuthentication(authentication: Phoenix.Authentication?, configuration: Phoenix.Configuration) -> NSURLRequest? {
         // Only pass back request if we require authentication
-        if authentication.requiresAuthentication == false {
+        if authentication?.requiresAuthentication == false {
             return nil
         }
         var urlQuery = "identity/v1/oauth/token?client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)"
         let grantType: String
-        if authentication.anonymous == false {
+        if authentication?.anonymous == false {
             grantType = "password"
-            if authentication.refreshToken == nil {
-                urlQuery += "&username=\(authentication.username!)&password=\(authentication.password)"
+            if authentication?.refreshToken == nil {
+                guard let username = authentication?.username, password = authentication?.password else {
+                    fatalError()
+                }
+                urlQuery += "&username=\(username)&password=\(password)"
             }
         } else {
             grantType = "client_credentials"
         }
         urlQuery += "&grant_type=\(grantType)"
-        if authentication.refreshToken != nil {
-            urlQuery += "&refresh_token=\(authentication.refreshToken!)"
+        
+        // Optionally add refresh token
+        if let token = authentication?.refreshToken {
+            urlQuery += "&refresh_token=\(token)"
         }
         if let url = NSURL(string: urlQuery, relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)

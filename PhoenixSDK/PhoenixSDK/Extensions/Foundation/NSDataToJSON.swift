@@ -8,9 +8,10 @@
 
 import Foundation
 
+typealias JSONArray = [JSONDictionary]
+typealias JSONDictionary = [String: AnyObject]
+
 extension NSData {
-    typealias JSONArray = [JSONDictionary]
-    typealias JSONDictionary = [String: AnyObject]
     private func tryJSON() -> AnyObject? {
         do {
             return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)

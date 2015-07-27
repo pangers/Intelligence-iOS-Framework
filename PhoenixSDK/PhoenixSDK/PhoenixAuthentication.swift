@@ -10,13 +10,37 @@ import Foundation
 
 extension Phoenix {
     class Authentication {
+        private let kAccessToken = "access_token"
+        private let kExpiresIn = "expires_in"
+        private let kRefreshToken = "refresh_token"
+        
+        /// Create new instance using JSON.
+        init?(json: JSONDictionary) {
+            guard let token = json[kAccessToken] as? String,
+                expire = json[kExpiresIn] as? Double where token.isEmpty == false && expire > 0 else {
+                    // TODO: Fail invalid response, retry?
+                    print("Invalid response")
+                    return
+            }
+            if let token = json[kRefreshToken] as? String {
+                // Optionally returned by server (only for 'password' grant type?)
+                refreshToken = token
+            }
+            // TODO: Store expiration date as NSTimeInterval (timeSinceReferenceDate)
+            accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
+            accessToken = token
+        }
+        
+        /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate?
+        
+        /// Return if current date is later than expiry date.
         private var accessTokenExpired: Bool {
-            // Return if current date is later than expiry date
             return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
         }
-        private var _accessToken: String?
         
+        private var _accessToken: String?
+        /// Access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
                 return _accessToken
@@ -29,24 +53,42 @@ extension Phoenix {
             }
             // TODO: Store access token
         }
-        var anonymous: Bool {
-            return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
+        
+        private var _refreshToken: String?
+        /// Refresh token used in requests to retrieve a new access token.
+        var refreshToken: String? {
+            get {
+                return _refreshToken
+            }
+            set {
+                // TODO: Store refresh token
+                _refreshToken = newValue
+            }
         }
-        var username: String?
-        var password: String?
-        // TODO: Store refresh token
-        var refreshToken: String?
+        
+        /// Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
         var requiresAuthentication: Bool {
             return accessToken != nil ? accessTokenExpired : true
         }
-        func expiresIn(seconds: Double) {
-            accessTokenExpirationDate = NSDate(timeInterval: seconds, sinceDate: NSDate())
-            // TODO: Store expiration date as NSTimeInterval (timeSinceReferenceDate)
+        
+        /// Returns false if username and password are set, otherwise true.
+        var anonymous: Bool {
+            return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
         }
+        
+        /// Set username for OAuth authentication with credentials.
+        var username: String?
+        
+        /// Set password for OAuth authentication with credentials.
+        var password: String?
+        
+        /// Expire our current access token, should occur when 401 is received.
         func expireAccessToken() {
             // Refresh token may still be valid but access token has expired
             accessToken = nil
         }
+        
+        /// Expire both tokens, should occur when 403 is received.
         func invalidateTokens() {
             // Refresh token is invalid
             refreshToken = nil
