@@ -12,6 +12,8 @@ private let HTTPStatusSuccess = 200
 private let HTTPStatusTokenExpired = 401
 private let HTTPStatusTokenInvalid = 403
 
+public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
+
 extension Phoenix {
     class Network {
         
@@ -32,7 +34,6 @@ extension Phoenix {
         //       -> Failure
         //         -> Cannot continue (try later?)
         
-        typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
         
         private lazy var workerQueue = NSOperationQueue()
         private lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -43,22 +44,18 @@ extension Phoenix {
         private let authenticateQueue: NSOperationQueue
         
         /// Initialize new instance of Phoenix Networking class
-        init(withConfiguration config: Phoenix.Configuration) {
+        init(withConfiguration configuration: Phoenix.Configuration) {
             authenticateQueue = NSOperationQueue()
             authenticateQueue.maxConcurrentOperationCount = 1
-            self.config = config
-            self.authentication = Phoenix.Authentication()
+            config = configuration
+            authentication = Phoenix.Authentication()
         }
         
         /// Intercept a callback before passing it on, if true we will not pass it on.
         /// Currently intercepts 401 and 403.
         private func interceptCallback(data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
             // If error is 401, enqueue authentication operation (or piggyback on existing)
-            guard let httpResponse = response as? NSHTTPURLResponse else {
-                // Very unlikely edge case?
-                // TODO: Log error!
-                return false
-            }
+            let httpResponse = response as! NSHTTPURLResponse
             // Intercepted responses:
             // - 'token_expired' is 401 (EXPIRE token, need to refresh)
             // - 'invalid_token' is 403 (NULL out token, need to reauthenticate)
@@ -105,7 +102,9 @@ extension Phoenix {
         /// - Parameter callback: Block/function to call once executed.
         func executeRequest(request: NSURLRequest, callback: PhoenixNetworkingCallback) {
             let operation = createRequestOperation(request) { [weak self] (data, response, error) in
+                // Intercept the callback, handling 401 and 403
                 if self?.interceptCallback(data, response: response, error: error) == false {
+                    // Other error code can fallthrough to caller who implements callback func to handle.
                     callback(data: data, response: response, error: error)
                 }
             }
@@ -115,10 +114,8 @@ extension Phoenix {
         /// Enqueue operation in worker queue, will suspend worker queue if authentication is required.
         /// - Parameter operation: Operation created using
         private func enqueueRequestOperation(operation: NSOperation) {
-            if authenticationOperation == nil && enqueueAuthenticationOperationIfRequired() == true {
-                // Suspended original queue
-                // Do nothing else...
-            }
+            // This method may suspend worker queue
+            enqueueAuthenticationOperationIfRequired()
             // Enqueue operation
             workerQueue.addOperation(operation)
         }
@@ -126,31 +123,34 @@ extension Phoenix {
         
         // MARK:- Authentication
         
-        /// Spawn new authentication operation or return nil if not required (determined by `authentication` objects state).
+        /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
+        /// - Parameter callback: Contains data, response, and error information from request.
+        /// - Returns: `nil` or `NSOperation` depending on if authentication is necessary (determined by `authentication` objects state).
         private func createAuthenticationOperationIfNecessary(callback: PhoenixNetworkingCallback) -> NSOperation? {
-            if self.authenticationOperation == nil {
-                if let request = NSURLRequest.requestForAuthentication(self.authentication, configuration: config) {
-                    let op = self.createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
+            if authenticationOperation == nil {
+                if let request = NSURLRequest.requestForAuthentication(authentication, configuration: config) {
+                    let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
+                        // Response must be NSHTTPURLResponse
+                        let httpResponse = response as! NSHTTPURLResponse
                         // Regardless of how we hit this method, we should update our authentication headers
-                        if let this = self, httpResponse = response as? NSHTTPURLResponse {
-                            if httpResponse.statusCode == HTTPStatusSuccess {
-                                guard let json = data?.toJsonDictionary(), accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
-                                    // TODO: Fail invalid response, retry?
-                                    print("Invalid response")
-                                    return
-                                }
-                                if let refreshToken = json["refresh_token"] as? String {
-                                    // Optionally returned by server (only for 'password' grant type?)
-                                    this.authentication.refreshToken = refreshToken
-                                }
-                                // Store new state
-                                this.authentication.accessToken = accessToken
-                                this.authentication.expiresIn(expiresIn)
-                                
-                                // Continue worker queue
-                                this.workerQueue.suspended = false
+                        if let this = self where httpResponse.statusCode == HTTPStatusSuccess {
+                            guard let json = data?.toJsonDictionary(), accessToken = json["access_token"] as? String, expiresIn = json["expires_in"] as? Double where accessToken.isEmpty == false && expiresIn > 0 else {
+                                // TODO: Fail invalid response, retry?
+                                print("Invalid response")
+                                return
                             }
+                            if let refreshToken = json["refresh_token"] as? String {
+                                // Optionally returned by server (only for 'password' grant type?)
+                                this.authentication.refreshToken = refreshToken
+                            }
+                            // Store new state
+                            this.authentication.accessToken = accessToken
+                            this.authentication.expiresIn(expiresIn)
+                            
+                            // Continue worker queue
+                            this.workerQueue.suspended = false
                         }
+                        // Execute callback with data from request
                         callback(data: data, response: response, error: error)
                     })
                     op.completionBlock = { [weak self] in
