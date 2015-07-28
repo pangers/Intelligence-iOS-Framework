@@ -161,7 +161,7 @@ extension Phoenix {
             let op = createRequestOperation(request, callback: { [weak self] (data, response, error) -> () in
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
-                    guard let json = data?.jsonDictionary, auth = Authentication(json: json) else {
+                    guard let json = data?.pd_jsonDictionary, auth = Authentication(json: json) else {
                         // TODO: Handle this...
                         print("Invalid response")
                         return
