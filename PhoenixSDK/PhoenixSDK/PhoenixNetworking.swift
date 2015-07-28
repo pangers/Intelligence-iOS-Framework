@@ -47,7 +47,7 @@ extension Phoenix {
         /// Configuration passed through from Phoenix initializer (must be valid).
         private let config: Configuration
         
-        /// Authentication object will be configured on response of an oauth/token call.
+        /// Authentication object will be configured on response of an oauth/token call or initialized from NSUserDefaults.
         private var authentication: Authentication?
         /// There should only ever be one authentication NSOperation.
         private var authenticationOperation: NSOperation?
@@ -58,6 +58,7 @@ extension Phoenix {
         init(withConfiguration configuration: Configuration) {
             authenticateQueue = NSOperationQueue()
             authenticateQueue.maxConcurrentOperationCount = 1
+            authentication = Authentication()   // may be nil
             config = configuration
         }
         

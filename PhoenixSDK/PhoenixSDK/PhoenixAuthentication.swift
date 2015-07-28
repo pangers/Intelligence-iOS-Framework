@@ -30,25 +30,37 @@ extension Phoenix {
         
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
-            didSet {
-                // TODO: Store or clear access token
-                if accessToken == nil || accessToken!.isEmpty {
+            get {
+                return NSUserDefaults().valueForKey(accessTokenKey) as? String
+            }
+            set {
+                if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
+                NSUserDefaults().setValue(newValue, forKey: accessTokenKey)
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
-            didSet {
-                // TODO: Store or clear refresh token
+            get {
+                return NSUserDefaults().valueForKey(refreshTokenKey) as? String
+            }
+            set {
+                NSUserDefaults().setValue(refreshToken, forKey: refreshTokenKey)
             }
         }
         
         /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate? {
-            didSet {
-                // TODO Store or clear expiration date.
+            get {
+                guard let seconds = NSUserDefaults().valueForKey(expiresInKey) as? Double else {
+                    return nil
+                }
+                return NSDate(timeIntervalSinceReferenceDate: seconds)
+            }
+            set {
+                NSUserDefaults().setValue(newValue?.timeIntervalSinceReferenceDate, forKey: expiresInKey)
             }
         }
         
@@ -89,6 +101,12 @@ extension Phoenix {
             }
             
             refreshToken = unwrappedRefreshToken
+        }
+        
+        init?() {
+            if accessToken?.isEmpty == true || accessTokenExpirationDate == nil {
+                return nil
+            }
         }
         
         // MARK: Functions
