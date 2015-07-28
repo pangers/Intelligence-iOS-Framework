@@ -9,10 +9,10 @@
 import Foundation
 
 /// Alias for an array loaded from a JSON object.
-public typealias JSONArray = [AnyObject]
+typealias JSONArray = [AnyObject]
 
 /// Alias for a dictionary loaded from a JSON object.
-public typealias JSONDictionary = [String: AnyObject]
+typealias JSONDictionary = [String: AnyObject]
 
 
 extension NSData {
