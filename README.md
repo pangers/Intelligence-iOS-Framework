@@ -1,4 +1,11 @@
 # Phoenix SDK #
+```
+Current iOS application credentials (DELETE BEFORE GOING PUBLIC)
+Client ID: iOSSDK_hvxbincerennv
+Client Secret: IZYKF5c975Lkjazjhosplmroopifkhjgeegagrpf
+AppId: 4152
+ProjectId: 3030
+```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
 
