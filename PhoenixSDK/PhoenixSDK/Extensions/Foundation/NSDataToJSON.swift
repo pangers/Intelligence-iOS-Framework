@@ -9,10 +9,10 @@
 import Foundation
 
 /// Alias for an array loaded from a JSON object.
-public typealias JSONArray = [AnyObject]
+typealias JSONArray = [AnyObject]
 
 /// Alias for a dictionary loaded from a JSON object.
-public typealias JSONDictionary = [String: AnyObject]
+typealias JSONDictionary = [String: AnyObject]
 
 
 extension NSData {
@@ -28,13 +28,13 @@ extension NSData {
     }
     
     /// - Returns: Array of JSONDictionary objects or nil if cast fails.
-    public var jsonArray: JSONArray? {
+    var jsonArray: JSONArray? {
         guard let arr = tryJSON() as? JSONArray else { return nil }
         return arr
     }
     
     /// - Returns: A JSONDictionary object or nil if cast fails.
-    public var jsonDictionary: JSONDictionary? {
+    var jsonDictionary: JSONDictionary? {
         guard let dict = tryJSON() as? JSONDictionary else { return nil }
         return dict
     }

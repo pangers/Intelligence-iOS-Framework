@@ -9,40 +9,29 @@
 import Foundation
 
 extension Phoenix {
-    class Authentication {
+    
+    /// Authentication class provides a wrapper over Phoenix's authentication responses.
+    public class Authentication {
+
+        // MARK: Constants
+        
+        // Constants to parse the JSON object
         private let accessTokenKey = "access_token"
         private let expiresInKey = "expires_in"
         private let refreshTokenKey = "refresh_token"
         
-        /// Create new instance using JSON.
-        init?(json: JSONDictionary) {
-            guard let token = json[accessTokenKey] as? String,
-                expire = json[expiresInKey] as? Double where token.isEmpty == false && expire > 0 else {
-                    // TODO: Fail invalid response, retry?
-                    print("Invalid response")
-                    return
-            }
-            if let token = json[refreshTokenKey] as? String {
-                // Optionally returned by server (only for 'password' grant type?)
-                refreshToken = token
-            }
-            // TODO: Store expiration date as NSTimeInterval (timeSinceReferenceDate)
-            accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
-            accessToken = token
-        }
+        // MARK: Instance variables
         
-        /// Expiry date of access token.
-        private var accessTokenExpirationDate: NSDate?
+        /// Set username for OAuth authentication with credentials.
+        var username: String?
         
-        /// Return if current date is later than expiry date.
-        private var accessTokenExpired: Bool {
-            return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
-        }
+        /// Set password for OAuth authentication with credentials.
+        var password: String?
         
-        /// Access token used in OAuth bearer header for requests.
+        /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             didSet {
-                // TODO: Store access token
+                // TODO: Store or clear access token
                 if accessToken == nil || accessToken!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
@@ -52,8 +41,20 @@ extension Phoenix {
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             didSet {
-                // TODO: Store refresh token
+                // TODO: Store or clear refresh token
             }
+        }
+        
+        /// Expiry date of access token.
+        private var accessTokenExpirationDate: NSDate? {
+            didSet {
+                // TODO Store or clear expiration date.
+            }
+        }
+        
+        /// Returns: true if current date is later than expiry date.
+        private var accessTokenExpired: Bool {
+            return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
         }
         
         /// Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
@@ -66,11 +67,31 @@ extension Phoenix {
             return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
         }
         
-        /// Set username for OAuth authentication with credentials.
-        var username: String?
+        // MARK: Initializers
+
+        /// - Parameter json: The JSONDictionary to load the access from.
+        /// - Returns: an optional Authentication object depending on whether the authentication
+        /// could be extracted from the JSONDictionary received.
+        init?(json: JSONDictionary) {
+
+            guard let token = json[accessTokenKey] as? String,
+                expire = json[expiresInKey] as? Double
+                where !token.isEmpty && expire > 0 else {
+                    return nil
+            }
+
+            accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
+            accessToken = token
+
+            // Load optional refresh token. Optionally returned by server (only for 'password' grant type?)
+            guard let unwrappedRefreshToken = json[refreshTokenKey] as? String else {
+                return
+            }
+            
+            refreshToken = unwrappedRefreshToken
+        }
         
-        /// Set password for OAuth authentication with credentials.
-        var password: String?
+        // MARK: Functions
         
         /// Expire our current access token, should occur when 401 is received.
         func expireAccessToken() {
