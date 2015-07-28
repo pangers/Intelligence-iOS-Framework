@@ -22,7 +22,7 @@ extension Phoenix {
         // MARK: Instance variables
         
         /// User defaults. Allows to change it to a different defaults if needed.
-        private lazy var userDefaults = NSUserDefaults.standardUserDefaults()
+        lazy var userDefaults = NSUserDefaults.standardUserDefaults()
         
         /// Set username for OAuth authentication with credentials.
         var username: String?
@@ -91,33 +91,43 @@ extension Phoenix {
         
         // MARK: Initializers
 
+        /// Default initializer
+        init() {
+            // nop
+        }
+        
         /// - Parameter json: The JSONDictionary to load the access from.
         /// - Returns: an optional Authentication object depending on whether the authentication
         /// could be extracted from the JSONDictionary received.
-        init?(json: JSONDictionary) {
-
-            guard let token = json[accessTokenKey] as? String,
-                expire = json[expiresInKey] as? Double
-                where !token.isEmpty && expire > 0 else {
-                    return nil
-            }
-
-            accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
-            accessToken = token
-
-            // Load optional refresh token. Optionally returned by server (only for 'password' grant type?)
-            if let unwrappedRefreshToken = json[refreshTokenKey] as? String {
-                refreshToken = unwrappedRefreshToken
-            }
-        }
-        
-        init?() {
-            if accessTokenExpirationDate == nil || accessToken?.isEmpty == true {
+        convenience init?(json: JSONDictionary) {
+            self.init()
+            if ( !loadAuthorizationFromJSON(json) ) {
                 return nil
             }
         }
         
         // MARK: Functions
+        
+        /// Reads from the JSON document the authorization credentials.
+        /// - Parameter json: The JSON dictionary as loaded from the authorization request.
+        /// - Returns: true if the authorization credentials were properly read.
+        func loadAuthorizationFromJSON(json: JSONDictionary) -> Bool {
+            guard let token = json[accessTokenKey] as? String,
+                expire = json[expiresInKey] as? Double
+                where !token.isEmpty && expire > 0 else {
+                    return false
+            }
+            
+            accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
+            accessToken = token
+            
+            // Load optional refresh token. Optionally returned by server (only for 'password' grant type?)
+            if let unwrappedRefreshToken = json[refreshTokenKey] as? String {
+                refreshToken = unwrappedRefreshToken
+            }
+            
+            return true
+        }
         
         /// Expire our current access token, should occur when 401 is received.
         func expireAccessToken() {
@@ -132,5 +142,6 @@ extension Phoenix {
             // Need to reauthenticate using credentials
             accessToken = nil
         }
+
     }
 }
