@@ -39,30 +39,20 @@ extension Phoenix {
             return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
         }
         
-        private var _accessToken: String?
         /// Access token used in OAuth bearer header for requests.
         var accessToken: String? {
-            get {
-                return _accessToken
-            }
-            set {
-                if newValue == nil || newValue!.isEmpty {
+            didSet {
+                // TODO: Store access token
+                if accessToken == nil || accessToken!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                _accessToken = newValue
             }
-            // TODO: Store access token
         }
         
-        private var _refreshToken: String?
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
-            get {
-                return _refreshToken
-            }
-            set {
+            didSet {
                 // TODO: Store refresh token
-                _refreshToken = newValue
             }
         }
         
