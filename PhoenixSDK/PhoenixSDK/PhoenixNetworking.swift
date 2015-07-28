@@ -12,11 +12,18 @@ private let HTTPStatusSuccess = 200
 private let HTTPStatusTokenExpired = 401
 private let HTTPStatusTokenInvalid = 403
 
+private let HTTPHeaderAcceptKey = "Accept"
+private let HTTPHeaderAuthorizationKey = "Authorization"
+private let HTTPHeaderContentTypeKey = "Content-Type"
+private let HTTPHeaderApplicationJson = "application/json"
+private let HTTPHeaderApplicationFormUrlEncoded = "application/x-www-form-urlencoded"
+
 public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
 
 extension Phoenix {
     class Network {
         
+        // TODO: Define a retry policy, something like...
         // Call
         // -> Auth (has token?)
         //   -> Success
@@ -111,6 +118,7 @@ extension Phoenix {
             enqueueRequestOperation(operation)
         }
         
+        // TODO: Remove this method (hack - since we have no API calls yet)
         func tryLogin(callback: PhoenixNetworkingCallback) {
             authenticationOperation = createAuthenticationOperationIfNecessary(callback)
             if authenticationOperation != nil {
@@ -144,6 +152,7 @@ extension Phoenix {
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse, this = self where httpResponse.statusCode == HTTPStatusSuccess {
                     guard let json = data?.jsonDictionary, auth = Authentication(json: json) else {
+                        // TODO: Handle this...
                         print("Invalid response")
                         return
                     }
@@ -183,16 +192,20 @@ extension Phoenix {
 
 
 extension NSURLRequest {
+    
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
     func mutateRequest(withAuthentication authentication: Phoenix.Authentication?) -> NSURLRequest? {
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
-        let applicationJson = "application/json"
-        var headerFields = ["Accept": applicationJson, "Content-Type": applicationJson]
+        var headerFields = mutable.allHTTPHeaderFields ?? [String: String]()
+        if headerFields[HTTPHeaderContentTypeKey] == nil {
+            headerFields[HTTPHeaderContentTypeKey] = HTTPHeaderApplicationJson
+        }
+        headerFields[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         if let token = authentication?.accessToken {
-            headerFields["Authorization"] = "Bearer \(token)"
+            headerFields[HTTPHeaderAuthorizationKey] = "Bearer \(token)"
         }
         mutable.allHTTPHeaderFields = headerFields
         return mutable
@@ -206,27 +219,30 @@ extension NSURLRequest {
         if authentication?.requiresAuthentication == false {
             return nil
         }
-        var urlQuery = "identity/v1/oauth/token?client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)"
-        let grantType: String
-        if authentication?.anonymous == false {
-            grantType = "password"
-            if authentication?.refreshToken == nil {
-                guard let username = authentication?.username, password = authentication?.password else {
-                    fatalError()
+        var postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)"
+        var grantType: String = "client_credentials"
+        if let auth = authentication {
+            if auth.anonymous == false {
+                grantType = "password"
+                if auth.refreshToken == nil {
+                    guard let username = auth.username, password = auth.password else {
+                        // This path should never occur (auth.anonymous checks if these values are set)
+                        fatalError()
+                    }
+                    postQuery += "&username=\(username)&password=\(password)"
                 }
-                urlQuery += "&username=\(username)&password=\(password)"
             }
-        } else {
-            grantType = "client_credentials"
         }
-        urlQuery += "&grant_type=\(grantType)"
-        
-        // Optionally add refresh token
+        postQuery += "&grant_type=\(grantType)"
         if let token = authentication?.refreshToken {
-            urlQuery += "&refresh_token=\(token)"
+            postQuery += "&refresh_token=\(token)"
         }
-        if let url = NSURL(string: urlQuery, relativeToURL: configuration.baseURL) {
-            return NSURLRequest(URL: url)
+        if let url = NSURL(string: "identity/v1/oauth/token", relativeToURL: configuration.baseURL) {
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = "POST"
+            request.HTTPBody = postQuery.dataUsingEncoding(NSUTF8StringEncoding)
+            return request.copy() as? NSURLRequest
         }
         return nil
     }
