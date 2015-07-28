@@ -127,10 +127,10 @@ extension Phoenix {
         
         // TODO: Remove this method (hack - since we have no API calls yet)
         func tryLogin(callback: PhoenixNetworkingCallback) {
-            authenticationOperation = createAuthenticationOperationIfNecessary(callback)
-            if authenticationOperation != nil {
-                authenticateQueue.addOperation(authenticationOperation!)
+            let blockOp = NSBlockOperation { () -> Void in
+                print("Started block")
             }
+            enqueueRequestOperation(blockOp)
         }
         
         /// Enqueue operation in worker queue, will suspend worker queue if authentication is required.
@@ -167,6 +167,8 @@ extension Phoenix {
                         return
                     }
                     this.authentication = auth
+                    
+                    print("Logged in")
                     
                     // Continue worker queue if we have authentication object
                     this.workerQueue.suspended = this.authentication == nil
