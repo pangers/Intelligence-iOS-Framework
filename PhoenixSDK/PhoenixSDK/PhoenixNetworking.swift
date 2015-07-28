@@ -12,8 +12,6 @@ private let HTTPStatusSuccess = 200
 private let HTTPStatusTokenExpired = 401
 private let HTTPStatusTokenInvalid = 403
 
-private let kApplicationJSON = "application/json"
-
 public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSURLResponse?, error: NSError?) -> ()
 
 extension Phoenix {
@@ -191,7 +189,8 @@ extension NSURLRequest {
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
         }
-        var headerFields = ["Accept": kApplicationJSON, "Content-Type": kApplicationJSON]
+        let applicationJson = "application/json"
+        var headerFields = ["Accept": applicationJson, "Content-Type": applicationJson]
         if let token = authentication?.accessToken {
             headerFields["Authorization"] = "Bearer \(token)"
         }
