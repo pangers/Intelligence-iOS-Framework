@@ -122,7 +122,7 @@ extension Phoenix {
         }
         
         init?() {
-            if accessTokenExpirationDate == nil || accessToken?.isEmpty == true {
+            if accessTokenExpirationDate == nil || accessToken == nil || accessToken?.isEmpty == true {
                 return nil
             }
         }
