@@ -19,6 +19,7 @@ extension Phoenix {
         private let accessTokenKey = "access_token"
         private let expiresInKey = "expires_in"
         private let refreshTokenKey = "refresh_token"
+        private let phoenixDefaults = PhoenixDefaults.phoenixDefaults()
         
         // MARK: Instance variables
         
@@ -36,7 +37,7 @@ extension Phoenix {
                     self.accessToken = nil
                     return nil
                 }
-                guard let token = NSUserDefaults().valueForKey(accessTokenKey) as? String where !token.isEmpty else {
+                guard let token = phoenixDefaults.pd_get(accessTokenKey) as? String else {
                     self.accessToken = nil
                     return nil
                 }
@@ -47,24 +48,24 @@ extension Phoenix {
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                NSUserDefaults().setValue(newValue, forKey: accessTokenKey)
+                phoenixDefaults.pd_set(newValue, forKey: accessTokenKey)
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             get {
-                return NSUserDefaults().valueForKey(refreshTokenKey) as? String
+                return phoenixDefaults.pd_get(refreshTokenKey) as? String
             }
             set {
-                NSUserDefaults().setValue(refreshToken, forKey: refreshTokenKey)
+                phoenixDefaults.pd_set(newValue, forKey: refreshTokenKey)
             }
         }
         
         /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate? {
             get {
-                guard let seconds = NSUserDefaults().valueForKey(expiresInKey) as? Double else {
+                guard let seconds = phoenixDefaults.pd_get(expiresInKey) as? Double else {
                     return nil
                 }
                 let date = NSDate(timeIntervalSinceReferenceDate: seconds)
@@ -76,7 +77,7 @@ extension Phoenix {
                 return date
             }
             set {
-                NSUserDefaults().setValue(newValue?.timeIntervalSinceReferenceDate, forKey: expiresInKey)
+                phoenixDefaults.pd_set(newValue?.timeIntervalSinceReferenceDate, forKey: expiresInKey)
             }
         }
         
@@ -135,5 +136,27 @@ extension Phoenix {
             // Need to reauthenticate using credentials
             accessToken = nil
         }
+    }
+}
+
+
+class PhoenixDefaults: NSUserDefaults {
+    class func phoenixDefaults() -> PhoenixDefaults {
+        return PhoenixDefaults(suiteName: "PhoenixSDK")!
+    }
+    func pd_set(value: AnyObject?, forKey key: String) {
+        if value == nil {
+            removeObjectForKey(key)
+        } else {
+            // Treat empty values the same as nil
+            if let str = value as? String where str.isEmpty {
+                setObject(nil, forKey: key)
+            } else {
+                setObject(value, forKey: key)
+            }
+        }
+    }
+    func pd_get(key: String) -> AnyObject? {
+        return valueForKey(key)
     }
 }
