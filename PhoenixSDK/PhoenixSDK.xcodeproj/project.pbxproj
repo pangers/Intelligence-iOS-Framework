@@ -100,11 +100,9 @@
 				A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */,
 				A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */,
 				BB7276681B5FB53200F098DA /* Phoenix.swift */,
-				FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */,
-				BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */,
-				FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */,
-				FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */,
 				BB653F711B5E59C40003C0C9 /* PhoenixError.swift */,
+				BBA5D4341B67827A007D2B60 /* Configuration */,
+				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
 			);
 			path = PhoenixSDK;
@@ -131,6 +129,24 @@
 				BB8FFC501B611A5E00E37146 /* invalidproperty.json */,
 			);
 			name = "Configuration files";
+			sourceTree = "<group>";
+		};
+		BBA5D4331B678244007D2B60 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */,
+				FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		BBA5D4341B67827A007D2B60 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */,
+				FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */,
+			);
+			name = Configuration;
 			sourceTree = "<group>";
 		};
 		BBAA74171B60FCCF00EDADA4 /* MockObjects */ = {
