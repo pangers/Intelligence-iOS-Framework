@@ -49,7 +49,6 @@ class PhoenixAuthenticationTestCase: XCTestCase {
         
         XCTAssert(authentication.refreshToken == refreshToken, "Refresh token stored correctly")
         XCTAssert(authentication.accessToken == accessToken, "Access token stored correctly")
-        XCTAssert(!authentication.accessTokenExpired, "Access token is unexpectedly expired")
     }
 
     func testExpireAuthentication() {
@@ -60,7 +59,6 @@ class PhoenixAuthenticationTestCase: XCTestCase {
         
         authentication.expireAccessToken()
         XCTAssert(authentication.accessToken == nil, "Access token is not expired")
-        XCTAssert(authentication.accessTokenExpired, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }
     
@@ -73,7 +71,6 @@ class PhoenixAuthenticationTestCase: XCTestCase {
         authentication.invalidateTokens()
         XCTAssert(authentication.accessToken == nil, "Access token is not expired")
         XCTAssert(authentication.refreshToken == nil, "Refresh token is not expired")
-        XCTAssert(authentication.accessTokenExpired, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }
 
@@ -87,13 +84,11 @@ class PhoenixAuthenticationTestCase: XCTestCase {
             return
         }
 
-        XCTAssert(!authentication.accessTokenExpired, "Access token is expired initially")
         XCTAssert(!authentication.requiresAuthentication, "Initially requires authentication")
 
         // Sleep for 0.1 seconds.
         usleep(100000)
         
-        XCTAssert(authentication.accessTokenExpired, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Does not require authentication")
     }
 
