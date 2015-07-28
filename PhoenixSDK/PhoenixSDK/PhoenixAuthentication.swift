@@ -76,10 +76,8 @@ extension Phoenix {
 
             guard let token = json[accessTokenKey] as? String,
                 expire = json[expiresInKey] as? Double
-                where token.isEmpty == false && expire > 0 else {
-                    // TODO: Fail invalid response, retry?
-                    print("Invalid response")
-                    return
+                where !token.isEmpty && expire > 0 else {
+                    return nil
             }
 
             accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
