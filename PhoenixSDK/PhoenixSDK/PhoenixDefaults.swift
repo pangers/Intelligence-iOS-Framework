@@ -15,15 +15,10 @@ class PhoenixDefaults: NSUserDefaults {
         return PhoenixDefaults(suiteName: "PhoenixSDK")!
     }
     func pd_set(value: AnyObject?, forKey key: String) {
-        if value == nil {
+        if value == nil || (value is String && (value as! String).isEmpty) {
             removeObjectForKey(key)
         } else {
-            // Treat empty values the same as nil
-            if let str = value as? String where str.isEmpty {
-                removeObjectForKey(key)
-            } else {
-                setObject(value, forKey: key)
-            }
+            setObject(value, forKey: key)
         }
         synchronize()
     }
