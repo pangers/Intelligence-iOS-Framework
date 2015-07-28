@@ -31,11 +31,19 @@ extension Phoenix {
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
+                // If access token has expired, return nil
+                if accessTokenExpirationDate == nil {
+                    NSUserDefaults().setValue(nil, forKey: accessTokenKey)
+                    return nil
+                }
                 return NSUserDefaults().valueForKey(accessTokenKey) as? String
             }
             set {
+                // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
+                    NSUserDefaults().setValue(nil, forKey: accessTokenKey)
+                    return
                 }
                 NSUserDefaults().setValue(newValue, forKey: accessTokenKey)
             }
@@ -57,21 +65,22 @@ extension Phoenix {
                 guard let seconds = NSUserDefaults().valueForKey(expiresInKey) as? Double else {
                     return nil
                 }
-                return NSDate(timeIntervalSinceReferenceDate: seconds)
+                let date = NSDate(timeIntervalSinceReferenceDate: seconds)
+                // Only return valid expiration date if it is not expired
+                if NSDate().earlierDate(date) == date {
+                    self.accessTokenExpirationDate = nil
+                    return nil
+                }
+                return date
             }
             set {
                 NSUserDefaults().setValue(newValue?.timeIntervalSinceReferenceDate, forKey: expiresInKey)
             }
         }
         
-        /// Returns: true if current date is later than expiry date.
-        private var accessTokenExpired: Bool {
-            return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
-        }
-        
         /// Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
         var requiresAuthentication: Bool {
-            return accessToken != nil ? accessTokenExpired : true
+            return accessToken == nil
         }
         
         /// Returns false if username and password are set, otherwise true.
@@ -104,7 +113,7 @@ extension Phoenix {
         }
         
         init?() {
-            if accessToken?.isEmpty == true || accessTokenExpirationDate == nil {
+            if accessTokenExpirationDate == nil || accessToken?.isEmpty == true {
                 return nil
             }
         }
