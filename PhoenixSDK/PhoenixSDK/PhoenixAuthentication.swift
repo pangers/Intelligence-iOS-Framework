@@ -11,6 +11,7 @@ import Foundation
 extension Phoenix {
     
     /// Authentication class provides a wrapper over Phoenix's authentication responses.
+    
     public class Authentication {
 
         // MARK: Constants
@@ -19,7 +20,6 @@ extension Phoenix {
         private let accessTokenKey = "access_token"
         private let expiresInKey = "expires_in"
         private let refreshTokenKey = "refresh_token"
-        private let phoenixDefaults = PhoenixDefaults.phoenixDefaults()
         
         // MARK: Instance variables
         
@@ -142,27 +142,5 @@ extension Phoenix {
             // Need to reauthenticate using credentials
             accessToken = nil
         }
-    }
-}
-
-
-class PhoenixDefaults: NSUserDefaults {
-    class func phoenixDefaults() -> PhoenixDefaults {
-        return PhoenixDefaults(suiteName: "PhoenixSDK")!
-    }
-    func pd_set(value: AnyObject?, forKey key: String) {
-        if value == nil {
-            removeObjectForKey(key)
-        } else {
-            // Treat empty values the same as nil
-            if let str = value as? String where str.isEmpty {
-                setObject(nil, forKey: key)
-            } else {
-                setObject(value, forKey: key)
-            }
-        }
-    }
-    func pd_get(key: String) -> AnyObject? {
-        return valueForKey(key)
     }
 }
