@@ -29,12 +29,16 @@ extension Phoenix {
         var password: String?
         
         /// The access token used in OAuth bearer header for requests.
-        var accessToken: String? {
+        public var accessToken: String? {
             didSet {
                 // TODO: Store or clear access token
-                if accessToken == nil || accessToken!.isEmpty {
+                guard let token = accessToken where !token.isEmpty else {
+                    // TODO: Clear the token
                     accessTokenExpirationDate = nil
+                 
+                    return
                 }
+                // TODO: Store the token
             }
         }
         
@@ -52,19 +56,25 @@ extension Phoenix {
             }
         }
         
-        /// Returns: true if current date is later than expiry date.
-        private var accessTokenExpired: Bool {
-            return NSDate().timeIntervalSinceReferenceDate > accessTokenExpirationDate?.timeIntervalSinceReferenceDate ?? 0
+        /// Returns: true if the authentication has expired.
+        var accessTokenExpired: Bool {
+            guard let tokenExpiryDate = accessTokenExpirationDate else {
+                return true
+            }
+            return tokenExpiryDate.timeIntervalSinceNow <= 0
         }
         
         /// Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
         var requiresAuthentication: Bool {
-            return accessToken != nil ? accessTokenExpired : true
+            guard let _ = accessToken else {
+                return true
+            }
+            return accessTokenExpired
         }
         
         /// Returns false if username and password are set, otherwise true.
         var anonymous: Bool {
-            return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
+            return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
         }
         
         // MARK: Initializers
@@ -80,15 +90,13 @@ extension Phoenix {
                     return nil
             }
 
-            accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
+            accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
             accessToken = token
 
             // Load optional refresh token. Optionally returned by server (only for 'password' grant type?)
-            guard let unwrappedRefreshToken = json[refreshTokenKey] as? String else {
-                return
+            if let unwrappedRefreshToken = json[refreshTokenKey] as? String {
+                refreshToken = unwrappedRefreshToken
             }
-            
-            refreshToken = unwrappedRefreshToken
         }
         
         // MARK: Functions
