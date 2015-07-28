@@ -20,10 +20,14 @@ extension NSData {
         }
         return nil
     }
+    
+    /// - Returns: Array of JSONDictionary objects or nil if cast fails.
     var jsonArray: JSONArray? {
         guard let arr = tryJSON() as? JSONArray else { return nil }
         return arr
     }
+    
+    /// - Returns: A JSONDictionary object or nil if cast fails.
     var jsonDictionary: JSONDictionary? {
         guard let dict = tryJSON() as? JSONDictionary else { return nil }
         return dict

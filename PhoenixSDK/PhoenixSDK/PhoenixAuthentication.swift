@@ -10,19 +10,19 @@ import Foundation
 
 extension Phoenix {
     class Authentication {
-        private let kAccessToken = "access_token"
-        private let kExpiresIn = "expires_in"
-        private let kRefreshToken = "refresh_token"
+        private let accessTokenKey = "access_token"
+        private let expiresInKey = "expires_in"
+        private let refreshTokenKey = "refresh_token"
         
         /// Create new instance using JSON.
         init?(json: JSONDictionary) {
-            guard let token = json[kAccessToken] as? String,
-                expire = json[kExpiresIn] as? Double where token.isEmpty == false && expire > 0 else {
+            guard let token = json[accessTokenKey] as? String,
+                expire = json[expiresInKey] as? Double where token.isEmpty == false && expire > 0 else {
                     // TODO: Fail invalid response, retry?
                     print("Invalid response")
                     return
             }
-            if let token = json[kRefreshToken] as? String {
+            if let token = json[refreshTokenKey] as? String {
                 // Optionally returned by server (only for 'password' grant type?)
                 refreshToken = token
             }
