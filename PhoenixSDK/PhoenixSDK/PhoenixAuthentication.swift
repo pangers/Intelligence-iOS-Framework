@@ -41,6 +41,7 @@ extension Phoenix {
                     self.accessToken = nil
                     return nil
                 }
+                
                 return token
             }
             set {
@@ -81,14 +82,21 @@ extension Phoenix {
             }
         }
         
-        /// Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
+        /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
         var requiresAuthentication: Bool {
-            return accessToken == nil
+            guard let _ = accessToken else {
+                return true
+            }
+
+            guard let tokenExpiryDate = accessTokenExpirationDate else {
+                return true
+            }
+            return tokenExpiryDate.timeIntervalSinceNow <= 0
         }
         
         /// Returns false if username and password are set, otherwise true.
         var anonymous: Bool {
-            return !(username != nil && password != nil && username!.isEmpty == false && password!.isEmpty == false)
+            return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
         }
         
         // MARK: Initializers
@@ -104,15 +112,13 @@ extension Phoenix {
                     return nil
             }
 
-            accessTokenExpirationDate = NSDate(timeInterval: expire, sinceDate: NSDate())
+            accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
             accessToken = token
 
             // Load optional refresh token. Optionally returned by server (only for 'password' grant type?)
-            guard let unwrappedRefreshToken = json[refreshTokenKey] as? String else {
-                return
+            if let unwrappedRefreshToken = json[refreshTokenKey] as? String {
+                refreshToken = unwrappedRefreshToken
             }
-            
-            refreshToken = unwrappedRefreshToken
         }
         
         init?() {
