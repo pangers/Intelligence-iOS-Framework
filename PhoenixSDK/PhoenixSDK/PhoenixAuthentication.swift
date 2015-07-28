@@ -8,20 +8,21 @@
 
 import Foundation
 
+// MARK: Constants
+
+private let accessTokenKey = "access_token"
+private let expiresInKey = "expires_in"
+private let refreshTokenKey = "refresh_token"
+
 extension Phoenix {
-    
+
     /// Authentication class provides a wrapper over Phoenix's authentication responses.
     public class Authentication {
-
-        // MARK: Constants
-        
-        // Constants to parse the JSON object
-        private let accessTokenKey = "access_token"
-        private let expiresInKey = "expires_in"
-        private let refreshTokenKey = "refresh_token"
-        private let phoenixDefaults = PhoenixDefaults.phoenixDefaults()
         
         // MARK: Instance variables
+        
+        /// User defaults. Allows to change it to a different defaults if needed.
+        private lazy var userDefaults = NSUserDefaults.standardUserDefaults()
         
         /// Set username for OAuth authentication with credentials.
         var username: String?
@@ -32,53 +33,42 @@ extension Phoenix {
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
-                // If access token has expired, return nil
-                if accessTokenExpirationDate == nil {
-                    self.accessToken = nil
-                    return nil
-                }
-                guard let token = phoenixDefaults.pd_get(accessTokenKey) as? String else {
-                    self.accessToken = nil
-                    return nil
-                }
-                
-                return token
+                return userDefaults.pd_accessToken()
             }
             set {
                 // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                phoenixDefaults.pd_set(newValue, forKey: accessTokenKey)
+                userDefaults.pd_setAccessToken(newValue)
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             get {
-                return phoenixDefaults.pd_get(refreshTokenKey) as? String
+                return userDefaults.pd_refreshToken()
             }
             set {
-                phoenixDefaults.pd_set(newValue, forKey: refreshTokenKey)
+                userDefaults.pd_setRefreshToken(newValue)
             }
         }
         
         /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate? {
             get {
-                guard let seconds = phoenixDefaults.pd_get(expiresInKey) as? Double else {
-                    return nil
-                }
-                let date = NSDate(timeIntervalSinceReferenceDate: seconds)
+                let date = userDefaults.pd_tokenExpirationDate()
+                
                 // Only return valid expiration date if it is not expired
-                if NSDate().earlierDate(date) == date {
+                if date?.timeIntervalSinceNow < 0 {
                     self.accessTokenExpirationDate = nil
                     return nil
                 }
+                
                 return date
             }
             set {
-                phoenixDefaults.pd_set(newValue?.timeIntervalSinceReferenceDate, forKey: expiresInKey)
+                userDefaults.pd_setTokenExpirationDate(newValue)
             }
         }
         
@@ -142,27 +132,5 @@ extension Phoenix {
             // Need to reauthenticate using credentials
             accessToken = nil
         }
-    }
-}
-
-
-class PhoenixDefaults: NSUserDefaults {
-    class func phoenixDefaults() -> PhoenixDefaults {
-        return PhoenixDefaults(suiteName: "PhoenixSDK")!
-    }
-    func pd_set(value: AnyObject?, forKey key: String) {
-        if value == nil {
-            removeObjectForKey(key)
-        } else {
-            // Treat empty values the same as nil
-            if let str = value as? String where str.isEmpty {
-                setObject(nil, forKey: key)
-            } else {
-                setObject(value, forKey: key)
-            }
-        }
-    }
-    func pd_get(key: String) -> AnyObject? {
-        return valueForKey(key)
     }
 }

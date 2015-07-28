@@ -61,20 +61,7 @@ class PhoenixAuthenticationTestCase: XCTestCase {
         XCTAssert(authentication.accessToken == nil, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }
-    
-    func testInvalidateAuthentication() {
-        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
-            XCTAssert(false, "Didn't acquire an authentication")
-            return
-        }
-        
-        authentication.invalidateTokens()
-        XCTAssert(authentication.accessToken == nil, "Access token is not expired")
-        XCTAssert(authentication.refreshToken == nil, "Refresh token is not expired")
-        XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
-    }
 
-    
     func testExpireAuthenticationByTime() {
         var dictionary = correctWithRefreshTokenJsonDictionary
         dictionary["expires_in"] = Double(0.01)
@@ -90,6 +77,19 @@ class PhoenixAuthenticationTestCase: XCTestCase {
         usleep(100000)
         
         XCTAssert(authentication.requiresAuthentication, "Does not require authentication")
+    }
+
+    
+    func testInvalidateAuthentication() {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+            XCTAssert(false, "Didn't acquire an authentication")
+            return
+        }
+        
+        authentication.invalidateTokens()
+        XCTAssert(authentication.refreshToken == nil, "Refresh token is not expired")
+        XCTAssert(authentication.accessToken == nil, "Access token is not expired")
+        XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }
 
 }
