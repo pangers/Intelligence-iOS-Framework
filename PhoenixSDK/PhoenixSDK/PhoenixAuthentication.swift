@@ -33,17 +33,19 @@ extension Phoenix {
             get {
                 // If access token has expired, return nil
                 if accessTokenExpirationDate == nil {
-                    NSUserDefaults().setValue(nil, forKey: accessTokenKey)
+                    self.accessToken = nil
                     return nil
                 }
-                return NSUserDefaults().valueForKey(accessTokenKey) as? String
+                guard let token = NSUserDefaults().valueForKey(accessTokenKey) as? String where !token.isEmpty else {
+                    self.accessToken = nil
+                    return nil
+                }
+                return token
             }
             set {
                 // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
-                    NSUserDefaults().setValue(nil, forKey: accessTokenKey)
-                    return
                 }
                 NSUserDefaults().setValue(newValue, forKey: accessTokenKey)
             }
