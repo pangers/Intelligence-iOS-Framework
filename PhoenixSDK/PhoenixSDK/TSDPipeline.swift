@@ -9,11 +9,12 @@
 import Foundation
 
 
-class TSDPipeline <TInput, TOutput, TError> : TSDOperation <TInput, TOutput, TError> {
+class TSDPipeline <TInput, TOutput, TFirstOperationOutput> : TSDOperation <TInput, TOutput> {
     
-    typealias TSDPipelineCompletion = (output:TOutput?, error:TError?) -> Void
+    typealias TSDPipelineCompletion = (output:TOutput?, error:NSError?) -> Void
     
     var completion:TSDPipelineCompletion?
+    
     var operations:[NSOperation]
     
     class func pipeline(withOperationArray operations:[NSOperation]) -> TSDPipeline {
@@ -37,11 +38,11 @@ class TSDPipeline <TInput, TOutput, TError> : TSDOperation <TInput, TOutput, TEr
         
 
         
-//        guard let operation = operations.first as? TSDOperation else {
-//            return
-//        }
-//        
-//        self.input = operations.first.input
+        guard let operation = operations.first as? TSDOperation<TInput, TFirstOperationOutput> else {
+            return
+        }
+        
+        self.input = operation.input
     }
 
 
