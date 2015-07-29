@@ -8,13 +8,6 @@
 
 import Foundation
 
-/// Alias for an array loaded from a JSON object.
-typealias JSONArray = [AnyObject]
-
-/// Alias for a dictionary loaded from a JSON object.
-typealias JSONDictionary = [String: AnyObject]
-
-
 extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData

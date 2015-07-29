@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
+		BB0F0ECC1B68C63E008679C9 /* TSDPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */; };
+		BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */; };
 		BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = BB27B5AF1B5FFF0A005221EF /* wrongjson.json */; };
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
@@ -18,6 +20,7 @@
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
 		BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */; };
 		BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */; };
+		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
 		FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */; };
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
@@ -44,6 +47,8 @@
 		A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDK-Info.plist"; sourceTree = "<group>"; };
 		A07FACBA1B5D0C4200482BB7 /* PhoenixSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDKTests-Info.plist"; sourceTree = "<group>"; };
+		BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDPipeline.swift; sourceTree = "<group>"; };
+		BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDOperation.swift; sourceTree = "<group>"; };
 		BB27B5AF1B5FFF0A005221EF /* wrongjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wrongjson.json; sourceTree = "<group>"; };
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
@@ -53,6 +58,7 @@
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
 		BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfiguration.swift; sourceTree = "<group>"; };
 		BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
+		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
 		FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegion.swift; sourceTree = "<group>"; };
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
@@ -110,6 +116,7 @@
 				BBA5D4341B67827A007D2B60 /* Configuration */,
 				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
+				BB0F0ECA1B68C627008679C9 /* Pipeline */,
 			);
 			path = PhoenixSDK;
 			sourceTree = "<group>";
@@ -126,6 +133,15 @@
 				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
 			);
 			path = PhoenixSDKTests;
+			sourceTree = "<group>";
+		};
+		BB0F0ECA1B68C627008679C9 /* Pipeline */ = {
+			isa = PBXGroup;
+			children = (
+				BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */,
+				BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */,
+			);
+			name = Pipeline;
 			sourceTree = "<group>";
 		};
 		BB8FFC521B611A6500E37146 /* Configuration files */ = {
@@ -178,6 +194,7 @@
 			children = (
 				FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */,
 				BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */,
+				BBE209DD1B67C149000202B6 /* NSURLRequest.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -294,11 +311,14 @@
 			files = (
 				BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */,
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
+				BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */,
 				FEF7EF751B6671C700066AA3 /* NSDataToJSON.swift in Sources */,
 				FE23E9621B679DF700BA962E /* PhoenixDefaults.swift in Sources */,
+				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
 				FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */,
 				FEEE79EA1B661AFB0047905D /* PhoenixNetworking.swift in Sources */,
 				BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */,
+				BB0F0ECC1B68C63E008679C9 /* TSDPipeline.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
