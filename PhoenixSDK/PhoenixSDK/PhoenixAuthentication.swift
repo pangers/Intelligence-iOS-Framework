@@ -60,7 +60,7 @@ extension Phoenix {
                 let date = userDefaults.phx_tokenExpirationDate()
                 
                 // Only return valid expiration date if it is not expired
-                if date?.timeIntervalSinceNow < 0 {
+                if date?.timeIntervalSinceNow <= 0 {
                     self.accessTokenExpirationDate = nil
                     return nil
                 }
@@ -74,14 +74,10 @@ extension Phoenix {
         
         /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
         var requiresAuthentication: Bool {
-            guard let _ = accessToken else {
+            guard let _ = accessToken, _ = accessTokenExpirationDate else {
                 return true
             }
-
-            guard let tokenExpiryDate = accessTokenExpirationDate else {
-                return true
-            }
-            return tokenExpiryDate.timeIntervalSinceNow <= 0
+            return false
         }
         
         /// Returns false if username and password are set, otherwise true.
