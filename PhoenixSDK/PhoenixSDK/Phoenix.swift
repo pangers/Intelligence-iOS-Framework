@@ -18,7 +18,7 @@ public class Phoenix: NSObject {
     /// Delegate implementing failure methods that a developer should implement to catch
     /// errors that the Phoenix SDK is unable to handle.
     /// - SeeAlso: `PhoenixNetworkDelegate`
-    public var networkingDelegate: PhoenixNetworkDelegate? {
+    public var networkDelegate: PhoenixNetworkDelegate? {
         get {
             return network.delegate
         }

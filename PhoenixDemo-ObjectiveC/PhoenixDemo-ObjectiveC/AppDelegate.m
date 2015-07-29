@@ -20,7 +20,7 @@
 	// Override point for customization after application launch.
     
     // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [[Phoenix sharedInstance] setNetworkingDelegate:self];
+    [[Phoenix sharedInstance] setNetworkDelegate:self];
     [[Phoenix sharedInstance] tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
         NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         NSLog(@"Error = %@", error.localizedDescription);
