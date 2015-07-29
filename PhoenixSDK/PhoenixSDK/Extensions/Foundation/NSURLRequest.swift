@@ -24,7 +24,7 @@ extension NSURLRequest {
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
     /// - Returns: An optional NSURLRequest which is equal to this one, but adding the required headers to 
     /// authenticate it against the backend.
-    func phx_preparePhoenixRequest(withAuthentication authentication: Phoenix.Authentication?) -> NSURLRequest? {
+    func phx_preparePhoenixRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest? {
         // Somehow the NSURLRequest is immutable (perhaps if subclassed?)
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             return nil
@@ -40,7 +40,7 @@ extension NSURLRequest {
         headerFields[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         
         // If we have an access token append `Bearer` to header
-        if let token = authentication?.accessToken {
+        if let token = authentication.accessToken {
             headerFields[HTTPHeaderAuthorizationKey] = "Bearer \(token)"
         }
         
@@ -56,16 +56,16 @@ extension NSURLRequest {
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
     ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     /// - Returns: An NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthentication(authentication: Phoenix.Authentication?, configuration: Phoenix.Configuration) -> NSURLRequest? {
-
-        if let auth = authentication where !auth.anonymous {
+    class func phx_requestForAuthentication(authentication: Phoenix.Authentication, configuration: Phoenix.Configuration) -> NSURLRequest? {
+        
+        if !authentication.anonymous {
 
             // Use either refresh token, or username and password parameters.
-            if let _ = auth.refreshToken {
-                return phx_requestForAuthenticationWithRefreshToken(configuration, authentication: auth)
+            if let _ = authentication.refreshToken {
+                return phx_requestForAuthenticationWithRefreshToken(configuration, authentication: authentication)
             }
-            else if let _ = auth.username, _ = auth.password {
-                return phx_requestForAuthenticationWithUserCredentials(configuration, authentication: auth)
+            else if let _ = authentication.username, _ = authentication.password {
+                return phx_requestForAuthenticationWithUserCredentials(configuration, authentication: authentication)
             }
             else {
                 assert(false, "Authentication.anonymous should guarantee this code is never reached.")

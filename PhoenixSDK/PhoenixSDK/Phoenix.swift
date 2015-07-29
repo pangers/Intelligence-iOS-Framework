@@ -15,6 +15,18 @@ public class Phoenix: NSObject {
     private let configuration: Configuration
     private let network: Network
     
+    /// Delegate implementing failure methods that a developer should implement to catch
+    /// errors that the Phoenix SDK is unable to handle.
+    /// - SeeAlso: `PhoenixNetworkDelegate`
+    public var networkDelegate: PhoenixNetworkDelegate? {
+        get {
+            return network.delegate
+        }
+        set {
+            network.delegate = newValue
+        }
+    }
+    
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: Configuration {
         return configuration.copy() as! Configuration

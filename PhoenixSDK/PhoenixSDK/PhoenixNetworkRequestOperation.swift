@@ -12,10 +12,10 @@ class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data:NSData?,
     
     let sessionManager:NSURLSession
     let request:NSURLRequest
-    let authentication:Phoenix.Authentication?
+    let authentication:Phoenix.Authentication
     
     /// Default initializer with all required parameters
-    init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication?) {
+    init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {
         self.sessionManager = session
         self.request = request
         self.authentication = authentication

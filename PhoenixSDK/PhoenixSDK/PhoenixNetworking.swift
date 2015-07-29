@@ -8,6 +8,11 @@
 
 import Foundation
 
+@objc public protocol PhoenixNetworkDelegate {
+    func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?)
+}
+
+
 /// Alias for an array loaded from a JSON object.
 typealias JSONArray = [AnyObject]
 
@@ -66,13 +71,15 @@ extension Phoenix {
         /// Static operation queue containing only one authentication operation at a time, enforced by 'authenticationOperation != nil'.
         private let authenticateQueue: NSOperationQueue
         
+        var delegate:PhoenixNetworkDelegate?
+        
         // MARK: Initializers
         
         /// Initialize new instance of Phoenix Networking class
         init(withConfiguration configuration: Configuration) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
-            self.authentication = Authentication()   // may be nil
+            self.authentication = Authentication()
             self.configuration = configuration
         }
         
@@ -165,7 +172,6 @@ extension Phoenix {
 
             guard let authOp = createAuthenticationOperation({ (data, response, error) -> () in
                 // Try to login with user credentials
-                
             }) else {
                 return false
             }
@@ -203,12 +209,19 @@ extension Phoenix {
             let error = authenticationOperation.error
             
             defer {
-                // Execute callback with data from request
-                callback(data: data, response: response, error: error)
-
                 // Continue worker queue if we have authentication object
                 self.workerQueue.suspended = self.authenticateQueue.operationCount > 0
-
+                
+                // Execute callback with data from request
+                callback(data: data, response: response, error: error)
+                
+                // Authentication object will be nil if we cannot parse the response.
+                if self.authentication.requiresAuthentication == true {
+                    // PSDK-26: #4 - When I open the sample app, And the /token endpoint is not available (404 error)
+                    // PSDK-26: #5 - When I open the sample app, And the /token endpoint returns a 401 Unauthorised
+                    // An exception is raised to the developer, And the SDK does not automatically attempt to get a token again
+                    self.delegate?.authenticationFailed(data, response: response, error: error)
+                }
             }
             
             // Regardless of how we hit this method, we should update our authentication headers

@@ -12,7 +12,7 @@ extension PhoenixNetworkRequestOperation {
 
     /// Default initializer with all required parameters
     class func authenticationRequestOperation(withSession session:NSURLSession,
-        withAuthentication authentication:Phoenix.Authentication?, withConfiguration configuration:Phoenix.Configuration)
+        withAuthentication authentication:Phoenix.Authentication, withConfiguration configuration:Phoenix.Configuration)
         -> PhoenixNetworkRequestOperation? {
             
         // If the request cannot be build we should exit.
