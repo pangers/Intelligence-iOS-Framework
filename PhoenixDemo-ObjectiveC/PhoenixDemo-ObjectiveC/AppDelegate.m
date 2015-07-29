@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "Phoenix+Manager.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <PhoenixNetworkDelegate>
 
 @end
 
@@ -20,7 +20,13 @@
 	// Override point for customization after application launch.
     
     // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [Phoenix sharedInstance];
+    [[Phoenix sharedInstance] setNetworkingDelegate:self];
+    [[Phoenix sharedInstance] tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
+        NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"Error = %@", error.localizedDescription);
+        NSLog(@"Response = %@", response);
+        NSLog(@"Data = %@", newStr);
+    }];
 	return YES;
 }
 
@@ -44,6 +50,12 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Phoenix Networking Delegate
+
+- (void)authenticationFailure:(nullable NSData *)data response:(nullable NSURLResponse *)response error:(nullable NSError *)error {
+    NSLog(@"Cannot authenticate: %@", error.localizedDescription);
 }
 
 @end

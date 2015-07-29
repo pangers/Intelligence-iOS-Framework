@@ -8,6 +8,11 @@
 
 import Foundation
 
+@objc public protocol PhoenixNetworkDelegate {
+    func authenticationFailure(data: NSData?, response: NSURLResponse?, error: NSError?)
+}
+
+
 /// Alias for an array loaded from a JSON object.
 typealias JSONArray = [AnyObject]
 
@@ -61,7 +66,7 @@ extension Phoenix {
         private let configuration: Configuration
         
         /// Authentication object will be configured on response of an oauth/token call or initialized from NSUserDefaults.
-        private var authentication: Authentication?
+        private var authentication: Authentication
         
         /// There should only ever be one authentication NSOperation.
         private var authenticationOperation: NSOperation?
@@ -69,13 +74,15 @@ extension Phoenix {
         /// Static operation queue containing only one authentication operation at a time, enforced by 'authenticationOperation != nil'.
         private let authenticateQueue: NSOperationQueue
         
+        var delegate: PhoenixNetworkDelegate?
+        
         // MARK: Initializers
         
         /// Initialize new instance of Phoenix Networking class
         init(withConfiguration configuration: Configuration) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
-            self.authentication = Authentication()   // may be nil
+            self.authentication = Authentication()
             self.configuration = configuration
         }
         
@@ -103,11 +110,11 @@ extension Phoenix {
             case HTTPStatusTokenExpired:
                 // TODO: It seems that the server can return 401 for any reason related to improper
                 // configuration or token expiry (we need to check 'error' field matches 'token_expired' to determine action.
-                authentication?.expireAccessToken()
+                authentication.expireAccessToken()
 
                 // 'invalid_token' in 'error' field of response
             case HTTPStatusTokenInvalid:
-                authentication?.invalidateTokens()
+                authentication.invalidateTokens()
                 
             default:
                 return false
@@ -226,16 +233,13 @@ extension Phoenix {
                 
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse where httpResponse.statusCode == HTTPStatusSuccess {
-                        
-                        guard let json = data?.phx_jsonDictionary, auth = Authentication(json: json) else {
-                            // TODO: Handle this...
-                            print("Invalid response")
-                            return
-                        }
-                        
-                        this.authentication = auth
-                        
-                        print("Logged in")
+                    guard let json = data?.phx_jsonDictionary else {
+                        // TODO: Handle this...
+                        print("Invalid response")
+                        return
+                    }
+                    this.authentication.loadAuthorizationFromJSON(json)
+                    print("Logged in")
                 }
             })
             
@@ -248,7 +252,7 @@ extension Phoenix {
                 this.authenticationOperation = nil
             
                 // Continue worker queue if we have authentication object
-                this.workerQueue.suspended = (this.authentication != nil) ? this.authentication!.requiresAuthentication : true
+                this.workerQueue.suspended = this.authentication.requiresAuthentication
             }
             
             return op
@@ -257,8 +261,14 @@ extension Phoenix {
         /// Enqueues an authentication operation if needed
         /// - Returns: true if the operation was needed and has been enqueued.
         private func enqueueAuthenticationOperationIfRequired() -> Bool {
-            guard let authOp = createAuthenticationOperationIfNecessary({ (data, response, error) -> () in
-                // Try to login with user credentials
+            guard let authOp = createAuthenticationOperationIfNecessary({ [weak self] (data, response, error) -> () in
+                // Authentication object will be nil if we cannot parse the response.
+                if self?.authentication.requiresAuthentication == true {
+                    // PSDK-26: #4 - When I open the sample app, And the /token endpoint is not available (404 error)
+                    // PSDK-26: #5 - When I open the sample app, And the /token endpoint returns a 401 Unauthorised
+                    // An exception is raised to the developer, And the SDK does not automatically attempt to get a token again
+                    self?.delegate?.authenticationFailure(data, response: response, error: error)
+                }
             }) else {
                 return false
             }
