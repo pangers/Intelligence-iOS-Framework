@@ -28,7 +28,7 @@
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
 		FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */; };
-		FEEE79EA1B661AFB0047905D /* PhoenixNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */; };
+		FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */; };
 		FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */; };
 		FEF7EF751B6671C700066AA3 /* NSDataToJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */; };
 /* End PBXBuildFile section */
@@ -68,7 +68,7 @@
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
 		FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegionTestCase.swift; sourceTree = "<group>"; };
-		FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworking.swift; sourceTree = "<group>"; };
+		FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetwork.swift; sourceTree = "<group>"; };
 		FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthentication.swift; sourceTree = "<group>"; };
 		FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataToJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,7 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */,
-				FEEE79E91B661AFB0047905D /* PhoenixNetworking.swift */,
+				FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */,
 				BB0F0ECF1B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift */,
 				BB0F0ED31B68EBF1008679C9 /* AuthenticationRequestOperation.swift */,
 			);
@@ -322,7 +322,7 @@
 				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
 				BB0F0ED41B68EBF1008679C9 /* AuthenticationRequestOperation.swift in Sources */,
 				FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */,
-				FEEE79EA1B661AFB0047905D /* PhoenixNetworking.swift in Sources */,
+				FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */,
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,
 				BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */,
 				BB0F0ED01B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift in Sources */,

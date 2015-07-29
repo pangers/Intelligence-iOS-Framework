@@ -83,7 +83,9 @@ extension Phoenix {
         
         // MARK: Interception of responses
         
-        /// Intercept a callback before passing it on, if true we will not pass it on.
+        /// Checks authentication responses from the API. If an error is located, the authentication
+        /// will be expired or invalidated.
+        ///
         /// Currently intercepts:
         ///   - 401: token_expired (EXPIRE token, need to refresh)
         ///   - 403: invalid_token (NULL out token, need to reauthenticate)
@@ -92,8 +94,8 @@ extension Phoenix {
         ///     - data: The data that was obtained from the backend.
         ///     - response: The NSURLResponse from the backend.
         ///     - error: The NSError of the request.
-        /// - Returns: True if the call has had to be intercepted due to an authentication error.
-        private func interceptCallback(data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Bool {
+        /// - Returns: True if the call had an authentication
+        private func checkAuthentication(data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Bool {
             guard let httpResponse = response else {
                 return false
             }
@@ -125,27 +127,12 @@ extension Phoenix {
         ///     - callback: Block/function to call once executed.
         func executeRequest(request: NSURLRequest, callback: PhoenixNetworkingCallback) {
             let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, withRequest: request, withAuthentication: authentication)
-            operation.completionBlock = { [weak self] in
-                
-                defer {
-                    // Other error code can fallthrough to caller who implements callback func to handle.
-                    callback(data: operation.output?.data, response: operation.output?.response, error: operation.error)
-                }
-                
-                guard let this = self else {
-                    return
-                }
-                
-                // Intercept the callback, handling 401 and 403
-                if this.interceptCallback(operation.output?.data, response: operation.output?.response, error: operation.error) {
-                    // Token invalid, try to authenticate again
-                    this.enqueueAuthenticationOperationIfRequired()
-                    
-                    // TODO: Reschedule the operation.
-                }
+            operation.completionBlock = {
+                // Other error code can fallthrough to caller who implements callback func to handle.
+                callback(data: operation.output?.data, response: operation.output?.response, error: operation.error)
             }
             
-            enqueueRequestOperation(operation)
+            executeNetworkOperation(operation)
         }
         
         /// Execute a request on the worker queue and performs the interception of
@@ -170,7 +157,7 @@ extension Phoenix {
                 }
                 
                 // Intercept the callback, handling 401 and 403
-                if this.interceptCallback(operation.output?.data, response: operation.output?.response, error: operation.error) {
+                if this.checkAuthentication(operation.output?.data, response: operation.output?.response, error: operation.error) {
                     // Token invalid, try to authenticate again
                     this.enqueueAuthenticationOperationIfRequired()
                     
@@ -218,12 +205,12 @@ extension Phoenix {
         
         /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
         /// - Parameter callback: Contains data, response, and error information from request.
-        /// - Returns: `nil` or `PhoenixNetworkingCallback` depending on if authentication is necessary (determined by `authentication` objects state).
-        private func createAuthenticationOperation(callback: PhoenixNetworkingCallback) -> PhoenixNetworkRequestOperation? {
+        /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
+        private func createAuthenticationOperation(callback: PhoenixNetworkingCallback) -> Phoenix.AuthenticationRequestOperation? {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            guard let authenticationOperation = PhoenixNetworkRequestOperation.authenticationRequestOperation(withSession: sessionManager, withAuthentication: authentication, withConfiguration: configuration) else {
+            guard let authenticationOperation = Phoenix.AuthenticationRequestOperation(session: sessionManager, authentication: authentication, configuration: configuration) else {
                 return nil
             }
             
@@ -234,7 +221,7 @@ extension Phoenix {
             return authenticationOperation
         }
         
-        func didCompleteAuthenticationOperation(authenticationOperation:PhoenixNetworkRequestOperation, callback: PhoenixNetworkingCallback) {
+        func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation, callback: PhoenixNetworkingCallback) {
             let response = authenticationOperation.output?.response
             let data = authenticationOperation.output?.data
             let error = authenticationOperation.error
