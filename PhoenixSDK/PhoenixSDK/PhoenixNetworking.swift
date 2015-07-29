@@ -209,7 +209,7 @@ extension Phoenix {
             // If the request cannot be build we should exit. 
             // This may need to raise some sort of warning to the developer (currently 
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            guard let request = NSURLRequest.requestForAuthentication(authentication, configuration: config) else {
+            guard let request = NSURLRequest.requestForAuthentication(authentication, configuration: configuration) else {
                 return nil
             }
             

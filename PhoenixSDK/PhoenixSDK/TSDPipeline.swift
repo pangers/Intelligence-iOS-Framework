@@ -13,26 +13,35 @@ class TSDPipeline <TInput, TOutput, TError> : TSDOperation <TInput, TOutput, TEr
     
     typealias TSDPipelineCompletion = (output:TOutput?, error:TError?) -> Void
     
-    var completion:TSDPipelineCompletion
-    var operations:[TSDOperations]
+    var completion:TSDPipelineCompletion?
+    var operations:[NSOperation]
     
-    class func pipeline(withOperationArray operations:[TSDOperation<>]) {
+    class func pipeline(withOperationArray operations:[NSOperation]) -> TSDPipeline {
         return TSDPipeline(withOperationArray:operations)
     }
     
     init(withOperationArray operations:[NSOperation]) {
+        self.operations = operations
+
         super.init()
         
         self.completionBlock = { [weak self] in
-            guard let this = self else {
-                return
+            guard let this = self,
+                let callback = this.completion else {
+                    return
             }
             
-            this.completion(output:this.output, error: this.error)
+            
+            callback(output:this.output, error: this.error)
         }
         
-        self.operations = operations
-        self.input = operations.first.input
+
+        
+//        guard let operation = operations.first as? TSDOperation else {
+//            return
+//        }
+//        
+//        self.input = operations.first.input
     }
 
 
