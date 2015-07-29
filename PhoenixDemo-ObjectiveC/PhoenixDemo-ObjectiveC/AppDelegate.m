@@ -7,9 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "Phoenix+Manager.h"
+@import PhoenixSDK;
 
 @interface AppDelegate () <PhoenixNetworkDelegate>
+
+@property (nonatomic) Phoenix *phoenix;
 
 @end
 
@@ -20,12 +22,21 @@
 	// Override point for customization after application launch.
     
     // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [[Phoenix sharedInstance] setNetworkDelegate:self];
-    [[Phoenix sharedInstance] tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
-        NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    // Attempt to instantiate Phoenix from file.
+    NSError *err;
+    self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+    if (nil != err) {
+        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+        // and generally indicate that something has gone wrong and needs to be resolved.
+        NSLog(@"Error initialising Phoenix: %zd", err.code);
+    }
+    NSParameterAssert(err == nil && self.phoenix != nil);
+    [self.phoenix setNetworkDelegate:self];
+    [self.phoenix tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
         NSLog(@"Error = %@", error.localizedDescription);
         NSLog(@"Response = %@", response);
-        NSLog(@"Data = %@", newStr);
+        NSLog(@"Data = %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     }];
 	return YES;
 }

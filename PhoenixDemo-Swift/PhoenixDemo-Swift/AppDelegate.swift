@@ -11,16 +11,32 @@ import UIKit
 import PhoenixSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 
 	var window: UIWindow?
     var phoenix:Phoenix?
 
+    func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
+        
+    }
+    
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
         
         do {
             self.phoenix = try Phoenix(withFile: "config");
+            self.phoenix?.networkDelegate = self
+            self.phoenix?.tryLogin({ (data, response, error) -> () in
+                if let err = error {
+                    print("Error: \(err.localizedDescription)")
+                }
+                if let unwrappedResponse = response {
+                    print("Response: \(unwrappedResponse)")
+                }
+                if let unwrappedData = data, body = NSString(data: unwrappedData, encoding: NSUTF8StringEncoding) {
+                    print("Data: \(body)")
+                }
+            })
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!

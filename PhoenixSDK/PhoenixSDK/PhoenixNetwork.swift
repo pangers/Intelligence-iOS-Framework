@@ -184,7 +184,7 @@ extension Phoenix {
         /// - Returns: true if the operation was needed and has been enqueued.
         private func enqueueAuthenticationOperationIfRequired() -> Bool {
             // If we already have an authentication operation we do not need to schedule another one.
-            if authenticateQueue.operationCount > 0 {
+            if !authentication.requiresAuthentication || authenticateQueue.operationCount > 0 {
                 return false
             }
 
@@ -228,24 +228,25 @@ extension Phoenix {
             
             defer {
                 // Continue worker queue if we have authentication object
-                self.workerQueue.suspended = self.authenticateQueue.operationCount > 0
+                workerQueue.suspended = authenticateQueue.operationCount > 0
                 
                 // Execute callback with data from request
                 callback(data: data, response: response, error: error)
                 
                 // Authentication object will be nil if we cannot parse the response.
-                if self.authentication.requiresAuthentication == true {
+                if authentication.requiresAuthentication == true {
                     // PSDK-26: #4 - When I open the sample app, And the /token endpoint is not available (404 error)
                     // PSDK-26: #5 - When I open the sample app, And the /token endpoint returns a 401 Unauthorised
                     // An exception is raised to the developer, And the SDK does not automatically attempt to get a token again
-                    self.delegate?.authenticationFailed(data, response: response, error: error)
+                    delegate?.authenticationFailed(data, response: response, error: error)
                 }
             }
             
             // Regardless of how we hit this method, we should update our authentication headers
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
-                where httpResponse.statusCode == HTTPStatusSuccess && self.authentication.loadAuthorizationFromJSON(json) == true else {
+                where httpResponse.statusCode == HTTPStatusSuccess &&
+                    authentication.loadAuthorizationFromJSON(json) == true else {
                     // TODO: Invalid response
                     return
             }
