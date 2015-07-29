@@ -53,7 +53,7 @@ public class Phoenix: NSObject {
     }
     
     public func tryLogin(callback: PhoenixNetworkingCallback) {
-        // TODO: Strip this out, for testing from App only
+        // TODO: Strip this out, for testing from App only. Also, make PhoenixNetworkingCallback internal.
         network.tryLogin(callback)
     }
     

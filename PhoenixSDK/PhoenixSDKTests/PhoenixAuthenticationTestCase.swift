@@ -64,7 +64,7 @@ class PhoenixAuthenticationTestCase: XCTestCase {
 
     func testExpireAuthenticationByTime() {
         var dictionary = correctWithRefreshTokenJsonDictionary
-        dictionary["expires_in"] = Double(0.01)
+        dictionary["expires_in"] = Double(0.001)
         
         guard let authentication = Phoenix.Authentication(json: dictionary) else {
             XCTAssert(false, "Didn't acquire an authentication")

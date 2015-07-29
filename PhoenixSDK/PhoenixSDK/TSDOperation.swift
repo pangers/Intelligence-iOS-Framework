@@ -11,8 +11,8 @@ import Foundation
 class TSDOperation <TInput, TOutput> : NSOperation {
     
     var input:TInput?
-    private(set) var output:TOutput?
-    private(set) var error:NSError?
+    internal(set) var output:TOutput?
+    internal(set) var error:NSError?
     
     override init() {
         super.init()
