@@ -29,8 +29,6 @@ let HTTPStatusTokenInvalid = 403
 // MARK: HTTP Method constants
 let HTTPPOSTMethod = "POST"
 
-let defaultRequestRetries = 3
-
 extension Phoenix {
     
     /// Wraps calls to the Phoenix API to assure that they are correctly authenticated.
