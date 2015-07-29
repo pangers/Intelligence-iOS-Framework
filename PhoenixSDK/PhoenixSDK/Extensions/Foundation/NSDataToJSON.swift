@@ -11,7 +11,7 @@ import Foundation
 extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData
-    private func pd_tryJSON() -> AnyObject? {
+    private func phx_tryJSON() -> AnyObject? {
         do {
             return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)
         } catch let err {
@@ -21,14 +21,14 @@ extension NSData {
     }
     
     /// - Returns: Array of JSONDictionary objects or nil if cast fails.
-    var pd_jsonArray: JSONArray? {
-        guard let arr = pd_tryJSON() as? JSONArray else { return nil }
+    var phx_jsonArray: JSONArray? {
+        guard let arr = phx_tryJSON() as? JSONArray else { return nil }
         return arr
     }
     
     /// - Returns: A JSONDictionary object or nil if cast fails.
-    var pd_jsonDictionary: JSONDictionary? {
-        guard let dict = pd_tryJSON() as? JSONDictionary else { return nil }
+    var phx_jsonDictionary: JSONDictionary? {
+        guard let dict = phx_tryJSON() as? JSONDictionary else { return nil }
         return dict
     }
 }

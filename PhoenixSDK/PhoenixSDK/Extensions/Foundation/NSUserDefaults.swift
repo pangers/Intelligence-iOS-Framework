@@ -14,32 +14,32 @@ private let tokenExpirationKey = "token_expiration_date"
 
 extension NSUserDefaults {    
     
-    func pd_setRefreshToken(value: String?) {
+    func phx_setRefreshToken(value: String?) {
         self[refreshTokenKey] = value
     }
     
-    func pd_refreshToken() -> String? {
+    func phx_refreshToken() -> String? {
         return self[refreshTokenKey] as? String
     }
     
-    func pd_setAccessToken(value: String?) {
+    func phx_setAccessToken(value: String?) {
         self[accessTokenKey] = value
     }
     
-    func pd_accessToken() -> String? {
+    func phx_accessToken() -> String? {
         return self[accessTokenKey] as? String
     }
     
-    func pd_setTokenExpirationDate(value: NSDate?) {
-        pd_setDate(value, forKey: tokenExpirationKey)
+    func phx_setTokenExpirationDate(value: NSDate?) {
+        phx_setDate(value, forKey: tokenExpirationKey)
     }
     
-    func pd_tokenExpirationDate() -> NSDate? {
-        return pd_dateForKey(tokenExpirationKey)
+    func phx_tokenExpirationDate() -> NSDate? {
+        return phx_dateForKey(tokenExpirationKey)
     }
     
     
-    func pd_setDate(value:NSDate?, forKey key:String) {
+    func phx_setDate(value:NSDate?, forKey key:String) {
         guard let date = value else {
             self[key] = nil
             return
@@ -48,7 +48,7 @@ extension NSUserDefaults {
         self[key] = date.timeIntervalSince1970
     }
     
-    func pd_dateForKey(key:String) -> NSDate? {
+    func phx_dateForKey(key:String) -> NSDate? {
         guard let timeInterval = self[key] as? NSTimeInterval else {
             return nil
         }
@@ -70,7 +70,7 @@ extension NSUserDefaults {
             // perform a suitable setting action here
             guard let value = newValue else {
                 removeObjectForKey(index)
-                return;
+                return
             }
             
             setObject(value, forKey: index)

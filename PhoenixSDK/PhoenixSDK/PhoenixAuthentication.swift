@@ -33,31 +33,31 @@ extension Phoenix {
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
-                return userDefaults.pd_accessToken()
+                return userDefaults.phx_accessToken()
             }
             set {
                 // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                userDefaults.pd_setAccessToken(newValue)
+                userDefaults.phx_setAccessToken(newValue)
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             get {
-                return userDefaults.pd_refreshToken()
+                return userDefaults.phx_refreshToken()
             }
             set {
-                userDefaults.pd_setRefreshToken(newValue)
+                userDefaults.phx_setRefreshToken(newValue)
             }
         }
         
         /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate? {
             get {
-                let date = userDefaults.pd_tokenExpirationDate()
+                let date = userDefaults.phx_tokenExpirationDate()
                 
                 // Only return valid expiration date if it is not expired
                 if date?.timeIntervalSinceNow < 0 {
@@ -68,7 +68,7 @@ extension Phoenix {
                 return date
             }
             set {
-                userDefaults.pd_setTokenExpirationDate(newValue)
+                userDefaults.phx_setTokenExpirationDate(newValue)
             }
         }
         

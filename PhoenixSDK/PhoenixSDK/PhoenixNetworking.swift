@@ -128,7 +128,7 @@ extension Phoenix {
             let operation = NSBlockOperation { [weak self] () -> Void in
                 // Mutate request, adding bearer token
                 guard let this = self,
-                    authenticatedRequest = request.preparePhoenixRequest(withAuthentication: this.authentication) else {
+                    authenticatedRequest = request.phx_preparePhoenixRequest(withAuthentication: this.authentication) else {
                     // Self has been invalidated or url request is immutable (somehow?)
                     return
                 }
@@ -209,7 +209,7 @@ extension Phoenix {
             // If the request cannot be build we should exit. 
             // This may need to raise some sort of warning to the developer (currently 
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            guard let request = NSURLRequest.requestForAuthentication(authentication, configuration: configuration) else {
+            guard let request = NSURLRequest.phx_requestForAuthentication(authentication, configuration: configuration) else {
                 return nil
             }
             
@@ -227,7 +227,7 @@ extension Phoenix {
                 // Regardless of how we hit this method, we should update our authentication headers
                 if let httpResponse = response as? NSHTTPURLResponse where httpResponse.statusCode == HTTPStatusSuccess {
                         
-                        guard let json = data?.pd_jsonDictionary, auth = Authentication(json: json) else {
+                        guard let json = data?.phx_jsonDictionary, auth = Authentication(json: json) else {
                             // TODO: Handle this...
                             print("Invalid response")
                             return
