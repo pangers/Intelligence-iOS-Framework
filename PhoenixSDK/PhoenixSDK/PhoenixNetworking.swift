@@ -117,7 +117,7 @@ extension Phoenix {
             return true
         }
         
-        /// Execute a request on the worker queue and performs the interception of 
+        /// Execute a request on the worker queue and performs the interception of
         /// it to handle authorization errors.
         ///
         /// - Parameters
@@ -148,9 +148,42 @@ extension Phoenix {
             enqueueRequestOperation(operation)
         }
         
+        /// Execute a request on the worker queue and performs the interception of
+        /// it to handle authorization errors.
+        ///
+        /// - Parameters
+        ///     - request: NSURLRequest with a valid URL.
+        ///     - callback: Block/function to call once executed.
+        func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
+            let initialBlock = operation.completionBlock
+            
+            operation.completionBlock = { [weak self] in
+                
+                defer {
+                    if let block = initialBlock {
+                        block()
+                    }
+                }
+                
+                guard let this = self else {
+                    return
+                }
+                
+                // Intercept the callback, handling 401 and 403
+                if this.interceptCallback(operation.output?.data, response: operation.output?.response, error: operation.error) {
+                    // Token invalid, try to authenticate again
+                    this.enqueueAuthenticationOperationIfRequired()
+                    
+                    // TODO: Reschedule the operation.
+                }
+            }
+            
+            enqueueRequestOperation(operation)
+        }
+        
         /// Enqueue operation in worker queue, will suspend worker queue if authentication is required.
         /// - Parameter operation: Operation created using
-        private func enqueueRequestOperation(operation: NSOperation) {
+        private func enqueueRequestOperation(operation: PhoenixNetworkRequestOperation) {
             // This method may suspend worker queue
             enqueueAuthenticationOperationIfRequired()
             // Enqueue operation
@@ -185,8 +218,8 @@ extension Phoenix {
         
         /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
         /// - Parameter callback: Contains data, response, and error information from request.
-        /// - Returns: `nil` or `NSOperation` depending on if authentication is necessary (determined by `authentication` objects state).
-        private func createAuthenticationOperation(callback: PhoenixNetworkingCallback) -> NSOperation? {
+        /// - Returns: `nil` or `PhoenixNetworkingCallback` depending on if authentication is necessary (determined by `authentication` objects state).
+        private func createAuthenticationOperation(callback: PhoenixNetworkingCallback) -> PhoenixNetworkRequestOperation? {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
@@ -233,10 +266,7 @@ extension Phoenix {
 
         // TODO: Remove this method (hack - since we have no API calls yet)
         func tryLogin(callback: PhoenixNetworkingCallback) {
-            let blockOp = NSBlockOperation { () -> Void in
-                print("Started block")
-            }
-            enqueueRequestOperation(blockOp)
+            enqueueAuthenticationOperationIfRequired()
         }
     }
 }
