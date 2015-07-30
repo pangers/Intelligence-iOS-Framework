@@ -21,6 +21,8 @@ typealias JSONArray = [AnyObject]
 typealias JSONDictionary = [String: AnyObject]
 
 // MARK: Status code constants
+// TODO: Rename these variables, as 401 is not always a Token Expired response and 403 is not always Token Invalid
+//       we need to interrogate the 'error' field in the JSON object that is returned to figure out what is actually the problem.
 let HTTPStatusSuccess = 200
 let HTTPStatusTokenExpired = 401
 let HTTPStatusTokenInvalid = 403
