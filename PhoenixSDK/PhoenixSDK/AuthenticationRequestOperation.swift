@@ -10,26 +10,26 @@ import Foundation
 
 public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
 
-private let maximumDelay = 5 * 60 // 5 minutes
-
-private func exponentialBackoff() -> ( block: (()->Bool) ) -> Void
-{
-    var delay = 3
-    
-    func backoff ( block:( () -> Bool) ) {
-        
-        if !block() {
-            sleep(UInt32(delay))
-            
-            delay = min(maximumDelay, delay*2)
-            
-            backoff(block)
-        }
-        
-    }
-    
-    return backoff
-}
+//private let maximumDelay = 5 * 60 // 5 minutes
+//
+//private func exponentialBackoff() -> ( block: (()->Bool) ) -> Void
+//{
+//    var delay = 3
+//    
+//    func backoff ( block:( () -> Bool) ) {
+//        
+//        if !block() {
+//            sleep(UInt32(delay))
+//            
+//            delay = min(maximumDelay, delay*2)
+//            
+//            backoff(block)
+//        }
+//        
+//    }
+//    
+//    return backoff
+//}
 
 extension Phoenix {
     
