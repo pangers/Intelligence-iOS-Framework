@@ -18,10 +18,4 @@ internal class TSDOperation <TInput, TOutput> : NSOperation {
         super.init()
     }
     
-    convenience init(withInput input:TInput) {
-        self.init()
-        self.input = input
-    }
-    
-    
 }

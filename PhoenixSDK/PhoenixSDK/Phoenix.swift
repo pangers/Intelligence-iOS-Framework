@@ -15,7 +15,7 @@ public final class Phoenix: NSObject {
 
     /// Private configuration. Can't be modified once initialized.
     private let configuration: Configuration
-    private let network: Network
+    internal let network: Network
 
     public var isAuthenticated:Bool {
         return network.isAuthenticated

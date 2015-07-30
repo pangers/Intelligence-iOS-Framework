@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
-		BB0F0ECC1B68C63E008679C9 /* TSDPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */; };
 		BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */; };
 		BB0F0ED01B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECF1B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift */; };
 		BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession.swift */; };
@@ -29,6 +28,7 @@
 		BBD7AF181B6A28F800F5B9C1 /* SimpleStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF171B6A28F800F5B9C1 /* SimpleStorage.swift */; };
 		BBD7AF1A1B6A299300F5B9C1 /* MockSimpleStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */; };
 		BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */; };
+		BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */; };
 		BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */; };
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
 		FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */; };
@@ -91,7 +91,6 @@
 		A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDK-Info.plist"; sourceTree = "<group>"; };
 		A07FACBA1B5D0C4200482BB7 /* PhoenixSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDKTests-Info.plist"; sourceTree = "<group>"; };
-		BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDPipeline.swift; sourceTree = "<group>"; };
 		BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDOperation.swift; sourceTree = "<group>"; };
 		BB0F0ECF1B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworkRequestOperation.swift; sourceTree = "<group>"; };
 		BB0F0ED11B68DA03008679C9 /* NSURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSession.swift; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 		BBD7AF171B6A28F800F5B9C1 /* SimpleStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleStorage.swift; sourceTree = "<group>"; };
 		BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSimpleStorage.swift; sourceTree = "<group>"; };
 		BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixBaseTestCase.swift; sourceTree = "<group>"; };
+		BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTestCase.swift; sourceTree = "<group>"; };
 		BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
 		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
 		FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegion.swift; sourceTree = "<group>"; };
@@ -188,6 +188,7 @@
 				FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */,
 				BBD7AF1D1B6A2C1A00F5B9C1 /* Configuration */,
 				BBD7AF1E1B6A2C2300F5B9C1 /* Network */,
+				BBD7AF1F1B6A3D0100F5B9C1 /* Utils */,
 			);
 			path = PhoenixSDKTests;
 			sourceTree = "<group>";
@@ -195,7 +196,6 @@
 		BB0F0ECA1B68C627008679C9 /* Pipeline */ = {
 			isa = PBXGroup;
 			children = (
-				BB0F0ECB1B68C63E008679C9 /* TSDPipeline.swift */,
 				BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */,
 			);
 			name = Pipeline;
@@ -268,6 +268,14 @@
 				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
 			);
 			name = Network;
+			sourceTree = "<group>";
+		};
+		BBD7AF1F1B6A3D0100F5B9C1 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		FEF7EF721B6671C700066AA3 /* Extensions */ = {
@@ -457,7 +465,6 @@
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,
 				BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */,
 				BB0F0ED01B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift in Sources */,
-				BB0F0ECC1B68C63E008679C9 /* TSDPipeline.swift in Sources */,
 				BBA573781B692B6900685EFB /* String.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
@@ -475,6 +482,7 @@
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
 				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
+				BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */,
 				BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
