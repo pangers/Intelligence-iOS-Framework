@@ -17,7 +17,7 @@ private let refreshTokenKey = "refresh_token"
 internal extension Phoenix {
 
     /// Authentication class provides a wrapper over Phoenix's authentication responses.
-    class Authentication {
+    final class Authentication {
         
         // MARK: Instance variables
         

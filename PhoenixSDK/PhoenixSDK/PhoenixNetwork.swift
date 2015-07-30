@@ -33,7 +33,7 @@ internal let HTTPPOSTMethod = "POST"
 internal extension Phoenix {
     
     /// Wraps calls to the Phoenix API to assure that they are correctly authenticated.
-    class Network {
+    final class Network {
         
         // TODO: Define a retry policy, something like...
         // Call

@@ -17,7 +17,7 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public class Configuration: NSObject {
+    public final class Configuration: NSObject {
         
         // TODO: Add company ID to configuration as mandatory
         

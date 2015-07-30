@@ -9,7 +9,7 @@
 import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
-public class Phoenix: NSObject {
+public final class Phoenix: NSObject {
     
     // MARK: Instance variables
 
