@@ -8,8 +8,13 @@
 
 import Foundation
 
-public protocol PhoenixConfigurationInputProtocol {
-    func readFromFile(fileName: String, inBundle bundle: NSBundle) throws
+// Constants used to parse the JSON file.
+private enum ConfigurationKey: String {
+    case ClientID = "client_id"
+    case ClientSecret = "client_secret"
+    case ApplicationID = "application_id"
+    case ProjectID = "project_id"
+    case Region = "region"
 }
 
 public protocol PhoenixConfigurationProtocol {
@@ -20,7 +25,32 @@ public protocol PhoenixConfigurationProtocol {
     var region: Phoenix.Region? { get set }
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
-    var baseURL: NSURL? { get }
+
+    func copy() -> PhoenixConfigurationProtocol
+}
+
+extension PhoenixConfigurationProtocol {
+    
+    /// - Returns: True if the configuration is correct and can be used to initialize
+    /// the Phoenix SDK.
+    public var isValid: Bool {
+        // For now only check if there is a missing property.
+        return !self.hasMissingProperty
+    }
+    
+    /// - Returns: True if there is a missing property in the configuration
+    public var hasMissingProperty: Bool {
+        return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
+            applicationID <= 0 || region == nil
+    }
+    
+    /// - Returns: Base URL to call.
+    public var baseURL: NSURL? {
+        guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
+            return nil
+        }
+        return URL
+    }
 }
 
 public extension Phoenix {
@@ -47,29 +77,19 @@ public extension Phoenix {
         /// The region
         public var region: Region?
 
-        /// - Returns: True if the configuration is correct and can be used to initialize
-        /// the Phoenix SDK.
-        public var isValid: Bool {
-            // For now only check if there is a missing property.
-            return !self.hasMissingProperty
+        convenience init(fromFile file:String, inBundle bundle:NSBundle) throws {
+            self.init()
+            try self.readFromFile(file, inBundle: bundle)
         }
         
-        /// - Returns: True if there is a missing property in the configuration
-        public var hasMissingProperty: Bool {
-            return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == nil
-        }
-        
-        /// - Returns: Base URL to call.
-        public var baseURL: NSURL? {
-            guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
-                return nil
-            }
-            return URL
+        class func configuration(fromFile file:String, inBundle bundle:NSBundle) throws -> Configuration {
+            let configuration = Configuration()
+            try configuration.readFromFile(file, inBundle: bundle)
+            return configuration
         }
         
         // NSCopying
-        override public func copy() -> AnyObject {
+        public func copy() -> PhoenixConfigurationProtocol {
             let copy = Configuration()
             copy.region = self.region
             copy.applicationID = self.applicationID
@@ -78,74 +98,50 @@ public extension Phoenix {
             copy.clientSecret = String(self.clientSecret)
             return copy
         }
-    }
-}
-
-// Extension to add JSON file reading functionality.
-extension Phoenix.Configuration: PhoenixConfigurationInputProtocol {
-    
-    // Constants used to parse the JSON file.
-    private enum ConfigurationKey: String {
-        case ClientID = "client_id"
-        case ClientSecret = "client_secret"
-        case ApplicationID = "application_id"
-        case ProjectID = "project_id"
-        case Region = "region"
-    }
-    
-    /// Initialises the configuration with a JSON with the file name specified in the main
-    /// - Throws: **ConfigurationError** if there was any error while reading and parsing the file.
-    /// - Parameters:
-    ///     - fromFile: The file name to read.
-    ///     - inBundle: The bundle in which we will look for the file.
-    convenience public init(fromFile fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
-        self.init();
-        try readFromFile(fileName, inBundle:bundle)
-    }
-    
-    /// Parses the JSON configuration file passed as parameter into the configuration object.
-    /// - Throws: **ConfigurationError** if there was any error while reading and parsing the file.
-    /// - Parameters:
-    ///     - fileName: The name of the JSON file containing the configuration.
-    ///     - inBundle: The bundle in which we will look for the file.
-    public func readFromFile(fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
         
-        guard
-            let path = bundle.pathForResource(fileName, ofType: "json"),
-            data = NSData(contentsOfFile: path)  else
-        {
-            throw ConfigurationError.FileNotFoundError
-        }
-        
-        // Helper function to parse the data and return an optional instead of an error
-        func optionalJSONData(data: NSData) -> NSDictionary? {
-            do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
+        /// Parses the JSON configuration file passed as parameter into the configuration object.
+        /// - Throws: **ConfigurationError** if there was any error while reading and parsing the file.
+        /// - Parameters:
+        ///     - fileName: The name of the JSON file containing the configuration.
+        ///     - inBundle: The bundle in which we will look for the file.
+        public func readFromFile(fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
+            
+            guard let path = bundle.pathForResource(fileName, ofType: "json"),
+                data = NSData(contentsOfFile: path)  else
+            {
+                throw ConfigurationError.FileNotFoundError
             }
-            catch {
-                // Swallow the error
+            
+            // Helper function to parse the data and return an optional instead of an error
+            func optionalJSONData(data: NSData) -> NSDictionary? {
+                do {
+                    return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
+                }
+                catch {
+                    // Swallow the error
+                }
+                return nil
             }
-            return nil
-        }
-        
-        // Guard that we have the json data parsed correctly
-        guard let contents = optionalJSONData(data) else {
-            throw ConfigurationError.InvalidFileError
-        }
-        
-        // Helper function to load a value from a dictionary.
-        func value<T>(forKey key: ConfigurationKey, inContents contents: NSDictionary) throws -> T {
-            guard let output = contents[key.rawValue] as? T else {
-                throw ConfigurationError.InvalidPropertyError
+            
+            // Guard that we have the json data parsed correctly
+            guard let contents = optionalJSONData(data) else {
+                throw ConfigurationError.InvalidFileError
             }
-            return output
+            
+            // Helper function to load a value from a dictionary.
+            func value<T>(forKey key: ConfigurationKey, inContents contents: NSDictionary) throws -> T {
+                guard let output = contents[key.rawValue] as? T else {
+                    throw ConfigurationError.InvalidPropertyError
+                }
+                return output
+            }
+            
+            // Fetch from the contents dictionary
+            self.clientID = try value(forKey: .ClientID, inContents:contents)
+            self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
+            self.projectID = try value(forKey: .ProjectID, inContents:contents)
+            self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
+            self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
         }
-        
-        // Fetch from the contents dictionary
-        clientID = try value(forKey: .ClientID, inContents:contents)
-        clientSecret = try value(forKey: .ClientSecret, inContents:contents)
-        projectID = try value(forKey: .ProjectID, inContents:contents)
-        applicationID = try value(forKey: .ApplicationID, inContents:contents)
-        region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
     }
 }

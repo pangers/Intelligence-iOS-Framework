@@ -26,7 +26,7 @@ public extension Phoenix {
         case Singapore
         
         /// - Returns: String to the base url to use (including protocol).
-        func baseURL() -> String {
+        public func baseURL() -> String {
             switch (self) {
             case .UnitedStates:
                 return "https://api.phoenixplatform.com"

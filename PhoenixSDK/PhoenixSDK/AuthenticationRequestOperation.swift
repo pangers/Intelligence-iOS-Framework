@@ -39,7 +39,7 @@ internal extension Phoenix {
         private let authentication:Phoenix.Authentication
         private var callbacks:[PhoenixAuthenticationCallback] = []
         
-        init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
+        init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
             self.sessionManager = session
             self.authentication = authentication
             

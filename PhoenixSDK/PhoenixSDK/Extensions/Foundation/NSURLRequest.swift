@@ -55,9 +55,9 @@ internal extension NSURLRequest {
     /// Request with URL constructed using the passed Authentication and Configuration.
     /// - Parameters:
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
-    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
     /// - Returns: An NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthentication(authentication: Phoenix.Authentication, configuration: Phoenix.Configuration) -> NSURLRequest {
+    class func phx_requestForAuthentication(authentication: Phoenix.Authentication, configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
         
         if !authentication.anonymous {
 
@@ -78,12 +78,12 @@ internal extension NSURLRequest {
         }
     }
     
-    private class func phx_requestForAuthenticationWithClientCredentials(configuration:Phoenix.Configuration) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithClientCredentials(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=client_credentials"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
-    private class func phx_requestForAuthenticationWithRefreshToken(configuration:Phoenix.Configuration, authentication:Phoenix.Authentication) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithRefreshToken(configuration:PhoenixConfigurationProtocol, authentication:Phoenix.Authentication) -> NSURLRequest {
         // Guard required values
         guard let refreshToken = authentication.refreshToken
             where configuration.clientID.isEmpty || configuration.clientSecret.isEmpty else {
@@ -95,7 +95,7 @@ internal extension NSURLRequest {
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
-    private class func phx_requestForAuthenticationWithUserCredentials(configuration:Phoenix.Configuration, authentication:Phoenix.Authentication) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithUserCredentials(configuration:PhoenixConfigurationProtocol, authentication:Phoenix.Authentication) -> NSURLRequest {
         // Guard required values
         guard let username = authentication.username,
             password = authentication.password
@@ -108,7 +108,7 @@ internal extension NSURLRequest {
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
-    private class func phx_httpURLRequestForAuthentication(configuration: Phoenix.Configuration, postQuery:String) -> NSURLRequest {
+    private class func phx_httpURLRequestForAuthentication(configuration: PhoenixConfigurationProtocol, postQuery:String) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_oauthTokenURLPath(), relativeToURL: configuration.baseURL) {
             // Create URL encoded POST with query string

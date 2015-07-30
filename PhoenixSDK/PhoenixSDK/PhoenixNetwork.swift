@@ -62,7 +62,7 @@ internal extension Phoenix {
         private lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         
         /// Configuration passed through from Network initializer (assumed to be valid).
-        private let configuration: Configuration
+        private let configuration: PhoenixConfigurationProtocol
         
         /// Authentication object will be configured on response of an oauth/token call or initialized from NSUserDefaults.
         private var authentication: Authentication
@@ -81,7 +81,7 @@ internal extension Phoenix {
         // MARK: Initializers
         
         /// Initialize new instance of Phoenix Networking class
-        init(withConfiguration configuration: Configuration) {
+        init(withConfiguration configuration: PhoenixConfigurationProtocol) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
             self.authentication = Authentication()

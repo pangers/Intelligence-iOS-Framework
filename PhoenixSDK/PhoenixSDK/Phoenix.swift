@@ -14,7 +14,7 @@ public final class Phoenix: NSObject {
     // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
-    private let configuration: Configuration
+    private let configuration: PhoenixConfigurationProtocol
     internal let network: Network
 
     public var isAuthenticated:Bool {
@@ -22,8 +22,8 @@ public final class Phoenix: NSObject {
     }
 
     /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: Configuration {
-        return configuration.copy() as! Configuration
+    public var currentConfiguration: PhoenixConfigurationProtocol {
+        return configuration.copy()
     }
     
     /// Delegate implementing failure methods that a developer should implement to catch
@@ -42,8 +42,8 @@ public final class Phoenix: NSObject {
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
     /// will be copied to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration cfg: Configuration) throws {
-        self.configuration = cfg.copy() as! Configuration
+    public init(withConfiguration cfg: PhoenixConfigurationProtocol) throws {
+        self.configuration = cfg.copy()
         self.network = Network(withConfiguration: self.configuration)
         super.init()
 
@@ -56,12 +56,6 @@ public final class Phoenix: NSObject {
         {
             throw ConfigurationError.InvalidPropertyError
         }
-        
-        // Automatically try to login
-        // TODO: Make this triggered by some other event? Or always implement like this.
-        network.tryLogin { (authenticated) -> () in
-            print("Logged in \(authenticated)")
-        }
     }
     
     /// Provides a convenience initializer to load the configuration from a JSON file
@@ -71,6 +65,6 @@ public final class Phoenix: NSObject {
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
-        try self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
     }
 }
