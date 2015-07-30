@@ -8,7 +8,7 @@
 
 import XCTest
 import OHHTTPStubs
-
+  
 @testable import PhoenixSDK
 
 class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {

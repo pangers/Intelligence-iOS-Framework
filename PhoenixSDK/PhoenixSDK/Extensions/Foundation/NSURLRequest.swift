@@ -98,7 +98,7 @@ internal extension NSURLRequest {
     private class func phx_requestForAuthenticationWithUserCredentials(configuration:Phoenix.Configuration, authentication:Phoenix.Authentication) -> NSURLRequest {
         // Guard required values
         guard let username = authentication.username,
-            let password = authentication.password
+            password = authentication.password
             where configuration.clientID.isEmpty || configuration.clientSecret.isEmpty else {
                 assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
                 return NSURLRequest()

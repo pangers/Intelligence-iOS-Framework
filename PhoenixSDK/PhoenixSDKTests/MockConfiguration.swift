@@ -10,14 +10,33 @@ import Foundation
 
 import PhoenixSDK
 
-    public class MockConfiguration: Phoenix.Configuration {
+    public class MockConfiguration: PhoenixConfigurationProtocol {
         
-        override public var isValid: Bool {
-            return false
-        }
+        /// The client ID
+        public var clientID = ""
         
-        override public var hasMissingProperty: Bool {
-            return false
+        /// The client secret
+        public var clientSecret = ""
+        
+        /// The project ID
+        public var projectID = 0
+        
+        /// The application ID
+        public var applicationID = 0
+        
+        /// The region
+        public var region: Region?
+
+        public var isValid = false
+        
+        public var hasMissingProperty = false
+        
+        /// - Returns: Base URL to call.
+        public var baseURL: NSURL? {
+            guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
+                return nil
+            }
+            return URL
         }
     }
 

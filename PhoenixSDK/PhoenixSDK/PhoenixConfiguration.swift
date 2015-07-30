@@ -12,41 +12,41 @@ public protocol PhoenixConfigurationInputProtocol {
     func readFromFile(fileName: String, inBundle bundle: NSBundle) throws
 }
 
+public protocol PhoenixConfigurationProtocol {
+    var clientID: String { get set }
+    var clientSecret: String { get set }
+    var projectID: Int { get set }
+    var applicationID: Int { get set }
+    var region: Phoenix.Region? { get set }
+    var isValid: Bool { get }
+    var hasMissingProperty: Bool { get }
+    var baseURL: NSURL? { get }
+}
+
 public extension Phoenix {
     
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public final class Configuration: NSObject {
+    public final class Configuration: NSObject, PhoenixConfigurationProtocol {
         
         // TODO: Add company ID to configuration as mandatory
         
         /// The client ID
-        public var clientID: String = ""
+        public var clientID = ""
         
         /// The client secret
-        public var clientSecret: String = ""
+        public var clientSecret = ""
         
         /// The project ID
-        public var projectID: Int = 0
+        public var projectID = 0
         
         /// The application ID
-        public var applicationID: Int = 0
+        public var applicationID = 0
         
         /// The region
         public var region: Region?
 
-        // NSCopying
-        public override func copy() -> AnyObject {
-            let copy = Configuration()
-            copy.region = self.region
-            copy.applicationID = self.applicationID
-            copy.projectID = self.projectID
-            copy.clientID = String(self.clientID)
-            copy.clientSecret = String(self.clientSecret)
-            return copy
-        }
-        
         /// - Returns: True if the configuration is correct and can be used to initialize
         /// the Phoenix SDK.
         public var isValid: Bool {
@@ -61,11 +61,22 @@ public extension Phoenix {
         }
         
         /// - Returns: Base URL to call.
-        internal var baseURL: NSURL? {
+        public var baseURL: NSURL? {
             guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
                 return nil
             }
             return URL
+        }
+        
+        // NSCopying
+        override public func copy() -> AnyObject {
+            let copy = Configuration()
+            copy.region = self.region
+            copy.applicationID = self.applicationID
+            copy.projectID = self.projectID
+            copy.clientID = String(self.clientID)
+            copy.clientSecret = String(self.clientSecret)
+            return copy
         }
     }
 }
