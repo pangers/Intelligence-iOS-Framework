@@ -9,7 +9,7 @@
 import Foundation
 
 
-class TSDPipeline <TInput, TOutput, TFirstOperationOutput> : TSDOperation <TInput, TOutput> {
+internal class TSDPipeline <TInput, TOutput, TFirstOperationOutput> : TSDOperation <TInput, TOutput> {
     
     typealias TSDPipelineCompletion = (output:TOutput?, error:NSError?) -> Void
     

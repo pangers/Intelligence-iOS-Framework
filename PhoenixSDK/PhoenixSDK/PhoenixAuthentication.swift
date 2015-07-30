@@ -14,10 +14,10 @@ private let accessTokenKey = "access_token"
 private let expiresInKey = "expires_in"
 private let refreshTokenKey = "refresh_token"
 
-extension Phoenix {
+internal extension Phoenix {
 
     /// Authentication class provides a wrapper over Phoenix's authentication responses.
-    public class Authentication {
+    class Authentication {
         
         // MARK: Instance variables
         

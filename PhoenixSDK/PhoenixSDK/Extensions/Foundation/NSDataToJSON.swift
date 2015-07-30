@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSData {
+internal extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData
     private func phx_tryJSON() -> AnyObject? {

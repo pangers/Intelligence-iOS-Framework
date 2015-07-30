@@ -8,11 +8,11 @@
 
 import Foundation
 
-class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
+internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
     
-    let sessionManager:NSURLSession
-    let request:NSURLRequest
-    let authentication:Phoenix.Authentication
+    private let sessionManager:NSURLSession
+    private let request:NSURLRequest
+    private let authentication:Phoenix.Authentication
     
     /// Default initializer with all required parameters
     init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {

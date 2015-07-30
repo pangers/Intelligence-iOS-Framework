@@ -15,22 +15,22 @@ import Foundation
 public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
 /// Alias for an array loaded from a JSON object.
-typealias JSONArray = [AnyObject]
+internal typealias JSONArray = [AnyObject]
 
 /// Alias for a dictionary loaded from a JSON object.
-typealias JSONDictionary = [String: AnyObject]
+internal typealias JSONDictionary = [String: AnyObject]
 
 // MARK: Status code constants
 // TODO: Rename these variables, as 401 is not always a Token Expired response and 403 is not always Token Invalid
 //       we need to interrogate the 'error' field in the JSON object that is returned to figure out what is actually the problem.
-let HTTPStatusSuccess = 200
-let HTTPStatusTokenExpired = 401
-let HTTPStatusTokenInvalid = 403
+private let HTTPStatusSuccess = 200
+private let HTTPStatusTokenExpired = 401
+private let HTTPStatusTokenInvalid = 403
 
 // MARK: HTTP Method constants
-let HTTPPOSTMethod = "POST"
+internal let HTTPPOSTMethod = "POST"
 
-extension Phoenix {
+internal extension Phoenix {
     
     /// Wraps calls to the Phoenix API to assure that they are correctly authenticated.
     class Network {
@@ -148,7 +148,7 @@ extension Phoenix {
         /// - Parameters
         ///     - request: NSURLRequest with a valid URL.
         ///     - callback: Block/function to call once executed.
-        func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
+        private func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
             let initialBlock = operation.completionBlock
             
             operation.completionBlock = { [weak self] in
@@ -236,7 +236,7 @@ extension Phoenix {
             return authenticationOperation
         }
         
-        func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation) {
+        private func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation) {
             let response = authenticationOperation.output?.response
             let data = authenticationOperation.output?.data
             let error = authenticationOperation.error

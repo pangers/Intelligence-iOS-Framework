@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct Injector {
+internal struct Injector {
     static internal(set) var storage:SimpleStorage = NSUserDefaults.standardUserDefaults()
 }

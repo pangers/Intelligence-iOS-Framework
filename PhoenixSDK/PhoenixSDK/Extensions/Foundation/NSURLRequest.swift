@@ -16,7 +16,7 @@ private let HTTPHeaderContentTypeKey = "Content-Type"
 private let HTTPHeaderApplicationJson = "application/json"
 private let HTTPHeaderApplicationFormUrlEncoded = "application/x-www-form-urlencoded"
 
-extension NSURLRequest {
+internal extension NSURLRequest {
     
     // MARK: Prepare request
     

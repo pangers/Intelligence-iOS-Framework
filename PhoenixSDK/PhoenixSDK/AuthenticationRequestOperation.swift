@@ -31,7 +31,7 @@ private func exponentialBackoff() -> ( block: (()->Bool) ) -> Void
     return backoff
 }
 
-extension Phoenix {
+internal extension Phoenix {
     
     class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         

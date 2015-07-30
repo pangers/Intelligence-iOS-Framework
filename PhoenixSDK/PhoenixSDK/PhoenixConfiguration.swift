@@ -61,7 +61,7 @@ public extension Phoenix {
         }
         
         /// - Returns: Base URL to call.
-        public var baseURL: NSURL? {
+        internal var baseURL: NSURL? {
             guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
                 return nil
             }

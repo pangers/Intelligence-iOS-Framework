@@ -12,16 +12,16 @@ private let accessTokenKey = "access_token"
 private let refreshTokenKey = "refresh_token"
 private let tokenExpirationKey = "token_expiration_date"
 
-protocol SimpleStorage {
+internal protocol SimpleStorage {
     
     // Subscript implementation
     subscript(index: String) -> AnyObject? {get set}
     
 }
 
-extension SimpleStorage {
+internal extension SimpleStorage {
     
-    var refreshToken: String? {
+    internal var refreshToken: String? {
         get {
             return self[refreshTokenKey] as? String
         }
@@ -30,7 +30,7 @@ extension SimpleStorage {
         }
     }
     
-    var accessToken:String? {
+    internal var accessToken:String? {
         get {
             return self[accessTokenKey] as? String
         }
@@ -39,7 +39,7 @@ extension SimpleStorage {
         }
     }
     
-    var tokenExpirationDate:NSDate? {
+    internal var tokenExpirationDate:NSDate? {
         get {
             guard let timeInterval = self[tokenExpirationKey] as? NSTimeInterval else {
                 return nil
