@@ -8,6 +8,8 @@
 
 import XCTest
 
+@testable import PhoenixSDK
+
 class UtilsTestCase: PhoenixBaseTestCase {
 
     func testStringContains() {
@@ -20,5 +22,45 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert("123".contains("123"), "Two equal strings are contained.")
         XCTAssert("PADDING123PADDING".contains("123"), "Strings contain.")
     }
+    
+    func testUserDefaultsSubscript() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let key = "test"
+        let value = "value"
+        
+        defaults[key] = value
+        
+        let result = defaults[key] as? String
+        
+        XCTAssert( (result == value) ,"Failure in subscript method.")
+        
+        defaults[key] = nil
+        
+        XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
+    }
+    
+    func testSimpleStorageNoDate() {
+        var storage = MockSimpleStorage()
+        storage.tokenExpirationDate = nil
+        
+        XCTAssert(storage.tokenExpirationDate == nil ,"Can clear the storage date correctly.")
+    }
+    
+    func testDataToJSONArray() {
+        guard let array = "[0,1,2,3]".dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonArray else {
+            XCTAssert(false,"Couldn't load an array from the NSData")
+            return
+        }
+        
+        for (index,value) in array.enumerate() {
+            XCTAssert(index == value as! Int, "Unexpected value parsed")
+        }
+    }
 
+    func testGuardedJSONParsing() {
+        let wrongJSONData = "sadasda{\\".dataUsingEncoding(NSUTF8StringEncoding)!
+        
+        XCTAssertNil(wrongJSONData.phx_jsonArray, "Json array loaded from wrong data")
+        XCTAssertNil(wrongJSONData.phx_jsonDictionary, "Json dictionary loaded from wrong data")
+    }
 }
