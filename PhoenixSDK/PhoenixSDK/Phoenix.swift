@@ -67,4 +67,12 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
     }
+
+    /// Starts the Phoenix SDK work
+    func startup() {
+        network.tryLogin { (authenticated) -> () in
+            print("Logged in \(authenticated)")
+        }
+    }
+    
 }
