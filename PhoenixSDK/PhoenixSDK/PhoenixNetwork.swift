@@ -12,16 +12,13 @@ import Foundation
     func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?)
 }
 
+public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
 /// Alias for an array loaded from a JSON object.
 typealias JSONArray = [AnyObject]
 
 /// Alias for a dictionary loaded from a JSON object.
 typealias JSONDictionary = [String: AnyObject]
-
-public typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
-
-public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
 
 // MARK: Status code constants
 let HTTPStatusSuccess = 200
@@ -71,11 +68,13 @@ extension Phoenix {
         /// Static operation queue containing only one authentication operation at a time, enforced by 'authenticationOperation != nil'.
         private let authenticateQueue: NSOperationQueue
         
+        private var authenticationOperation:AuthenticationRequestOperation?
+        
         var isAuthenticated:Bool {
             return !authentication.requiresAuthentication
         }
         
-        var delegate:PhoenixNetworkDelegate?
+        weak var delegate:PhoenixNetworkDelegate?
         
         // MARK: Initializers
         
@@ -183,33 +182,34 @@ extension Phoenix {
             workerQueue.addOperation(operation)
         }
         
-        
         // MARK:- Authentication
         
         /// Enqueues an authentication operation if needed
         /// - Returns: true if the operation was needed and has been enqueued.
-        private func enqueueAuthenticationOperationIfRequired(callback:PhoenixNetworkingCallback? = nil) -> Bool {
+        private func enqueueAuthenticationOperationIfRequired(callback:PhoenixAuthenticationCallback? = nil) -> Bool {
             // If we already have an authentication operation we do not need to schedule another one.
             if !authentication.requiresAuthentication {
                 
                 if let block = callback {
-                    block(authenticated: !authentication.requiresAuthentication)
+                    block(authenticated: true)
                 }
                 return false
             }
 
-            if let authenticationOperation = authenticateQueue.operations[0] as? AuthenticationRequestOperation {
-                authenticationOperation.addCallback(callback)
+            if let authOp = authenticationOperation {
+                if let block = callback {
+                    authOp.addCallback(block)
+                }
                 return false
             }
             
-            let authOp = createAuthenticationOperation(callback)
+            authenticationOperation = createAuthenticationOperation(callback)
             
             // Suspend worker queue until authentication succeeds
             workerQueue.suspended = true
             
             // Schedule authentication call
-            authenticateQueue.addOperation(authOp)
+            authenticateQueue.addOperation(authenticationOperation!)
             
             return true
         }
@@ -217,32 +217,31 @@ extension Phoenix {
         /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
         /// - Parameter callback: Contains data, response, and error information from request.
         /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
-        private func createAuthenticationOperation(callback: PhoenixNetworkingCallback?) -> Phoenix.AuthenticationRequestOperation {
+        private func createAuthenticationOperation(callback: PhoenixAuthenticationCallback?) -> Phoenix.AuthenticationRequestOperation {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
             let authenticationOperation = Phoenix.AuthenticationRequestOperation(session: sessionManager, authentication: authentication, configuration: configuration)
             
-            authenticationOperation.completionBlock = { [weak self] in
-                self?.didCompleteAuthenticationOperation(authenticationOperation, callback:callback)
+            authenticationOperation.addCallback { [weak self] (authenticated) -> () in
+                self?.didCompleteAuthenticationOperation(authenticationOperation)
+            }
+            
+            if let block = callback {
+                authenticationOperation.addCallback(block)
             }
             
             return authenticationOperation
         }
         
-        func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation, callback: PhoenixNetworkingCallback?) {
+        func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation) {
             let response = authenticationOperation.output?.response
             let data = authenticationOperation.output?.data
             let error = authenticationOperation.error
             
             defer {
                 // Continue worker queue if we have authentication object
-                workerQueue.suspended = authenticateQueue.operationCount > 0
-                
-                // Execute callback with data from request
-                if let block = callback {
-                    block(data: data, response: response, error: error)
-                }
+                workerQueue.suspended = !self.isAuthenticated
                 
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
@@ -256,11 +255,12 @@ extension Phoenix {
             // Regardless of how we hit this method, we should update our authentication headers
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
-                where httpResponse.statusCode == HTTPStatusSuccess &&
-                    authentication.loadAuthorizationFromJSON(json) == true else {
+                where httpResponse.statusCode == HTTPStatusSuccess else {
                     // TODO: Invalid response
                     return
             }
+            
+            authentication.loadAuthorizationFromJSON(json)
         }
 
         // TODO: Remove this method (hack - since we have no API calls yet)

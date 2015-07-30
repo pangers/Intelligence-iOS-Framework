@@ -11,7 +11,7 @@ import XCTest
 
 // Refers to test case https://tigerspike.atlassian.net/browse/PSDK-21
 // Refers to test case https://tigerspike.atlassian.net/browse/PSDK-22
-class PhoenixConfigurationTestCase: XCTestCase {
+class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     
     func testConfigurationFromFileAndBundle() {
         let clientID="CLIENT_ID" // as in file

@@ -12,7 +12,7 @@ import Foundation
 extension String {
     
     public func contains(string:String) -> Bool {
-        return self.rangeOfString(string) != nil
+        return rangeOfString(string) != nil
     }
     
 }

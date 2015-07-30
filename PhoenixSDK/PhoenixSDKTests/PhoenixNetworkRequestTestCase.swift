@@ -11,12 +11,14 @@ import OHHTTPStubs
 
 @testable import PhoenixSDK
 
-class PhoenixNetworkRequestTestCase : XCTestCase {
+class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     var phoenix:Phoenix?
     var configuration:Phoenix.Configuration?
     
     override func setUp() {
+        super.setUp()
+        
         do {
             try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
             self.configuration!.region = .Europe
@@ -25,33 +27,16 @@ class PhoenixNetworkRequestTestCase : XCTestCase {
         catch {
             // I'm happy.
         }
-        
     }
     
     func testTokenObtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+
         let expectation = expectationWithDescription("")
         
         // Swift
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print(request)
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                print("")
-                
                 return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
@@ -61,15 +46,11 @@ class PhoenixNetworkRequestTestCase : XCTestCase {
                 return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
         })
         
-        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
-
-        self.phoenix!.tryLogin({ (data, response, error) -> () in
-            print(data)
-            print(response)
-            print(error)
+        self.phoenix!.tryLogin { (authenticated) -> () in
+            XCTAssert(authenticated, "Failed to authenticate")
+            print(authenticated)
             expectation.fulfill()
-        })
-        
+        }
         
         waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")

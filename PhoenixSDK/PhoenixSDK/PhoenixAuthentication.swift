@@ -21,9 +21,6 @@ extension Phoenix {
         
         // MARK: Instance variables
         
-        /// User defaults. Allows to change it to a different defaults if needed.
-        lazy var userDefaults = NSUserDefaults.standardUserDefaults()
-        
         /// Set username for OAuth authentication with credentials.
         var username: String?
         
@@ -33,31 +30,31 @@ extension Phoenix {
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
-                return userDefaults.phx_accessToken()
+                return Injector.storage.accessToken
             }
             set {
                 // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                userDefaults.phx_setAccessToken(newValue)
+                Injector.storage.accessToken = newValue
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             get {
-                return userDefaults.phx_refreshToken()
+                return Injector.storage.refreshToken
             }
             set {
-                userDefaults.phx_setRefreshToken(newValue)
+                Injector.storage.refreshToken = newValue
             }
         }
         
         /// Expiry date of access token.
         private var accessTokenExpirationDate: NSDate? {
             get {
-                let date = userDefaults.phx_tokenExpirationDate()
+                let date = Injector.storage.tokenExpirationDate
                 
                 // Only return valid expiration date if it is not expired
                 if date?.timeIntervalSinceNow <= 0 {
@@ -68,7 +65,7 @@ extension Phoenix {
                 return date
             }
             set {
-                userDefaults.phx_setTokenExpirationDate(newValue)
+                Injector.storage.tokenExpirationDate = newValue
             }
         }
         

@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
+
 private let maximumDelay = 5 * 60 // 5 minutes
 
 private func exponentialBackoff() -> ( block: (()->Bool) ) -> Void
@@ -35,6 +37,7 @@ extension Phoenix {
         
         private let sessionManager:NSURLSession
         private let authentication:Phoenix.Authentication
+        private var callbacks:[PhoenixAuthenticationCallback] = []
         
         init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
             self.sessionManager = session
@@ -49,6 +52,18 @@ extension Phoenix {
                 preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
             
             self.input = preparedRequest
+            
+            self.completionBlock = { [weak self] in
+                guard let this = self else {
+                    return
+                }
+                
+                for callback in this.callbacks {
+                    callback(authenticated: !this.authentication.requiresAuthentication)
+                }
+                
+                this.callbacks = []
+            }
         }
         
         override func main() {
@@ -82,6 +97,15 @@ extension Phoenix {
             }
             
             return !self.authentication.requiresAuthentication
+        }
+        
+        func addCallback(callback:PhoenixAuthenticationCallback) {
+            if self.finished {
+                callback(authenticated: !self.authentication.requiresAuthentication)
+            }
+            else {
+                callbacks += [callback]
+            }
         }
         
     }

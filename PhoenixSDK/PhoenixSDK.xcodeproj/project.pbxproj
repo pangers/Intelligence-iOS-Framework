@@ -25,6 +25,10 @@
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
 		BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */; };
+		BBD7AF161B6A263800F5B9C1 /* Injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF151B6A263800F5B9C1 /* Injector.swift */; };
+		BBD7AF181B6A28F800F5B9C1 /* SimpleStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF171B6A28F800F5B9C1 /* SimpleStorage.swift */; };
+		BBD7AF1A1B6A299300F5B9C1 /* MockSimpleStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */; };
+		BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */; };
 		BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */; };
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
 		FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */; };
@@ -103,6 +107,10 @@
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
 		BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfiguration.swift; sourceTree = "<group>"; };
+		BBD7AF151B6A263800F5B9C1 /* Injector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Injector.swift; sourceTree = "<group>"; };
+		BBD7AF171B6A28F800F5B9C1 /* SimpleStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleStorage.swift; sourceTree = "<group>"; };
+		BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSimpleStorage.swift; sourceTree = "<group>"; };
+		BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixBaseTestCase.swift; sourceTree = "<group>"; };
 		BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
 		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
 		FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegion.swift; sourceTree = "<group>"; };
@@ -163,6 +171,8 @@
 				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
 				BB0F0ECA1B68C627008679C9 /* Pipeline */,
+				BBD7AF151B6A263800F5B9C1 /* Injector.swift */,
+				BBD7AF171B6A28F800F5B9C1 /* SimpleStorage.swift */,
 			);
 			path = PhoenixSDK;
 			sourceTree = "<group>";
@@ -174,11 +184,10 @@
 				BB8FFC521B611A6500E37146 /* Configuration files */,
 				BBAA74171B60FCCF00EDADA4 /* MockObjects */,
 				A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */,
+				BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */,
 				FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */,
-				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
-				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
-				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
-				BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */,
+				BBD7AF1D1B6A2C1A00F5B9C1 /* Configuration */,
+				BBD7AF1E1B6A2C2300F5B9C1 /* Network */,
 			);
 			path = PhoenixSDKTests;
 			sourceTree = "<group>";
@@ -238,8 +247,27 @@
 			isa = PBXGroup;
 			children = (
 				BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */,
+				BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */,
 			);
 			name = MockObjects;
+			sourceTree = "<group>";
+		};
+		BBD7AF1D1B6A2C1A00F5B9C1 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
+				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		BBD7AF1E1B6A2C2300F5B9C1 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */,
+				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
+			);
+			name = Network;
 			sourceTree = "<group>";
 		};
 		FEF7EF721B6671C700066AA3 /* Extensions */ = {
@@ -423,6 +451,8 @@
 				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
 				BB0F0ED41B68EBF1008679C9 /* AuthenticationRequestOperation.swift in Sources */,
 				FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */,
+				BBD7AF161B6A263800F5B9C1 /* Injector.swift in Sources */,
+				BBD7AF181B6A28F800F5B9C1 /* SimpleStorage.swift in Sources */,
 				FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */,
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,
 				BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */,
@@ -440,9 +470,11 @@
 			files = (
 				BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */,
 				BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */,
+				BBD7AF1A1B6A299300F5B9C1 /* MockSimpleStorage.swift in Sources */,
 				BBA573761B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift in Sources */,
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
+				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
 				BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

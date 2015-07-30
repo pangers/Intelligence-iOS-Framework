@@ -10,7 +10,7 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class PhoenixAuthenticationTestCase: XCTestCase {
+class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
     
     private let correctWithRefreshTokenJsonDictionary = [
         "access_token" : "123",
@@ -20,7 +20,6 @@ class PhoenixAuthenticationTestCase: XCTestCase {
     
     let refreshToken = "123"
     let accessToken = "123"
-
     
     func testInitializeOptionalAuthentication() {
         let wrongJsonDictionary = ["wrong":"Dictionary"]
