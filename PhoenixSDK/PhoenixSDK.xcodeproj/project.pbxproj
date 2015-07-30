@@ -18,6 +18,9 @@
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
 		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
+		BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
+		BBA573761B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */; };
+		BBA573781B692B6900685EFB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573771B692B6900685EFB /* String.swift */; };
 		BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */; };
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
@@ -41,6 +44,41 @@
 			remoteGlobalIDString = A07FACAF1B5D0C4200482BB7;
 			remoteInfo = PhoenixSDK;
 		};
+		BBA5736A1B6926C800685EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09110A4119805F4800D175E4;
+			remoteInfo = "OHHTTPStubs iOS StaticLib";
+		};
+		BBA5736C1B6926C800685EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09110A5119805F4800D175E4;
+			remoteInfo = "OHHTTPStubs iOS Tests";
+		};
+		BBA5736E1B6926C800685EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 725CD99B1A9EB65100F84C8B;
+			remoteInfo = "OHHTTPStubs iOS Framework";
+		};
+		BBA573701B6926C800685EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 095981C219806A7900807DBE;
+			remoteInfo = "OHHTTPStubs Mac Framework";
+		};
+		BBA573721B6926C800685EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 095981D219806A7900807DBE;
+			remoteInfo = "OHHTTPStubs Mac Tests";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +96,9 @@
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		BB8FFC501B611A5E00E37146 /* invalidproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = invalidproperty.json; sourceTree = "<group>"; };
+		BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../../Libraries/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
+		BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworkRequestTestCase.swift; sourceTree = "<group>"; };
+		BBA573771B692B6900685EFB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthenticationTestCase.swift; sourceTree = "<group>"; };
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
@@ -85,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */,
 				A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,6 +170,7 @@
 		A07FACBE1B5D0C4200482BB7 /* PhoenixSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */,
 				BB8FFC521B611A6500E37146 /* Configuration files */,
 				BBAA74171B60FCCF00EDADA4 /* MockObjects */,
 				A07FACC11B5D0C4200482BB7 /* PhoenixSDKTests-Info.plist */,
@@ -135,6 +178,7 @@
 				BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */,
 				FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */,
 				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
+				BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */,
 			);
 			path = PhoenixSDKTests;
 			sourceTree = "<group>";
@@ -156,6 +200,18 @@
 				BB8FFC501B611A5E00E37146 /* invalidproperty.json */,
 			);
 			name = "Configuration files";
+			sourceTree = "<group>";
+		};
+		BBA573631B6926C800685EFB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BBA5736B1B6926C800685EFB /* libOHHTTPStubs.a */,
+				BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Tests.xctest */,
+				BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */,
+				BBA573711B6926C800685EFB /* OHHTTPStubs.framework */,
+				BBA573731B6926C800685EFB /* OHHTTPStubs Mac Tests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		BBA5D4331B678244007D2B60 /* Network */ = {
@@ -201,6 +257,7 @@
 				BBE209DB1B67BC26000202B6 /* NSUserDefaults.swift */,
 				BBE209DD1B67C149000202B6 /* NSURLRequest.swift */,
 				BB0F0ED11B68DA03008679C9 /* NSURLSession.swift */,
+				BBA573771B692B6900685EFB /* String.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -282,6 +339,12 @@
 			mainGroup = A07FACA61B5D0C4200482BB7;
 			productRefGroup = A07FACB11B5D0C4200482BB7 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = BBA573631B6926C800685EFB /* Products */;
+					ProjectRef = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				A07FACAF1B5D0C4200482BB7 /* PhoenixSDK */,
@@ -289,6 +352,44 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		BBA5736B1B6926C800685EFB /* libOHHTTPStubs.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOHHTTPStubs.a;
+			remoteRef = BBA5736A1B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs iOS Tests.xctest";
+			remoteRef = BBA5736C1B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = BBA5736E1B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BBA573711B6926C800685EFB /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = BBA573701B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BBA573731B6926C800685EFB /* OHHTTPStubs Mac Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs Mac Tests.xctest";
+			remoteRef = BBA573721B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A07FACAE1B5D0C4200482BB7 /* Resources */ = {
@@ -327,6 +428,7 @@
 				BBE209DC1B67BC26000202B6 /* NSUserDefaults.swift in Sources */,
 				BB0F0ED01B68D98C008679C9 /* PhoenixNetworkRequestOperation.swift in Sources */,
 				BB0F0ECC1B68C63E008679C9 /* TSDPipeline.swift in Sources */,
+				BBA573781B692B6900685EFB /* String.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
@@ -338,6 +440,7 @@
 			files = (
 				BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */,
 				BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */,
+				BBA573761B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift in Sources */,
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
 				BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */,
