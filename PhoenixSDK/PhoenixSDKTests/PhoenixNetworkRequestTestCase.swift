@@ -24,36 +24,48 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
             try self.phoenix = Phoenix(withConfiguration: configuration!)
         }
         catch {
-            // I'm happy.
         }
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        phoenix = nil
+        configuration = nil
     }
     
     /// Verify correct behaviour on token obtained
     func testTokenObtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
-        
         let expectation = expectationWithDescription("")
         
         // Swift
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
             withStubResponse: { _ in
+                let now:dispatch_time_t = DISPATCH_TIME_NOW
+                let dispatchTime = dispatch_time(now , Int64(0.01 * Double(NSEC_PER_SEC)))
+                dispatch_after(dispatchTime, dispatch_get_main_queue(), { () -> Void in
+                    print("Removing expectation")
+                    expectation.fulfill()
+                })
+                
                 let stubData = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}".dataUsingEncoding(NSUTF8StringEncoding)
                 return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
         })
         
-        self.phoenix!.tryLogin { (authenticated) -> () in
-            XCTAssert(authenticated, "Failed to authenticate")
-            expectation.fulfill()
-        }
-        
+        phoenix?.startup()
+
         waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            
+            print("Checking authentication")
             XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
@@ -64,30 +76,29 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         let expectation = expectationWithDescription("")
         var countRetries = 0
-        var countCallbacks = 0
         
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
             withStubResponse: { _ in
                 
                 countRetries++
+                expectation.fulfill()
                 
                 // Wrong response to force the network to retry
                 let stubData = "{}".dataUsingEncoding(NSUTF8StringEncoding)
                 return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
         })
         
-        self.phoenix!.tryLogin { (authenticated) -> () in
-            XCTAssert(!authenticated, "Authenticated without a response")
-            countCallbacks++
-            expectation.fulfill()
-            
-            XCTAssertEqual(countCallbacks, 1, "Perform either more than a single callback calls or none at all")
-        }
+        phoenix?.startup()
         
         waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -105,20 +116,22 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         // Swift
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
             withStubResponse: { _ in
                 let stubData = "{asdas==".dataUsingEncoding(NSUTF8StringEncoding)
+                expectation.fulfill()
                 return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
         })
         
-        self.phoenix!.tryLogin { (authenticated) -> () in
-            XCTAssert(!authenticated, "Failed to authenticate")
-            expectation.fulfill()
-        }
-        
+        phoenix?.startup()
+
         waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             
@@ -148,7 +161,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
                 // Authentication interception
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
@@ -193,7 +211,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
                 // Authentication interception
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
@@ -259,8 +282,11 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                print(request.URL)
-                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                guard let config = self.configuration else {
+                    return false
+                }
+                
+                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
                     request.HTTPMethod == "POST"
             }
             ,
