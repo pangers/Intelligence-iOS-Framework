@@ -36,7 +36,7 @@ extension Phoenix {
         private let sessionManager:NSURLSession
         private let authentication:Phoenix.Authentication
         
-        init?(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
+        init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
             self.sessionManager = session
             self.authentication = authentication
             
@@ -45,10 +45,8 @@ extension Phoenix {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            guard let request = NSURLRequest.phx_requestForAuthentication(authentication, configuration: configuration),
-                preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication) else {
-                return nil
-            }
+            let request = NSURLRequest.phx_requestForAuthentication(authentication, configuration: configuration),
+                preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
             
             self.input = preparedRequest
         }

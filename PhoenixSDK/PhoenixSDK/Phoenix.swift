@@ -10,10 +10,21 @@ import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
 public class Phoenix: NSObject {
+    
+    // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
     private let configuration: Configuration
     private let network: Network
+
+    public var isAuthenticated:Bool {
+        return network.isAuthenticated
+    }
+
+    /// - Returns: A **copy** of the configuration.
+    public var currentConfiguration: Configuration {
+        return configuration.copy() as! Configuration
+    }
     
     /// Delegate implementing failure methods that a developer should implement to catch
     /// errors that the Phoenix SDK is unable to handle.
@@ -25,11 +36,6 @@ public class Phoenix: NSObject {
         set {
             network.delegate = newValue
         }
-    }
-    
-    /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: Configuration {
-        return configuration.copy() as! Configuration
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -52,11 +58,6 @@ public class Phoenix: NSObject {
         }
     }
     
-    public func tryLogin(callback: PhoenixNetworkingCallback) {
-        // TODO: Strip this out, for testing from App only. Also, make PhoenixNetworkingCallback internal.
-        network.tryLogin(callback)
-    }
-    
     /// Provides a convenience initializer to load the configuration from a JSON file
     /// - Throws: **ConfigurationError** if the configuration is invalid or there is a problem
     /// reading the file.
@@ -66,4 +67,10 @@ public class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
     }
+ 
+    public func tryLogin(callback: PhoenixAuthenticationCallback) {
+        // TODO: Strip this out, for testing from App only. Also, make PhoenixNetworkingCallback internal.
+        network.tryLogin(callback)
+    }
+
 }

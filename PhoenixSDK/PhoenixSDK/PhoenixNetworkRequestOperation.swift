@@ -24,10 +24,7 @@ class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data:NSData?,
     // The operation will run synchronously the data task.
     override func main() {
         // Mutate request, adding bearer token
-        guard let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: self.authentication) else {
-            assert(false, "Should never occur unless we override request and don't create mutable copies of it.")
-            return
-        }
+        let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: self.authentication)
         
         let (data, response, error) = sessionManager.phx_executeSynchronousDataTaskWithRequest(preparedRequest)
         
