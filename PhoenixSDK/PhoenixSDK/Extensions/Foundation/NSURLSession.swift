@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSURLSession {
+internal extension NSURLSession {
 
     func phx_executeSynchronousDataTaskWithRequest(request: NSURLRequest) -> (data:NSData?, response:NSURLResponse?, error:NSError?) {
         let semaphore = dispatch_semaphore_create(0)

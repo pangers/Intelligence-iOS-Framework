@@ -9,7 +9,7 @@
 import Foundation
 
 
-extension String {
+internal extension String {
     
     public func contains(string:String) -> Bool {
         return rangeOfString(string) != nil

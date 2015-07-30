@@ -31,7 +31,7 @@ public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
 //    return backoff
 //}
 
-extension Phoenix {
+internal extension Phoenix {
     
     class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         

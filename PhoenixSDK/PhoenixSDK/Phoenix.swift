@@ -9,7 +9,7 @@
 import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
-public class Phoenix: NSObject {
+public final class Phoenix: NSObject {
     
     // MARK: Instance variables
 
@@ -56,6 +56,12 @@ public class Phoenix: NSObject {
         {
             throw ConfigurationError.InvalidPropertyError
         }
+        
+        // Automatically try to login
+        // TODO: Make this triggered by some other event? Or always implement like this.
+        network.tryLogin { (authenticated) -> () in
+            print("Logged in \(authenticated)")
+        }
     }
     
     /// Provides a convenience initializer to load the configuration from a JSON file
@@ -67,10 +73,4 @@ public class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
     }
- 
-    public func tryLogin(callback: PhoenixAuthenticationCallback) {
-        // TODO: Strip this out, for testing from App only. Also, make PhoenixNetworkingCallback internal.
-        network.tryLogin(callback)
-    }
-
 }

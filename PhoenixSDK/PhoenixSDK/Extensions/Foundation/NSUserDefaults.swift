@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSUserDefaults : SimpleStorage {
+internal extension NSUserDefaults : SimpleStorage {
     
     // Subscript implementation
     subscript(index: String) -> AnyObject? {

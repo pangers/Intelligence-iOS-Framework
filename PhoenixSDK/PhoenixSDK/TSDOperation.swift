@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TSDOperation <TInput, TOutput> : NSOperation {
+internal class TSDOperation <TInput, TOutput> : NSOperation {
     
     var input:TInput?
     internal(set) var output:TOutput?

@@ -33,11 +33,6 @@
     }
     NSParameterAssert(err == nil && self.phoenix != nil);
     [self.phoenix setNetworkDelegate:self];
-    [self.phoenix tryLogin:^(NSData * data, NSURLResponse * response, NSError * error) {
-        NSLog(@"Error = %@", error.localizedDescription);
-        NSLog(@"Response = %@", response);
-        NSLog(@"Data = %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-    }];
 	return YES;
 }
 
