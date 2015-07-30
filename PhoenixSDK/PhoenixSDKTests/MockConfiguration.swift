@@ -10,14 +10,25 @@ import Foundation
 
 import PhoenixSDK
 
-    public class MockConfiguration: Phoenix.Configuration {
-        
-        override public var isValid: Bool {
-            return false
+public class MockConfiguration: Phoenix.Configuration {
+    
+    override public var isValid: Bool {
+        return false
+    }
+    
+    override public var hasMissingProperty: Bool {
+        return false
+    }
+    
+    /// No region
+    override public var region: PhoenixSDK.Phoenix.Region? {
+        get {
+            return nil
         }
-        
-        override public var hasMissingProperty: Bool {
-            return false
+        set {
+            // nop
         }
     }
+
+}
 

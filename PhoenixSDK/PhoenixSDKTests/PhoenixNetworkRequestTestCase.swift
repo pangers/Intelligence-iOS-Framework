@@ -31,7 +31,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     func testTokenObtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
-
+        
         let expectation = expectationWithDescription("")
         
         // Swift
@@ -56,6 +56,44 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
             XCTAssertNil(error,"Error in expectation")
             
             XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
+    func testAuthRetryOnNoTokenObtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        
+        let expectation = expectationWithDescription("")
+        var countRetries = 0
+        var countCallbacks = 0
+        
+        // Swift
+        OHHTTPStubs.stubRequestsPassingTest(
+            { request in
+                return request.URL!.absoluteString.hasPrefix(self.configuration!.baseURL!.absoluteString) &&
+                    request.HTTPMethod == "POST"
+            }
+            ,
+            withStubResponse: { _ in
+                
+                countRetries++
+                
+                // Wrong response to force the network to retry
+                let stubData = "{}".dataUsingEncoding(NSUTF8StringEncoding)
+                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
+        })
+        
+        self.phoenix!.tryLogin { (authenticated) -> () in
+            XCTAssert(!authenticated, "Authenticated without a response")
+            countCallbacks++
+            expectation.fulfill()
+            
+            XCTAssertEqual(countCallbacks, 1, "Perform either more than a single callback calls or none at all")
+        }
+        
+        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            
+            XCTAssertEqual(countRetries, 1, "Single called fired.")
         }
     }
     

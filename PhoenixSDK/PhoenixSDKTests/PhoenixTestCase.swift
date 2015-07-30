@@ -47,4 +47,27 @@ class PhoenixTestCase: PhoenixBaseTestCase {
             XCTAssert(false, "Unexpected exception thrown")
         }
     }
+    
+    @objc class Helper:  NSObject, PhoenixNetworkDelegate {
+        func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+        }
+    }
+    
+    // Mock configuration fakes an invalid configuration
+    func testPhoenixGetterSetterWorks() {
+        do {
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
+            
+            
+            let helper:PhoenixNetworkDelegate = Helper()
+            phoenix.networkDelegate = helper
+            
+            XCTAssert(phoenix.networkDelegate! === helper, "The getter works")
+        }
+        catch {
+            XCTAssert(false, "There was an error reading the file or initializing phoenix.")
+        }
+    }
 }
