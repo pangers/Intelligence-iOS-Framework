@@ -22,7 +22,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         let projectId = 20
         
         do {
-            let config = try Phoenix.Configuration(fromFile: "config", inBundle: bundle);
+            let config = Phoenix.Configuration()
+            try config.readFromFile("config", inBundle: bundle);
             XCTAssert(config.clientID == clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == region, "The region is incorrect")
@@ -193,6 +194,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     }
 
     func testEmptyBaseUrlIfNoRegion(){
-        XCTAssert(MockConfiguration().baseURL == nil, "The mock configuration with no region returned an unexpected base url")
+        var config = MockConfiguration()
+        config.region = nil
+        XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
     }
 }

@@ -37,7 +37,9 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     // Mock configuration fakes an invalid configuration
     func testPhoenixInitializerWithMockConfiguration() {
         do {
-            let _ = try Phoenix(withConfiguration: MockConfiguration())
+            var config = MockConfiguration()
+            config.mockInvalid = true
+            let _ = try Phoenix(withConfiguration: config)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {

@@ -10,33 +10,40 @@ import Foundation
 
 import PhoenixSDK
 
-public class MockConfiguration: PhoenixConfigurationProtocol {
+public struct MockConfiguration: PhoenixConfigurationProtocol {
     
-    /// The client ID
-    public var clientID = ""
+    public var clientID: String = "123"
+    public var clientSecret: String = "123"
+    public var projectID: Int = 123
+    public var applicationID: Int = 123
+    public var region: Phoenix.Region? = .Europe
     
-    /// The client secret
-    public var clientSecret = ""
-    
-    /// The project ID
-    public var projectID = 0
-    
-    /// The application ID
-    public var applicationID = 0
-    
-    /// The region
-    public var region: Region?
-    
-    public var isValid = false
-    
-    public var hasMissingProperty = false
-    
-    /// - Returns: Base URL to call.
-    public var baseURL: NSURL? {
-        guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
-            return nil
+    public var mockInvalid:Bool = false
+    public var mockMissingProperty: Bool = false
+
+    /// - Returns: True if the configuration is correct and can be used to initialize
+    /// the Phoenix SDK.
+    public var isValid: Bool {
+        if mockInvalid {
+           return false
         }
-        return URL
+        
+        // For now only check if there is a missing property.
+        return !self.hasMissingProperty
+    }
+    
+    /// - Returns: True if there is a missing property in the configuration
+    public var hasMissingProperty: Bool {
+        if mockMissingProperty {
+            return true
+        }
+        
+        return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
+            applicationID <= 0 || region == nil
+    }
+    
+    public func copy() -> PhoenixConfigurationProtocol {
+        let tmp = self
+        return tmp
     }
 }
-
