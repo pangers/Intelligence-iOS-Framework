@@ -32,7 +32,7 @@
         NSLog(@"Error initialising Phoenix: %zd", err.code);
     }
     NSParameterAssert(err == nil && self.phoenix != nil);
-    
+
     __weak typeof(_phoenix) weakPhoenix = _phoenix;
     [_phoenix setNetworkDelegate:self];
     [_phoenix startupWithCallback:^(BOOL authenticated) {

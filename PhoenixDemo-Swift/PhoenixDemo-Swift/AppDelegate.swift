@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 		// Override point for customization after application launch.
         
         do {
-            self.phoenix = try Phoenix(withFile: "config");
+            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
             self.phoenix?.networkDelegate = self
             self.phoenix?.startup(withCallback: { (authenticated) -> () in
                 print("Anonymous login \(authenticated)")
