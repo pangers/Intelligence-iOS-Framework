@@ -12,6 +12,7 @@ private let accessTokenKey = "access_token"
 private let refreshTokenKey = "refresh_token"
 private let tokenExpirationKey = "token_expiration_date"
 
+/// The protocol to implement in order to become a simple storage.
 internal protocol SimpleStorage {
     
     // Subscript implementation
@@ -19,6 +20,8 @@ internal protocol SimpleStorage {
     
 }
 
+/// A protocol extension to provide a wrapper over any class implementing
+/// simple storage that provides the required values used by the app.
 internal extension SimpleStorage {
     
     internal var refreshToken: String? {

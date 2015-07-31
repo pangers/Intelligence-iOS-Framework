@@ -39,7 +39,7 @@ public extension Phoenix {
             }
         }
         
-        /// - Returns: The region that a specific code represents. Can return nil if the
+        /// - Returns: The region that a specific code represents. Returns nil if the
         /// code does not match any region.
         init?(code: String) {
             switch code {

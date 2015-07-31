@@ -199,7 +199,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
 
-    /// Testig 401 on token request:
+    /// Testig 404 on token request:
     func testToken404Obtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(404)
@@ -211,11 +211,10 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
 
-    /// Testig 401 on token request:
+    /// Testig 403 on token request:
     func testToken403Obtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(403)
-        phoenix?.startup()
         
         phoenix?.startup()
         

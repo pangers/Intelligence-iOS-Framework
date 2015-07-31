@@ -11,8 +11,14 @@ import Foundation
 
 internal extension String {
     
+    /// - Returns: true if self contains the passed string.
     func contains(string:String) -> Bool {
         return rangeOfString(string) != nil
+    }
+    
+    /// - Returns: true if string passed contains self string.
+    func isContained(string:String) -> Bool {
+        return string.contains(self)
     }
     
 }

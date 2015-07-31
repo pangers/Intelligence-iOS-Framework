@@ -10,6 +10,9 @@ import Foundation
 
 internal extension NSURLSession {
 
+    /// Executes synchronously the passed request.
+    /// - Parameter request: The request to perform.
+    /// - Returns: A struct containing the data, response and error of the request performed.
     func phx_executeSynchronousDataTaskWithRequest(request: NSURLRequest) -> (data:NSData?, response:NSURLResponse?, error:NSError?) {
         let semaphore = dispatch_semaphore_create(0)
         

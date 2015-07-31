@@ -8,6 +8,10 @@
 
 import Foundation
 
+/// A naive injector object.
+/// Uses lazy vars in order to allow to inject a different object in it.
+/// Currently holds:
+/// - SimpleStorage: Used to keep the authentication tokens.
 internal struct Injector {
     static internal(set) var storage:SimpleStorage = NSUserDefaults.standardUserDefaults()
 }
