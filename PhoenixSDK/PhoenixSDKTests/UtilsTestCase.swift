@@ -21,6 +21,16 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(!"1".contains("123"), "A substring of the string contains the second string.")
         XCTAssert("123".contains("123"), "Two equal strings are contained.")
         XCTAssert("PADDING123PADDING".contains("123"), "Strings contain.")
+        
+        
+        //  isContained
+        XCTAssert(!"".isContained(""), "Empty strings are contained")
+        XCTAssert(!"123".isContained(""), "A string does contain an empty string.")
+        XCTAssert(!"".isContained("123"), "An empty string contains a string.")
+        XCTAssert("123".isContained("123"), "Two equal strings are contained.")
+
+        XCTAssert("1".isContained("123"), "A substring of the string contains the second string.")
+        XCTAssert(!"PADDING123PADDING".isContained("123"), "Strings contain.")
     }
     
     func testUserDefaultsSubscript() {
