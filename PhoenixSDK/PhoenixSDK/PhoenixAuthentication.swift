@@ -14,10 +14,36 @@ private let accessTokenKey = "access_token"
 private let expiresInKey = "expires_in"
 private let refreshTokenKey = "refresh_token"
 
-internal extension Phoenix {
+internal protocol PhoenixAuthenticationProtocol {
+    var username: String? { get set }
+    var password: String? { get set }
+    var accessToken: String? { get set }
+    var refreshToken: String? { get set }
+    var accessTokenExpirationDate: NSDate? { get set }
+}
 
+
+extension PhoenixAuthenticationProtocol {
+    
+    /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
+    var requiresAuthentication: Bool {
+        guard let _ = accessToken, _ = accessTokenExpirationDate else {
+            return true
+        }
+        return false
+    }
+    
+    /// Returns false if username and password are set, otherwise true.
+    var anonymous: Bool {
+        return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
+    }
+}
+
+
+internal extension Phoenix {
+    
     /// Authentication class provides a wrapper over Phoenix's authentication responses.
-    final class Authentication {
+    final class Authentication: PhoenixAuthenticationProtocol {
         
         // MARK: Instance variables
         
@@ -52,7 +78,7 @@ internal extension Phoenix {
         }
         
         /// Expiry date of access token.
-        private var accessTokenExpirationDate: NSDate? {
+        var accessTokenExpirationDate: NSDate? {
             get {
                 let date = Injector.storage.tokenExpirationDate
                 
@@ -67,19 +93,6 @@ internal extension Phoenix {
             set {
                 Injector.storage.tokenExpirationDate = newValue
             }
-        }
-        
-        /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
-        var requiresAuthentication: Bool {
-            guard let _ = accessToken, _ = accessTokenExpirationDate else {
-                return true
-            }
-            return false
-        }
-        
-        /// Returns false if username and password are set, otherwise true.
-        var anonymous: Bool {
-            return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
         }
         
         // MARK: Initializers
@@ -135,6 +148,12 @@ internal extension Phoenix {
             // Need to reauthenticate using credentials
             accessToken = nil
         }
-
+        
+        /// Reset to a clean-slate.
+        func reset() {
+            username = nil
+            password = nil
+            invalidateTokens()
+        }
     }
 }
