@@ -33,6 +33,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
                     let password = "tigerspike123"
                     instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
                         print("Logged in \(authenticated)")
+                        
+                        // Log out ...
+                        instance.logout()
+                        print("Logged out")
+                        
+                        // Login anonymously again ... (not ideal implementation...)
+                        // Should probably automate this in future on a logout...
+                        instance.startup(withCallback: { (authenticated) -> () in
+                            print("Anonymous login \(authenticated)")
+                        })
                     })
                 }
             })

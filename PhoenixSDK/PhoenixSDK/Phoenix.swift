@@ -90,6 +90,10 @@ public final class Phoenix: NSObject {
     
     /// Starts up the Phoenix SDK, triggering:
     ///   - Anonymous authentication
+    // TODO: Need to define how this works, since it can fail...
+    // Strange flow, startup method actually makes a network call, so it's
+    // a little odd that the user has to have internet access and the
+    // platform is available for the app to start, need to rethink this.
     public func startup(withCallback callback: PhoenixAuthenticationCallback) {
         network.anonymousLogin(callback)
     }
