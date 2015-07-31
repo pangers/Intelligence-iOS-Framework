@@ -17,6 +17,8 @@ private enum ConfigurationKey: String {
     case Region = "region"
 }
 
+/// A protocol defining the Phoenix required configuration.
+/// The implementation is Phoenix.Configuration.
 public protocol PhoenixConfigurationProtocol {
     var clientID: String { get set }
     var clientSecret: String { get set }
@@ -29,6 +31,10 @@ public protocol PhoenixConfigurationProtocol {
     func copy() -> PhoenixConfigurationProtocol
 }
 
+/// Extension to the configuraiton protocol to verify whether the configuration provided is
+/// valid or not. Also has the baseURL helper method.
+/// This extension is used for internal purposes only, and should not be overriden by the 
+/// developer.
 extension PhoenixConfigurationProtocol {
     
     /// - Returns: True if the configuration is correct and can be used to initialize
@@ -60,8 +66,6 @@ public extension Phoenix {
     /// the data contained is valid to initialise the Phoenix SDK.
     public final class Configuration: NSObject, PhoenixConfigurationProtocol {
         
-        // TODO: Add company ID to configuration as mandatory
-        
         /// The client ID
         public var clientID = ""
         
@@ -77,18 +81,29 @@ public extension Phoenix {
         /// The region
         public var region: Region?
 
+        /// Convenience initializer to load from a file.
+        /// - Parameters:
+        ///     - fromFile: The file name to read. The .json extension is appended to it.
+        ///     - inBundle: The bundle that contains the given file.
+        /// - Throws: A **ConfigurationError** if the configuration file is incorrectly formatted.
         convenience init(fromFile file:String, inBundle bundle:NSBundle) throws {
             self.init()
             try self.readFromFile(file, inBundle: bundle)
         }
         
+        /// Factory method to initialize a configuration and return it.
+        /// - Throws: A **ConfigurationError** if the configuration file is incorrectly formatted.
+        /// - Parameters:
+        ///     - fromFile: The file name to read. The .json extension is appended to it.
+        ///     - inBundle: The bundle that contains the given file.
+        /// - Returns: A configuration with the contents of the file.
         class func configuration(fromFile file:String, inBundle bundle:NSBundle) throws -> Configuration {
             let configuration = Configuration()
             try configuration.readFromFile(file, inBundle: bundle)
             return configuration
         }
         
-        // NSCopying
+        /// - Returns: A copy of the configuration object.
         public func copy() -> PhoenixConfigurationProtocol {
             let copy = Configuration()
             copy.region = self.region
