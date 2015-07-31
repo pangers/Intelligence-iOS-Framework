@@ -273,10 +273,8 @@ internal extension Phoenix {
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
                 where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
-                    // TODO: Invalid response
                     return
             }
-            
             authentication.loadAuthorizationFromJSON(json)
         }
         

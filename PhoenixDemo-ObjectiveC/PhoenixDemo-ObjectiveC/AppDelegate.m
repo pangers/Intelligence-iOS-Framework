@@ -39,7 +39,7 @@
         NSLog(@"Anonymous login %d", authenticated);
         if (authenticated) {
             NSString *username = @"chris.nevin@tigerspike.com";
-            NSString *password = @"xxxxxxx";
+            NSString *password = @"tigerspike123";
             [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
                 NSLog(@"Logged in %d", authenticated);
             }];
