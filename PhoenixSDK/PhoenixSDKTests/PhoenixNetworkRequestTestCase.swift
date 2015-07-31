@@ -43,7 +43,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
 
-        phoenix?.startup()
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+        })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -62,7 +64,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
         
-        phoenix?.startup()
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+        })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -74,8 +78,10 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     func testAuthInvalidJSON() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForURL(anonymousTokenUrl, method: anonymousTokenMethod, response: (data: "Broken JSON\'!@£$%^&*}", statusCode: 200, headers:nil))
-        phoenix?.startup()
-
+        
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+        })
+        
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
@@ -191,7 +197,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         
         mockResponseForAuthentication(401)
-        phoenix?.startup()
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == false)
+        })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -203,7 +211,11 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     func testToken404Obtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(404)
-        phoenix?.startup()
+        
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == false)
+        })
+        
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -216,7 +228,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(403)
         
-        phoenix?.startup()
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == false)
+        })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
