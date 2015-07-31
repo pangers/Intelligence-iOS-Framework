@@ -42,7 +42,7 @@ public struct MockConfiguration: PhoenixConfigurationProtocol {
             applicationID <= 0 || region == nil
     }
     
-    public func copy() -> PhoenixConfigurationProtocol {
+    public func clone() -> PhoenixConfigurationProtocol {
         let tmp = self
         return tmp
     }

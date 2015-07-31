@@ -27,7 +27,7 @@ public final class Phoenix: NSObject {
 
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: PhoenixConfigurationProtocol {
-        return configuration.copy()
+        return configuration.clone()
     }
     
     /// Delegate implementing failure methods that a developer should implement to catch
@@ -47,7 +47,7 @@ public final class Phoenix: NSObject {
     /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
     public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
-        self.configuration = phoenixConfiguration.copy()
+        self.configuration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: self.configuration)
         super.init()
 
@@ -72,6 +72,8 @@ public final class Phoenix: NSObject {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
     }
 
+    // MARK:- Authentication
+
     /// Starts up the Phoenix SDK, triggering:
     ///   - Anonymous authentication
     func startup() {
@@ -79,5 +81,4 @@ public final class Phoenix: NSObject {
             // Nop
         }
     }
-    
 }

@@ -28,7 +28,7 @@ public protocol PhoenixConfigurationProtocol {
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
 
-    func copy() -> PhoenixConfigurationProtocol
+    func clone() -> PhoenixConfigurationProtocol
 }
 
 /// Extension to the configuraiton protocol to verify whether the configuration provided is
@@ -104,7 +104,7 @@ public extension Phoenix {
         }
         
         /// - Returns: A copy of the configuration object.
-        public func copy() -> PhoenixConfigurationProtocol {
+        public func clone() -> PhoenixConfigurationProtocol {
             let copy = Configuration()
             copy.region = self.region
             copy.applicationID = self.applicationID
