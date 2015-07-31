@@ -26,7 +26,7 @@ public protocol PhoenixConfigurationProtocol {
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
 
-    func copy() -> PhoenixConfigurationProtocol
+    func clone() -> PhoenixConfigurationProtocol
 }
 
 extension PhoenixConfigurationProtocol {
@@ -88,8 +88,7 @@ public extension Phoenix {
             return configuration
         }
         
-        // NSCopying
-        public func copy() -> PhoenixConfigurationProtocol {
+        public func clone() -> PhoenixConfigurationProtocol {
             let copy = Configuration()
             copy.region = self.region
             copy.applicationID = self.applicationID

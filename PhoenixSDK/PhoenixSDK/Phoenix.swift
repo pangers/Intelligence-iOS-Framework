@@ -23,7 +23,7 @@ public final class Phoenix: NSObject {
 
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: PhoenixConfigurationProtocol {
-        return configuration.copy()
+        return configuration.clone()
     }
     
     /// Delegate implementing failure methods that a developer should implement to catch
@@ -43,7 +43,7 @@ public final class Phoenix: NSObject {
     /// will be copied to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
     public init(withConfiguration cfg: PhoenixConfigurationProtocol) throws {
-        self.configuration = cfg.copy()
+        self.configuration = cfg.clone()
         self.network = Network(withConfiguration: self.configuration)
         super.init()
 
