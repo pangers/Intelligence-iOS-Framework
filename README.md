@@ -146,8 +146,17 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
 #!swift
         
         do {
-            self.phoenix = try Phoenix(withFile: "config");
-            self.phoenix?.startup()
+            let instance = try Phoenix(withFile: "config")
+            instance.networkDelegate = self
+            instance.startup(withCallback: { (authenticated) -> () in
+                // Perform requests inside this callback
+
+                // Optionally, login to a user's account...
+                instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+                    print("Logged in \(authenticated)")
+                })
+            }
+            self.phoenix = instance
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -181,6 +190,17 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
             NSLog(@"Error initialising Phoenix: %zd", err.code);
         }
         NSParameterAssert(err == nil && instance != nil);
+
+        __weak typeof(phoenix) weakPhoenix = phoenix;
+        [phoenix setNetworkDelegate:self];
+        [phoenix startupWithCallback:^(BOOL authenticated) {
+            // Perform requests inside this callback.
+
+            // Optionally, login to a user's account...
+            [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
+                NSLog(@"Logged in %d", authenticated);
+            }];
+        }];
 ```
 
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
