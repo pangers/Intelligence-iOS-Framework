@@ -14,9 +14,13 @@ public final class Phoenix: NSObject {
     // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
+    /// Provide a Phoenix.Configuration object to initialize it.
     private let configuration: PhoenixConfigurationProtocol
+    
+    /// The network manager instance.
     internal let network: Network
 
+    /// Returns true if Phoenix is currently authenticated against the backend
     public var isAuthenticated:Bool {
         return network.isAuthenticated
     }
@@ -40,19 +44,19 @@ public final class Phoenix: NSObject {
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
-    /// will be copied to avoid future mutability.
+    /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration cfg: PhoenixConfigurationProtocol) throws {
-        self.configuration = cfg.clone()
+    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
+        self.configuration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: self.configuration)
         super.init()
 
-        if (cfg.hasMissingProperty)
+        if (self.configuration.hasMissingProperty)
         {
             throw ConfigurationError.MissingPropertyError
         }
 
-        if (!cfg.isValid)
+        if (!self.configuration.isValid)
         {
             throw ConfigurationError.InvalidPropertyError
         }
@@ -67,7 +71,7 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
     }
-    
+
     // MARK:- Authentication
     
     /// Attempt to authenticate with a username and password.
@@ -84,7 +88,8 @@ public final class Phoenix: NSObject {
         network.logout()
     }
     
-    /// Starts the Phoenix SDK work
+    /// Starts up the Phoenix SDK, triggering:
+    ///   - Anonymous authentication
     public func startup() {
         network.anonymousLogin { (authenticated) -> () in
             print("Logged in \(authenticated)")
