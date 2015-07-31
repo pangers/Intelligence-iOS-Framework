@@ -149,6 +149,13 @@ internal extension Phoenix {
             accessToken = nil
         }
         
+        /// Configure with username and password.
+        func configure(withUsername username: String, password: String) {
+            invalidateTokens()
+            self.username = username
+            self.password = password
+        }
+        
         /// Reset to a clean-slate.
         func reset() {
             username = nil

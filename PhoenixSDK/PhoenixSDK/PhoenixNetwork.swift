@@ -271,9 +271,7 @@ internal extension Phoenix {
         ///     - password: Password associated with username.
         ///     - callback: Block/function to call once executed.
         func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
-            authentication.username = username
-            authentication.password = password
-            authentication.invalidateTokens()
+            authentication.configure(withUsername: username, password: password)
             enqueueAuthenticationOperationIfRequired(callback)
         }
         
