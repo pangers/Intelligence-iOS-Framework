@@ -24,8 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 		// Override point for customization after application launch.
         
         do {
-            self.phoenix = try Phoenix(withFile: "config");
+            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
             self.phoenix?.networkDelegate = self
+            self.phoenix?.startup()
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!

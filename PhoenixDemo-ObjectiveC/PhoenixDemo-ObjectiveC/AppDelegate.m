@@ -33,6 +33,8 @@
     }
     NSParameterAssert(err == nil && self.phoenix != nil);
     [self.phoenix setNetworkDelegate:self];
+    [self.phoenix startup];
+    
 	return YES;
 }
 
