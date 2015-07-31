@@ -33,6 +33,10 @@
     }
     NSParameterAssert(err == nil && self.phoenix != nil);
     [self.phoenix setNetworkDelegate:self];
+    [self.phoenix startup];
+    [self.phoenix loginWithUsername:@"chris.nevin@tigerspike.com" password:@"dsds" callback:^(BOOL authenticated) {
+        NSLog(@"Logged in %d", authenticated);
+    }];
 	return YES;
 }
 
