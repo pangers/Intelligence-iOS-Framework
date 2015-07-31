@@ -265,26 +265,8 @@ internal extension Phoenix {
             authentication.loadAuthorizationFromJSON(json)
         }
         
-        /// Attempt to authenticate with a username and password.
-        /// - Parameters
-        ///     - username: Username of account to attempt login with.
-        ///     - password: Password associated with username.
-        ///     - callback: Block/function to call once executed.
-        func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
-            authentication.username = username
-            authentication.password = password
-            authentication.invalidateTokens()
-            enqueueAuthenticationOperationIfRequired(callback)
-        }
-        
-        /// Clear all stored credentials and OAuth tokens, next request will be done anonymously after requesting a new OAuth token.
-        func logout() {
-            workerQueue.suspended = true
-            authentication.reset()
-        }
-        
         // TODO: Remove this method (hack - since we have no API calls yet)
-        func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
+        func tryLogin(callback: PhoenixAuthenticationCallback?) {
             enqueueAuthenticationOperationIfRequired(callback)
         }
     }
