@@ -35,7 +35,10 @@ extension PhoenixAuthenticationProtocol {
     
     /// Returns false if username and password are set, otherwise true.
     var anonymous: Bool {
-        return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
+        guard let username = username, password = password where !username.isEmpty && !password.isEmpty else {
+            return true
+        }
+        return false
     }
 }
 
