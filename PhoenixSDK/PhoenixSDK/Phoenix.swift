@@ -67,10 +67,26 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
     }
-
+    
+    // MARK:- Authentication
+    
+    /// Attempt to authenticate with a username and password.
+    /// - Parameters
+    ///     - username: Username of account to attempt login with.
+    ///     - password: Password associated with username.
+    ///     - callback: Block/function to call once executed.
+    public func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
+        network.login(withUsername: username, password: password, callback: callback)
+    }
+    
+    /// Logout of currently logged in user's account.
+    public func logout() {
+        network.logout()
+    }
+    
     /// Starts the Phoenix SDK work
-    func startup() {
-        network.tryLogin { (authenticated) -> () in
+    public func startup() {
+        network.anonymousLogin { (authenticated) -> () in
             print("Logged in \(authenticated)")
         }
     }
