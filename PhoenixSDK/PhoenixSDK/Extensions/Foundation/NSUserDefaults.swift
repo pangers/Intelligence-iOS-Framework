@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// NSUserDefaults implements SimpleStorage in order to use it to store
+/// the SDK access tokens.
 extension NSUserDefaults : SimpleStorage {
     
     // Subscript implementation
