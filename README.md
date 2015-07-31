@@ -154,6 +154,10 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
                 // Optionally, login to a user's account...
                 instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
                     print("Logged in \(authenticated)")
+
+
+                    // How to handle logout once you have authenticated.
+                    instance.logout()
                 })
             }
             self.phoenix = instance
@@ -199,6 +203,9 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
             // Optionally, login to a user's account...
             [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
                 NSLog(@"Logged in %d", authenticated);
+
+                // How to handle logout once you have authenticated.
+                [weakPhoenix logout];
             }];
         }];
 ```
