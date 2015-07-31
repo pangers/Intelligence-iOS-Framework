@@ -75,7 +75,7 @@ public final class Phoenix: NSObject {
     /// Starts up the Phoenix SDK, triggering:
     ///   - Anonymous authentication
     func startup() {
-        network.tryLogin { (authenticated) -> () in
+        network.performAuthentication { (authenticated) -> () in
             // Nop
         }
     }

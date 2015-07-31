@@ -114,7 +114,7 @@ internal extension NSURLRequest {
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPPOSTMethod
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
             request.HTTPBody = postQuery.dataUsingEncoding(NSUTF8StringEncoding)
 
             guard let finalRequest = request.copy() as? NSURLRequest else {

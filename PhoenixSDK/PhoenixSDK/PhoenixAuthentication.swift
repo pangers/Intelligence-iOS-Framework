@@ -16,15 +16,22 @@ private let refreshTokenKey = "refresh_token"
 
 internal extension Phoenix {
 
-    /// Authentication class provides a wrapper over Phoenix's authentication responses.
+    /// Authentication class holds the token and authentication data of Phoenix,
+    /// and also handles the JSON responses of the identity module, reading and
+    /// storing the data it requires to identify the user later on.
+    ///
+    /// Relies on the SimpleStorage found in the Injector object to store and load
+    /// the tokens. The default Phoenix storage is NSUserDefaults. The developer
+    /// can override the SimpleStorage protocol and provide a different implementation,
+    /// such as storing it in CoreData, a file, keychain,...
     final class Authentication {
         
         // MARK: Instance variables
         
-        /// Set username for OAuth authentication with credentials.
+        /// Username for OAuth authentication with credentials.
         var username: String?
         
-        /// Set password for OAuth authentication with credentials.
+        /// Password for OAuth authentication with credentials.
         var password: String?
         
         /// The access token used in OAuth bearer header for requests.
