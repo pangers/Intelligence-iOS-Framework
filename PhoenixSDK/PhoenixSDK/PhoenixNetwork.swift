@@ -279,6 +279,7 @@ internal extension Phoenix {
         
         /// Clear all stored credentials and OAuth tokens, next request will be done anonymously after requesting a new OAuth token.
         func logout() {
+            workerQueue.suspended = true
             authentication.reset()
         }
         
