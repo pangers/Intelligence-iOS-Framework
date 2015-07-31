@@ -7,11 +7,15 @@
 //
 
 import XCTest
-import OHHTTPStubs
-  
+
 @testable import PhoenixSDK
 
 class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
+    
+    let anonymousTokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
+    let anonymousTokenMethod = "POST"
+    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let expectationTimeout:NSTimeInterval = 3
     
     var phoenix:Phoenix?
     var configuration:Phoenix.Configuration?
@@ -36,105 +40,44 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Verify correct behaviour on token obtained
     func testTokenObtained() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
-        let expectation = expectationWithDescription("")
         
-        // Swift
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                let now:dispatch_time_t = DISPATCH_TIME_NOW
-                let dispatchTime = dispatch_time(now , Int64(0.01 * Double(NSEC_PER_SEC)))
-                dispatch_after(dispatchTime, dispatch_get_main_queue(), { () -> Void in
-                    print("Removing expectation")
-                    expectation.fulfill()
-                })
-                
-                let stubData = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}".dataUsingEncoding(NSUTF8StringEncoding)
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
-        
-        phoenix?.startup()
+        mockResponseForAuthentication(200)
 
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        phoenix?.startup()
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            print("Checking authentication")
             XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
     
-    /// Verifies that upon no token obtained, there are no more retries, and the caller callback is performed
-    func testAuthNoRetryOnNoTokenObtained() {
+    /// Verify that there is a call executed when the token is available, but expired.
+    func testTokenObtainedOnExpiredtoken() {
+        // Mock using the injector storage that we have a token, but expired
+        Injector.storage.accessToken = "Somevalue"
+        Injector.storage.refreshToken = ""
+        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
+        
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         
-        let expectation = expectationWithDescription("")
-        var countRetries = 0
-        
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                
-                countRetries++
-                expectation.fulfill()
-                
-                // Wrong response to force the network to retry
-                let stubData = "{}".dataUsingEncoding(NSUTF8StringEncoding)
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
+        mockResponseForAuthentication(200)
         
         phoenix?.startup()
         
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            
-            XCTAssertEqual(countRetries, 1, "Single called fired.")
+            XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
 
     /// Tests that an invalid JSON means no authentication obtained.
     func testAuthInvalidJSON() {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
-        
-        let expectation = expectationWithDescription("")
-        
-        // Swift
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                let stubData = "{asdas==".dataUsingEncoding(NSUTF8StringEncoding)
-                expectation.fulfill()
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
-        
+        mockResponseForURL(anonymousTokenUrl, method: anonymousTokenMethod, response: (data: "Broken JSON\'!@£$%^&*}", statusCode: 200, headers:nil))
         phoenix?.startup()
 
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            
             XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
@@ -146,44 +89,22 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         Injector.storage.refreshToken = "Something"
         Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10000)
         
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "{}"
-        let statusCode = Int32(401)
-        let expectationOperation = expectationWithDescription("")
+        let url = NSURL(string: "http://www.google.com/")!
+        
+        mockResponseForURL(url,
+            method: "GET",
+            response: (data:"", statusCode: 401, headers: nil))
+        mockResponseForAuthentication(200)
+        
         var didReceiveNetworkError = false
         
-        // Install stubs
-        OHHTTPStubs.stubRequestsPassingTest( { request in request.URL == initialRequest.URL } ) { _ in
-            // Return 401
-            return OHHTTPStubsResponse(data: stringData.dataUsingEncoding(NSUTF8StringEncoding)!, statusCode:statusCode, headers:nil)
-        }
-        
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                // Authentication interception
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                expectationOperation.fulfill()
-                // Give back a token
-                let stubData = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}".dataUsingEncoding(NSUTF8StringEncoding)
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
-        
-        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
-            if response?.statusCode == Int(statusCode) {
+        phoenix!.network.executeRequest(NSURLRequest(URL: url)) { (data, response, error) -> () in
+            if response?.statusCode == 401 {
                 didReceiveNetworkError = true
             }
         }
         
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             XCTAssert(didReceiveNetworkError)
         }
@@ -196,49 +117,27 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         Injector.storage.refreshToken = "Something"
         Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10000)
         
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "{}"
-        let statusCode = Int32(403)
-        let expectationOperation = expectationWithDescription("")
+        let url = NSURL(string: "http://www.google.com/")!
+        
+        mockResponseForURL(url,
+            method: "GET",
+            response: (data:"", statusCode: 403, headers: nil))
+        mockResponseForAuthentication(200)
+        
         var didReceiveNetworkError = false
         
-        // Install stubs
-        OHHTTPStubs.stubRequestsPassingTest( { request in request.URL == initialRequest.URL } ) { _ in
-            // Return 401
-            return OHHTTPStubsResponse(data: stringData.dataUsingEncoding(NSUTF8StringEncoding)!, statusCode:statusCode, headers:nil)
-        }
-        
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                // Authentication interception
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                expectationOperation.fulfill()
-                // Give back a token
-                let stubData = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}".dataUsingEncoding(NSUTF8StringEncoding)
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
-        
-        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
-            if response?.statusCode == Int(statusCode) {
+        phoenix!.network.executeRequest(NSURLRequest(URL: url)) { (data, response, error) -> () in
+            if response?.statusCode == 403 {
                 didReceiveNetworkError = true
             }
         }
         
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             XCTAssert(didReceiveNetworkError)
         }
     }
-
+    
     /// Verifies that upon a request operation, we get as output the correct
     /// values obtained in the network.
     func testNetworkRequestOperation() {
@@ -246,11 +145,6 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let expectation = expectationWithDescription("")
         let statusCode = Int32(200)
-        
-        OHHTTPStubs.stubRequestsPassingTest( { $0.URL == initialRequest.URL } ) { _ in
-            return OHHTTPStubsResponse(data: stringData.dataUsingEncoding(NSUTF8StringEncoding)!, statusCode:statusCode, headers:nil)
-        }
-        
         let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), withRequest: initialRequest, withAuthentication: PhoenixSDK.Phoenix.Authentication())
         op.completionBlock = {
             expectation.fulfill()
@@ -259,10 +153,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
             XCTAssert(response?.statusCode == Int(statusCode), "Unexpected status code")
         }
         
+        // Mock the response and perform the call
+        mockResponseForURL(initialRequest.URL!, method: "GET", response: (data: stringData, statusCode: statusCode, headers: nil))
         NSOperationQueue().addOperation(op)
         
         
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
         }
     }
@@ -273,40 +169,71 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let statusCode = Int32(200)
         let expectationOperation = expectationWithDescription("")
-        var didTryLogin = false
         
-        // Install stubs
-        OHHTTPStubs.stubRequestsPassingTest( { $0.URL == initialRequest.URL } ) { _ in
-            return OHHTTPStubsResponse(data: stringData.dataUsingEncoding(NSUTF8StringEncoding)!, statusCode:statusCode, headers:nil)
-        }
-        
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                guard let config = self.configuration else {
-                    return false
-                }
-                
-                return request.URL!.absoluteString.hasPrefix(config.baseURL!.absoluteString) &&
-                    request.HTTPMethod == "POST"
-            }
-            ,
-            withStubResponse: { _ in
-                didTryLogin = true
-                let stubData = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}".dataUsingEncoding(NSUTF8StringEncoding)
-                return OHHTTPStubsResponse(data: stubData!, statusCode:200, headers:nil)
-        })
-        
+        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
+        mockResponseForAuthentication(200)
+
         // Force Invalidate tokens
         PhoenixSDK.Phoenix.Authentication().invalidateTokens()
         phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
             expectationOperation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(10) { (error:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(didTryLogin, "The app didn't try to login")
             XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
+    
+    
+    /// Testig 401 on token request:
+    func testToken401Obtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        
+        mockResponseForAuthentication(401)
+        phoenix?.startup()
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated Despite the response being a 401")
+        }
+    }
+
+    /// Testig 401 on token request:
+    func testToken404Obtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        mockResponseForAuthentication(404)
+        phoenix?.startup()
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated Despite the response being a 404")
+        }
+    }
+
+    /// Testig 401 on token request:
+    func testToken403Obtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        mockResponseForAuthentication(403)
+        phoenix?.startup()
+        
+        phoenix?.startup()
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated Despite the response being a 404")
+        }
+    }
+
+    // MARK: Helpers
+    
+    func mockResponseForAuthentication(statusCode:Int32) {
+        let responseData = (statusCode == 200) ? anonymousTokenSuccessfulResponse : ""
+        
+        mockResponseForURL(anonymousTokenUrl,
+            method: anonymousTokenMethod,
+            response: (data:responseData, statusCode: statusCode, headers: nil))
+    }
+
 }
 
