@@ -26,6 +26,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
         do {
             self.phoenix = try Phoenix(withFile: "config");
             self.phoenix?.networkDelegate = self
+            self.phoenix?.startup(withCallback: { (authenticated) -> () in
+                print("Anonymous login \(authenticated)")
+                if authenticated {
+                    let username = "chris.nevin@tigerspike.com"
+                    let password = "xxxxxxx"
+                    self.phoenix?.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+                        print("Logged in \(authenticated)")
+                    })
+                }
+            })
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!

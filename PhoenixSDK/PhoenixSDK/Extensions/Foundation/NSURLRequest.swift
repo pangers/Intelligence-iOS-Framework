@@ -22,9 +22,9 @@ internal extension NSURLRequest {
     
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
-    /// - Returns: An optional NSURLRequest which is equal to this one, but adding the required headers to 
+    /// - Returns: An NSURLRequest which is equal to this one, but adding the required headers to
     /// authenticate it against the backend.
-    func phx_preparePhoenixRequest(withAuthentication authentication: Phoenix.Authentication) -> NSURLRequest {
+    func phx_preparePhoenixRequest(withAuthentication authentication: PhoenixAuthenticationProtocol) -> NSURLRequest {
         // Somehow the NSURLRequest is immutable (perhaps if subclassed?)
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             assertionFailure("The mutable copy of this \(self.dynamicType) should return an NSMutableURLRequest.")
@@ -52,12 +52,15 @@ internal extension NSURLRequest {
     
     // MARK: URL Request factory
     
-    /// Request with URL constructed using the passed Authentication and Configuration.
     /// - Parameters:
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
     ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
     /// - Returns: An NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthentication(authentication: Phoenix.Authentication, configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_requestForAuthentication(authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
+        if configuration.clientID.isEmpty || configuration.clientSecret.isEmpty {
+            assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
+            return NSURLRequest()
+        }
         
         if !authentication.anonymous {
 
@@ -78,43 +81,55 @@ internal extension NSURLRequest {
         }
     }
     
-    private class func phx_requestForAuthenticationWithClientCredentials(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    /// - Parameters:
+    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    /// - Returns: An anonymous client credentials NSURLRequest that can be used to obtain an authentication token.
+    private class func phx_requestForAuthenticationWithClientCredentials(configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=client_credentials"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
-    private class func phx_requestForAuthenticationWithRefreshToken(configuration:PhoenixConfigurationProtocol, authentication:Phoenix.Authentication) -> NSURLRequest {
+    /// - Parameters:
+    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
+    /// - Returns: A refresh token authentication NSURLRequest that can be used to obtain an authentication token.
+    private class func phx_requestForAuthenticationWithRefreshToken(configuration: PhoenixConfigurationProtocol, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
         // Guard required values
-        guard let refreshToken = authentication.refreshToken
-            where configuration.clientID.isEmpty || configuration.clientSecret.isEmpty else {
-                assertionFailure("Client ID and client Secret must not be empty. We also require a refresh token.")
-                return NSURLRequest()
+        guard let refreshToken = authentication.refreshToken else {
+            assertionFailure("Refresh token is missing.")
+            return NSURLRequest()
         }
         
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=password&refresh_token=\(refreshToken)"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
-    private class func phx_requestForAuthenticationWithUserCredentials(configuration:PhoenixConfigurationProtocol, authentication:Phoenix.Authentication) -> NSURLRequest {
+    /// - Parameters:
+    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
+    /// - Returns: An user credentials authentication NSURLRequest that can be used to obtain an authentication token.
+    private class func phx_requestForAuthenticationWithUserCredentials(configuration: PhoenixConfigurationProtocol, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
         // Guard required values
-        guard let username = authentication.username,
-            password = authentication.password
-            where configuration.clientID.isEmpty || configuration.clientSecret.isEmpty else {
-                assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
-                return NSURLRequest()
+        guard let username = authentication.username, password = authentication.password else {
+            assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
+            return NSURLRequest()
         }
         
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=password&username=\(username)&password=\(password)"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
+    /// - Parameters:
+    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - postQuery: The query to be used in the given OAuth request
+    /// - Returns: An authentication NSURLRequest built using the passed configuration and postQuery.
     private class func phx_httpURLRequestForAuthentication(configuration: PhoenixConfigurationProtocol, postQuery:String) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_oauthTokenURLPath(), relativeToURL: configuration.baseURL) {
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPPOSTMethod
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
             request.HTTPBody = postQuery.dataUsingEncoding(NSUTF8StringEncoding)
 
             guard let finalRequest = request.copy() as? NSURLRequest else {
