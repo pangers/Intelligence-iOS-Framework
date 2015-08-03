@@ -101,7 +101,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200, anonymous: false)
         
-        phoenix?.login(withUsername: "chris.nevin@tigerspike.com", password: "tigerspike123") { (authenticated) -> () in
+        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
             XCTAssert(authenticated == true)
         }
         
@@ -117,7 +117,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200, anonymous: false)
         
-        phoenix?.login(withUsername: "chris.nevin@tigerspike.com", password: "tigerspike123") { (authenticated) -> () in
+        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
             XCTAssert(authenticated == true)
             
             self.phoenix?.logout()

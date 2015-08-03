@@ -38,8 +38,8 @@
     [_phoenix startupWithCallback:^(BOOL authenticated) {
         NSLog(@"Anonymous login %d", authenticated);
         if (authenticated) {
-            NSString *username = @"chris.nevin@tigerspike.com";
-            NSString *password = @"tigerspike123";
+            NSString *username = @"username";
+            NSString *password = @"password";
             [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
                 NSLog(@"Logged in %d", authenticated);
             }];
