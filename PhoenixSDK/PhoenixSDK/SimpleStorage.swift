@@ -25,7 +25,6 @@ internal protocol SimpleStorage {
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
 internal extension SimpleStorage {
-    
     var username: String? {
         get {
             return self[usernameKey] as? String

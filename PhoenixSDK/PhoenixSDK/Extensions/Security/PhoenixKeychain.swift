@@ -18,21 +18,25 @@ class PhoenixKeychain: TSDKeychain, SimpleStorage {
         return executeManagedRequest(.Read)?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
     }
     
-    func objectForKey(key: String) -> AnyObject? {
+    private func objectForKey(key: String) -> AnyObject? {
         let value = keyValues()[key]
         return value
     }
     
-    func setObject(value: AnyObject, forKey key: String) {
+    private func setObject(value: AnyObject, forKey key: String) {
         let values = keyValues()
         values[key] = value
         executeManagedRequest(.Update, keyValues: values)
     }
     
-    func removeObjectForKey(key: String) {
+    private func removeObjectForKey(key: String) {
         let values = keyValues()
         values.removeObjectForKey(key)
         executeManagedRequest(.Update, keyValues: values)
+    }
+    
+    func erase() {
+        executeManagedRequest(.Delete)
     }
     
     // Subscript implementation

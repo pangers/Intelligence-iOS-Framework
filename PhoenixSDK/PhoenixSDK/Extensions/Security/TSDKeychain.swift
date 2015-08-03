@@ -106,7 +106,7 @@ class TSDKeychain {
     /// - Returns: Previously stored key-values
     func executeManagedRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSDictionary? {
         do {
-            return try performRequest(createRequest(requestType, keyValues: keyValues), requestType: requestType)
+            return try executeRequest(requestType, keyValues: keyValues)
         }
         catch { }
         return nil

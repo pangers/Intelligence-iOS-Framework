@@ -97,6 +97,7 @@
 		7FDAAAD11B5D35AE00DF2BE6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Tigerspike;
 				TargetAttributes = {

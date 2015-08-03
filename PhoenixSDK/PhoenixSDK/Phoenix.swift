@@ -21,10 +21,15 @@ public final class Phoenix: NSObject {
     internal let network: Network
 
     /// Returns true if Phoenix is currently authenticated against the backend
-    public var isAuthenticated:Bool {
+    public var isAuthenticated: Bool {
         return network.isAuthenticated
     }
 
+    /// Returns true if Phoenix is currently authenticated against the backend with a valid username and password
+    public var isLoggedIn: Bool {
+        return network.isLoggedIn
+    }
+    
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: PhoenixConfigurationProtocol {
         return configuration.clone()

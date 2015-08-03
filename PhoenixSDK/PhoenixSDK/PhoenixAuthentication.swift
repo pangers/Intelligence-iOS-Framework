@@ -184,9 +184,15 @@ internal extension Phoenix {
         
         /// Reset to a clean-slate.
         func reset() {
-            username = nil
-            password = nil
-            invalidateTokens()
+            if Injector.storage is PhoenixKeychain {
+                // Remove keychain elements.
+                (Injector.storage as! PhoenixKeychain).erase()
+            } else {
+                // Tests need to execute differently.
+                invalidateTokens()
+                username = nil
+                password = nil
+            }
         }
     }
 }
