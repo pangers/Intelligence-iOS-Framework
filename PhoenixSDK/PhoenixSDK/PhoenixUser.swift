@@ -34,16 +34,16 @@ public enum UserType : String {
 public protocol PhoenixUser {
     
     /// The user id. Non modifiable. The implementer should use a let.
-    var userId:Int { get }
+    var userId:Int? { get }
     
     /// The company id. Non modifiable. Should be fetched from the Configuration of Phoenix.
-    var companyId:String {get}
+    var companyId:Int {get}
     
     /// The username
     var username:String {get set}
     
     /// The password
-    var password:String {get set}
+    var password:String? {get set}
     
     /// The firstname
     var firstName:String {get set}
@@ -52,7 +52,7 @@ public protocol PhoenixUser {
     var lastName:String {get set}
     
     /// The avatar URL
-    var avatarURL:String {get set}
+    var avatarURL:String? {get set}
     
 }
 
@@ -81,20 +81,32 @@ extension PhoenixUser {
     }
     
     func toJSON() -> JSONDictionary {
-        return [
-            idKey:self.userId,
+        var dictionary:JSONDictionary = [
             companyIdKey: self.companyId,
             usernameKey: self.username,
-            passwordKey: self.password,
             firstNameKey: self.firstName,
             lastNameKey: self.lastName,
-            avatarURLKey: self.avatarURL,
             lockingCountKey: self.lockingCount,
             referenceKey: self.reference,
             isActiveKey: self.isActive,
             metadataKey: self.metadata,
             userTypeKey: self.userTypeId.rawValue
         ]
+        
+        // If we have the user Id add it.
+        if let userId = self.userId {
+            dictionary[idKey] = userId
+        }
+
+        if let password = self.password {
+            dictionary[passwordKey] = password
+        }
+
+        if let avatarURL = self.avatarURL {
+            dictionary[avatarURLKey] = avatarURL
+        }
+        
+        return dictionary
     }
 }
 
@@ -105,16 +117,16 @@ extension Phoenix {
     public class User : PhoenixUser {
         
         /// The user Id as a let
-        public let userId:Int
+        public let userId:Int?
         
         /// The company Id as a let.
-        public let companyId:String
+        public let companyId:Int
         
         /// the username
         public var username:String
         
         /// The password
-        public var password:String
+        public var password:String?
         
         /// The first name
         public var firstName:String
@@ -123,33 +135,12 @@ extension Phoenix {
         public var lastName:String
         
         /// The avatar url
-        public var avatarURL:String
+        public var avatarURL:String?
         
-        /// Parses the JSON dictionary to create the User object. If it fails to
-        /// parse all values, it will return nil.
-        ///
-        /// - Parameters:
-        ///     - withJSON: The json dictionary as obtained from the backend.
-        ///     - withConfiguration: The configuration that holds the company Id.
-        init?(withJSON json:JSONDictionary, withConfiguration configuration:Configuration) {
-            self.username = ""
-            self.password = ""
-            self.firstName = ""
-            self.lastName = ""
-            self.avatarURL = ""
-            self.companyId = configuration.companyId
-
-            guard let id = json[idKey] as? Int,
-                let username = json[usernameKey] as? String,
-                let password = json[passwordKey] as? String,
-                let firstName = json[firstNameKey] as? String,
-                let lastName = json[lastNameKey] as? String,
-                let avatarURL = json[avatarURLKey] as? String else {
-                    self.userId = 0
-                    return nil
-            }
-            
-            self.userId = id
+        /// Default initializer receiveing all parameters required.
+        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String, avatarURL:String?) {
+            self.userId = userId
+            self.companyId = companyId
             self.username = username
             self.password = password
             self.firstName = firstName
@@ -157,7 +148,36 @@ extension Phoenix {
             self.avatarURL = avatarURL
         }
         
+        /// Convenience initializer with no user id.
+        convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String, avatarURL:String?) {
+            self.init(userId:nil, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
+        }
         
+        /// Parses the JSON dictionary to create the User object. If it fails to
+        /// parse all values, it will return nil.
+        ///
+        /// - Parameters:
+        ///     - withJSON: The json dictionary as obtained from the backend.
+        ///     - withConfiguration: The configuration that holds the company Id.
+        convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:PhoenixConfigurationProtocol) {
+            guard let userId = json[idKey] as? Int,
+            let username = json[usernameKey] as? String,
+            let firstName = json[firstNameKey] as? String,
+            let lastName = json[lastNameKey] as? String else {
+                    return nil
+            }
+            
+            self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+        }
     }
-    
 }
+
+
+
+
+
+
+
+
+
+
