@@ -73,7 +73,7 @@
 #pragma mark - Phoenix Networking Delegate
 
 - (void)authenticationFailed:(nullable NSData *)data response:(nullable NSURLResponse *)response error:(nullable NSError *)error {
-    //NSLog(@"Authentication Failed %@", response);
+
 }
 
 @end

@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
     var phoenix:Phoenix?
 
     func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        //print("Authentication Failed \(response)")
+
     }
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
