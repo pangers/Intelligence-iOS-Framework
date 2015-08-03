@@ -153,7 +153,7 @@ internal extension NSURLRequest {
                 let request = NSMutableURLRequest(URL: url)
                 request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
                 request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(withUser.toJSON() as NSDictionary, options: .PrettyPrinted)
+                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject([withUser.toJSON()], options: .PrettyPrinted)
                 
                 if let finalRequest = request.copy() as? NSURLRequest {
                     return finalRequest
