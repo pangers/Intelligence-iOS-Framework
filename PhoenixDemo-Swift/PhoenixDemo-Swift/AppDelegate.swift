@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
     var phoenix:Phoenix?
 
     func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        
+        //print("Authentication Failed \(response)")
     }
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -33,16 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
                     let password = "tigerspike123"
                     instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
                         print("Logged in \(authenticated)")
-                        
-                        // Log out ...
-                        instance.logout()
-                        print("Logged out")
-                        
-                        // Login anonymously again ... (not ideal implementation...)
-                        // Should probably automate this in future on a logout...
-                        instance.startup(withCallback: { (authenticated) -> () in
-                            print("Anonymous login \(authenticated)")
-                        })
                     })
                 }
             })

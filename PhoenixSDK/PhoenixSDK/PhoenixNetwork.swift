@@ -227,7 +227,6 @@ internal extension Phoenix {
                 }
                 return false
             }
-            
             authenticationOperation = createAuthenticationOperation(callback)
             
             // Suspend worker queue until authentication succeeds
@@ -286,6 +285,8 @@ internal extension Phoenix {
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
                 where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
+                    // Clear tokens if response is unreadable.
+                    logout()
                     return
             }
             authentication.loadAuthorizationFromJSON(json)
