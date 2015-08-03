@@ -8,15 +8,12 @@
 
 import Foundation
 
-internal enum TSDKeychainRequestType: String {
-    case Delete = "Delete"
-    case Update = "Update"
-    case Read = "Read"
+internal enum TSDKeychainRequestType {
+    case Delete, Update, Read
 }
 
 internal enum TSDKeychainError: ErrorType {
-    case ErrorCode(Int)
-    case NotFoundError
+    case ErrorCode(Int), NotFoundError
 }
 
 class TSDKeychain {
