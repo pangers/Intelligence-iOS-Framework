@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Locksmith
 
 internal enum TSDKeychainRequestType: String {
     case Create = "Create"
