@@ -42,6 +42,13 @@ public final class Phoenix: NSObject {
         }
     }
     
+    // MARK: The Phoenix SDK modules
+    
+    /// The identity module, used to manage users in the Phoenix backend.
+    public internal(set) var identity:PhoenixIdentity?
+
+    // MARK: Initializer
+    
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
@@ -49,13 +56,17 @@ public final class Phoenix: NSObject {
     public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
         self.configuration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: self.configuration)
-        super.init()
 
+        // Modules
+        self.identity = Identity(withNetwork:network)
+
+        super.init()
+        
         if (self.configuration.hasMissingProperty)
         {
             throw ConfigurationError.MissingPropertyError
         }
-
+        
         if (!self.configuration.isValid)
         {
             throw ConfigurationError.InvalidPropertyError
@@ -80,5 +91,10 @@ public final class Phoenix: NSObject {
         network.performAuthentication { (authenticated) -> () in
             // Nop
         }
+    }
+    
+    /// Shutdowns the Phoenix SDK.
+    public func shutdown() {
+        
     }
 }
