@@ -172,10 +172,8 @@
 				A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */,
 				A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */,
 				BB7276681B5FB53200F098DA /* Phoenix.swift */,
-				BBC46D511B6F711700C8E418 /* PhoenixModules.swift */,
-				BBC46D5A1B6F78D000C8E418 /* PhoenixIdentity.swift */,
-				BBC46D581B6F71DF00C8E418 /* PhoenixUser.swift */,
 				BB653F711B5E59C40003C0C9 /* PhoenixError.swift */,
+				BBC46D5C1B6F8D3200C8E418 /* Modules */,
 				BBA5D4341B67827A007D2B60 /* Configuration */,
 				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
@@ -259,6 +257,24 @@
 				BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */,
 			);
 			name = MockObjects;
+			sourceTree = "<group>";
+		};
+		BBC46D5C1B6F8D3200C8E418 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				BBC46D511B6F711700C8E418 /* PhoenixModules.swift */,
+				BBC46D5D1B6F8D4500C8E418 /* Identity */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		BBC46D5D1B6F8D4500C8E418 /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				BBC46D5A1B6F78D000C8E418 /* PhoenixIdentity.swift */,
+				BBC46D581B6F71DF00C8E418 /* PhoenixUser.swift */,
+			);
+			name = Identity;
 			sourceTree = "<group>";
 		};
 		BBD7AF1D1B6A2C1A00F5B9C1 /* Configuration */ = {
