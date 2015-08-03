@@ -25,7 +25,7 @@ public protocol PhoenixConfigurationProtocol {
     var clientSecret: String { get set }
     var projectID: Int { get set }
     var applicationID: Int { get set }
-    var companyId: String { get set }
+    var companyId: Int { get set }
     var region: Phoenix.Region? { get set }
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
@@ -49,7 +49,7 @@ extension PhoenixConfigurationProtocol {
     /// - Returns: True if there is a missing property in the configuration
     public var hasMissingProperty: Bool {
         return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-            applicationID <= 0 || region == nil || companyId.isEmpty
+            applicationID <= 0 || region == nil || companyId <= 0
     }
     
     /// - Returns: Base URL to call.
@@ -75,7 +75,7 @@ public extension Phoenix {
         public var clientSecret = ""
 
         /// The company Id
-        public var companyId = ""
+        public var companyId = 0
 
         /// The project ID
         public var projectID = 0
