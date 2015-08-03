@@ -78,8 +78,7 @@ class TSDKeychain {
             options[String(kSecReturnData)] = kCFBooleanTrue
             options[String(kSecMatchLimit)] = kSecMatchLimitOne
         default:
-            // Exhaustive switch -_-
-            requestType == requestType
+            break
         }
         return options
     }
