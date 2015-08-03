@@ -210,6 +210,8 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         }];
 ```
 
+The Phoenix.startup() method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time.
+
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
