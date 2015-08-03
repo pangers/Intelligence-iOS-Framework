@@ -78,6 +78,11 @@ internal extension Phoenix {
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
         
+        /// - Returns: true if username and password are unset.
+        var isAnonymous: Bool {
+            return authentication.anonymous
+        }
+        
         /// - Returns: true if the SDK is currently authenticated (anonymously or otherwise).
         var isAuthenticated:Bool {
             return !authentication.requiresAuthentication
@@ -87,7 +92,7 @@ internal extension Phoenix {
         var isLoggedIn: Bool {
             // Refresh token is only set when we are logged in, therefore if we check that we have a username, password and refreshToken that should fulfil the requirements of being logged in.
             return !authentication.requiresAuthentication &&
-                authentication.username != nil && authentication.password != nil &&
+                !isAnonymous &&
                 authentication.refreshToken != nil
         }
         
