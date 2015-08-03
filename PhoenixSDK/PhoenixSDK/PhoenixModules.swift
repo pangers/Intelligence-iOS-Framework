@@ -9,25 +9,9 @@
 import Foundation
 
 /// PhoenixModuleProtocol defines a protocol that all modules should adhere to.
-public protocol PhoenixModuleProtocol {
+public protocol PhoenixModule {
     
     /// Initializes the module. Requires to be called before using the module.
     func startup()
-    
-}
-
-/// PhoenixModule base class. Used to assure that startup was called.
-///
-/// When overriding it, startup should always be called.
-class PhoenixModule : PhoenixModuleProtocol {
-
-    /// Boolean to specify if the startup was called before using
-    /// the module.
-    var didStartup:Bool = false
-    
-    /// Initializes the module.
-    func startup() {
-        self.didStartup = true
-    }
     
 }

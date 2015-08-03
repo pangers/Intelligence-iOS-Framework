@@ -15,40 +15,37 @@ public typealias PhoenixNetworkErrorCallback = (error:NSError?) -> Void
 public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-public protocol PhoenixIdentity : PhoenixModuleProtocol {
+public protocol PhoenixIdentity : PhoenixModule {
     
     /// Creates a user in the backend.
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    /// - throws: ModuleError.StartupNotCalledError
-    func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) throws
+    func createUser(user:PhoenixUser, callback:PhoenixUserCallback?)
+
     /// Gets a user data from the current user credentials.
     /// - Parameters:
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    /// - throws: ModuleError.StartupNotCalledError
-    func getMe(callback:PhoenixUserCallback?) throws
+    func getMe(callback:PhoenixUserCallback?)
     
     /// Gets a user data from a given user Id.
     /// - Parameters:
     ///     - userId: The user id to look for.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    /// - throws: ModuleError.StartupNotCalledError
-    func getUser(userId:Int, callback:PhoenixUserCallback?) throws
+    func getUser(userId:Int, callback:PhoenixUserCallback?)
     
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    /// - throws: ModuleError.StartupNotCalledError
-    func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) throws
+    func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?)
 
 }
 
 extension Phoenix {
 
     /// The PhoenixIdentity implementation.
-    class Identity : PhoenixModule, PhoenixIdentity {
+    class Identity : PhoenixIdentity {
 
         /// A reference to the network manager
         private let network:Network
@@ -59,40 +56,23 @@ extension Phoenix {
             self.network = network
         }
         
-        /// Overridden startup.
-        override func startup() {
-            super.startup()
-        }
-        
-        func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) throws {
-            if !self.didStartup {
-                throw ModuleError.StartupNotCalledError
-            }
-        
+        func startup() {
             // stub
         }
         
-        func getMe(callback:PhoenixUserCallback?) throws {
-            if !self.didStartup {
-                throw ModuleError.StartupNotCalledError
-            }
-          
+        func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
             // stub
         }
         
-        func getUser(userId:Int, callback:PhoenixUserCallback?) throws {
-            if !self.didStartup {
-                throw ModuleError.StartupNotCalledError
-            }
-         
+        func getMe(callback:PhoenixUserCallback?) {
             // stub
         }
         
-        func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) throws {
-            if !self.didStartup {
-                throw ModuleError.StartupNotCalledError
-            }
-
+        func getUser(userId:Int, callback:PhoenixUserCallback?) {
+            // stub
+        }
+        
+        func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
             // stub
         }
 
