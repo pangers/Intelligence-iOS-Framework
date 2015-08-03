@@ -9,27 +9,19 @@
 import Foundation
 
 class PhoenixKeychain: TSDKeychain, SimpleStorage {
-    private func keyValues() -> NSMutableDictionary {
-        return caughtRequest(nil, requestType: .Read) ?? NSMutableDictionary()
-    }
-    
+    // Consume thrown error
     private func caughtRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) -> NSMutableDictionary? {
         do {
             let dictionary = try PhoenixKeychain.executeRequest(keyValues, requestType: requestType)
             return dictionary?.mutableCopy() as? NSMutableDictionary
         }
-        catch let err as TSDKeychainError {
-            switch err {
-            case .ErrorCode(let code):
-                print("Error: \(code)")
-            case .NotFoundError:
-                print("Not found error")
-            }
-        }
         catch {
-            
         }
         return nil
+    }
+    
+    private func keyValues() -> NSMutableDictionary {
+        return caughtRequest(nil, requestType: .Read) ?? NSMutableDictionary()
     }
     
     func objectForKey(key: String) -> AnyObject? {

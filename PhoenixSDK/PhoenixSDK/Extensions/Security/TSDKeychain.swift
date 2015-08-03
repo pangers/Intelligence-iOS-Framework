@@ -9,7 +9,6 @@
 import Foundation
 
 internal enum TSDKeychainRequestType: String {
-    case Create = "Create"
     case Delete = "Delete"
     case Update = "Update"
     case Read = "Read"
@@ -34,8 +33,6 @@ class TSDKeychain {
         var status: OSStatus?
         
         switch type {
-        case .Create:
-            status = withUnsafeMutablePointer(&result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
         case .Read:
             status = withUnsafeMutablePointer(&result) { SecItemCopyMatching(requestReference, UnsafeMutablePointer($0)) }
         case .Delete:
@@ -53,7 +50,6 @@ class TSDKeychain {
             var resultsDictionary: NSDictionary?
             if result != nil && type == .Read && status == errSecSuccess {
                 if let data = result as? NSData {
-                    // Convert the retrieved data to a dictionary
                     resultsDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDictionary
                 }
             }
@@ -70,8 +66,6 @@ class TSDKeychain {
         options[String(kSecAttrSynchronizable)] = false
         options[String(kSecClass)] = kSecClassGenericPassword
         switch requestType {
-        case .Create:
-            fallthrough
         case .Update:
             if let keyValues = keyValues {
                 options[String(kSecValueData)] = NSKeyedArchiver.archivedDataWithRootObject(keyValues)
@@ -80,7 +74,7 @@ class TSDKeychain {
             options[String(kSecReturnData)] = kCFBooleanTrue
             options[String(kSecMatchLimit)] = kSecMatchLimitOne
         default:
-            // Exhaustive -_-
+            // Exhaustive switch -_-
             requestType == requestType
         }
         return options
