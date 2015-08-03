@@ -9,44 +9,85 @@
 import Foundation
 import Locksmith
 
-class TSDKeychain: SimpleStorage {
-    private let PhoenixUser = "PhoenixSDK"
+internal enum TSDKeychainRequestType: String {
+    case Create = "Create"
+    case Delete = "Delete"
+    case Update = "Update"
+    case Read = "Read"
+}
+
+internal enum TSDKeychainError: ErrorType {
+    case ErrorCode(Int)
+    case NotFoundError
+}
+
+class TSDKeychain {
     
-    private func keyValues() -> NSMutableDictionary {
-        let (dictionary, _) = Locksmith.loadDataForUserAccount(PhoenixUser)
-        return dictionary?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
-    }
+    // MARK:- Helpers
     
-    func objectForKey(key: String) -> AnyObject? {
-        return keyValues()[key]
-    }
+    private static let PhoenixUser = "PhoenixSDK"
+    private static let PhoenixService = "com.tigerspike.PhoenixSDK"
     
-    func setObject(value: AnyObject, forKey key: String) {
-        let values = keyValues()
-        values[key] = value.description!
-        Locksmith.updateData(values.copy() as! Dictionary<String, String>, forUserAccount: PhoenixUser)
-    }
-    
-    func removeObjectForKey(key: String) {
-        let values = keyValues()
-        values.removeObjectForKey(key)
-        Locksmith.updateData(values.copy() as! Dictionary<String, String>, forUserAccount: PhoenixUser)
-    }
-    
-    // Subscript implementation
-    subscript(index: String) -> AnyObject? {
-        get {
-            // return an appropriate subscript value here
-            return objectForKey(index)
+    private class func performRequest(request: NSMutableDictionary, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
+        let type = requestType
+        let requestReference = request as CFDictionaryRef
+        var result: AnyObject?
+        var status: OSStatus?
+        
+        switch type {
+        case .Create:
+            status = withUnsafeMutablePointer(&result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
+        case .Read:
+            status = withUnsafeMutablePointer(&result) { SecItemCopyMatching(requestReference, UnsafeMutablePointer($0)) }
+        case .Delete:
+            status = SecItemDelete(requestReference)
+        case .Update:
+            SecItemDelete(requestReference)
+            status = withUnsafeMutablePointer(&result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
         }
-        set(newValue) {
-            // perform a suitable setting action here
-            guard let value = newValue else {
-                removeObjectForKey(index)
-                return
+        
+        if let status = status {
+            let statusCode = Int(status)
+            if statusCode != Int(errSecSuccess) {
+                throw TSDKeychainError.ErrorCode(statusCode)
             }
-            
-            setObject(value, forKey: index)
+            var resultsDictionary: NSDictionary?
+            if result != nil && type == .Read && status == errSecSuccess {
+                if let data = result as? NSData {
+                    // Convert the retrieved data to a dictionary
+                    resultsDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDictionary
+                }
+            }
+            return resultsDictionary
+        } else {
+            throw TSDKeychainError.NotFoundError
         }
+    }
+    
+    private class func createRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) -> NSMutableDictionary {
+        let options = NSMutableDictionary()
+        options[String(kSecAttrAccount)] = PhoenixUser
+        options[String(kSecAttrService)] = PhoenixService
+        options[String(kSecAttrSynchronizable)] = false
+        options[String(kSecClass)] = kSecClassGenericPassword
+        switch requestType {
+        case .Create:
+            fallthrough
+        case .Update:
+            if let keyValues = keyValues {
+                options[String(kSecValueData)] = NSKeyedArchiver.archivedDataWithRootObject(keyValues)
+            }
+        case .Read:
+            options[String(kSecReturnData)] = kCFBooleanTrue
+            options[String(kSecMatchLimit)] = kSecMatchLimitOne
+        default:
+            // Exhaustive -_-
+            requestType == requestType
+        }
+        return options
+    }
+    
+    internal class func executeRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
+        return try performRequest(createRequest(keyValues, requestType: requestType), requestType: requestType)
     }
 }
