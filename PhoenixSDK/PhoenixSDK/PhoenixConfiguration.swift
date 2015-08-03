@@ -15,6 +15,7 @@ private enum ConfigurationKey: String {
     case ApplicationID = "application_id"
     case ProjectID = "project_id"
     case Region = "region"
+    case CompanyId = "company_id"
 }
 
 /// A protocol defining the Phoenix required configuration.
@@ -24,6 +25,7 @@ public protocol PhoenixConfigurationProtocol {
     var clientSecret: String { get set }
     var projectID: Int { get set }
     var applicationID: Int { get set }
+    var companyId: String { get set }
     var region: Phoenix.Region? { get set }
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
@@ -47,7 +49,7 @@ extension PhoenixConfigurationProtocol {
     /// - Returns: True if there is a missing property in the configuration
     public var hasMissingProperty: Bool {
         return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-            applicationID <= 0 || region == nil
+            applicationID <= 0 || region == nil || companyId.isEmpty
     }
     
     /// - Returns: Base URL to call.
@@ -71,7 +73,10 @@ public extension Phoenix {
         
         /// The client secret
         public var clientSecret = ""
-        
+
+        /// The company Id
+        public var companyId = ""
+
         /// The project ID
         public var projectID = 0
         
@@ -111,6 +116,7 @@ public extension Phoenix {
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
+            copy.companyId = companyId
             return copy
         }
         
@@ -157,6 +163,7 @@ public extension Phoenix {
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
+            self.companyId = try value(forKey: .CompanyId, inContents:contents)
         }
     }
 }
