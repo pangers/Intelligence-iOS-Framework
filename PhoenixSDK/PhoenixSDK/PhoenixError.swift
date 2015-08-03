@@ -26,3 +26,11 @@ public enum ConfigurationError: Int, ErrorType {
     /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
 }
+
+/// Errors that cause missbehaving in the Phoenix Modules.
+public enum ModuleError: Int, ErrorType {
+    
+    /// The startup method of the Module was not initialized.
+    case StartupNotCalledError = 2001
+    
+}
