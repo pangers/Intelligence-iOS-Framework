@@ -23,26 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
         
-        do {
-            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
-            self.phoenix?.networkDelegate = self
-            self.phoenix?.startup()
-        }
-        catch PhoenixSDK.ConfigurationError.FileNotFoundError {
-            // The file you specified does not exist!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidFileError {
-            // The file is invalid! Check that the JSON provided is correct.
-        }
-        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
-            // You missed a property!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
-            // There is an invalid property!
-        }
-        catch {
-            // Treat the error with care!
-        }
+        PhoenixManager.startup()
         
 		return true
 	}
