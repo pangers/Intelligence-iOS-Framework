@@ -50,10 +50,14 @@ extension Phoenix {
         /// A reference to the network manager
         private let network:Network
         
+        /// The configuration of the Phoenix SDK
+        private let configuration:PhoenixConfigurationProtocol
+        
         /// Default initializer. Requires a network.
         /// - Parameter network: The network that will be used.
-        init(withNetwork network:Network) {
+        init(withNetwork network:Network, withConfiguration configuration:PhoenixConfigurationProtocol) {
             self.network = network
+            self.configuration = configuration
         }
         
         func startup() {
@@ -61,7 +65,18 @@ extension Phoenix {
         }
         
         func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
-            // stub
+            let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
+            
+            // set the completion block to notify the caller
+            operation.completionBlock = {
+                guard let callback = callback else {
+                    return;
+                }
+                callback(user: operation.createdUser, error: operation.error)
+            }
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
         }
         
         func getMe(callback:PhoenixUserCallback?) {

@@ -60,7 +60,7 @@ internal extension Phoenix {
         // MARK: Instance variables
 
         /// NSURLSession with default session configuration.
-        private lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        private(set) internal lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 
         /// Contains concurrently executable operations for requests that rely on an authenticated session.
         /// Will be suspended if the authentication queue needs to perform authentications.
@@ -73,7 +73,7 @@ internal extension Phoenix {
         private let configuration: PhoenixConfigurationProtocol
         
         /// The current phoenix authentication.
-        private var authentication:Authentication
+        private(set) internal var authentication:Authentication
         
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
@@ -158,7 +158,7 @@ internal extension Phoenix {
         ///
         /// - Parameters
         ///     - operation: The PhoenixNetworkRequestOperation to run.
-        private func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
+        func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
             let initialBlock = operation.completionBlock
             
             operation.completionBlock = { [weak self] in
