@@ -42,7 +42,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
         
         mockResponseForAuthentication(200)
-
+        
         phoenix?.startup(withCallback: { (authenticated) -> () in
             XCTAssert(authenticated == true)
         })
@@ -50,6 +50,40 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
+    /// Verify correct behaviour on token obtained
+    func testLoginTokenObtained() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        
+        mockResponseForAuthentication(200)
+        
+        phoenix?.login(withUsername: "chris.nevin@tigerspike.com", password: "tigerspike123") { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.phoenix!.isAuthenticated, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
+    /// Verify correct behaviour on logout
+    func testLoginLogoutTokenRemoved() {
+        XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated before a response")
+        
+        mockResponseForAuthentication(200)
+        
+        phoenix?.login(withUsername: "chris.nevin@tigerspike.com", password: "tigerspike123") { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+            
+            self.phoenix?.logout()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated after a logout")
         }
     }
     
