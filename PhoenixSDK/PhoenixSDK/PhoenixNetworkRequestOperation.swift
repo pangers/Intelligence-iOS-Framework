@@ -37,6 +37,11 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
         
         self.error = error
         self.output = (data:data, response:response as? NSHTTPURLResponse)
+        
+        if let statusCode = self.output?.response?.statusCode where statusCode != 200 {
+            // TODO: Error handling for non 200
+            self.error = NSError(domain: "", code: 123, userInfo: nil)
+        }
     }
     
 
