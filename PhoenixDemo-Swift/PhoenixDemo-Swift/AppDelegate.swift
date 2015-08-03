@@ -11,16 +11,22 @@ import UIKit
 import PhoenixSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 
 	var window: UIWindow?
     var phoenix:Phoenix?
 
+    func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
+        
+    }
+    
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
         
         do {
-            self.phoenix = try Phoenix(withFile: "config");
+            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
+            self.phoenix?.networkDelegate = self
+            self.phoenix?.startup()
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!

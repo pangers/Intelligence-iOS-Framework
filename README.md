@@ -1,4 +1,11 @@
 # Phoenix SDK #
+```
+Current iOS application credentials (DELETE BEFORE GOING PUBLIC)
+Client ID: iOSSDK_hvxbincerennv
+Client Secret: IZYKF5c975Lkjazjhosplmroopifkhjgeegagrpf
+AppId: 4152
+ProjectId: 3030
+```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
 
@@ -18,6 +25,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
         do {
             let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            phoenix?.startup()
         }
         catch {
             // Treat the error with care!
@@ -36,6 +44,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
             let phoenix = Phoenix(withConfiguration: configuration)
+            phoenix?.startup()
         }
         catch {
             // Treat the error with care!
@@ -72,6 +81,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
             configuration.region = Phoenix.Region.Europe
 
             let phoenix = Phoenix(withConfiguration: configuration)
+            phoenix?.startup()
         }
         catch {
             // Treat the error with care!
@@ -137,6 +147,7 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         
         do {
             self.phoenix = try Phoenix(withFile: "config");
+            self.phoenix?.startup()
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -171,8 +182,6 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         }
         NSParameterAssert(err == nil && instance != nil);
 ```
-
-
 
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 

@@ -9,17 +9,7 @@
 import XCTest
 @testable import PhoenixSDK
 
-class PhoenixTestCase: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+class PhoenixTestCase: PhoenixBaseTestCase {
     
     func testPhoenixInitializer() {
         do {
@@ -47,7 +37,9 @@ class PhoenixTestCase: XCTestCase {
     // Mock configuration fakes an invalid configuration
     func testPhoenixInitializerWithMockConfiguration() {
         do {
-            let _ = try Phoenix(withConfiguration: MockConfiguration())
+            var config = MockConfiguration()
+            config.mockInvalid = true
+            let _ = try Phoenix(withConfiguration: config)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
@@ -55,6 +47,29 @@ class PhoenixTestCase: XCTestCase {
         }
         catch {
             XCTAssert(false, "Unexpected exception thrown")
+        }
+    }
+    
+    @objc class Helper:  NSObject, PhoenixNetworkDelegate {
+        func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+        }
+    }
+    
+    // Mock configuration fakes an invalid configuration
+    func testPhoenixGetterSetterWorks() {
+        do {
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
+            
+            
+            let helper:PhoenixNetworkDelegate = Helper()
+            phoenix.networkDelegate = helper
+            
+            XCTAssert(phoenix.networkDelegate! === helper, "The getter works")
+        }
+        catch {
+            XCTAssert(false, "There was an error reading the file or initializing phoenix.")
         }
     }
 }

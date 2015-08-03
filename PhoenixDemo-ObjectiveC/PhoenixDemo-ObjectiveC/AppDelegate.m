@@ -7,9 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "Phoenix+Manager.h"
+@import PhoenixSDK;
 
-@interface AppDelegate ()
+@interface AppDelegate () <PhoenixNetworkDelegate>
+
+@property (nonatomic) Phoenix *phoenix;
 
 @end
 
@@ -20,7 +22,19 @@
 	// Override point for customization after application launch.
     
     // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [Phoenix sharedInstance];
+    
+    // Attempt to instantiate Phoenix from file.
+    NSError *err;
+    self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+    if (nil != err) {
+        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+        // and generally indicate that something has gone wrong and needs to be resolved.
+        NSLog(@"Error initialising Phoenix: %zd", err.code);
+    }
+    NSParameterAssert(err == nil && self.phoenix != nil);
+    [self.phoenix setNetworkDelegate:self];
+    [self.phoenix startup];
+    
 	return YES;
 }
 
@@ -44,6 +58,12 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Phoenix Networking Delegate
+
+- (void)authenticationFailed:(nullable NSData *)data response:(nullable NSURLResponse *)response error:(nullable NSError *)error {
+    NSLog(@"Cannot authenticate: %@", error.localizedDescription);
 }
 
 @end

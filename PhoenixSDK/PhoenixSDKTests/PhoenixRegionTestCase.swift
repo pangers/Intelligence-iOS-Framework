@@ -10,18 +10,8 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class PhoenixRegionTestCase: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
+class PhoenixRegionTestCase: PhoenixBaseTestCase {
+        
     func testPSDK21Case1() {
         XCTAssert(Phoenix.Region.UnitedStates.baseURL() == "https://api.phoenixplatform.com",
             "United states url does not point to https://api.phoenixplatform.com")

@@ -9,30 +9,54 @@
 import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
-public class Phoenix: NSObject {
+public final class Phoenix: NSObject {
+    
+    // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
-    private let configuration: Configuration
+    /// Provide a Phoenix.Configuration object to initialize it.
+    private let configuration: PhoenixConfigurationProtocol
     
+    /// The network manager instance.
+    internal let network: Network
+
+    /// Returns true if Phoenix is currently authenticated against the backend
+    public var isAuthenticated:Bool {
+        return network.isAuthenticated
+    }
+
     /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: Configuration {
-        return configuration.copy() as! Configuration
+    public var currentConfiguration: PhoenixConfigurationProtocol {
+        return configuration.clone()
+    }
+    
+    /// Delegate implementing failure methods that a developer should implement to catch
+    /// errors that the Phoenix SDK is unable to handle.
+    /// - SeeAlso: `PhoenixNetworkDelegate`
+    public var networkDelegate: PhoenixNetworkDelegate? {
+        get {
+            return network.delegate
+        }
+        set {
+            network.delegate = newValue
+        }
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameter phoenixConfiguration: The configuration to use. The configuration
-    /// will be copied to avoid future mutability.
+    /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration cfg: Configuration) throws {
-        self.configuration = cfg.copy() as! Configuration
+    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
+        self.configuration = phoenixConfiguration.clone()
+        self.network = Network(withConfiguration: self.configuration)
         super.init()
 
-        if (cfg.hasMissingProperty)
+        if (self.configuration.hasMissingProperty)
         {
             throw ConfigurationError.MissingPropertyError
         }
 
-        if (!cfg.isValid)
+        if (!self.configuration.isValid)
         {
             throw ConfigurationError.InvalidPropertyError
         }
@@ -45,6 +69,16 @@ public class Phoenix: NSObject {
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
-        try self.init(withConfiguration: Configuration(fromFile: withFile, inBundle: inBundle))
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
+    }
+
+    // MARK:- Authentication
+
+    /// Starts up the Phoenix SDK, triggering:
+    ///   - Anonymous authentication
+    public func startup() {
+        network.performAuthentication { (authenticated) -> () in
+            // Nop
+        }
     }
 }

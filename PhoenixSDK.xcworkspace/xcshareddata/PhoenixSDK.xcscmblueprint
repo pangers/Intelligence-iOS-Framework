@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "DF9E03B56DA4C37121E9BD2536E81D15D2872E98",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "38C2A0D4F62B675E8C16C8BC1437C7753846C8AC" : 0,
+    "DF9E03B56DA4C37121E9BD2536E81D15D2872E98" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E3CE9D87-FD35-4DE6-82F7-223C23AF6B3E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "38C2A0D4F62B675E8C16C8BC1437C7753846C8AC" : "ts-phoenix-sdk-ios\/Libraries\/OHHTTPStubs\/",
+    "DF9E03B56DA4C37121E9BD2536E81D15D2872E98" : "ts-phoenix-sdk-ios"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PhoenixSDK",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "PhoenixSDK.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AliSoftware\/OHHTTPStubs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "38C2A0D4F62B675E8C16C8BC1437C7753846C8AC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/bitbucket.org\/tigerspike\/ts-phoenix-sdk-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DF9E03B56DA4C37121E9BD2536E81D15D2872E98"
+    }
+  ]
+}

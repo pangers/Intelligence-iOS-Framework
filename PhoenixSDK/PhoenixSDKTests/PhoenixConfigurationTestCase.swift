@@ -11,7 +11,7 @@ import XCTest
 
 // Refers to test case https://tigerspike.atlassian.net/browse/PSDK-21
 // Refers to test case https://tigerspike.atlassian.net/browse/PSDK-22
-class PhoenixConfigurationTestCase: XCTestCase {
+class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     
     func testConfigurationFromFileAndBundle() {
         let clientID="CLIENT_ID" // as in file
@@ -22,7 +22,8 @@ class PhoenixConfigurationTestCase: XCTestCase {
         let projectId = 20
         
         do {
-            let config = try Phoenix.Configuration(fromFile: "config", inBundle: bundle);
+            let config = Phoenix.Configuration()
+            try config.readFromFile("config", inBundle: bundle);
             XCTAssert(config.clientID == clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == region, "The region is incorrect")
@@ -192,4 +193,9 @@ class PhoenixConfigurationTestCase: XCTestCase {
         }
     }
 
+    func testEmptyBaseUrlIfNoRegion(){
+        var config = MockConfiguration()
+        config.region = nil
+        XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
+    }
 }
