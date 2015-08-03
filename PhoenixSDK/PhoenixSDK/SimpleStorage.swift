@@ -11,6 +11,8 @@ import Foundation
 private let accessTokenKey = "access_token"
 private let refreshTokenKey = "refresh_token"
 private let tokenExpirationKey = "token_expiration_date"
+private let usernameKey = "username"
+private let passwordKey = "password"
 
 /// The protocol to implement in order to become a simple storage.
 internal protocol SimpleStorage {
@@ -24,7 +26,25 @@ internal protocol SimpleStorage {
 /// simple storage that provides the required values used by the app.
 internal extension SimpleStorage {
     
-    internal var refreshToken: String? {
+    var username: String? {
+        get {
+            return self[usernameKey] as? String
+        }
+        set {
+            self[usernameKey] = newValue
+        }
+    }
+    
+    var password: String? {
+        get {
+            return self[passwordKey] as? String
+        }
+        set {
+            self[passwordKey] = newValue
+        }
+    }
+    
+    var refreshToken: String? {
         get {
             return self[refreshTokenKey] as? String
         }
@@ -33,7 +53,7 @@ internal extension SimpleStorage {
         }
     }
     
-    internal var accessToken:String? {
+    var accessToken:String? {
         get {
             return self[accessTokenKey] as? String
         }
@@ -42,7 +62,7 @@ internal extension SimpleStorage {
         }
     }
     
-    internal var tokenExpirationDate:NSDate? {
+    var tokenExpirationDate:NSDate? {
         get {
             guard let timeInterval = self[tokenExpirationKey] as? NSTimeInterval else {
                 return nil

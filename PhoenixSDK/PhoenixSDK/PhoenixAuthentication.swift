@@ -60,10 +60,24 @@ internal extension Phoenix {
         // MARK: Instance variables
         
         /// Username for OAuth authentication with credentials.
-        var username: String?
+        var username: String? {
+            get {
+                return Injector.storage.username
+            }
+            set {
+                Injector.storage.username = newValue
+            }
+        }
         
         /// Password for OAuth authentication with credentials.
-        var password: String?
+        var password: String? {
+            get {
+                return Injector.storage.password
+            }
+            set {
+                Injector.storage.password = newValue
+            }
+        }
         
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {

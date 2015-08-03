@@ -35,6 +35,8 @@
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
 		FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */; };
+		FE75E3321B6F6F3400DD400D /* Locksmith.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE75E32A1B6F6F2C00DD400D /* Locksmith.framework */; };
+		FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */; };
 		FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */; };
 		FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */; };
 		FEF7EF751B6671C700066AA3 /* NSDataToJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */; };
@@ -83,6 +85,20 @@
 			remoteGlobalIDString = 095981D219806A7900807DBE;
 			remoteInfo = "OHHTTPStubs Mac Tests";
 		};
+		FE75E3291B6F6F2C00DD400D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE75E3241B6F6F2C00DD400D /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BFFB19D01A4870A300CCFFC3;
+			remoteInfo = Locksmith;
+		};
+		FE75E32B1B6F6F2C00DD400D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE75E3241B6F6F2C00DD400D /* Locksmith.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BFFB19DB1A4870A300CCFFC3;
+			remoteInfo = LocksmithTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +133,8 @@
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
 		FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegionTestCase.swift; sourceTree = "<group>"; };
+		FE75E3241B6F6F2C00DD400D /* Locksmith.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Locksmith.xcodeproj; path = ../../Libraries/Locksmith/Locksmith.xcodeproj; sourceTree = "<group>"; };
+		FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDKeychain.swift; sourceTree = "<group>"; };
 		FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetwork.swift; sourceTree = "<group>"; };
 		FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthentication.swift; sourceTree = "<group>"; };
 		FEF7EF741B6671C700066AA3 /* NSDataToJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataToJSON.swift; sourceTree = "<group>"; };
@@ -127,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE75E3321B6F6F3400DD400D /* Locksmith.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +182,7 @@
 		A07FACB21B5D0C4200482BB7 /* PhoenixSDK */ = {
 			isa = PBXGroup;
 			children = (
+				FE75E3241B6F6F2C00DD400D /* Locksmith.xcodeproj */,
 				A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */,
 				A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */,
 				BB7276681B5FB53200F098DA /* Phoenix.swift */,
@@ -278,10 +298,28 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		FE75E3251B6F6F2C00DD400D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE75E32A1B6F6F2C00DD400D /* Locksmith.framework */,
+				FE75E32C1B6F6F2C00DD400D /* LocksmithTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FE75E3331B6F6F6000DD400D /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
 		FEF7EF721B6671C700066AA3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				FEF7EF731B6671C700066AA3 /* Foundation */,
+				FE75E3331B6F6F6000DD400D /* Security */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -377,6 +415,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = FE75E3251B6F6F2C00DD400D /* Products */;
+					ProjectRef = FE75E3241B6F6F2C00DD400D /* Locksmith.xcodeproj */;
+				},
+				{
 					ProductGroup = BBA573631B6926C800685EFB /* Products */;
 					ProjectRef = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
 				},
@@ -425,6 +467,20 @@
 			remoteRef = BBA573721B6926C800685EFB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FE75E32A1B6F6F2C00DD400D /* Locksmith.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Locksmith.framework;
+			remoteRef = FE75E3291B6F6F2C00DD400D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FE75E32C1B6F6F2C00DD400D /* LocksmithTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = LocksmithTests.xctest;
+			remoteRef = FE75E32B1B6F6F2C00DD400D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -460,6 +516,7 @@
 				BB0F0ED41B68EBF1008679C9 /* AuthenticationRequestOperation.swift in Sources */,
 				FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */,
 				BBD7AF161B6A263800F5B9C1 /* Injector.swift in Sources */,
+				FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */,
 				BBD7AF181B6A28F800F5B9C1 /* SimpleStorage.swift in Sources */,
 				FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */,
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,
