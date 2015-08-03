@@ -24,7 +24,7 @@ public final class Phoenix: NSObject {
     internal var isAuthenticated: Bool {
         return network.isAuthenticated
     }
-
+    
     /// Returns true if Phoenix is currently authenticated against the backend with a valid username and password
     public var isLoggedIn: Bool {
         return network.isLoggedIn

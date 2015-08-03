@@ -61,6 +61,22 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
+    /// Verify correct behaviour on token obtained
+    func testLoginTokenObtained() {
+        XCTAssert(!self.phoenix!.isLoggedIn, "Phoenix is authenticated before a response")
+        
+        mockResponseForAuthentication(200, anonymous: false)
+        
+        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.checkLoggedIn, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
         // Mock using the injector storage that we have a token, but expired
@@ -95,22 +111,6 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is not authenticated after a successful response")
     }
 
-    /// Verify correct behaviour on token obtained
-    func testLoginTokenObtained() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkLoggedIn, "Phoenix is not authenticated after a successful response")
-        }
-    }
-    
     /// Verify correct behaviour on logout when logged in with username and password.
     func testLoginLogoutTokenCleared() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
