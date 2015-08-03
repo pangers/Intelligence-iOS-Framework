@@ -61,6 +61,40 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
+    /// Verify that there is a call executed when the token is available, but expired.
+    func testTokenObtainedOnExpiredtoken() {
+        // Mock using the injector storage that we have a token, but expired
+        Injector.storage.accessToken = "Somevalue"
+        Injector.storage.refreshToken = ""
+        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
+        
+        XCTAssert(!checkAuthenticated, "Phoenix is not authenticated before a response")
+        
+        mockResponseForAuthentication(200)
+        
+        phoenix?.startup(withCallback: { (authenticated) -> () in
+            XCTAssert(authenticated == true)
+        })
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.checkAuthenticated, "Phoenix is authenticated after a successful response")
+        }
+    }
+
+    
+    /// Verify that we logout clearing our tokens successfully when anonymously logged in.
+    func testAnonymousLogout() {
+        // Mock using the injector storage that we have a token
+        Injector.storage.accessToken = "Somevalue"
+        Injector.storage.refreshToken = ""
+        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
+        XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
+        
+        phoenix?.logout()
+        XCTAssert(!checkAuthenticated, "Phoenix is not authenticated after a successful response")
+    }
+
     /// Verify correct behaviour on token obtained
     func testLoginTokenObtained() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
@@ -77,8 +111,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
-    /// Verify correct behaviour on logout
-    func testLoginLogoutTokenRemoved() {
+    /// Verify correct behaviour on logout when logged in with username and password.
+    func testLoginLogoutTokenCleared() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         mockResponseForAuthentication(200, anonymous: false)
@@ -95,27 +129,6 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
-    /// Verify that there is a call executed when the token is available, but expired.
-    func testTokenObtainedOnExpiredtoken() {
-        // Mock using the injector storage that we have a token, but expired
-        Injector.storage.accessToken = "Somevalue"
-        Injector.storage.refreshToken = ""
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
-        
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        mockResponseForAuthentication(200)
-        
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-        })
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated, "Phoenix is not authenticated after a successful response")
-        }
-    }
-
     /// Tests that an invalid JSON means no authentication obtained.
     func testAuthInvalidJSON() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
