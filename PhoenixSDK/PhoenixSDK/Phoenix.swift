@@ -45,7 +45,7 @@ public final class Phoenix: NSObject {
     // MARK: The Phoenix SDK modules
     
     /// The identity module, used to manage users in the Phoenix backend.
-    public internal(set) var identity:PhoenixIdentity?
+    public internal(set) var identity:PhoenixIdentity
 
     // MARK: Initializer
     
