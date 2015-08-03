@@ -285,7 +285,7 @@ internal extension Phoenix {
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
                 where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
-                    // Clear tokens if response is unreadable.
+                    // Clear tokens if response is unreadable or unsuccessful.
                     logout()
                     return
             }
