@@ -9,19 +9,13 @@
 import Foundation
 
 class PhoenixKeychain: TSDKeychain, SimpleStorage {
-    // Consume thrown error
-    private func caughtRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) -> NSMutableDictionary? {
-        do {
-            let dictionary = try PhoenixKeychain.executeRequest(keyValues, requestType: requestType)
-            return dictionary?.mutableCopy() as? NSMutableDictionary
-        }
-        catch {
-        }
-        return nil
+    
+    init() {
+        super.init("PhoenixSDK", service: "com.tigerspike.PhoenixSDK")
     }
     
     private func keyValues() -> NSMutableDictionary {
-        return caughtRequest(nil, requestType: .Read) ?? NSMutableDictionary()
+        return executeManagedRequest(.Read)?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
     }
     
     func objectForKey(key: String) -> AnyObject? {
@@ -32,13 +26,13 @@ class PhoenixKeychain: TSDKeychain, SimpleStorage {
     func setObject(value: AnyObject, forKey key: String) {
         let values = keyValues()
         values[key] = value
-        caughtRequest(values, requestType: .Update)
+        executeManagedRequest(.Update, keyValues: values)
     }
     
     func removeObjectForKey(key: String) {
         let values = keyValues()
         values.removeObjectForKey(key)
-        caughtRequest(values, requestType: .Update)
+        executeManagedRequest(.Update, keyValues: values)
     }
     
     // Subscript implementation

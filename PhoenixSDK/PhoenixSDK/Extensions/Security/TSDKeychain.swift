@@ -21,12 +21,19 @@ internal enum TSDKeychainError: ErrorType {
 
 class TSDKeychain {
     
-    // MARK:- Helpers
+    /// Value for kSecAttrAccount
+    private let keychainAccount: String
     
-    private static let PhoenixUser = "PhoenixSDK"
-    private static let PhoenixService = "com.tigerspike.PhoenixSDK"
+    /// Value for kSecAttrService
+    private let keychainService: String
     
-    private class func performRequest(request: NSMutableDictionary, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
+    /// Create a new instance providing kSecAttrAccount and kSecAttrService.
+    init(_ account: String, service: String) {
+        keychainAccount = account
+        keychainService = service
+    }
+    
+    private func performRequest(request: NSMutableDictionary, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
         let type = requestType
         let requestReference = request as CFDictionaryRef
         var result: AnyObject?
@@ -59,10 +66,10 @@ class TSDKeychain {
         }
     }
     
-    private class func createRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) -> NSMutableDictionary {
+    private func createRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSMutableDictionary {
         let options = NSMutableDictionary()
-        options[String(kSecAttrAccount)] = PhoenixUser
-        options[String(kSecAttrService)] = PhoenixService
+        options[String(kSecAttrAccount)] = keychainAccount
+        options[String(kSecAttrService)] = keychainService
         options[String(kSecAttrSynchronizable)] = false
         options[String(kSecClass)] = kSecClassGenericPassword
         switch requestType {
@@ -80,7 +87,28 @@ class TSDKeychain {
         return options
     }
     
-    internal class func executeRequest(keyValues: NSDictionary?, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
-        return try performRequest(createRequest(keyValues, requestType: requestType), requestType: requestType)
+    /// Execute a new keychain storage request optionally providing key-values.
+    /// Error will be thrown if something fails.
+    /// - Parameters:
+    ///     - requestType: Update, Read, or Delete request
+    ///     - keyValues: Dictionary containing archivable key-values
+    /// - Returns: Previously stored key-values or error
+    func executeRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) throws -> NSDictionary? {
+        return try performRequest(createRequest(requestType, keyValues: keyValues), requestType: requestType)
+    }
+    
+    /// Execute a new keychain storage request optionally providing key-values.
+    /// Error will be consumed and ignored.
+    /// - SeeAlso: executeRequest(requestType:keyValues:)
+    /// - Parameters:
+    ///     - requestType: Update, Read, or Delete request
+    ///     - keyValues: Dictionary containing archivable key-values
+    /// - Returns: Previously stored key-values
+    func executeManagedRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSDictionary? {
+        do {
+            return try performRequest(createRequest(requestType, keyValues: keyValues), requestType: requestType)
+        }
+        catch { }
+        return nil
     }
 }
