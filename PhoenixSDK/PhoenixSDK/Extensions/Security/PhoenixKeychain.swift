@@ -21,14 +21,6 @@ class PhoenixKeychain: TSDKeychain, SimpleStorage {
         catch let err as TSDKeychainError {
             switch err {
             case .ErrorCode(let code):
-                switch code {
-                case Int(errSecItemNotFound):
-                    print("Item not found: \(keyValues) \(requestType.rawValue)")
-                default:
-                    print("Error")
-                }
-                
-                
                 print("Error: \(code)")
             case .NotFoundError:
                 print("Not found error")
