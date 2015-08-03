@@ -1,7 +1,3 @@
 [submodule "Libraries/OHHTTPStubs"]
 	path = Libraries/OHHTTPStubs
 	url = https://github.com/AliSoftware/OHHTTPStubs.git
-[submodule "Libraries/Locksmith"]
-	path = Libraries/Locksmith
-	url = https://github.com/matthewpalmer/Locksmith.git
-	branch = 2.0
