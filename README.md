@@ -262,8 +262,8 @@ The code to create a user for each language is as follows:
 
 ```
 #!swift
-        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameTxt,
-                   password: passwordTxt, firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
+                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
         
         PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
             
