@@ -37,7 +37,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     // Mock configuration fakes an invalid configuration
     func testPhoenixInitializerWithMockConfiguration() {
         do {
-            var config = MockConfiguration()
+            let config = MockConfiguration()
             config.mockInvalid = true
             let _ = try Phoenix(withConfiguration: config)
             XCTAssert(false, "No exception thrown")

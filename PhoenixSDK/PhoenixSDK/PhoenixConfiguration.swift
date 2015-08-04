@@ -55,7 +55,7 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public final class Configuration: NSObject, PhoenixConfigurationProtocol {
+    public class Configuration: NSObject, PhoenixConfigurationProtocol {
         
         /// The client ID
         public var clientID = ""
@@ -75,7 +75,7 @@ public extension Phoenix {
         /// The region
         public var region:Region
         
-        override init() {
+        public override init() {
             self.region = .NoRegion
             super.init()
         }
