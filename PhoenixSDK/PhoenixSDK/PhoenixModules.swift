@@ -9,7 +9,7 @@
 import Foundation
 
 /// PhoenixModuleProtocol defines a protocol that all modules should adhere to.
-public protocol PhoenixModule {
+@objc public protocol PhoenixModule {
     
     /// Initializes the module. Requires to be called before using the module.
     func startup()

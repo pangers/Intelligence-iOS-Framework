@@ -15,7 +15,7 @@ public typealias PhoenixNetworkErrorCallback = (error:NSError?) -> Void
 public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-public protocol PhoenixIdentity : PhoenixModule {
+@objc public protocol PhoenixIdentity : PhoenixModule {
     
     /// Creates a user in the backend.
     /// - Parameters:
@@ -60,11 +60,11 @@ extension Phoenix {
             self.configuration = configuration
         }
         
-        func startup() {
+        @objc func startup() {
             // stub
         }
         
-        func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller
@@ -79,15 +79,15 @@ extension Phoenix {
             network.executeNetworkOperation(operation)
         }
         
-        func getMe(callback:PhoenixUserCallback?) {
+        @objc func getMe(callback:PhoenixUserCallback?) {
             // stub
         }
         
-        func getUser(userId:Int, callback:PhoenixUserCallback?) {
+        @objc func getUser(userId:Int, callback:PhoenixUserCallback?) {
             // stub
         }
         
-        func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
             // stub
         }
 
