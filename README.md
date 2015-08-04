@@ -245,6 +245,10 @@ The code to create a user for each language is as follows:
 
 ```
 #!objc
+
+    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password
+        firstName:firstname lastName:lastname avatarURL:avatarURL];
+
     __weak typeof(self) weakSelf = self;
     
     [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
@@ -258,7 +262,8 @@ The code to create a user for each language is as follows:
 
 ```
 #!swift
-        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameTxt, password: passwordTxt, firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameTxt,
+                   password: passwordTxt, firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
         
         PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
             
