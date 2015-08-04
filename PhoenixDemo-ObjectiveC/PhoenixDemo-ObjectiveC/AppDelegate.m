@@ -9,12 +9,6 @@
 #import "AppDelegate.h"
 #import "PHXPhoenixManager.h"
 
-@interface AppDelegate () <PhoenixNetworkDelegate>
-
-@property (nonatomic) Phoenix *phoenix;
-
-@end
-
 @implementation AppDelegate
 
 
