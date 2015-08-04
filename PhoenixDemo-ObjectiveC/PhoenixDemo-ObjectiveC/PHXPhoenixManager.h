@@ -12,10 +12,10 @@
 
 @interface PHXPhoenixManager : NSObject
 
-+(instancetype) sharedManager;
++ (instancetype) sharedManager;
 
 @property(nonatomic,readonly,strong) Phoenix* phoenix;
 
--(void) startup;
+- (void) startup;
 
 @end
