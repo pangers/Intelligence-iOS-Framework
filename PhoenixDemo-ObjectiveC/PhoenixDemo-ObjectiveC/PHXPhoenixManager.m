@@ -8,7 +8,7 @@
 
 #import "PHXPhoenixManager.h"
 
-@interface PHXPhoenixManager ()
+@interface PHXPhoenixManager () <PHXPhoenixNetworkDelegate>
 
 @property(nonatomic,readwrite,strong) Phoenix* phoenix;
 
@@ -17,12 +17,15 @@
 @implementation PHXPhoenixManager
 
 +(instancetype) sharedManager {
+    static PHXPhoenixManager* instance;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
         // Attempt to instantiate Phoenix from file.
         NSError *err;
-        self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        instance = [[PHXPhoenixManager alloc] init];
+        instance.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
         
         if (err != nil) {
             // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
@@ -30,11 +33,12 @@
             NSLog(@"Error initialising Phoenix: %zd", err.code);
         }
         
-        NSParameterAssert(err == nil && self.phoenix != nil);
-        [self.phoenix setNetworkDelegate:self];
+        NSParameterAssert(err == nil && instance.phoenix != nil);
+        [instance.phoenix setNetworkDelegate:instance];
     });
+    
+    return instance;
 }
-
 
 -(void) startup
 {
