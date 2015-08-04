@@ -98,5 +98,26 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Wait for calls to be made and the callback to be notified
         }
     }
+    
+    func testCreateUserConditions() {
+        XCTAssertFalse(Phoenix.User(companyId: 0, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No company allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "", lastName: "t", avatarURL: "t").isValidToCreate, "No firstname allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
+    
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
+    }
+    
+    // Assures that when the user is not valid to create, an error is returned.
+    func testIdentityErrorOnUserCondition() {
+        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+        }
+    }
 
 }

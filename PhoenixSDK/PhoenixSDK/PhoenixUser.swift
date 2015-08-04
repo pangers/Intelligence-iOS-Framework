@@ -108,6 +108,14 @@ extension PhoenixUser {
         
         return dictionary
     }
+    
+    var isValidToCreate:Bool {
+        guard let password = password else {
+            return false
+        }
+        return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
+            !firstName.isEmpty && !lastName.isEmpty)
+    }
 }
 
 

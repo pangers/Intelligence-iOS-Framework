@@ -65,14 +65,16 @@ extension Phoenix {
         }
         
         @objc func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+            if !user.isValidToCreate {
+                // TODO: Raise error regarding no such user.
+                callback?(user:nil, error: NSError(domain: "", code: 321, userInfo: nil) )
+            }
+            
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller
             operation.completionBlock = {
-                guard let callback = callback else {
-                    return;
-                }
-                callback(user: operation.createdUser, error: operation.error)
+                callback?(user: operation.createdUser, error: operation.error)
             }
             
             // Execute the network operation
