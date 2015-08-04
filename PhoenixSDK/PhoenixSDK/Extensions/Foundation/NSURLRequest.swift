@@ -164,7 +164,28 @@ internal extension NSURLRequest {
         catch {
             // The assertion will be called in case of exception
         }
-        assertionFailure("Couldn't create the authentication URL.")
+        assertionFailure("Couldn't create the users URL.")
+        return NSURLRequest()
+    }
+    
+    class func phx_httpURLRequestForGetUserMe(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+        do {
+            // Configure url
+            if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/me", relativeToURL: configuration.baseURL) {
+                
+                // Create GET request
+                let request = NSMutableURLRequest(URL: url)
+                request.HTTPMethod = HTTPRequestMethod.GET.rawValue
+                
+                if let finalRequest = request.copy() as? NSURLRequest {
+                    return finalRequest
+                }
+            }
+        }
+        catch {
+            // The assertion will be called in case of exception
+        }
+        assertionFailure("Couldn't create the users/me URL.")
         return NSURLRequest()
     }
     
