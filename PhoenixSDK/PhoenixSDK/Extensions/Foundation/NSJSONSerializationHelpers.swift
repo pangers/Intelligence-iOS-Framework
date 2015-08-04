@@ -1,5 +1,5 @@
 //
-//  NSDataToJSON.swift
+//  NSJSONSerializationHelpers.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 27/07/2015.
