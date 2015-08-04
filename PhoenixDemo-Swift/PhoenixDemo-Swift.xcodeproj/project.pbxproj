@@ -12,6 +12,7 @@
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
 		7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */; };
+		BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A23641B70ADD700CE0C81 /* Identity.storyboard */; };
 		BB2FD4691B6B9D46000E8070 /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */; };
 		BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */; };
 		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
@@ -27,6 +28,7 @@
 		7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAAE61B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB0A23651B70ADD700CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
 		BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 		BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
 		BB3534861B6FAB5800C67500 /* PhoenixManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixManager.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
 				7FDAAADE1B5D35AE00DF2BE6 /* ViewController.swift */,
 				7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */,
+				BB0A23641B70ADD700CE0C81 /* Identity.storyboard */,
 				7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */,
 				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
 				7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */,
@@ -146,6 +149,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */,
 				BB2FD4691B6B9D46000E8070 /* PhoenixConfiguration.json in Resources */,
 				7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */,
@@ -185,6 +189,14 @@
 				7FDAAAE61B5D35AE00DF2BE6 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		BB0A23641B70ADD700CE0C81 /* Identity.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BB0A23651B70ADD700CE0C81 /* Base */,
+			);
+			name = Identity.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
