@@ -11,48 +11,12 @@ import UIKit
 import PhoenixSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-    var phoenix:Phoenix?
-
-    func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
-
-    }
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
-        
-        do {
-            let instance = try Phoenix(withFile: "PhoenixConfiguration")
-            instance.networkDelegate = self
-            instance.startup(withCallback: { (authenticated) -> () in
-                print("Anonymous login \(authenticated)")
-                if authenticated {
-                    let username = "username"
-                    let password = "password"
-                    instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
-                        print("Logged in \(authenticated)")
-                    })
-                }
-            })
-            self.phoenix = instance
-        }
-        catch PhoenixSDK.ConfigurationError.FileNotFoundError {
-            // The file you specified does not exist!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidFileError {
-            // The file is invalid! Check that the JSON provided is correct.
-        }
-        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
-            // You missed a property!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
-            // There is an invalid property!
-        }
-        catch {
-            // Treat the error with care!
-        }
         
 		return true
 	}
