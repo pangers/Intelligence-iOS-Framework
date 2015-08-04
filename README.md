@@ -110,7 +110,8 @@ As an example, your configuration file will look like:
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
     "project_id": 20,
-    "region": "EU"
+    "region": "EU",
+    "company_id" : 10
 }
 
 ```
