@@ -101,6 +101,10 @@ class AuthenticationViewController: UITableViewController, PhoenixNetworkDelegat
         }
         alert.addAction(UIAlertAction(title: "Login", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
             guard let username = alert.textFields?.first?.text, password = alert.textFields?.last?.text else {
+                self.loginErrorMessage = nil
+                NSOperationQueue.mainQueue().addOperationWithBlock() {
+                    self.tableView.reloadData()
+                }
                 return
             }
             self.phoenix?.login(withUsername: username, password: password, callback: { (authenticated) -> () in
@@ -110,7 +114,7 @@ class AuthenticationViewController: UITableViewController, PhoenixNetworkDelegat
                     self.loginErrorMessage = nil
                 }
                 NSOperationQueue.mainQueue().addOperationWithBlock() {
-                    self.tableView.performSelector("reloadData", withObject: nil, afterDelay: 0.5)
+                    self.tableView.reloadData()
                 }
             })
         }))
