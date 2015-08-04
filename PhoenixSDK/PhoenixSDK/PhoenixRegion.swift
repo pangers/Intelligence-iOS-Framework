@@ -25,8 +25,11 @@ public extension Phoenix {
         /// SG Region
         case Singapore
         
+        /// NoRegion in case a non optional region needs to be initialized. Will fail 
+        /// when calling baseURL.
         case NoRegion
         
+        /// Asserts that it won't be called on .NoRegion.
         /// - Returns: String to the base url to use (including protocol).
         public func baseURL() -> String {
             switch (self) {

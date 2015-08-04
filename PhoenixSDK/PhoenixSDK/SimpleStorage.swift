@@ -15,7 +15,7 @@ private let tokenExpirationKey = "token_expiration_date"
 /// The protocol to implement in order to become a simple storage.
 internal protocol SimpleStorage {
     
-    // Subscript implementation
+    // Basic subscript implementation
     subscript(index: String) -> AnyObject? {get set}
     
 }

@@ -13,5 +13,7 @@ import Foundation
 /// Currently holds:
 /// - SimpleStorage: Used to keep the authentication tokens.
 internal struct Injector {
+    
+    /// The storage. Used for tokens.
     static internal(set) var storage:SimpleStorage = NSUserDefaults.standardUserDefaults()
 }

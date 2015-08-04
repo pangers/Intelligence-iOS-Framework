@@ -60,26 +60,32 @@ public enum UserType : String {
 /// Also provides a toJSON method to return a JSON dictionary from the values of the user.
 extension PhoenixUser {
     
+    /// The locking count will always be 0 and should be ignored by the developer
     var lockingCount:Int {
         return 0
     }
 
+    /// The reference will be empty and should be ignored by the developer
     var reference:String {
         return ""
     }
 
+    /// Is active is true. Developers should ignore this value
     var isActive:Bool {
         return true
     }
     
+    /// The metadata will be empty and should be ignored.
     var metadata:String {
         return ""
     }
     
+    /// The user type will always be User.
     var userTypeId:UserType {
         return .User
     }
     
+    /// - Returns: Provides a JSONDictionary with the user data.
     func toJSON() -> JSONDictionary {
         var dictionary:JSONDictionary = [
             companyIdKey: self.companyId,
@@ -109,6 +115,7 @@ extension PhoenixUser {
         return dictionary
     }
     
+    /// - Returns: True if the user is valid to be sent to a create request.
     var isValidToCreate:Bool {
         guard let password = password else {
             return false
@@ -130,19 +137,14 @@ extension Phoenix {
         /// The company Id as a let.
         @objc public  var companyId:Int
         
-        /// the username
         @objc public var username:String
         
-        /// The password
         @objc public var password:String?
         
-        /// The first name
         @objc public var firstName:String
-        
-        /// The last name
+
         @objc public var lastName:String
         
-        /// The avatar url
         @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
