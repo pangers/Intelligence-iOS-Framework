@@ -21,9 +21,14 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     var phoenix:Phoenix?
     var configuration:Phoenix.Configuration?
     
+    /// Check if we have an unexpired access_token.
+    /// This all happens internally in the isAuthenticated method.
     var checkAuthenticated: Bool {
         return self.phoenix?.isAuthenticated ?? false
     }
+    
+    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
+    /// This all happens internally in the isLoggedIn method.
     var checkLoggedIn: Bool {
         return self.phoenix?.isLoggedIn ?? false
     }
