@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-@import PhoenixSDK;
+#import "PHXPhoenixManager.h"
 
 @interface AppDelegate () <PhoenixNetworkDelegate>
 
@@ -21,19 +21,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
     
-    // Instantiate Phoenix using PhoenixConfiguration.json file.
-    
-    // Attempt to instantiate Phoenix from file.
-    NSError *err;
-    self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-    if (nil != err) {
-        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-        // and generally indicate that something has gone wrong and needs to be resolved.
-        NSLog(@"Error initialising Phoenix: %zd", err.code);
-    }
-    NSParameterAssert(err == nil && self.phoenix != nil);
-    [self.phoenix setNetworkDelegate:self];
-    [self.phoenix startup];
+    // startup the manager
+    [[PHXPhoenixManager sharedManager] startup];
     
 	return YES;
 }
