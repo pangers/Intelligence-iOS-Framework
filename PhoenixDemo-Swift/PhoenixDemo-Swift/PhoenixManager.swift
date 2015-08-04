@@ -39,6 +39,12 @@ class PhoenixManager {
     }
     
     static func startup() {
-        PhoenixManager.manager.phoenix?.startup()
+        PhoenixManager.manager.phoenix?.startup(withCallback: { (authenticated) -> () in
+            if authenticated {
+                PhoenixManager.manager.phoenix?.identity.getMe({ (user, error) -> Void in
+                    print(user)
+                })
+            }
+        })
     }
 }

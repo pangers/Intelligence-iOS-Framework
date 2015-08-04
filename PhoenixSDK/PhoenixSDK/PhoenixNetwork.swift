@@ -309,7 +309,7 @@ internal extension Phoenix {
         }
         
         // TODO: Remove this method (hack - since we have no API calls yet)
-        func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
+        func anonymousLogin(callback: PhoenixAuthenticationCallback? = nil) {
             enqueueAuthenticationOperationIfRequired(callback)
         }
     }
