@@ -101,6 +101,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
     
+    // Test the method that is used to see if the user is valid to be created
     func testCreateUserConditions() {
         XCTAssertFalse(Phoenix.User(companyId: 0, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No company allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
