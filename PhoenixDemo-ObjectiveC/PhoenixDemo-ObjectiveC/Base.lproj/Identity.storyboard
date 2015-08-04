@@ -53,7 +53,7 @@
         <!--Create user-->
         <scene sceneID="Ob0-iC-ovN">
             <objects>
-                <viewController title="Create user" id="vnA-SC-MlW" customClass="CreateUserViewController" customModule="PhoenixDemo_ObjectiveC" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Create user" id="vnA-SC-MlW" customClass="PHXCreateUserViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="KlB-MY-jPw"/>
                         <viewControllerLayoutGuide type="bottom" id="Jvt-ym-eeU"/>
@@ -148,6 +148,9 @@
                                     <constraint firstAttribute="height" constant="50" id="bKU-5u-ZJ6"/>
                                 </constraints>
                                 <state key="normal" title="Create user"/>
+                                <connections>
+                                    <action selector="didTapCreateUser:" destination="vnA-SC-MlW" eventType="touchUpInside" id="jDo-S1-JLx"/>
+                                </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oC5-Dn-nTG">
                                 <rect key="frame" x="35" y="284" width="530" height="20"/>
@@ -180,6 +183,11 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="avatarURL" destination="uCK-lL-A4a" id="0UT-9T-3so"/>
+                        <outlet property="firstName" destination="EJd-Nu-mzu" id="0aM-Ds-kzV"/>
+                        <outlet property="lastName" destination="5ki-E8-oB6" id="t5p-6V-A7o"/>
+                        <outlet property="password" destination="xBg-4J-xVT" id="z1q-bj-3wk"/>
+                        <outlet property="username" destination="hPw-2U-QPS" id="h84-r7-xXn"/>
                         <segue destination="MM1-fo-SXu" kind="show" identifier="showUser" id="xP4-dm-Xsj"/>
                     </connections>
                 </viewController>
