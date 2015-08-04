@@ -31,10 +31,10 @@ public enum UserType : String {
 }
 
 /// A protocol defining the Phoenix Users behaviour.
-public protocol PhoenixUser {
+@objc(PHXPhoenixUser) public protocol PhoenixUser {
     
     /// The user id. Non modifiable. The implementer should use a let.
-    var userId:Int? { get }
+    var userId:Int { get }
     
     /// The company id. Non modifiable. Should be fetched from the Configuration of Phoenix.
     var companyId:Int {get}
@@ -89,12 +89,17 @@ extension PhoenixUser {
             referenceKey: self.reference,
             isActiveKey: self.isActive,
             metadataKey: self.metadata,
-            userTypeKey: self.userTypeId.rawValue
+            userTypeKey: self.userTypeId.rawValue,
         ]
         func add(value: AnyObject?, key: String) {
             if let value = value {
                 dictionary[key] = value
             }
+        }
+        
+        // If we have the user Id add it.
+        if userId != 0 {
+            dictionary[idKey] = userId
         }
         add(lastName, key: lastNameKey)
         add(userId, key: idKey)
@@ -108,32 +113,32 @@ extension PhoenixUser {
 extension Phoenix {
 
     /// The user class implementation
-    public class User : PhoenixUser {
+    @objc(PHXPhoenixUser) public class User : NSObject, PhoenixUser {
         
         /// The user Id as a let
-        public let userId:Int?
+        @objc public let userId:Int
         
         /// The company Id as a let.
-        public let companyId:Int
+        @objc public  var companyId:Int
         
         /// the username
-        public var username:String
+        @objc public var username:String
         
         /// The password
-        public var password:String?
+        @objc public var password:String?
         
         /// The first name
-        public var firstName:String
+        @objc public var firstName:String
         
         /// The last name
-        public var lastName:String?
+        @objc public var lastName:String?
         
         /// The avatar url
-        public var avatarURL:String?
+        @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
         public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.userId = userId
+            self.userId = userId ?? 0
             self.companyId = companyId
             self.username = username
             self.password = password
@@ -164,13 +169,3 @@ extension Phoenix {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

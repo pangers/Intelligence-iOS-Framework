@@ -70,7 +70,7 @@ class CreateUserViewController : UIViewController {
                 
                 let showUserAction = this.createShowUserActionWithUser(user)
                 
-                this.showAlert("User created", message: "Successfully created a user with Id \(user.userId!)", extraAction:showUserAction)
+                this.showAlert("User created", message: "Successfully created a user with Id \(user.userId)", extraAction:showUserAction)
             })
             
         })

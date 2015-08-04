@@ -38,8 +38,8 @@ class ViewUserViewController : UIViewController {
             return
         }
         
-        if let userId = user.userId {
-            idLabel.text = "User Id: \(userId)"
+        if user.userId != 0 {
+            idLabel.text = "User Id: \(user.userId)"
         }
         else {
             idLabel.text = "User Id: --"
