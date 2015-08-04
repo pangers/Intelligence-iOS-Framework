@@ -15,6 +15,7 @@ private let expiresInKey = "expires_in"
 private let refreshTokenKey = "refresh_token"
 
 internal protocol PhoenixAuthenticationProtocol {
+    var userId: Int? { get set }
     var username: String? { get set }
     var password: String? { get set }
     var accessToken: String? { get set }
@@ -58,6 +59,15 @@ internal extension Phoenix {
     final class Authentication: PhoenixAuthenticationProtocol {
 
         // MARK: Instance variables
+        
+        var userId: Int? {
+            get {
+                return Injector.storage.userId
+            }
+            set {
+                Injector.storage.userId = newValue
+            }
+        }
         
         /// Username for OAuth authentication with credentials.
         var username: String? {
