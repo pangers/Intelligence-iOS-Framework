@@ -8,14 +8,12 @@
 
 import Foundation
 
-infix operator ?+=  { precedence 50 associativity left }
+infix operator ?+=  { associativity right precedence 90 }
 
-func ?+= (lhs: JSONDictionary, rhs: (String, AnyObject?)) -> JSONDictionary {
-    var dict = lhs
+func ?+= (inout lhs: JSONDictionary, rhs: (String, AnyObject?)) {
     if let value = rhs.1 {
-        dict[rhs.0] = value
+        lhs[rhs.0] = value
     }
-    return dict
 }
 
 /// Alias for an array loaded from a JSON object.
