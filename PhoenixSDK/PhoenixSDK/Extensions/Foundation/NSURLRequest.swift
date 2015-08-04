@@ -100,7 +100,7 @@ internal extension NSURLRequest {
             return NSURLRequest()
         }
         
-        let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=password&refresh_token=\(refreshToken)"
+        let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=refresh_token&refresh_token=\(refreshToken)"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
