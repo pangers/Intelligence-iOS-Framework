@@ -22,11 +22,11 @@
 @implementation PHXCreateUserViewController
 
 - (IBAction)didTapCreateUser:(id)sender {
-    NSString* username = self.username.text
-    NSString* password = self.password.text
-    NSString* firstname = self.firstName.text
-    NSString* lastname = self.lastName.text
-    NSString* avatarURL = self.avatarURL.text
+    NSString* username = self.username.text;
+    NSString* password = self.password.text;
+    NSString* firstname = self.firstName.text;
+    NSString* lastname = self.lastName.text;
+    NSString* avatarURL = self.avatarURL.text;
     
 }
 

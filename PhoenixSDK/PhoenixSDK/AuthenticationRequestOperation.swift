@@ -49,17 +49,17 @@ internal extension Phoenix {
         private let urlSession:NSURLSession
         
         /// The authentication object
-        private let authentication:Phoenix.Authentication
+        private let authentication: PhoenixAuthenticationProtocol
         
         /// The callback objects that will be notified upon completion.
-        private var callbacks:[PhoenixAuthenticationCallback] = []
+        private lazy var callbacks = [PhoenixAuthenticationCallback]()
         
         /// Default initializer
         /// - Parameters: 
         ///     - session: An NSURLSession to use for the requests.
         ///     - authentication: The authentication to use.
         ///     - configuration: The SDK configuration
-        init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol) {
             self.urlSession = session
             self.authentication = authentication
             
@@ -108,6 +108,26 @@ internal extension Phoenix {
             }
 
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
+            
+            // TODO: Remove Logging
+            // Once we know exactly what we are getting back from the server
+            // and can handle it appropriately, currently things are a bit ambiguous
+            // so exposing the data we have received will help us define action plans
+            // for how to deal with the response. 
+            //
+            // Such as:
+            // "This account is locked due to an excess of invalid authentication attempts"
+            // on a login request, we should stop trying to login since this is unrecoverable
+            // until resolved on the back-end.
+            //
+            if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, path = request.URL?.lastPathComponent {
+                print("Status: \(statusCode) - \(path)")
+                if (statusCode != 200) {
+                    if let json = data?.phx_jsonDictionary {
+                        print("Data: \(json)")
+                    }
+                }
+            }
             
             self.error = error
             self.output = (data:data, response:response as? NSHTTPURLResponse)

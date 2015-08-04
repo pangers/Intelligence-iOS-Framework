@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@import PhoenixSDK
+@import PhoenixSDK;
 
 @interface PHXPhoenixManager : NSObject
 

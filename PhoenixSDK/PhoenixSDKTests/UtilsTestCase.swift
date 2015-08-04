@@ -33,8 +33,8 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(!"PADDING123PADDING".isContained("123"), "Strings contain.")
     }
     
-    func testUserDefaultsSubscript() {
-        let defaults = NSUserDefaults.standardUserDefaults()
+    func testKeychainSubscript() {
+        let defaults = PhoenixKeychain()
         let key = "test"
         let value = "value"
         
