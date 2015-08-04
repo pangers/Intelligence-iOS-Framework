@@ -81,6 +81,16 @@ extension Phoenix {
         
         func getMe(callback:PhoenixUserCallback?) {
             // stub
+            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            operation.completionBlock = {
+                guard let callback = callback else {
+                    return
+                }
+                callback(user: operation.meUser, error: operation.error)
+            }
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
         }
         
         func getUser(userId:Int, callback:PhoenixUserCallback?) {

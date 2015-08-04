@@ -169,21 +169,9 @@ internal extension NSURLRequest {
     }
     
     class func phx_httpURLRequestForGetUserMe(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
-        do {
-            // Configure url
-            if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/me", relativeToURL: configuration.baseURL) {
-                
-                // Create GET request
-                let request = NSMutableURLRequest(URL: url)
-                request.HTTPMethod = HTTPRequestMethod.GET.rawValue
-                
-                if let finalRequest = request.copy() as? NSURLRequest {
-                    return finalRequest
-                }
-            }
-        }
-        catch {
-            // The assertion will be called in case of exception
+        // Configure url
+        if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
+            return NSURLRequest(URL: url)
         }
         assertionFailure("Couldn't create the users/me URL.")
         return NSURLRequest()
@@ -196,8 +184,13 @@ internal extension NSURLRequest {
         return "\(phoenixIdentityAPIVersion)/oauth/token"
     }
     
+    /// - Returns: The path to get current user's information.
+    private class func phx_usersMeURLPath() -> String {
+        return "\(phoenixIdentityAPIVersion)/users/me"
+    }
+    
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
-    /// - Returns: the path to the API endpoint to obtain an OAuth token.
+    /// - Returns: The path for most requests related to a user.
     private class func phx_usersURLPath(projectId:Int) -> String {
         return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users"
     }

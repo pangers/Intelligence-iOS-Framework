@@ -10,10 +10,11 @@ import Foundation
 
 class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
     
-    let configuration: PhoenixConfigurationProtocol
+    var meUser: Phoenix.User?
+    private let configuration: PhoenixConfigurationProtocol
     
     /// Default initializer with all required parameters
-    init(session:NSURLSession, user:PhoenixUser, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
         self.configuration = configuration
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
@@ -27,21 +28,12 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
             return
         }
         
-        if let output = self.output, data = output.data {
-            
-            do {
-                let jsonResponse:JSONDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! JSONDictionary
-                
-                if let data = jsonResponse["Data"] as? JSONArray where data.count > 0 {
-                    let userData = data[0] as! JSONDictionary
-                    self.createdUser = Phoenix.User(withJSON: userData, withConfiguration:configuration)
-                }
-            }
-            catch {
-                // TODO: Error parsing the response
-                
-            }
+        guard let output = self.output, rawData = output.data, jsonResponse = rawData.phx_jsonDictionary,
+            jsonArr = jsonResponse["Data"] as? JSONArray,
+            userData = jsonArr.first as? JSONDictionary where jsonArr.count > 0 else {
+                return
         }
+        meUser = Phoenix.User(withJSON: userData, withConfiguration: configuration)
+        authentication.userId = meUser?.userId
     }
-
 }
