@@ -50,7 +50,9 @@ class CreateUserViewController : UIViewController {
             }
             
             this.showProgress(false)
-
+            
+            this.lastUserCreated = user
+            
             if let err = error {
                 this.createUserError(err.description)
                 return
