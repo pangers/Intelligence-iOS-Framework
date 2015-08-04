@@ -13,8 +13,18 @@ import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
 
+    let anonymousTokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
+    let anonymousTokenMethod = "POST"
+    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+
     override func setUp() {
+        super.setUp()
         Injector.storage = MockSimpleStorage()
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        OHHTTPStubs.removeAllStubs()
     }
     
     func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil) {
@@ -46,4 +56,15 @@ class PhoenixBaseTestCase : XCTestCase {
         })
 
     }
+    
+    /// Mock the authentication response
+    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil) {
+        let responseData = (statusCode == 200) ? anonymousTokenSuccessfulResponse : ""
+        
+        mockResponseForURL(anonymousTokenUrl,
+            method: anonymousTokenMethod,
+            response: (data:responseData, statusCode: statusCode, headers: nil),
+            expectation:expectation)
+    }
+
 }

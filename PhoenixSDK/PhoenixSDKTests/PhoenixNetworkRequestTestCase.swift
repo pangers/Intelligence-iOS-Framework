@@ -12,9 +12,6 @@ import XCTest
 
 class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
-    let anonymousTokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
-    let anonymousTokenMethod = "POST"
-    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let expectationTimeout:NSTimeInterval = 3
     
     var phoenix:Phoenix?
@@ -223,16 +220,5 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
             XCTAssert(!self.phoenix!.isAuthenticated, "Phoenix is authenticated Despite the response being a 404")
         }
     }
-
-    // MARK: Helpers
-    
-    func mockResponseForAuthentication(statusCode:Int32) {
-        let responseData = (statusCode == 200) ? anonymousTokenSuccessfulResponse : ""
-        
-        mockResponseForURL(anonymousTokenUrl,
-            method: anonymousTokenMethod,
-            response: (data:responseData, statusCode: statusCode, headers: nil))
-    }
-
 }
 
