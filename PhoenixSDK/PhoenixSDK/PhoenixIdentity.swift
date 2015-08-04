@@ -67,7 +67,7 @@ extension Phoenix {
         @objc func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
                 // TODO: Raise error regarding no such user.
-                callback?(user:nil, error: NSError(domain: "", code: 321, userInfo: nil) )
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
             }
             
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)

@@ -56,12 +56,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: self.configuration!).URL!
 
-        identity!.createUser(user) { (user, error) -> Void in
-            expectCallback.fulfill()
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-        }
-        
         // Mock 200 on auth
         mockResponseForAuthentication(200)
         
@@ -69,6 +63,12 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockResponseForURL(request,
             method: "POST",
             response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
+        
+        identity!.createUser(user) { (user, error) -> Void in
+            expectCallback.fulfill()
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+        }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
@@ -80,12 +80,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: self.configuration!).URL!
 
-        identity!.createUser(user) { (user, error) -> Void in
-            expectCallback.fulfill()
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-        }
-        
         // Mock 200 on auth
         mockResponseForAuthentication(200)
         
@@ -94,6 +88,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             method: "POST",
             response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
 
+        identity!.createUser(user) { (user, error) -> Void in
+            expectCallback.fulfill()
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+        }
+        
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
@@ -117,6 +119,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         identity!.createUser(user) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
         }
     }
 

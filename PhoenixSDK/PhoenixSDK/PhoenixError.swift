@@ -26,3 +26,13 @@ public enum ConfigurationError: Int, ErrorType {
     /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
 }
+
+public enum IdentityError: Int, ErrorType {
+    
+    static let domain = "IdentityError"
+
+    case UserCreationError = 2001
+    
+    case InvalidUserError = 2002
+    
+}
