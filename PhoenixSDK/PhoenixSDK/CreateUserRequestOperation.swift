@@ -8,33 +8,17 @@
 
 import Foundation
 
-class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
-    
-    private(set) var createdUser:PhoenixUser?
-    let configuration:PhoenixConfigurationProtocol
-    
+class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters
     init(session:NSURLSession, user:PhoenixUser, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
         let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration)
-        self.configuration = configuration
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
+        self.configuration = configuration
     }
     
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
-        
-        if error != nil {
-            return
-        }
-        
-        if let jsonResponse = self.output?.data?.phx_jsonDictionary,
-            let jsonData = jsonResponse["Data"] as? JSONArray,
-            let userData = jsonData.first as? JSONDictionary {
-                // If all conditions succeed, parse the user.
-                self.createdUser = Phoenix.User(withJSON: userData, withConfiguration:configuration)
-        }
     }
-
 }

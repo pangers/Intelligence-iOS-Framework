@@ -72,7 +72,7 @@ extension Phoenix {
                 guard let callback = callback else {
                     return;
                 }
-                callback(user: operation.createdUser, error: operation.error)
+                callback(user: operation.user, error: operation.error)
             }
             
             // Execute the network operation
@@ -86,7 +86,7 @@ extension Phoenix {
                 guard let callback = callback else {
                     return
                 }
-                callback(user: operation.meUser, error: operation.error)
+                callback(user: operation.user, error: operation.error)
             }
             
             // Execute the network operation
