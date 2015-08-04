@@ -187,6 +187,7 @@
                         <outlet property="firstName" destination="EJd-Nu-mzu" id="0aM-Ds-kzV"/>
                         <outlet property="lastName" destination="5ki-E8-oB6" id="t5p-6V-A7o"/>
                         <outlet property="password" destination="xBg-4J-xVT" id="z1q-bj-3wk"/>
+                        <outlet property="spinner" destination="oC5-Dn-nTG" id="u4w-Pi-6o0"/>
                         <outlet property="username" destination="hPw-2U-QPS" id="h84-r7-xXn"/>
                         <segue destination="MM1-fo-SXu" kind="show" identifier="showUser" id="xP4-dm-Xsj"/>
                     </connections>
