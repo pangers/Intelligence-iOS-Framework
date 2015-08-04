@@ -29,20 +29,11 @@ class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
             return
         }
         
-        if let output = self.output, data = output.data {
-            
-            do {
-                let jsonResponse:JSONDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! JSONDictionary
-                
-                if let data = jsonResponse["Data"] as? JSONArray where data.count > 0 {
-                    let userData = data[0] as! JSONDictionary
-                    self.createdUser = Phoenix.User(withJSON: userData, withConfiguration:configuration)
-                }
-            }
-            catch {
-                // TODO: Error parsing the response
-                
-            }
+        if let jsonResponse = self.output?.data?.phx_jsonDictionary,
+            let jsonData = jsonResponse["Data"] as? JSONArray,
+            let userData = jsonData.first as? JSONDictionary {
+                // If all conditions succeed, parse the user.
+                self.createdUser = Phoenix.User(withJSON: userData, withConfiguration:configuration)
         }
     }
 
