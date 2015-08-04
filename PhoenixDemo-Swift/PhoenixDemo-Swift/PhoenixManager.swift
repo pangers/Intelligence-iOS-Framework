@@ -19,7 +19,7 @@ class PhoenixManager {
     
     init(){
         do {
-            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
+            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration")
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
