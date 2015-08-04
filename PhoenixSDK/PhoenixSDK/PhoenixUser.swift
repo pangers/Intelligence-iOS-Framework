@@ -49,7 +49,7 @@ public protocol PhoenixUser {
     var firstName:String {get set}
     
     /// The lastname
-    var lastName:String {get set}
+    var lastName:String? {get set}
     
     /// The avatar URL
     var avatarURL:String? {get set}
@@ -85,27 +85,21 @@ extension PhoenixUser {
             companyIdKey: self.companyId,
             usernameKey: self.username,
             firstNameKey: self.firstName,
-            lastNameKey: self.lastName,
             lockingCountKey: self.lockingCount,
             referenceKey: self.reference,
             isActiveKey: self.isActive,
             metadataKey: self.metadata,
             userTypeKey: self.userTypeId.rawValue
         ]
-        
-        // If we have the user Id add it.
-        if let userId = self.userId {
-            dictionary[idKey] = userId
+        func add(value: AnyObject?, key: String) {
+            if let value = value {
+                dictionary[key] = value
+            }
         }
-
-        if let password = self.password {
-            dictionary[passwordKey] = password
-        }
-
-        if let avatarURL = self.avatarURL {
-            dictionary[avatarURLKey] = avatarURL
-        }
-        
+        add(lastName, key: lastNameKey)
+        add(userId, key: idKey)
+        add(password, key: passwordKey)
+        add(avatarURL, key: avatarURLKey)
         return dictionary
     }
 }
@@ -132,13 +126,13 @@ extension Phoenix {
         public var firstName:String
         
         /// The last name
-        public var lastName:String
+        public var lastName:String?
         
         /// The avatar url
         public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
-        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String, avatarURL:String?) {
+        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.userId = userId
             self.companyId = companyId
             self.username = username
@@ -162,11 +156,10 @@ extension Phoenix {
         convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:PhoenixConfigurationProtocol) {
             guard let userId = json[idKey] as? Int,
             let username = json[usernameKey] as? String,
-            let firstName = json[firstNameKey] as? String,
-            let lastName = json[lastNameKey] as? String else {
+            let firstName = json[firstNameKey] as? String else {
                     return nil
             }
-            
+            let lastName = json[lastNameKey] as? String
             self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
         }
     }
