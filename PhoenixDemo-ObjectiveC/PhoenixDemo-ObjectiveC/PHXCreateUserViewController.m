@@ -8,6 +8,8 @@
 
 #import "PHXCreateUserViewController.h"
 
+#import "PHXPhoenixManager.h"
+
 @interface PHXCreateUserViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *username;
@@ -28,7 +30,13 @@
     NSString* lastname = self.lastName.text;
     NSString* avatarURL = self.avatarURL.text;
     
-    [[PHXPhoenixManager sharedManager].phoenix.identity]
+    id<PHXPhoenixConfigurationProtocol> protocol = [[PHXPhoenixManager sharedManager].phoenix currentConfiguration];
+    NSInteger companyID = protocol.companyId;
+    
+    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password firstName:firstname lastName:lastname avatarURL:avatarURL];
+    
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+    }];
 }
 
 @end
