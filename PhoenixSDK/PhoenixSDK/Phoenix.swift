@@ -31,7 +31,7 @@ public final class Phoenix: NSObject {
     }
     
     /// - Returns: A **copy** of the configuration.
-    @objc public var currentConfiguration: PhoenixConfigurationProtocol {
+    public var currentConfiguration: PhoenixConfigurationProtocol {
         return configuration.clone()
     }
     

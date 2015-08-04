@@ -44,7 +44,7 @@ class PhoenixRegionTestCase: PhoenixBaseTestCase {
             XCTAssert(Phoenix.Region(code:code) == value, "Incorrect enum value from string")
         }
         
-        XCTAssert(Phoenix.Region(code:"Wrong code") == nil, "Incorrect enum value from string")
+        XCTAssert(Phoenix.Region(code:"Wrong code") == .NoRegion, "Incorrect enum value from string")
 
     }
     

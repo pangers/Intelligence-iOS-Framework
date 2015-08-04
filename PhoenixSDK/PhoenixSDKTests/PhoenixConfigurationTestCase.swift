@@ -194,8 +194,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     }
 
     func testEmptyBaseUrlIfNoRegion(){
-        var config = MockConfiguration()
-        config.region = nil
+        let config = MockConfiguration()
+        config.region = .NoRegion
         XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
     }
 }
