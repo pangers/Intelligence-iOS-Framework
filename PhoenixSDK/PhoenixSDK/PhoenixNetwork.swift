@@ -19,12 +19,6 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-/// Alias for an array loaded from a JSON object.
-internal typealias JSONArray = [AnyObject]
-
-/// Alias for a dictionary loaded from a JSON object.
-internal typealias JSONDictionary = [String: AnyObject]
-
 // MARK: Status code constants
 
 /// Enumeration containing the possible status to use.

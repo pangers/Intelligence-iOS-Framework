@@ -127,19 +127,8 @@ public extension Phoenix {
                 throw ConfigurationError.FileNotFoundError
             }
             
-            // Helper function to parse the data and return an optional instead of an error
-            func optionalJSONData(data: NSData) -> NSDictionary? {
-                do {
-                    return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
-                }
-                catch {
-                    // Swallow the error
-                }
-                return nil
-            }
-            
             // Guard that we have the json data parsed correctly
-            guard let contents = optionalJSONData(data) else {
+            guard let contents = data.phx_jsonDictionary else {
                 throw ConfigurationError.InvalidFileError
             }
             

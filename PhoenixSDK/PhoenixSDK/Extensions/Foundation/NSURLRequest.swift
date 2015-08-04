@@ -146,23 +146,18 @@ internal extension NSURLRequest {
     // MARK: User CRUD
     
     class func phx_httpURLRequestForCreateUser(withUser:PhoenixUser, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
-        do {
-            // Configure url
-            if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
-                
-                // Create URL encoded POST with query string
-                let request = NSMutableURLRequest(URL: url)
-                request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-                request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject([withUser.toJSON()], options: .PrettyPrinted)
-                
-                if let finalRequest = request.copy() as? NSURLRequest {
-                    return finalRequest
-                }
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
+            
+            // Create URL encoded POST with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+            request.HTTPBody = withUser.toJSON().phx_toJSONData()
+            
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
             }
-        }
-        catch {
-            // The assertion will be called in case of exception
         }
         assertionFailure("Couldn't create the users URL.")
         return NSURLRequest()
