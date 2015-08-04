@@ -26,7 +26,7 @@ public final class Phoenix: NSObject {
     }
 
     /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: PhoenixConfigurationProtocol {
+    @objc public var currentConfiguration: PhoenixConfigurationProtocol {
         return configuration.clone()
     }
     
@@ -45,7 +45,7 @@ public final class Phoenix: NSObject {
     // MARK: The Phoenix SDK modules
     
     /// The identity module, used to manage users in the Phoenix backend.
-    public internal(set) var identity:PhoenixIdentity
+    @objc public internal(set) var identity:PhoenixIdentity
 
     // MARK: Initializer
     

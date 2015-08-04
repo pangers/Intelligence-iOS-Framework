@@ -9,7 +9,9 @@
 import Foundation
 
 /// The network delegate. Currently only shows authentication failed.
-@objc public protocol PhoenixNetworkDelegate {
+@objc(PHXPhoenixNetworkDelegate) public protocol PhoenixNetworkDelegate {
+    
+    optional
     func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?)
 }
 
@@ -264,7 +266,7 @@ internal extension Phoenix {
                     // PSDK-26: #4 - When I open the sample app, And the /token endpoint is not available (404 error)
                     // PSDK-26: #5 - When I open the sample app, And the /token endpoint returns a 401 Unauthorised
                     // An exception is raised to the developer, And the SDK does not automatically attempt to get a token again
-                    delegate?.authenticationFailed(data, response: response, error: error)
+                    delegate?.authenticationFailed?(data, response: response, error: error)
                 }
             }
             

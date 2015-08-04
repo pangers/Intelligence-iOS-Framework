@@ -20,13 +20,13 @@ private enum ConfigurationKey: String {
 
 /// A protocol defining the Phoenix required configuration.
 /// The implementation is Phoenix.Configuration.
-public protocol PhoenixConfigurationProtocol {
+@objc(PHXPhoenixConfigurationProtocol) public protocol PhoenixConfigurationProtocol {
     var clientID: String { get set }
     var clientSecret: String { get set }
     var projectID: Int { get set }
     var applicationID: Int { get set }
     var companyId: Int { get set }
-    var region: Phoenix.Region? { get set }
+    var region: Phoenix.Region { get set }
     var isValid: Bool { get }
     var hasMissingProperty: Bool { get }
 
@@ -38,26 +38,15 @@ public protocol PhoenixConfigurationProtocol {
 /// This extension is used for internal purposes only, and should not be overriden by the 
 /// developer.
 extension PhoenixConfigurationProtocol {
-    
-    /// - Returns: True if the configuration is correct and can be used to initialize
-    /// the Phoenix SDK.
-    public var isValid: Bool {
-        // For now only check if there is a missing property.
-        return !self.hasMissingProperty
-    }
-    
-    /// - Returns: True if there is a missing property in the configuration
-    public var hasMissingProperty: Bool {
-        return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-            applicationID <= 0 || region == nil || companyId <= 0
-    }
-    
+ 
     /// - Returns: Base URL to call.
-    public var baseURL: NSURL? {
-        guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
+    var baseURL: NSURL? {
+        // nil on no region
+        if region == .NoRegion {
             return nil
         }
-        return URL
+        
+        return NSURL(string: self.region.baseURL())
     }
 }
 
@@ -84,7 +73,12 @@ public extension Phoenix {
         public var applicationID = 0
         
         /// The region
-        public var region: Region?
+        public var region:Region
+        
+        override init() {
+            self.region = .NoRegion
+            super.init()
+        }
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -164,6 +158,19 @@ public extension Phoenix {
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
+        }
+        
+        /// - Returns: True if the configuration is correct and can be used to initialize
+        /// the Phoenix SDK.
+        @objc public var isValid: Bool {
+            // For now only check if there is a missing property.
+            return !self.hasMissingProperty
+        }
+        
+        /// - Returns: True if there is a missing property in the configuration
+        @objc public var hasMissingProperty: Bool {
+            return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
+                applicationID <= 0 || region == .NoRegion || companyId <= 0
         }
     }
 }

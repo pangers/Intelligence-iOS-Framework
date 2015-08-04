@@ -11,7 +11,7 @@ import Foundation
 public extension Phoenix {
     
     /// An enum with the regions to which the SDK can be pointing to.
-    public enum Region {
+    @objc public enum Region : Int {
         
         /// US Region
         case UnitedStates
@@ -25,6 +25,8 @@ public extension Phoenix {
         /// SG Region
         case Singapore
         
+        case NoRegion
+        
         /// - Returns: String to the base url to use (including protocol).
         public func baseURL() -> String {
             switch (self) {
@@ -36,12 +38,15 @@ public extension Phoenix {
                 return "https://api.phoenixplatform.eu"
             case .Singapore:
                 return "https://api.phoenixplatform.com.sg"
+            default:
+                assertionFailure("No base URL for no region")
+                return ""
             }
         }
         
         /// - Returns: The region that a specific code represents. Returns nil if the
         /// code does not match any region.
-        init?(code: String) {
+        init(code: String) {
             switch code {
             case "US":
                 self = .UnitedStates
@@ -52,7 +57,7 @@ public extension Phoenix {
             case "SG":
                 self = .Singapore
             default:
-                return nil
+                self = .NoRegion
             }
         }
     }

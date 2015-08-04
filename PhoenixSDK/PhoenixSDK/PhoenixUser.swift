@@ -31,7 +31,7 @@ public enum UserType : String {
 }
 
 /// A protocol defining the Phoenix Users behaviour.
-@objc public protocol PhoenixUser {
+@objc(PHXPhoenixUser) public protocol PhoenixUser {
     
     /// The user id. Non modifiable. The implementer should use a let.
     var userId:Int { get }
@@ -114,7 +114,7 @@ extension PhoenixUser {
 extension Phoenix {
 
     /// The user class implementation
-    public class User : PhoenixUser {
+    @objc(PHXPhoenixUser) public class User : NSObject, PhoenixUser {
         
         /// The user Id as a let
         @objc public let userId:Int
