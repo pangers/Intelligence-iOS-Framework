@@ -8,6 +8,16 @@
 
 import Foundation
 
+infix operator ?+=  { precedence 50 associativity left }
+
+func ?+= (lhs: JSONDictionary, rhs: (String, AnyObject?)) -> JSONDictionary {
+    var dict = lhs
+    if let value = rhs.1 {
+        dict[rhs.0] = value
+    }
+    return dict
+}
+
 /// Alias for an array loaded from a JSON object.
 internal typealias JSONArray = [AnyObject]
 

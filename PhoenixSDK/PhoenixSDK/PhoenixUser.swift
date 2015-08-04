@@ -91,20 +91,13 @@ extension PhoenixUser {
             metadataKey: self.metadata,
             userTypeKey: self.userTypeId.rawValue,
         ]
-        func add(value: AnyObject?, key: String) {
-            if let value = value {
-                dictionary[key] = value
-            }
-        }
-        
+        dictionary ?+= (lastNameKey, lastName)
+        dictionary ?+= (passwordKey, password)
+        dictionary ?+= (avatarURLKey, avatarURL)
         // If we have the user Id add it.
         if userId != 0 {
             dictionary[idKey] = userId
         }
-        add(lastName, key: lastNameKey)
-        add(userId, key: idKey)
-        add(password, key: passwordKey)
-        add(avatarURL, key: avatarURLKey)
         return dictionary
     }
 }
