@@ -1,10 +1,20 @@
 # Phoenix SDK #
 ```
-Current iOS application credentials (DELETE BEFORE GOING PUBLIC)
-Client ID: iOSSDK_hvxbincerennv
-Client Secret: IZYKF5c975Lkjazjhosplmroopifkhjgeegagrpf
-AppId: 4152
-ProjectId: 3030
+== Configuration values for the "Phoenix SDK Test Project" (https://dashboard.phoenixplatform.eu/) ==
+!! these values should be deleted from the app once the codebase goes public !!
+
+Region: EU (https://api.phoenixplatform.eu)
+API Version: v1
+Company Id: 3
+Project Id: 2030
+
+Application Id (iOS): 3152
+Client Id (iOS): iOSSDKApp_napmxilutp
+Client Secret (iOS): Z4D1eCGO65pi45y5dewrmrgenndrfnzarnzdilrl
+
+Application Id (Android): 4154
+Client Id (Android): AndroidSDKApp_kypopf
+Client Secret (Android): OCN20qleymuqjlqbfcwbcwnjdwphdgoxpocrpxvp
 ```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
