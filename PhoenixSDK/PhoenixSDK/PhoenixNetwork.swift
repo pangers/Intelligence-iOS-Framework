@@ -73,7 +73,7 @@ internal extension Phoenix {
         private let configuration: PhoenixConfigurationProtocol
         
         /// The current phoenix authentication.
-        private var authentication: Authentication
+        internal var authentication: Authentication
         
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?

@@ -70,6 +70,52 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
+    /// Verifies that when trying to do a request, an authorization with 'grant_type=password' will be fired if it is needed.
+    func testEnqueueAuthorizationLoginOnNewOperation() {
+        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
+        let stringData = "Hola"
+        let statusCode = Int32(200)
+        let expectationOperation = expectationWithDescription("")
+        phoenix!.network.authentication.configure(withUsername: "username", password: "password")
+        
+        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
+        mockResponseForAuthentication(200, anonymous: false)
+        
+        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
+            expectationOperation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.phoenix!.isLoggedIn, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
+    /// Verifies that when trying to do a request, an authorization with 'grant_type=refresh_token' will be fired if it is needed.
+    func testEnqueueAuthorizationRefreshTokenOnNewOperation() {
+        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
+        let stringData = "Hola"
+        let statusCode = Int32(200)
+        let expectationOperation = expectationWithDescription("")
+        phoenix!.network.authentication.configure(withUsername: "username", password: "password")
+        Injector.storage.accessToken = "Somevalue"
+        Injector.storage.refreshToken = "Somevalue"
+        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
+        
+        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
+        mockResponseForAuthentication(200, anonymous: false)
+        
+        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
+            expectationOperation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.phoenix!.isLoggedIn, "Phoenix is not authenticated after a successful response")
+        }
+    }
+    
+    
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
         // Mock using the injector storage that we have a token, but expired
