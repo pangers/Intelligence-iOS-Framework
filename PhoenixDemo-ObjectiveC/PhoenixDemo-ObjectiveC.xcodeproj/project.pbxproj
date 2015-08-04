@@ -13,6 +13,7 @@
 		7FDAAB0E1B5D360800DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */; };
 		7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */; };
 		7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */; };
+		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
 		FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAB121B5D360800DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAB141B5D360800DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB0A23701B70B1B800CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
 		FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../PhoenixSDK/build/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +66,7 @@
 		7FDAAB021B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC */ = {
 			isa = PBXGroup;
 			children = (
+				BB0A236E1B70B1A400CE0C81 /* Identity */,
 				FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
 				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
@@ -84,6 +87,14 @@
 				7FDAAB041B5D360800DF2BE6 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BB0A236E1B70B1A400CE0C81 /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */,
+			);
+			name = Identity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +154,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */,
 				FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */,
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
@@ -180,6 +192,14 @@
 				7FDAAB121B5D360800DF2BE6 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BB0A23701B70B1B800CE0C81 /* Base */,
+			);
+			name = Identity.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
