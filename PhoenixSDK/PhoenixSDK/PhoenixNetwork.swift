@@ -279,6 +279,15 @@ internal extension Phoenix {
                 // Continue worker queue if we have authentication object
                 workerQueue.suspended = !self.isAuthenticated
                 
+                // If the worker queue is suspended, cancel all its tasks
+                if workerQueue.suspended {
+                    for operation in workerQueue.operations {
+                        if let operation = operation as? PhoenixNetworkRequestOperation {
+                            operation.authenticationFailed()
+                        }
+                    }
+                }
+                
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
                     // An exception is raised to the developer.
