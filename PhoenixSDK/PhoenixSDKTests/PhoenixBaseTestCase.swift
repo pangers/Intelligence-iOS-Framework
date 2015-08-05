@@ -13,9 +13,10 @@ import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
 
-    let anonymousTokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
-    let anonymousTokenMethod = "POST"
+    let tokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
+    let tokenMethod = "POST"
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
 
     override func setUp() {
         super.setUp()
@@ -57,14 +58,15 @@ class PhoenixBaseTestCase : XCTestCase {
 
     }
     
+    // MARK: Helpers
+    
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil) {
-        let responseData = (statusCode == 200) ? anonymousTokenSuccessfulResponse : ""
+    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil, anonymous: Bool? = true) {
+        let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
         
-        mockResponseForURL(anonymousTokenUrl,
-            method: anonymousTokenMethod,
-            response: (data:responseData, statusCode: statusCode, headers: nil),
-            expectation:expectation)
+        mockResponseForURL(tokenUrl,
+            method: tokenMethod,
+            response: (data:responseData, statusCode: statusCode, headers: nil))
     }
 
 }
