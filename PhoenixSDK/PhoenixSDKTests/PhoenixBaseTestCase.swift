@@ -103,4 +103,22 @@ class PhoenixBaseTestCase : XCTestCase {
                 return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
         })
     }
+    
+    // MARK:- Assertions
+    
+    func assertURLNotCalled(url:NSURL, method:String? = "GET") {
+        OHHTTPStubs.stubRequestsPassingTest(
+            { request in
+                if let method = method where method != request.HTTPMethod {
+                    return false
+                }
+                
+                XCTAssertFalse(request.URL! == url,"URL \(url) was called.")
+                return false
+            },
+            withStubResponse: { _ in
+                return OHHTTPStubsResponse() // Never reached
+        })
+    }
+
 }
