@@ -7,44 +7,12 @@
 //
 
 #import "AppDelegate.h"
-@import PhoenixSDK;
-
-@interface AppDelegate () <PhoenixNetworkDelegate>
-
-@property (nonatomic) Phoenix *phoenix;
-
-@end
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
-    
-    // Instantiate Phoenix using PhoenixConfiguration.json file.
-    
-    // Attempt to instantiate Phoenix from file.
-    NSError *err;
-    self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-    if (nil != err) {
-        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-        // and generally indicate that something has gone wrong and needs to be resolved.
-        NSLog(@"Error initialising Phoenix: %zd", err.code);
-    }
-    NSParameterAssert(err == nil && self.phoenix != nil);
-
-    __weak typeof(_phoenix) weakPhoenix = _phoenix;
-    [_phoenix setNetworkDelegate:self];
-    [_phoenix startupWithCallback:^(BOOL authenticated) {
-        NSLog(@"Anonymous login %d", authenticated);
-        if (authenticated) {
-            NSString *username = @"chris.nevin@tigerspike.com";
-            NSString *password = @"tigerspike123";
-            [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-                NSLog(@"Logged in %d", authenticated);
-            }];
-        }
-    }];
 	return YES;
 }
 
@@ -68,12 +36,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
-#pragma mark - Phoenix Networking Delegate
-
-- (void)authenticationFailed:(nullable NSData *)data response:(nullable NSURLResponse *)response error:(nullable NSError *)error {
-    NSLog(@"Cannot authenticate: %@", error.localizedDescription);
 }
 
 @end
