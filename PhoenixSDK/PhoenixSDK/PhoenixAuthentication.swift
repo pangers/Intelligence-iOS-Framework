@@ -14,18 +14,32 @@ private let accessTokenKey = "access_token"
 private let expiresInKey = "expires_in"
 private let refreshTokenKey = "refresh_token"
 
+/// The authentication protocol. Defines the variables that need to be provided by
+/// Authentication.
 internal protocol PhoenixAuthenticationProtocol {
+    /// The id for the logged in user
     var userId: Int? { get set }
+    
+    /// The username
     var username: String? { get set }
+    
+    /// The password
     var password: String? { get set }
+    
+    /// The accesstoken
     var accessToken: String? { get set }
+    
+    /// The refresh token
     var refreshToken: String? { get set }
+    
+    /// The expiration date of the access token.
     var accessTokenExpirationDate: NSDate? { get set }
     
     func loadAuthorizationFromJSON(json: JSONDictionary) -> Bool
 }
 
-
+/// Extension over PhoenixAuthenticationProtocol. Adds functionality to check if the 
+/// authentication being used is anonymous and if it requires authentication.
 extension PhoenixAuthenticationProtocol {
     
     /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.

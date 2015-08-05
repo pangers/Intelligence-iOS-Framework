@@ -20,5 +20,14 @@ class CreateUserRequestOperation : PhoenixUserRequestOperation {
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
+        // Check for network errors
+        if self.error != nil {
+            self.error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+            return
+        }
+        // If the parse failed, return an error.
+        if self.user == nil {
+            self.error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+        }
     }
 }

@@ -21,16 +21,34 @@ private enum ConfigurationKey: String {
 /// A protocol defining the Phoenix required configuration.
 /// The implementation is Phoenix.Configuration.
 @objc(PHXPhoenixConfigurationProtocol) public protocol PhoenixConfigurationProtocol {
+    
+    /// The client Id.
     var clientID: String { get set }
+    
+    /// The client secret
     var clientSecret: String { get set }
+    
+    /// The project Id
     var projectID: Int { get set }
+    
+    /// The application Id
     var applicationID: Int { get set }
+    
+    /// The company Id
     var companyId: Int { get set }
+    
+    /// The region
     var region: Phoenix.Region { get set }
+    
+    /// - Returns: True if the configuration is valid
     var isValid: Bool { get }
+    
+    /// - Returns: True if a property is missing.
     var hasMissingProperty: Bool { get }
 
+    /// - Returns: a clone of the object
     func clone() -> PhoenixConfigurationProtocol
+    
 }
 
 /// Extension to the configuraiton protocol to verify whether the configuration provided is
@@ -39,7 +57,7 @@ private enum ConfigurationKey: String {
 /// developer.
 extension PhoenixConfigurationProtocol {
  
-    /// - Returns: Base URL to call.
+    /// - Returns: Optioanl base URL to call.
     var baseURL: NSURL? {
         // nil on no region
         if region == .NoRegion {
@@ -75,6 +93,7 @@ public extension Phoenix {
         /// The region
         public var region:Region
         
+        /// Default initializer. Sets region to .NoRegion so we can notice that the region is invalid.
         public override init() {
             self.region = .NoRegion
             super.init()

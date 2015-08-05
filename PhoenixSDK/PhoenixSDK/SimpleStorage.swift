@@ -18,7 +18,7 @@ private let passwordKey = "password"
 /// The protocol to implement in order to become a simple storage.
 internal protocol SimpleStorage {
     
-    // Subscript implementation
+    // Basic subscript implementation
     subscript(index: String) -> AnyObject? {get set}
     
 }

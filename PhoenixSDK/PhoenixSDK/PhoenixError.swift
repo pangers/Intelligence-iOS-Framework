@@ -26,3 +26,17 @@ public enum ConfigurationError: Int, ErrorType {
     /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
 }
+
+/// Enumeration to list the errors that can occur in the identity module.
+public enum IdentityError: Int, ErrorType {
+    
+    /// The domain passed to NSErrors.
+    static let domain = "IdentityError"
+
+    /// The user creation request couldn't complete successfully.
+    case UserCreationError = 2001
+    
+    /// The user is invalid.
+    case InvalidUserError = 2002
+    
+}

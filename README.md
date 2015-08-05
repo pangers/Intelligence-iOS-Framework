@@ -1,10 +1,20 @@
 # Phoenix SDK #
 ```
-Current iOS application credentials (DELETE BEFORE GOING PUBLIC)
-Client ID: iOSSDK_hvxbincerennv
-Client Secret: IZYKF5c975Lkjazjhosplmroopifkhjgeegagrpf
-AppId: 4152
-ProjectId: 3030
+== Configuration values for the "Phoenix SDK Test Project" (https://dashboard.phoenixplatform.eu/) ==
+!! these values should be deleted from the app once the codebase goes public !!
+
+Region: EU (https://api.phoenixplatform.eu)
+API Version: v1
+Company Id: 3
+Project Id: 2030
+
+Application Id (iOS): 3152
+Client Id (iOS): iOSSDKApp_napmxilutp
+Client Secret (iOS): Z4D1eCGO65pi45y5dewrmrgenndrfnzarnzdilrl
+
+Application Id (Android): 4154
+Client Id (Android): AndroidSDKApp_kypopf
+Client Secret (Android): OCN20qleymuqjlqbfcwbcwnjdwphdgoxpocrpxvp
 ```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
@@ -119,7 +129,8 @@ As an example, your configuration file will look like:
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
     "project_id": 20,
-    "region": "EU"
+    "region": "EU",
+    "company_id" : 10
 }
 
 ```
@@ -163,6 +174,10 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
                 // Optionally, login to a user's account...
                 instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
                     print("Logged in \(authenticated)")
+
+
+                    // How to handle logout once you have authenticated.
+                    instance.logout()
                 })
             }
             self.phoenix = instance
@@ -208,9 +223,14 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
             // Optionally, login to a user's account...
             [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
                 NSLog(@"Logged in %d", authenticated);
+
+                // How to handle logout once you have authenticated.
+                [weakPhoenix logout];
             }];
         }];
 ```
+
+The Phoenix.startup() method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time.
 
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
