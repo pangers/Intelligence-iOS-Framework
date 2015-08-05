@@ -14,6 +14,7 @@ class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
+        errorCode = IdentityError.InvalidUserError.rawValue
         self.configuration = configuration
     }
     
