@@ -74,6 +74,7 @@ internal extension Phoenix {
 
         // MARK: Instance variables
         
+        /// The id for the logged in user
         var userId: Int? {
             get {
                 return Injector.storage.userId
