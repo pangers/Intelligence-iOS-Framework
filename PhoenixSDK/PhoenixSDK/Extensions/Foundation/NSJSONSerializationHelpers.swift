@@ -8,17 +8,6 @@
 
 import Foundation
 
-infix operator ?+=  { associativity right precedence 90 }
-
-/// Create operator to optionally add a key-value to a Dictionary using a Tuple.
-/// Usage: JSONDictionary ?+= (key, nil) | fails
-/// Usage: JSONDictionary ?+= (key, "Test") | succeeds
-func ?+= (inout lhs: JSONDictionary, rhs: (String, AnyObject?)) {
-    if let value = rhs.1 {
-        lhs[rhs.0] = value
-    }
-}
-
 /// Alias for an array loaded from a JSON object.
 internal typealias JSONArray = [AnyObject]
 
