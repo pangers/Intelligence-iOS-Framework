@@ -32,9 +32,19 @@
         NSLog(@"Error initialising Phoenix: %zd", err.code);
     }
     NSParameterAssert(err == nil && self.phoenix != nil);
-    [self.phoenix setNetworkDelegate:self];
-    [self.phoenix startup];
-    
+
+    __weak typeof(_phoenix) weakPhoenix = _phoenix;
+    [_phoenix setNetworkDelegate:self];
+    [_phoenix startupWithCallback:^(BOOL authenticated) {
+        NSLog(@"Anonymous login %d", authenticated);
+        if (authenticated) {
+            NSString *username = @"chris.nevin@tigerspike.com";
+            NSString *password = @"tigerspike123";
+            [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
+                NSLog(@"Logged in %d", authenticated);
+            }];
+        }
+    }];
 	return YES;
 }
 

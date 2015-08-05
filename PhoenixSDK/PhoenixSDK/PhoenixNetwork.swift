@@ -73,14 +73,27 @@ internal extension Phoenix {
         private let configuration: PhoenixConfigurationProtocol
         
         /// The current phoenix authentication.
-        private var authentication:Authentication
+        internal var authentication: Authentication
         
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
         
-        /// - Returns: true if the SDK is currently authenticated
+        /// - Returns: true if username and password are unset.
+        var isAnonymous: Bool {
+            return authentication.anonymous
+        }
+        
+        /// - Returns: true if the SDK is currently authenticated (anonymously or otherwise).
         var isAuthenticated:Bool {
             return !authentication.requiresAuthentication
+        }
+        
+        /// - Returns: true if the SDK is currently authenticated with a username and password.
+        var isLoggedIn: Bool {
+            // Refresh token is only set when we are logged in, therefore if we check that we have a username, password and refreshToken that should fulfil the requirements of being logged in.
+            return !authentication.requiresAuthentication &&
+                !isAnonymous &&
+                authentication.refreshToken != nil
         }
         
         /// A delegate to receive notifications from the network manager.
@@ -250,6 +263,7 @@ internal extension Phoenix {
         /// - Parameter authenticationOperation: The operation that just finished.
         private func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation) {
             assert(authenticationOperation.finished)
+            self.authenticationOperation = nil
             
             let response = authenticationOperation.output?.response
             let data = authenticationOperation.output?.data
@@ -272,17 +286,29 @@ internal extension Phoenix {
             guard let json = data?.phx_jsonDictionary,
                 httpResponse = response
                 where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
-                    // TODO: Invalid response
                     return
             }
-            
             authentication.loadAuthorizationFromJSON(json)
         }
-
-        /// Performs an authentication request if required.
-        /// - Parameter callback: The callback that will receive the outcome of this
-        /// authentication.
-        func performAuthentication(callback: PhoenixAuthenticationCallback?) {
+        
+        /// Attempt to authenticate with a username and password.
+        /// - Parameters
+        ///     - username: Username of account to attempt login with.
+        ///     - password: Password associated with username.
+        ///     - callback: Block/function to call once executed.
+        func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
+            authentication.configure(withUsername: username, password: password)
+            enqueueAuthenticationOperationIfRequired(callback)
+        }
+        
+        /// Clear all stored credentials and OAuth tokens, next request will be done anonymously after requesting a new OAuth token.
+        func logout() {
+            workerQueue.suspended = true
+            authentication.reset()
+        }
+        
+        // TODO: Remove this method (hack - since we have no API calls yet)
+        func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
             enqueueAuthenticationOperationIfRequired(callback)
         }
     }

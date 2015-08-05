@@ -24,9 +24,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixNetworkDelegate {
 		// Override point for customization after application launch.
         
         do {
-            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration");
-            self.phoenix?.networkDelegate = self
-            self.phoenix?.startup()
+            let instance = try Phoenix(withFile: "PhoenixConfiguration")
+            instance.networkDelegate = self
+            instance.startup(withCallback: { (authenticated) -> () in
+                print("Anonymous login \(authenticated)")
+                if authenticated {
+                    let username = "chris.nevin@tigerspike.com"
+                    let password = "tigerspike123"
+                    instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+                        print("Logged in \(authenticated)")
+                    })
+                }
+            })
+            self.phoenix = instance
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!

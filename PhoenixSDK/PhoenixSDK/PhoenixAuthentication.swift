@@ -20,6 +20,8 @@ internal protocol PhoenixAuthenticationProtocol {
     var accessToken: String? { get set }
     var refreshToken: String? { get set }
     var accessTokenExpirationDate: NSDate? { get set }
+    
+    func loadAuthorizationFromJSON(json: JSONDictionary) -> Bool
 }
 
 
@@ -35,7 +37,10 @@ extension PhoenixAuthenticationProtocol {
     
     /// Returns false if username and password are set, otherwise true.
     var anonymous: Bool {
-        return (username == nil || password == nil || username!.isEmpty == false || password!.isEmpty == false)
+        guard let username = username, password = password where !username.isEmpty && !password.isEmpty else {
+            return true
+        }
+        return false
     }
 }
 
@@ -154,6 +159,13 @@ internal extension Phoenix {
             refreshToken = nil
             // Need to reauthenticate using credentials
             accessToken = nil
+        }
+        
+        /// Configure with username and password.
+        func configure(withUsername username: String, password: String) {
+            invalidateTokens()
+            self.username = username
+            self.password = password
         }
         
         /// Reset to a clean-slate.

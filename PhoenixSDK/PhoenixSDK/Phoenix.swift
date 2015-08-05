@@ -21,10 +21,15 @@ public final class Phoenix: NSObject {
     internal let network: Network
 
     /// Returns true if Phoenix is currently authenticated against the backend
-    public var isAuthenticated:Bool {
+    internal var isAuthenticated: Bool {
         return network.isAuthenticated
     }
-
+    
+    /// Returns true if Phoenix is currently authenticated against the backend with a valid username and password
+    public var isLoggedIn: Bool {
+        return network.isLoggedIn
+    }
+    
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: PhoenixConfigurationProtocol {
         return configuration.clone()
@@ -73,12 +78,25 @@ public final class Phoenix: NSObject {
     }
 
     // MARK:- Authentication
-
+    
+    /// Attempt to authenticate with a username and password.
+    /// - Parameters
+    ///     - username: Username of account to attempt login with.
+    ///     - password: Password associated with username.
+    ///     - callback: Block/function to call once executed.
+    public func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
+        network.login(withUsername: username, password: password, callback: callback)
+    }
+    
+    /// Logout of currently logged in user's account.
+    public func logout() {
+        network.logout()
+    }
+    
     /// Starts up the Phoenix SDK, triggering:
     ///   - Anonymous authentication
-    public func startup() {
-        network.performAuthentication { (authenticated) -> () in
-            // Nop
-        }
+    public func startup(withCallback callback: PhoenixAuthenticationCallback) {
+        network.anonymousLogin(callback)
     }
+    
 }
