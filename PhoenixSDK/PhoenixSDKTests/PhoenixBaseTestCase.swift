@@ -28,7 +28,7 @@ class PhoenixBaseTestCase : XCTestCase {
         OHHTTPStubs.removeAllStubs()
     }
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil) {
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil, callback:(()->Void)? = nil) {
         var exp = expectation
         if exp == nil {
              exp = expectationWithDescription("mock \(url)")
@@ -51,7 +51,7 @@ class PhoenixBaseTestCase : XCTestCase {
                 dispatch_after(dispatchTime, dispatch_get_main_queue(), { () -> Void in
                     exp!.fulfill()
                 })
-                
+                callback?()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
                 return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
         })
@@ -61,12 +61,13 @@ class PhoenixBaseTestCase : XCTestCase {
     // MARK: Helpers
     
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil, anonymous: Bool? = true) {
+    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil, anonymous: Bool? = true, callback:(()->Void)? = nil) {
         let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,
-            response: (data:responseData, statusCode: statusCode, headers: nil))
+            response: (data:responseData, statusCode: statusCode, headers: nil),
+            callback: callback)
     }
 
 }

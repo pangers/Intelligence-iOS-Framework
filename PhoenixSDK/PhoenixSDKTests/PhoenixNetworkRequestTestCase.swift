@@ -233,10 +233,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
         let stringData = "Hola"
         let statusCode = Int32(200)
-        let expectationOperation = expectationWithDescription("")
+        let expectationOperation = expectationWithDescription("Operation")
+        let requestExpectation = expectationWithDescription("Request")
         
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
-        mockResponseForAuthentication(200)
+        mockResponseForAuthentication(200, callback: {
+            self.mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil), expectation:requestExpectation)
+        })
 
         // Force Invalidate tokens
         PhoenixSDK.Phoenix.Authentication().invalidateTokens()
