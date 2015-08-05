@@ -10,7 +10,7 @@
 
 @import PhoenixSDK;
 
-@interface AuthenticationViewController() <PhoenixNetworkDelegate>
+@interface AuthenticationViewController() <PHXPhoenixNetworkDelegate>
 
 @property (nonatomic) Phoenix *phoenix;
 @property (nonatomic) NSString *loginErrorMessage;
