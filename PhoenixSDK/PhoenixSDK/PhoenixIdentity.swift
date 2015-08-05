@@ -79,7 +79,10 @@ extension Phoenix {
             
             // set the completion block to notify the caller
             operation.completionBlock = {
-                callback?(user: operation.createdUser, error: operation.error)
+                guard let callback = callback else {
+                    return;
+                }
+                callback(user: operation.user, error: operation.error)
             }
             
             // Execute the network operation
@@ -87,7 +90,16 @@ extension Phoenix {
         }
         
         @objc func getMe(callback:PhoenixUserCallback?) {
-            // stub
+            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            operation.completionBlock = {
+                guard let callback = callback else {
+                    return
+                }
+                callback(user: operation.user, error: operation.error)
+            }
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
         }
         
         @objc func getUser(userId:Int, callback:PhoenixUserCallback?) {

@@ -11,15 +11,20 @@ import XCTest
 @testable import PhoenixSDK
 
 class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
-    
+
     let expectationTimeout:NSTimeInterval = 3
     
     var phoenix:Phoenix?
     var configuration:Phoenix.Configuration?
     
+    /// Check if we have an unexpired access_token.
+    /// This all happens internally in the isAuthenticated method.
     var checkAuthenticated: Bool {
         return self.phoenix?.isAuthenticated ?? false
     }
+    
+    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
+    /// This all happens internally in the isLoggedIn method.
     var checkLoggedIn: Bool {
         return self.phoenix?.isLoggedIn ?? false
     }
@@ -188,7 +193,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil),
             MockResponse(anonymousTokenSuccessfulResponse, 200, nil)]
-        mockResponsesForAuthentication(responses)
+        mockAuthenticationResponses(responses)
         
         let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
         let stringData = "Hola"
@@ -365,7 +370,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let requestExpectation = expectationWithDescription("Request")
         
         mockResponseForAuthentication(200, callback: {
-            self.mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil), expectation:requestExpectation)
+            self.mockResponseForURL(initialRequest.URL!, method: nil, response: (stringData, statusCode, nil), callback: nil, expectation: requestExpectation)
         })
 
         // Force Invalidate tokens
@@ -426,5 +431,6 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
             XCTAssert(!self.checkAuthenticated, "Phoenix is authenticated Despite the response being a 404")
         }
     }
+    
 }
 

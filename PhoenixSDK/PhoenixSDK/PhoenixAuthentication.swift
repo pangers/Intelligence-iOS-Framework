@@ -17,6 +17,8 @@ private let refreshTokenKey = "refresh_token"
 /// The authentication protocol. Defines the variables that need to be provided by
 /// Authentication.
 internal protocol PhoenixAuthenticationProtocol {
+    /// The id for the logged in user
+    var userId: Int? { get set }
     
     /// The username
     var username: String? { get set }
@@ -71,6 +73,15 @@ internal extension Phoenix {
     final class Authentication: PhoenixAuthenticationProtocol {
 
         // MARK: Instance variables
+        
+        var userId: Int? {
+            get {
+                return Injector.storage.userId
+            }
+            set {
+                Injector.storage.userId = newValue
+            }
+        }
         
         /// Username for OAuth authentication with credentials.
         var username: String? {

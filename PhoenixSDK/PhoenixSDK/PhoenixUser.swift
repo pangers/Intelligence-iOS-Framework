@@ -49,7 +49,7 @@ public enum UserType : String {
     var firstName:String {get set}
     
     /// The lastname
-    var lastName:String {get set}
+    var lastName:String? {get set}
     
     /// The avatar URL
     var avatarURL:String? {get set}
@@ -91,27 +91,19 @@ extension PhoenixUser {
             companyIdKey: self.companyId,
             usernameKey: self.username,
             firstNameKey: self.firstName,
-            lastNameKey: self.lastName,
             lockingCountKey: self.lockingCount,
             referenceKey: self.reference,
             isActiveKey: self.isActive,
             metadataKey: self.metadata,
-            userTypeKey: self.userTypeId.rawValue
+            userTypeKey: self.userTypeId.rawValue,
         ]
-        
+        dictionary ?+= (lastNameKey, lastName)
+        dictionary ?+= (passwordKey, password)
+        dictionary ?+= (avatarURLKey, avatarURL)
         // If we have the user Id add it.
         if userId != 0 {
             dictionary[idKey] = userId
         }
-
-        if let password = self.password {
-            dictionary[passwordKey] = password
-        }
-
-        if let avatarURL = self.avatarURL {
-            dictionary[avatarURLKey] = avatarURL
-        }
-        
         return dictionary
     }
     
@@ -121,7 +113,7 @@ extension PhoenixUser {
             return false
         }
         return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
-            !firstName.isEmpty && !lastName.isEmpty)
+            !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
     }
 }
 
@@ -143,12 +135,13 @@ extension Phoenix {
         
         @objc public var firstName:String
 
-        @objc public var lastName:String
+        /// The last name
+        @objc public var lastName:String?
         
         @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
-        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String, avatarURL:String?) {
+        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.userId = userId ?? 0
             self.companyId = companyId
             self.username = username
@@ -159,7 +152,7 @@ extension Phoenix {
         }
         
         /// Convenience initializer with no user id.
-        convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String, avatarURL:String?) {
+        convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.init(userId:nil, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
         }
         
@@ -172,22 +165,11 @@ extension Phoenix {
         convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:PhoenixConfigurationProtocol) {
             guard let userId = json[idKey] as? Int,
             let username = json[usernameKey] as? String,
-            let firstName = json[firstNameKey] as? String,
-            let lastName = json[lastNameKey] as? String else {
+            let firstName = json[firstNameKey] as? String else {
                     return nil
             }
-            
+            let lastName = json[lastNameKey] as? String
             self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

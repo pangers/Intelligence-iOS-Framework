@@ -23,12 +23,6 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-/// Alias for an array loaded from a JSON object.
-internal typealias JSONArray = [AnyObject]
-
-/// Alias for a dictionary loaded from a JSON object.
-internal typealias JSONDictionary = [String: AnyObject]
-
 // MARK: Status code constants
 
 /// Enumeration containing the possible status to use.
@@ -323,7 +317,7 @@ internal extension Phoenix {
         }
         
         // TODO: Remove this method (hack - since we have no API calls yet)
-        func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
+        func anonymousLogin(callback: PhoenixAuthenticationCallback? = nil) {
             authentication.username = nil
             authentication.password = nil
             authentication.invalidateTokens()

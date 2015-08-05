@@ -10,39 +10,71 @@
 
 @import PhoenixSDK;
 
-@interface AuthenticationViewController() <PhoenixNetworkDelegate>
+#import "PHXPhoenixManager.h"
 
-@property (nonatomic) Phoenix *phoenix;
-@property (nonatomic) NSString *loginErrorMessage;
+typedef NS_ENUM(NSUInteger) {
+    Login,
+    LoggedIn,
+    LoggingIn,
+    LoginFailed,
+} LoginMessage;
 
+@interface AuthenticationViewController()
+{
+    LoginMessage currentStatus;
+}
 @end
 
 
 @implementation AuthenticationViewController
 
-- (void)authenticationFailed:(NSData * _Nullable)data response:(NSURLResponse * _Nullable)response error:(NSError * _Nullable)error {
-    
+- (LoginMessage)status {
+    if ([self loggedIn]) {
+        return LoggedIn;
+    } else {
+        return currentStatus;
+    }
 }
 
-- (void)rise {
-    NSError *err;
-    self.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-    if (nil != err) {
-        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-        // and generally indicate that something has gone wrong and needs to be resolved.
-        NSLog(@"Error initialising Phoenix: %zd", err.code);
+- (NSString*)messageForStatus {
+    switch ([self status]) {
+        case LoggedIn:
+            return @"Logged in";
+        case Login:
+            return @"Login";
+        case LoggingIn:
+            return @"Logging in...";
+        case LoginFailed:
+            return @"Login failed!";
+        default:
+            return @"";
     }
-    NSParameterAssert(err == nil && self.phoenix != nil);
-    self.phoenix.networkDelegate = self;
-    [self.phoenix startupWithCallback:^(BOOL authenticated) {
-        NSLog(@"Anonymous login %d", authenticated);
-    }];
+}
+
+- (UIColor*)colorForStatus {
+    switch ([self status]) {
+        case LoggingIn:
+            return [UIColor purpleColor];
+        case LoggedIn:
+            return [UIColor grayColor];
+        case LoginFailed:
+            return [UIColor redColor];
+        default:
+            return [UIColor blackColor];
+    }
+}
+
+- (Phoenix*)phoenix {
+    return [[PHXPhoenixManager sharedManager] phoenix];
+}
+
+- (BOOL)loggedIn {
+    return [[self phoenix] isLoggedIn];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setTitle:@"Authentication"];
-    [self rise];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -57,15 +89,13 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     if (indexPath.row == 0) {
-        if (self.loginErrorMessage == nil) {
-            cell.textLabel.text = self.phoenix.isLoggedIn == true ? @"Logged in" : @"Login";
-        } else {
-            cell.textLabel.text = self.loginErrorMessage;
-        }
-        cell.userInteractionEnabled = self.phoenix.isLoggedIn == false;
+        cell.textLabel.text = [self messageForStatus];
+        cell.textLabel.textColor = [self colorForStatus];
+        cell.userInteractionEnabled = !self.loggedIn;
     } else {
         cell.textLabel.text = @"Logout";
-        cell.userInteractionEnabled = self.phoenix.isLoggedIn == true;
+        cell.textLabel.textColor = !self.loggedIn ? [UIColor grayColor] : [UIColor blackColor];
+        cell.userInteractionEnabled = self.loggedIn;
     }
     return cell;
 }
@@ -81,9 +111,9 @@
 
 - (void)login {
     
-    if (self.phoenix.isLoggedIn == true) { return; }
+    if (self.loggedIn) { return; }
     
-    self.loginErrorMessage = @"Logging in...";
+    currentStatus = LoggingIn;
     [self.tableView reloadData];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter Details" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -98,18 +128,14 @@
         NSString *username = alert.textFields.firstObject.text;
         NSString *password = alert.textFields.lastObject.text;
         if (!(username.length != 0 && password.length != 0)) {
-            self.loginErrorMessage = nil;
+            currentStatus = Login;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
             return;
         }
         [self.phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-            if (!authenticated) {
-                self.loginErrorMessage = @"Login failed";
-            } else {
-                self.loginErrorMessage = nil;
-            }
+            currentStatus = authenticated ? LoggedIn : LoginFailed;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
@@ -119,6 +145,7 @@
 }
 
 - (void)logout {
+    currentStatus = Login;
     [self.phoenix logout];
     [self.tableView reloadData];
 }

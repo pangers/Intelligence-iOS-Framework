@@ -12,10 +12,15 @@ import PhoenixSDK
 
 class ViewUserViewController : UIViewController {
     
+    var fetchMe: Bool = false
+    
     var user:PhoenixUser? {
         didSet {
             displayUser()
         }
+    }
+    var phoenix: Phoenix? {
+        return PhoenixManager.manager.phoenix
     }
     
     @IBOutlet weak var userLabel: UILabel!
@@ -27,6 +32,21 @@ class ViewUserViewController : UIViewController {
     
     override func viewDidLoad() {
         displayUser()
+        if fetchMe {
+            phoenix?.identity.getMe(displayMe)
+        }
+    }
+    
+    func displayMe(user: PhoenixUser?, error: NSError?) {
+        NSOperationQueue.mainQueue().addOperationWithBlock({ [weak self] in
+            guard let user = user else {
+                let alert = UIAlertController(title: "Error", message: error?.description ?? "Unknown error", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
+                self?.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+            self?.user = user
+        })
     }
     
     func displayUser() {
@@ -45,10 +65,14 @@ class ViewUserViewController : UIViewController {
             idLabel.text = "User Id: --"
         }
         
+        let lastName = user.lastName ?? "N/A"
+        let password = user.password ?? "N/A"
+        let avatar = user.avatarURL ?? "N/A"
+        
         userLabel.text = "Username: \(user.username)"
-        passwordLabel.text = "Password: \(user.password)"
-        avatarURLLabel.text = "AvatarURL: \(user.avatarURL)"
+        passwordLabel.text = "Password: \(password)"
+        avatarURLLabel.text = "AvatarURL: \(avatar)"
         firstNameLabel.text = "FirstName: \(user.firstName)"
-        lastNameLabel.text = "LastName: \(user.lastName)"
+        lastNameLabel.text = "LastName: \(lastName)"
     }
 }

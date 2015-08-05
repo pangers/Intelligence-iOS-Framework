@@ -27,7 +27,7 @@
 
 @implementation PHXCreateUserViewController
 
--(void)viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self showProgress:NO];
@@ -77,15 +77,15 @@
     });
 }
 
--(void) createUserError:(NSString*)message {
+- (void) createUserError:(NSString*)message {
     [self showAlertWithTitle:@"Error creating user" withMessage:message];
 }
 
--(void) showAlertWithTitle:(NSString*) title withMessage:(NSString*) message {
+- (void) showAlertWithTitle:(NSString*) title withMessage:(NSString*) message {
     [self showAlertWithTitle:title withMessage:message extraAction:nil];
 }
 
--(void) showAlertWithTitle:(NSString*) title withMessage:(NSString*) message extraAction:(UIAlertAction*)action
+- (void) showAlertWithTitle:(NSString*) title withMessage:(NSString*) message extraAction:(UIAlertAction*)action
 {
     UIAlertController* controller = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     
@@ -102,7 +102,7 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
--(UIAlertAction*) createActionShowUser:(id<PHXPhoenixUser>)user
+- (UIAlertAction*) createActionShowUser:(id<PHXPhoenixUser>)user
 {
     __weak typeof(self) weakSelf = self;
     return [UIAlertAction actionWithTitle:@"View user" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -112,7 +112,7 @@
     }];
 }
 
--(void)prepareForSegue:(nonnull UIStoryboardSegue *)segue sender:(nullable id)sender
+- (void)prepareForSegue:(nonnull UIStoryboardSegue *)segue sender:(nullable id)sender
 {
     if ( [@"showUser" isEqualToString:segue.identifier] )
     {

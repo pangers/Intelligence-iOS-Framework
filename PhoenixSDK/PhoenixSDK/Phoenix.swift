@@ -110,7 +110,7 @@ public final class Phoenix: NSObject {
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
-    public func startup(withCallback callback: PhoenixAuthenticationCallback) {
+    public func startup(withCallback callback: PhoenixAuthenticationCallback? = nil) {
         network.anonymousLogin(callback)
     }
     

@@ -12,6 +12,7 @@ private let accessTokenKey = "access_token"
 private let refreshTokenKey = "refresh_token"
 private let tokenExpirationKey = "token_expiration_date"
 private let usernameKey = "username"
+private let userIdKey = "userId"
 private let passwordKey = "password"
 
 /// The protocol to implement in order to become a simple storage.
@@ -25,6 +26,16 @@ internal protocol SimpleStorage {
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
 internal extension SimpleStorage {
+    
+    var userId: Int? {
+        get {
+            return self[userIdKey] as? Int
+        }
+        set {
+            self[userIdKey] = newValue
+        }
+    }
+    
     var username: String? {
         get {
             return self[usernameKey] as? String

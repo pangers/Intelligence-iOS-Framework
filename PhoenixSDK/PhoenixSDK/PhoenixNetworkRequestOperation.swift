@@ -19,7 +19,7 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     private let request:NSURLRequest
     
     /// The Phoenix authentication to prepare the request with.
-    private let authentication:Phoenix.Authentication
+    internal let authentication:Phoenix.Authentication
     
     /// Default initializer with all required parameters
     init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {
