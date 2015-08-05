@@ -18,6 +18,7 @@
 		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */; };
+		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674761B70FB490085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674751B70FB490085BEC8 /* Authentication.storyboard */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,7 @@
 		BB3534861B6FAB5800C67500 /* PhoenixManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixManager.swift; sourceTree = "<group>"; };
 		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../../../Library/Developer/Xcode/DerivedData/PhoenixSDK-crtfqvcfmeujokezpbpaskdrsxjl/Build/Products/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
+		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE1674751B70FB490085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23641B70ADD700CE0C81 /* Identity.storyboard */,
+				FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */,
 				BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */,
 				BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */,
 			);
@@ -192,6 +195,7 @@
 				BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */,
 				FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
+				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
 				BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
