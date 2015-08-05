@@ -40,7 +40,7 @@ class PhoenixManager {
     
     static func startup() {
         PhoenixManager.manager.phoenix?.startup(withCallback: { (authenticated) -> () in
-            
+
         })
     }
 }

@@ -330,13 +330,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let requestExpectation = expectationWithDescription("Request")
         
         mockResponseForAuthentication(200, callback: {
-            
+            self.mockResponseForURL(initialRequest.URL!, method: nil, response: (stringData, statusCode, nil), callback: nil, expectation: requestExpectation)
         })
-        
-        self.mockResponseForURL(initialRequest.URL!, method: nil, response: (stringData, statusCode, nil), callback: {
-            requestExpectation.fulfill()
-        })
-        
+
         // Force Invalidate tokens
         PhoenixSDK.Phoenix.Authentication().invalidateTokens()
         phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in

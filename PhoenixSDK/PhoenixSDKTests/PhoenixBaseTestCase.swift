@@ -32,15 +32,15 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), callback:MockCallback? = nil) {
-        mockResponseForURL(url, method: method, responses: [response], callbacks: [callback])
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), callback:MockCallback? = nil, expectation: XCTestExpectation? = nil) {
+        mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
     }
     
-    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callbacks: [MockCallback?]? = nil) {
+    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
         let count = responses.count
-        var expectations = [(MockCallback?, MockResponse, XCTestExpectation)]()
+        var runs = [(MockCallback?, MockResponse, XCTestExpectation)]()
         for i in 0..<count {
-            expectations += [ (callbacks?[i], responses[i],
+            runs += [ (callbacks?[i], responses[i], expectations?[i] ??
                 expectationWithDescription("mock \(url) iteration \(i)")) ]
         }
         OHHTTPStubs.stubRequestsPassingTest(
@@ -51,14 +51,8 @@ class PhoenixBaseTestCase : XCTestCase {
                 return request.URL! == url
             },
             withStubResponse: { _ in
-                // Fulfil a single expectation
-                /*
-                guard let (callback, response, expectation) = expectations.first else {
-                    return OHHTTPStubsResponse(data: NSData(), statusCode: 0, headers: nil)
-                }
-                */
-                let (callback, response, expectation) = expectations.first!
-                expectations.removeAtIndex(0)
+                let (callback, response, expectation) = runs.first!
+                runs.removeAtIndex(0)
                 // Execute callback before fulfilling expectation so we can chain multiple expectations together
                 callback?()
                 expectation.fulfill()

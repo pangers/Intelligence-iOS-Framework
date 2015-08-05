@@ -327,7 +327,8 @@ Startup is necessary in order to initialise the framework after it's been config
 Notice that the createUser method can return the following errors:
 
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserCreationError : When there is a network while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+
 
 Those errors will be wrapped within an NSError using as domain IdentityError.domain.
 
