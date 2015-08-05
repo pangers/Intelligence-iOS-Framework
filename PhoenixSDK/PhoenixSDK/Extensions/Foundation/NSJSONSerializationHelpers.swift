@@ -51,6 +51,9 @@ internal extension NSData {
 }
 
 extension Dictionary {
+    
+    /// Converts a JSON Dictionary to NSData. Accepts any Dictionary type, not just the JSONDictionary we defined.
+    /// - Returns: nil or NSData representation of JSON Object.
     func phx_toJSONData() -> NSData? {
         if let anyObject = self as? AnyObject {
             do {
@@ -63,6 +66,9 @@ extension Dictionary {
 }
 
 extension CollectionType {
+    
+    /// Converts a JSON Array to NSData. Accepts any Collection type, not just the JSONArray we defined.
+    /// - Returns: nil or NSData representation of JSON Object.
     func phx_toJSONData() -> NSData? {
         if let anyObject = self as? AnyObject {
             do {
