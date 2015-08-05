@@ -17,6 +17,8 @@
 		BB0A23771B70B25F00CE0C81 /* PHXCreateUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A23761B70B25F00CE0C81 /* PHXCreateUserViewController.m */; };
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
+		FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674791B7105190085BEC8 /* Authentication.storyboard */; };
+		FE16747D1B71052C0085BEC8 /* AuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */; };
 		FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
 /* End PBXBuildFile section */
@@ -39,6 +41,9 @@
 		BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXPhoenixManager.m; sourceTree = "<group>"; };
 		BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXViewUserViewController.h; sourceTree = "<group>"; };
 		BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXViewUserViewController.m; sourceTree = "<group>"; };
+		FE1674791B7105190085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
+		FE16747B1B71052C0085BEC8 /* AuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationViewController.h; sourceTree = "<group>"; };
+		FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationViewController.m; sourceTree = "<group>"; };
 		FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../PhoenixSDK/build/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,6 +87,9 @@
 				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
 				7FDAAB091B5D360800DF2BE6 /* ViewController.h */,
 				7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */,
+				FE16747B1B71052C0085BEC8 /* AuthenticationViewController.h */,
+				FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */,
+				FE1674791B7105190085BEC8 /* Authentication.storyboard */,
 				7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */,
 				7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */,
 				7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */,
@@ -182,6 +190,7 @@
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
 				7FDAAB0E1B5D360800DF2BE6 /* Main.storyboard in Resources */,
+				FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +201,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE16747D1B71052C0085BEC8 /* AuthenticationViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
 				BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */,
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,

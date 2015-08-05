@@ -13,10 +13,12 @@ import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
 
+    typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
+
     let tokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
     let tokenMethod = "POST"
-    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
-    let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"anonymousToken\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let loggedInTokenSuccessfulResponse = "{\"access_token\":\"loggedInToken\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
 
     override func setUp() {
         super.setUp()
@@ -28,64 +30,77 @@ class PhoenixBaseTestCase : XCTestCase {
         OHHTTPStubs.removeAllStubs()
     }
     
-    func assertURLNotCalled(url:NSURL!, method:String?) {
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                
-                if let method = method where method != request.HTTPMethod {
-                    return false
-                }
-                
-                XCTAssertFalse(request.URL! == url,"Url \(url) called unexpectedly")
-                return false
-            }
-            ,
-            withStubResponse: { _ in
-                return OHHTTPStubsResponse(data: NSData(), statusCode:200, headers:nil)
-            })
-        
+    // MARK:- Authentication mock Helpers
+    
+    /// Mock authentication with a set of responses
+    func mockResponsesForAuthentication(responses: [MockResponse]) {
+        mockResponseForURL(tokenUrl, method: tokenMethod, responses: responses)
     }
 
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil, callback:(()->Void)? = nil) {
-        var exp = expectation
-        if exp == nil {
-             exp = expectationWithDescription("mock \(url)")
-        }
-        
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-
-                if let method = method where method != request.HTTPMethod {
-                    return false
-                }
-                
-                return request.URL! == url
-            }
-            ,
-            withStubResponse: { [response, exp] _ in
-                // Dispatch the expectation after a bit of sleeping, to allow the request to be handled.
-                let now:dispatch_time_t = DISPATCH_TIME_NOW
-                let dispatchTime = dispatch_time(now , Int64(0.01 * Double(NSEC_PER_SEC)))
-                dispatch_after(dispatchTime, dispatch_get_main_queue(), { () -> Void in
-                    exp!.fulfill()
-                })
-                callback?()
-                let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
-        })
-
-    }
-    
-    // MARK: Helpers
-    
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:Int32, expectation:XCTestExpectation? = nil, anonymous: Bool? = true, callback:(()->Void)? = nil) {
-        let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
+    func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true, callback:(()->Void)? = nil) {
+        let successResponse = (anonymous == true) ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse
+        let responseData = (statusCode == 200) ? successResponse : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,
             response: (data:responseData, statusCode: statusCode, headers: nil),
             callback: callback)
     }
+    
+    // MARK:- Generic mock Helpers
 
+    /// Mocks a response for a given URL.
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil, callback:(()->Void)? = nil) {
+        if let expectation = expectation {
+            mockResponseForURL(url, method: method, responses: [response],expectations:[expectation], callback:callback)
+        }
+        else {
+            mockResponseForURL(url, method: method, responses: [response], callback:callback)
+        }
+    }
+
+    /// Mocks an array of responses for a given URL being requested.
+    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callback:(()->Void)? = nil) {
+        let count = responses.count
+        var expectations = [XCTestExpectation]()
+        for i in 0..<count {
+            expectations += [ expectationWithDescription("mock \(url) iteration \(i)") ]
+        }
+        
+        mockResponseForURL(url, method: method, responses:responses, expectations:expectations, callback:callback)
+    }
+
+    /// Mocks an array of responses for a given URL being requested.
+    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], expectations:[XCTestExpectation], callback:(()->Void)? = nil) {
+        // Assert the count
+        assert(expectations.count == responses.count)
+
+        var responsesArray = responses
+        var expectationsArray = expectations
+        
+        OHHTTPStubs.stubRequestsPassingTest(
+            { request in
+                if let method = method where method != request.HTTPMethod {
+                    return false
+                }
+                return request.URL! == url
+            },
+            withStubResponse: { _ in
+                XCTAssertFalse(expectationsArray.isEmpty,"Received more requests than expected.")
+                
+                // Before fulfilling an expectation, call the callback so another one can be created, and thus chained.
+                callback?()
+                
+                let response = responsesArray.removeAtIndex(0)
+                let expectation = expectationsArray.removeAtIndex(0)
+
+                // Fulfil a single expectation
+                expectation.fulfill()
+
+                // Provide the response
+                let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
+                return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
+        })
+    }
 }

@@ -21,6 +21,9 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
     let refreshToken = "123"
     let accessToken = "123"
     
+    let username = "123"
+    let password = "123"
+    
     func testInitializeOptionalAuthentication() {
         let wrongJsonDictionary = ["wrong":"Dictionary"]
         let emptyJsonDictionary = [
@@ -40,6 +43,19 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary)?.anonymous == true, "The authentication appears to be non anonymous")
     }
 
+    func testUsernameAndPasswordStoredValues() {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+            XCTAssert(false, "Didn't acquire an authentication")
+            return
+        }
+        
+        authentication.username = username
+        authentication.password = password
+        
+        XCTAssert(authentication.username == username, "Username stored correctly")
+        XCTAssert(authentication.password == password, "Password stored correctly")
+    }
+    
     func testInitializeAuthenticationParsedValues() {
         guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
             XCTAssert(false, "Didn't acquire an authentication")
