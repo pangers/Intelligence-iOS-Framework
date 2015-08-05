@@ -57,7 +57,7 @@ private enum ConfigurationKey: String {
 /// developer.
 extension PhoenixConfigurationProtocol {
  
-    /// - Returns: Optioanl base URL to call.
+    /// - Returns: Optional base URL to call.
     var baseURL: NSURL? {
         // nil on no region
         if region == .NoRegion {

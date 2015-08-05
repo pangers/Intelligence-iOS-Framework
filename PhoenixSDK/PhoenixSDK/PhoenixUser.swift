@@ -113,7 +113,7 @@ extension PhoenixUser {
             return false
         }
         return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
-            !firstName.isEmpty && (lastName != nil ? lastName!.isEmpty : false))
+            !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
     }
 }
 
