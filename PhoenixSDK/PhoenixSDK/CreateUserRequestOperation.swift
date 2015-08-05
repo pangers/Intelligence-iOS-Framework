@@ -26,22 +26,22 @@ class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
         super.main()
         
         // Check for network errors
-        if self.error != nil {
-            self.error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+        if error != nil {
+            error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
             return
         }
         
         // Try to pare the created user
         if let jsonResponse = self.output?.data?.phx_jsonDictionary,
-            let jsonData = jsonResponse["Data"] as? JSONArray,
-            let userData = jsonData.first as? JSONDictionary {
+            jsonData = jsonResponse["Data"] as? JSONArray,
+            userData = jsonData.first as? JSONDictionary {
                 // If all conditions succeed, parse the user.
                 self.createdUser = Phoenix.User(withJSON: userData, withConfiguration:configuration)
         }
         
         // If the parse failed, return an error.
         if self.createdUser == nil {
-            self.error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+            error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
         }
     }
 
