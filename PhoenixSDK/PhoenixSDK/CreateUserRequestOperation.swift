@@ -21,8 +21,8 @@ class CreateUserRequestOperation : PhoenixUserRequestOperation {
     override func main() {
         super.main()
         // Check for network errors
-        if self.error != nil {
-            self.error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+        if error != nil {
+            error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
             return
         }
         // If the parse failed, return an error.

@@ -271,7 +271,7 @@ internal extension Phoenix {
             
             defer {
                 // Continue worker queue if we have authentication object
-                workerQueue.suspended = !self.isAuthenticated && self.authenticateQueue.operationCount > 0
+                workerQueue.suspended = !self.isAuthenticated
                 
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {

@@ -21,6 +21,9 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
+    /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
+    /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
+    /// The NSError domain is IdentityError.domain
     func createUser(user:PhoenixUser, callback:PhoenixUserCallback?)
 
     /// Gets a user data from the current user credentials.

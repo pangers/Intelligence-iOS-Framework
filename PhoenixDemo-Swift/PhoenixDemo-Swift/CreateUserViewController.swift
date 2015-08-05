@@ -28,12 +28,12 @@ class CreateUserViewController : UIViewController {
     }
     
     @IBAction func didTapCreateUser(sender: AnyObject) {
-        guard let usernameTxt = username.text,
-            let passwordTxt = password.text,
-            let firstNameTxt = firstName.text,
-            let lastNameTxt = lastName.text,
-            let avatarURLTxt = avatarURL.text
-            where !usernameTxt.isEmpty && !passwordTxt.isEmpty && !firstNameTxt.isEmpty && !lastNameTxt.isEmpty && !avatarURLTxt.isEmpty else {
+        guard let usernameText = username.text,
+            let passwordText = password.text,
+            let firstNameText = firstName.text,
+            let lastNameText = lastName.text,
+            let avatarURLText = avatarURL.text
+            where !usernameText.isEmpty && !passwordText.isEmpty && !firstNameText.isEmpty && !lastNameText.isEmpty && !avatarURLText.isEmpty else {
                 
                 createUserError("Some fields were not populated")
                 return
@@ -41,7 +41,7 @@ class CreateUserViewController : UIViewController {
 
         showProgress(true)
 
-        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameTxt, password: passwordTxt, firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameText, password: passwordText, firstName: firstNameText, lastName: lastNameText, avatarURL: avatarURLText)
         
         PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
             

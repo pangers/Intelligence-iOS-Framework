@@ -235,3 +235,64 @@ The Phoenix.startup() method is responsible to bootstrap the SDK, without it, un
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
+
+## Phoenix Modules ##
+
+The Phoenix platform is composed of a series of modules that can be used as required by the developer.
+
+In this section, each modules are described, including its functions and sample code on how to use them.
+
+### Identity Module ###
+
+The identity module is responsible to perform user management within the Phoenix platform, allowing to create, retrieve and update users.
+
+#### Create user ####
+
+The code to create a user for each language is as follows:
+
+**Objective-C:**
+
+```
+#!objc
+
+    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password
+        firstName:firstname lastName:lastname avatarURL:avatarURL];
+
+    __weak typeof(self) weakSelf = self;
+    
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+          // Treat the user created and error obtained appropriately
+    }];
+
+```
+
+**Swift:**
+
+
+```
+#!swift
+        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
+                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        
+        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
+            
+            guard let this = self else {
+                return
+            }
+            
+            // Treat the user and error appropriately.
+            
+        })
+```
+
+Notice that the createUser method can return the following errors:
+
+* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
+* IdentityError.UserCreationError : When there is a network while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+
+Those errors will be wrapped within an NSError using as domain IdentityError.domain.
+
+Notice that calling this methods **won't** start using the user's credentials. 
+You'll need to perform an authentication with the new user's credentials in order to do so.
+
+Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.
