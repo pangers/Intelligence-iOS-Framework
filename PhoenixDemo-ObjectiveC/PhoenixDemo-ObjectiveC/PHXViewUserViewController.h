@@ -13,5 +13,6 @@
 @interface PHXViewUserViewController : UIViewController
 
 @property (strong, nonatomic) id<PHXPhoenixUser> user;
+@property BOOL fetchMe;
 
 @end
