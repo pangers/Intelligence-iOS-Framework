@@ -166,21 +166,11 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
 #!swift
         
         do {
-            let instance = try Phoenix(withFile: "config")
-            instance.networkDelegate = self
-            instance.startup(withCallback: { (authenticated) -> () in
+            phoenix = try Phoenix(withFile: "config")
+            phoenix.networkDelegate = self
+            phoenix.startup(withCallback: { (authenticated) -> () in
                 // Perform requests inside this callback
-
-                // Optionally, login to a user's account...
-                instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
-                    print("Logged in \(authenticated)")
-
-
-                    // How to handle logout once you have authenticated.
-                    instance.logout()
-                })
             }
-            self.phoenix = instance
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -219,14 +209,6 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         [phoenix setNetworkDelegate:self];
         [phoenix startupWithCallback:^(BOOL authenticated) {
             // Perform requests inside this callback.
-
-            // Optionally, login to a user's account...
-            [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-                NSLog(@"Logged in %d", authenticated);
-
-                // How to handle logout once you have authenticated.
-                [weakPhoenix logout];
-            }];
         }];
 ```
 
@@ -235,6 +217,55 @@ The Phoenix.startup() method is responsible to bootstrap the SDK, without it, un
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
+
+### Authentication ###
+
+If you have a registered account on the Phoenix Platform you will be able to login to that account using the login method (as seen below).
+
+**Swift:**
+```
+#!swift
+
+// Optionally, login to a user's account...
+phoenix.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+print("Logged in \(authenticated)")
+})
+
+```
+
+
+**Objective-C:**
+
+```
+#!objc
+
+// Optionally, login to a user's account...
+[phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
+NSLog(@"Logged in %d", authenticated);
+}];
+
+```
+
+You will then be logged in to a user's account (if 'authenticated' is true). Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method (as seen below).
+
+**Swift:**
+```
+#!swift
+
+phoenix.logout()
+
+```
+
+
+**Objective-C:**
+
+```
+
+[phoenix logout];
+
+```
+
+
 
 ## Phoenix Modules ##
 
@@ -249,6 +280,12 @@ The identity module is responsible to perform user management within the Phoenix
 #### Create user ####
 
 The code to create a user for each language is as follows:
+
+Setting a network delegate is optional, but recommended if you require more context when an error occurs.
+
+Startup is necessary in order to initialise the framework after it's been configured.
+
+
 
 **Objective-C:**
 
