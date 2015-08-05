@@ -130,7 +130,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No password allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "", lastName: "t", avatarURL: "t").isValidToCreate, "No firstname allows to create user")
-        //XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
         XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
     
         XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
