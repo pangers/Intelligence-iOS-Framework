@@ -21,6 +21,8 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
+    /// The queue on which the callback is called is not guaranteed. It might or might not be the main thread.
+    /// The developer is responsible to dispatch it to the main thread using dispatch_async to avoid deadlocks.
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
     /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
     /// The NSError domain is IdentityError.domain
