@@ -44,7 +44,7 @@ class PhoenixManager {
             if authenticated {
                 let username = "chris.nevin@tigerspike.com"
                 let password = "tigerspike123"
-                instance.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+                PhoenixManager.manager.phoenix?.login(withUsername: username, password: password, callback: { (authenticated) -> () in
                     print("Logged in \(authenticated)")
                 })
             }

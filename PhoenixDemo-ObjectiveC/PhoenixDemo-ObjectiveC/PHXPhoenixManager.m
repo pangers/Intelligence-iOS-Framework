@@ -48,7 +48,7 @@
         if (authenticated) {
             NSString *username = @"chris.nevin@tigerspike.com";
             NSString *password = @"tigerspike123";
-            [weakPhoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
+            [self.phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
                 NSLog(@"Logged in %d", authenticated);
             }];
         }
