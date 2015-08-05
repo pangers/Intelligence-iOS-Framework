@@ -67,7 +67,7 @@
                             <outlet property="delegate" destination="4Zv-dv-08P" id="O5r-CB-WzR"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="2hX-oN-26b"/>
+                    <navigationItem key="navigationItem" title="Phoenix SDK" id="2hX-oN-26b"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RSN-CI-Yrc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
