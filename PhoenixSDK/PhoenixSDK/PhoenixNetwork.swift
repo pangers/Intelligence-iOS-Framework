@@ -312,7 +312,7 @@ internal extension Phoenix {
         func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
             authentication.username = nil
             authentication.password = nil
-            authentication.refreshToken = nil
+            authentication.invalidateTokens()
             enqueueAuthenticationOperationIfRequired(callback)
         }
     }
