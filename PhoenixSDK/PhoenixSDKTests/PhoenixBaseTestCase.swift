@@ -52,15 +52,16 @@ class PhoenixBaseTestCase : XCTestCase {
             },
             withStubResponse: { _ in
                 // Fulfil a single expectation
-                
+                /*
                 guard let (callback, response, expectation) = expectations.first else {
                     return OHHTTPStubsResponse(data: NSData(), statusCode: 0, headers: nil)
                 }
-                
-                //let (callback, response, expectation) = expectations.first!
+                */
+                let (callback, response, expectation) = expectations.first!
                 expectations.removeAtIndex(0)
-                expectation.fulfill()
+                // Execute callback before fulfilling expectation so we can chain multiple expectations together
                 callback?()
+                expectation.fulfill()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
                 return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
         })
