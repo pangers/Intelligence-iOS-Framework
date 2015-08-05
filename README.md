@@ -252,7 +252,8 @@ The code to create a user for each language is as follows:
     __weak typeof(self) weakSelf = self;
     
     [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
-          // Treat the user created and error obtained appropriately
+        // Treat the user and error appropriately. Notice that the callback might be performed
+        // In a background thread. Use dispatch_async to handle it in the main thread.
     }];
 
 ```
@@ -271,7 +272,8 @@ The code to create a user for each language is as follows:
                 return
             }
             
-            // Treat the user and error appropriately.
+            // Treat the user and error appropriately. Notice that the callback might be performed
+            // In a background thread. Use dispatch_async to handle it in the main thread.
             
         })
 ```
