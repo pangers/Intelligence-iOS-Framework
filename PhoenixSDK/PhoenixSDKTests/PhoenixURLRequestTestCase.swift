@@ -26,7 +26,7 @@ class PhoenixURLRequestTestCase: XCTestCase {
 
         XCTAssertEqual(request.URL!.absoluteString, "https://api.phoenixplatform.eu/identity/v1/projects/123/users")
         
-        guard let userDictionary = request.HTTPBody?.phx_jsonArray?.first as? JSONDictionary else {
+        guard let userDictionary = request.HTTPBody?.phx_jsonDictionary else {
             XCTAssert(false,"Couldn't parse the HTTP Body")
             return
         }
