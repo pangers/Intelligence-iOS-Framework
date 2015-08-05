@@ -175,6 +175,46 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
+    /// Mocks a 403 response in the authentication request, and how the callback
+    /// of the operation is later called with the error.
+    func testAuthorization403CallsbackToRequestOperation() {
+        let url = NSURL(string: "http://www.google.com/")!
+        
+        mockResponseForAuthentication(403)
+        assertURLNotCalled(url, method: "GET")
+        
+        let expectation = expectationWithDescription("The request callback is called.")
+        
+        phoenix!.network.executeRequest(NSURLRequest(URL: url)) { (data, response, error) -> () in
+            XCTAssertNotNil(error,"Nil error when a 403 was received in authentication")
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+        }
+    }
+    
+    /// Mocks a 401 response in the authentication request, and how the callback
+    /// of the operation is later called with the error.
+    func testAuthorization401CallsbackToRequestOperation() {
+        let url = NSURL(string: "http://www.google.com/")!
+        
+        mockResponseForAuthentication(403)
+        assertURLNotCalled(url, method: "GET")
+        
+        let expectation = expectationWithDescription("The request callback is called.")
+        
+        phoenix!.network.executeRequest(NSURLRequest(URL: url)) { (data, response, error) -> () in
+            XCTAssertNotNil(error,"Nil error when a 403 was received in authentication")
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+        }
+    }
+    
     /// Mocks a 403 response in a request, and how the authentication is later scheduled
     func testEnqueueAuthorizationOn403Operation() {
         // Mock a valid authentication

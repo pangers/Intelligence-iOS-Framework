@@ -28,6 +28,24 @@ class PhoenixBaseTestCase : XCTestCase {
         OHHTTPStubs.removeAllStubs()
     }
     
+    func assertURLNotCalled(url:NSURL!, method:String?) {
+        OHHTTPStubs.stubRequestsPassingTest(
+            { request in
+                
+                if let method = method where method != request.HTTPMethod {
+                    return false
+                }
+                
+                XCTAssertFalse(request.URL! == url,"Url \(url) called unexpectedly")
+                return false
+            }
+            ,
+            withStubResponse: { _ in
+                return OHHTTPStubsResponse(data: NSData(), statusCode:200, headers:nil)
+            })
+        
+    }
+
     func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation:XCTestExpectation? = nil, callback:(()->Void)? = nil) {
         var exp = expectation
         if exp == nil {
