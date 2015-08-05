@@ -43,10 +43,4 @@
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark - Phoenix Networking Delegate
-
-- (void)authenticationFailed:(nullable NSData *)data response:(nullable NSURLResponse *)response error:(nullable NSError *)error {
-    NSLog(@"Cannot authenticate: %@", error.localizedDescription);
-}
-
 @end

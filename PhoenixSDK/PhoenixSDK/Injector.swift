@@ -15,5 +15,6 @@ import Foundation
 internal struct Injector {
     
     /// The storage. Used for tokens.
-    static internal(set) var storage:SimpleStorage = NSUserDefaults.standardUserDefaults()
+    static internal(set) var storage:SimpleStorage = PhoenixKeychain()
+
 }
