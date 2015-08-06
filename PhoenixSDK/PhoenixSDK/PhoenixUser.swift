@@ -60,8 +60,8 @@ extension Phoenix {
         @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
-        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.userId = userId ?? 0
+        public init(userId:Int, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
+            self.userId = userId
             self.companyId = companyId
             self.username = username
             self.password = password
@@ -72,7 +72,7 @@ extension Phoenix {
         
         /// Convenience initializer with no user id.
         convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.init(userId:nil, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
+            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
         }
         
         /// Parses the JSON dictionary to create the User object. If it fails to
@@ -150,7 +150,7 @@ extension Phoenix {
             dictionary ?+= (passwordKey, password)
             dictionary ?+= (avatarURLKey, avatarURL)
             // If we have the user Id add it.
-            if userId != 0 {
+            if userId != invalidUserId {
                 dictionary[idKey] = userId
             }
             return dictionary
