@@ -74,63 +74,65 @@ internal extension Phoenix {
 
         // MARK: Instance variables
         
+        private var storage:TokenStorage;
+        
         var userId: Int? {
             get {
-                return Injector.storage.userId
+                return storage.userId
             }
             set {
-                Injector.storage.userId = newValue
+                storage.userId = newValue
             }
         }
         
         /// Username for OAuth authentication with credentials.
         var username: String? {
             get {
-                return Injector.storage.username
+                return storage.username
             }
             set {
-                Injector.storage.username = newValue
+                storage.username = newValue
             }
         }
         
         /// Password for OAuth authentication with credentials.
         var password: String? {
             get {
-                return Injector.storage.password
+                return storage.password
             }
             set {
-                Injector.storage.password = newValue
+                storage.password = newValue
             }
         }
         
         /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
-                return Injector.storage.accessToken
+                return storage.accessToken
             }
             set {
                 // If access token is invalid, clear expiry
                 if newValue == nil || newValue!.isEmpty {
                     accessTokenExpirationDate = nil
                 }
-                Injector.storage.accessToken = newValue
+                storage.accessToken = newValue
             }
         }
         
         /// Refresh token used in requests to retrieve a new access token.
         var refreshToken: String? {
             get {
-                return Injector.storage.refreshToken
+                return storage.refreshToken
             }
             set {
-                Injector.storage.refreshToken = newValue
+                storage.refreshToken = newValue
             }
         }
         
         /// Expiry date of access token.
         var accessTokenExpirationDate: NSDate? {
             get {
-                let date = Injector.storage.tokenExpirationDate
+                let date = storage.tokenExpirationDate
                 
                 // Only return valid expiration date if it is not expired
                 if date?.timeIntervalSinceNow <= 0 {
@@ -141,22 +143,22 @@ internal extension Phoenix {
                 return date
             }
             set {
-                Injector.storage.tokenExpirationDate = newValue
+                storage.tokenExpirationDate = newValue
             }
         }
         
         // MARK: Initializers
 
         /// Default initializer
-        init() {
-            // nop
+        init(withTokenStorage tokenStorage:TokenStorage) {
+            storage = tokenStorage
         }
         
         /// - Parameter json: The JSONDictionary to load the access from.
         /// - Returns: an optional Authentication object depending on whether the authentication
         /// could be extracted from the JSONDictionary received.
-        convenience init?(json: JSONDictionary) {
-            self.init()
+        convenience init?(json: JSONDictionary, withTokenStorage tokenStorage:TokenStorage) {
+            self.init(withTokenStorage:tokenStorage)
             if ( !loadAuthorizationFromJSON(json) ) {
                 return nil
             }
@@ -208,9 +210,9 @@ internal extension Phoenix {
         
         /// Reset to a clean-slate.
         func reset() {
-            if Injector.storage is PhoenixKeychain {
+            if storage is PhoenixKeychain {
                 // Remove keychain elements.
-                (Injector.storage as! PhoenixKeychain).erase()
+                (storage as! PhoenixKeychain).erase()
             } else {
                 // Tests need to execute differently.
                 invalidateTokens()

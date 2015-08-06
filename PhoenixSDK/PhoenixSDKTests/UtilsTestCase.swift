@@ -50,7 +50,7 @@ class UtilsTestCase: PhoenixBaseTestCase {
     }
     
     func testSimpleStorageNoDate() {
-        var storage = MockSimpleStorage()
+        let storage = MockSimpleStorage()
         storage.tokenExpirationDate = nil
         
         XCTAssert(storage.tokenExpirationDate == nil ,"Can clear the storage date correctly.")

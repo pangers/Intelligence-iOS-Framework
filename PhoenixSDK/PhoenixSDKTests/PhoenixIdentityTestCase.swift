@@ -59,7 +59,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         super.setUp()
         do {
             self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
-            let network = Phoenix.Network(withConfiguration: configuration!)
+            let network = Phoenix.Network(withConfiguration: configuration!, withTokenStorage:storage)
             self.identity = Phoenix.Identity(withNetwork: network, withConfiguration: configuration!)
         }
         catch{

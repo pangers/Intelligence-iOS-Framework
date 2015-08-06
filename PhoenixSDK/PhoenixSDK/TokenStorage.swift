@@ -16,7 +16,7 @@ private let userIdKey = "userId"
 private let passwordKey = "password"
 
 /// The protocol to implement in order to become a simple storage.
-internal protocol SimpleStorage {
+@objc public protocol TokenStorage {
     
     // Basic subscript implementation
     subscript(index: String) -> AnyObject? {get set}
@@ -25,7 +25,7 @@ internal protocol SimpleStorage {
 
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
-internal extension SimpleStorage {
+extension TokenStorage {
     
     var userId: Int? {
         get {
