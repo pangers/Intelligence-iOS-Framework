@@ -13,7 +13,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     
     func testPhoenixInitializer() {
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -26,7 +26,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = try Phoenix(withConfiguration: configuration)
+            let phoenix = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -39,7 +39,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         do {
             let config = MockConfiguration()
             config.mockInvalid = true
-            let _ = try Phoenix(withConfiguration: config)
+            let _ = try Phoenix(withConfiguration: config, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
@@ -59,7 +59,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     // Mock configuration fakes an invalid configuration
     func testPhoenixGetterSetterWorks() {
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
             
             

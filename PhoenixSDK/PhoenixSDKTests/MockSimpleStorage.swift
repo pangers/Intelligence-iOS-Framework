@@ -10,11 +10,11 @@ import Foundation
 
 @testable import PhoenixSDK
 
-struct MockSimpleStorage: PhoenixSDK.SimpleStorage {
+class MockSimpleStorage: PhoenixSDK.TokenStorage {
     
     private var storage:[String:AnyObject] = [:]
     
-    subscript(index: String) -> AnyObject? {
+    @objc subscript(index: String) -> AnyObject? {
         get {
             return storage[index]
         }

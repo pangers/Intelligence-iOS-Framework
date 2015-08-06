@@ -107,7 +107,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.region = .UnitedStates;
             configuration.companyId = 1
 
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -127,7 +127,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.region = .UnitedStates;
             configuration.companyId = 1
 
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -147,7 +147,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.region = .UnitedStates;
             configuration.companyId = 1
 
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -167,7 +167,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.region = .UnitedStates;
             configuration.companyId = 1
 
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -187,7 +187,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.applicationID = 123;
             configuration.companyId = 1
             
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -207,7 +207,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.applicationID = 123;
             configuration.region = .Europe;
             
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
@@ -228,7 +228,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.region = .Europe
             configuration.companyId = 0
             
-            let _ = try Phoenix(withConfiguration: configuration)
+            let _ = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {

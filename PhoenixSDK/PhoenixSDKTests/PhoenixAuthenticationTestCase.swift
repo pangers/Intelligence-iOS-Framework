@@ -36,15 +36,15 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
             "expires_in" : 100.0
         ]
         
-        XCTAssert(Phoenix.Authentication(json: wrongJsonDictionary) == nil, "Authentication obtained when passing a wrong dictionary")
-        XCTAssert(Phoenix.Authentication(json: emptyJsonDictionary) == nil, "Authentication obtained when passing a correct dictionary with empty values")
-        XCTAssert(Phoenix.Authentication(json: correctJsonDictionary) != nil, "No Authentication obtained when passing a correct dictionary")
-        XCTAssert(Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) != nil, "No Authentication obtained when passing a correct dictionary with all the values")
-        XCTAssert(Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary)?.anonymous == true, "The authentication appears to be non anonymous")
+        XCTAssert(Phoenix.Authentication(json: wrongJsonDictionary, withTokenStorage:storage) == nil, "Authentication obtained when passing a wrong dictionary")
+        XCTAssert(Phoenix.Authentication(json: emptyJsonDictionary, withTokenStorage:storage) == nil, "Authentication obtained when passing a correct dictionary with empty values")
+        XCTAssert(Phoenix.Authentication(json: correctJsonDictionary, withTokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary")
+        XCTAssert(Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary with all the values")
+        XCTAssert(Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage)?.anonymous == true, "The authentication appears to be non anonymous")
     }
 
     func testUsernameAndPasswordStoredValues() {
-        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
@@ -57,7 +57,7 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
     }
     
     func testInitializeAuthenticationParsedValues() {
-        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
@@ -67,7 +67,7 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
     }
 
     func testExpireAuthentication() {
-        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
@@ -81,7 +81,7 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
         var dictionary = correctWithRefreshTokenJsonDictionary
         dictionary["expires_in"] = Double(0.001)
         
-        guard let authentication = Phoenix.Authentication(json: dictionary) else {
+        guard let authentication = Phoenix.Authentication(json: dictionary, withTokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
@@ -96,7 +96,7 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
 
     
     func testInvalidateAuthentication() {
-        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary) else {
+        guard let authentication = Phoenix.Authentication(json: correctWithRefreshTokenJsonDictionary, withTokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
