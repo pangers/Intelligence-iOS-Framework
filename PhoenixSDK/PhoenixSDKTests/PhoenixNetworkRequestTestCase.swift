@@ -11,14 +11,20 @@ import XCTest
 @testable import PhoenixSDK
 
 class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
+
     let expectationTimeout:NSTimeInterval = 3
     
     var phoenix:Phoenix?
     var configuration:Phoenix.Configuration?
     
+    /// Check if we have an unexpired access_token.
+    /// This all happens internally in the isAuthenticated method.
     var checkAuthenticated: Bool {
         return self.phoenix?.isAuthenticated ?? false
     }
+    
+    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
+    /// This all happens internally in the isLoggedIn method.
     var checkLoggedIn: Bool {
         return self.phoenix?.isLoggedIn ?? false
     }
@@ -187,7 +193,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil),
             MockResponse(anonymousTokenSuccessfulResponse, 200, nil)]
-        mockResponsesForAuthentication(responses)
+        mockAuthenticationResponses(responses)
         
         let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
         let stringData = "Hola"
@@ -320,10 +326,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
         let stringData = "Hola"
         let statusCode = Int32(200)
-        let expectationOperation = expectationWithDescription("")
+        let expectationOperation = expectationWithDescription("Operation")
+        let requestExpectation = expectationWithDescription("Request")
         
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
-        mockResponseForAuthentication(200)
+        mockResponseForAuthentication(200, callback: {
+            self.mockResponseForURL(initialRequest.URL!, method: nil, response: (stringData, statusCode, nil), callback: nil, expectation: requestExpectation)
+        })
 
         // Force Invalidate tokens
         PhoenixSDK.Phoenix.Authentication().invalidateTokens()

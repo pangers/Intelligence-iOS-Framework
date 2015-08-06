@@ -15,20 +15,40 @@ private enum ConfigurationKey: String {
     case ApplicationID = "application_id"
     case ProjectID = "project_id"
     case Region = "region"
+    case CompanyId = "company_id"
 }
 
 /// A protocol defining the Phoenix required configuration.
 /// The implementation is Phoenix.Configuration.
-public protocol PhoenixConfigurationProtocol {
+@objc(PHXPhoenixConfigurationProtocol) public protocol PhoenixConfigurationProtocol {
+    
+    /// The client Id.
     var clientID: String { get set }
+    
+    /// The client secret
     var clientSecret: String { get set }
+    
+    /// The project Id
     var projectID: Int { get set }
+    
+    /// The application Id
     var applicationID: Int { get set }
-    var region: Phoenix.Region? { get set }
+    
+    /// The company Id
+    var companyId: Int { get set }
+    
+    /// The region
+    var region: Phoenix.Region { get set }
+    
+    /// - Returns: True if the configuration is valid
     var isValid: Bool { get }
+    
+    /// - Returns: True if a property is missing.
     var hasMissingProperty: Bool { get }
 
+    /// - Returns: a clone of the object
     func clone() -> PhoenixConfigurationProtocol
+    
 }
 
 /// Extension to the configuraiton protocol to verify whether the configuration provided is
@@ -36,26 +56,15 @@ public protocol PhoenixConfigurationProtocol {
 /// This extension is used for internal purposes only, and should not be overriden by the 
 /// developer.
 extension PhoenixConfigurationProtocol {
-    
-    /// - Returns: True if the configuration is correct and can be used to initialize
-    /// the Phoenix SDK.
-    public var isValid: Bool {
-        // For now only check if there is a missing property.
-        return !self.hasMissingProperty
-    }
-    
-    /// - Returns: True if there is a missing property in the configuration
-    public var hasMissingProperty: Bool {
-        return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-            applicationID <= 0 || region == nil
-    }
-    
-    /// - Returns: Base URL to call.
-    public var baseURL: NSURL? {
-        guard let URLString = self.region?.baseURL(), URL = NSURL(string: URLString) else {
+ 
+    /// - Returns: Optional base URL to call.
+    var baseURL: NSURL? {
+        // nil on no region
+        if region == .NoRegion {
             return nil
         }
-        return URL
+        
+        return NSURL(string: self.region.baseURL())
     }
 }
 
@@ -64,14 +73,17 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public final class Configuration: NSObject, PhoenixConfigurationProtocol {
+    public class Configuration: NSObject, PhoenixConfigurationProtocol {
         
         /// The client ID
         public var clientID = ""
         
         /// The client secret
         public var clientSecret = ""
-        
+
+        /// The company Id
+        public var companyId = 0
+
         /// The project ID
         public var projectID = 0
         
@@ -79,7 +91,13 @@ public extension Phoenix {
         public var applicationID = 0
         
         /// The region
-        public var region: Region?
+        public var region:Region
+        
+        /// Default initializer. Sets region to .NoRegion so we can notice that the region is invalid.
+        public override init() {
+            self.region = .NoRegion
+            super.init()
+        }
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -111,6 +129,7 @@ public extension Phoenix {
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
+            copy.companyId = companyId
             return copy
         }
         
@@ -127,19 +146,8 @@ public extension Phoenix {
                 throw ConfigurationError.FileNotFoundError
             }
             
-            // Helper function to parse the data and return an optional instead of an error
-            func optionalJSONData(data: NSData) -> NSDictionary? {
-                do {
-                    return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
-                }
-                catch {
-                    // Swallow the error
-                }
-                return nil
-            }
-            
             // Guard that we have the json data parsed correctly
-            guard let contents = optionalJSONData(data) else {
+            guard let contents = data.phx_jsonDictionary else {
                 throw ConfigurationError.InvalidFileError
             }
             
@@ -157,6 +165,20 @@ public extension Phoenix {
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
+            self.companyId = try value(forKey: .CompanyId, inContents:contents)
+        }
+        
+        /// - Returns: True if the configuration is correct and can be used to initialize
+        /// the Phoenix SDK.
+        @objc public var isValid: Bool {
+            // For now only check if there is a missing property.
+            return !self.hasMissingProperty
+        }
+        
+        /// - Returns: True if there is a missing property in the configuration
+        @objc public var hasMissingProperty: Bool {
+            return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
+                applicationID <= 0 || region == .NoRegion || companyId <= 0
         }
     }
 }

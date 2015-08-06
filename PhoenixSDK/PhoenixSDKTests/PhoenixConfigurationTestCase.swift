@@ -105,7 +105,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.projectID = 212;
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
-            
+            configuration.companyId = 1
+
             let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
@@ -124,7 +125,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.projectID = 212;
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
-            
+            configuration.companyId = 1
+
             let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
@@ -143,7 +145,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.clientSecret = "SECRET";
             configuration.applicationID = 42131;
             configuration.region = .UnitedStates;
-            
+            configuration.companyId = 1
+
             let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
@@ -162,7 +165,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.clientSecret = "SECRET";
             configuration.projectID = 42131;
             configuration.region = .UnitedStates;
-            
+            configuration.companyId = 1
+
             let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
         }
@@ -181,6 +185,48 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             configuration.clientSecret = "SECRET";
             configuration.projectID = 42131;
             configuration.applicationID = 123;
+            configuration.companyId = 1
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+
+    func testNoCompanyIDInConfiguration() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID";
+            configuration.clientSecret = "SECRET";
+            configuration.projectID = 42131;
+            configuration.applicationID = 123;
+            configuration.region = .Europe;
+            
+            let _ = try Phoenix(withConfiguration: configuration)
+            XCTAssert(false, "No exception thrown")
+        }
+        catch ConfigurationError.MissingPropertyError {
+            // Correct path
+        }
+        catch {
+            XCTAssert(false, "Unexpected exception")
+        }
+    }
+
+    func testCompanyID0InConfiguration() {
+        do {
+            let configuration = Phoenix.Configuration()
+            configuration.clientID = "ID"
+            configuration.clientSecret = "SECRET"
+            configuration.projectID = 42131
+            configuration.applicationID = 123
+            configuration.region = .Europe
+            configuration.companyId = 0
             
             let _ = try Phoenix(withConfiguration: configuration)
             XCTAssert(false, "No exception thrown")
@@ -194,8 +240,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     }
 
     func testEmptyBaseUrlIfNoRegion(){
-        var config = MockConfiguration()
-        config.region = nil
+        let config = MockConfiguration()
+        config.region = .NoRegion
         XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
     }
 }

@@ -12,8 +12,13 @@
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
 		7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */; };
+		BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A23641B70ADD700CE0C81 /* Identity.storyboard */; };
 		BB2FD4691B6B9D46000E8070 /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */; };
+		BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */; };
+		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
+		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */; };
+		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674761B70FB490085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674751B70FB490085BEC8 /* Authentication.storyboard */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
 /* End PBXBuildFile section */
@@ -26,8 +31,13 @@
 		7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAAE61B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB0A23651B70ADD700CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
 		BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
+		BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
+		BB3534861B6FAB5800C67500 /* PhoenixManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixManager.swift; sourceTree = "<group>"; };
+		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../../../Library/Developer/Xcode/DerivedData/PhoenixSDK-crtfqvcfmeujokezpbpaskdrsxjl/Build/Products/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
+		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE1674751B70FB490085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,17 +74,46 @@
 		7FDAAADB1B5D35AE00DF2BE6 /* PhoenixDemo-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				BB0A23781B70B89600CE0C81 /* Phoenix */,
+				FE0C64DB1B722AD8008C02D7 /* Authentication */,
+				BB3534831B6FAAB900C67500 /* Identity */,
 				BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */,
 				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
 				7FDAAADE1B5D35AE00DF2BE6 /* ViewController.swift */,
-				FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */,
-				FE1674751B70FB490085BEC8 /* Authentication.storyboard */,
 				7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */,
 				7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */,
 				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
 				7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */,
 			);
 			path = "PhoenixDemo-Swift";
+			sourceTree = "<group>";
+		};
+		BB0A23781B70B89600CE0C81 /* Phoenix */ = {
+			isa = PBXGroup;
+			children = (
+				BB3534861B6FAB5800C67500 /* PhoenixManager.swift */,
+			);
+			name = Phoenix;
+			sourceTree = "<group>";
+		};
+		BB3534831B6FAAB900C67500 /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				BB0A23641B70ADD700CE0C81 /* Identity.storyboard */,
+				FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */,
+				BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */,
+				BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */,
+			);
+			name = Identity;
+			sourceTree = "<group>";
+		};
+		FE0C64DB1B722AD8008C02D7 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */,
+				FE1674751B70FB490085BEC8 /* Authentication.storyboard */,
+			);
+			name = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +174,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */,
 				BB2FD4691B6B9D46000E8070 /* PhoenixConfiguration.json in Resources */,
 				7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */,
@@ -150,9 +190,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
 				7FDAAADF1B5D35AE00DF2BE6 /* ViewController.swift in Sources */,
+				BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */,
 				FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
+				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
+				BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +217,14 @@
 				7FDAAAE61B5D35AE00DF2BE6 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		BB0A23641B70ADD700CE0C81 /* Identity.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BB0A23651B70ADD700CE0C81 /* Base */,
+			);
+			name = Identity.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -1,10 +1,20 @@
 # Phoenix SDK #
 ```
-Current iOS application credentials (DELETE BEFORE GOING PUBLIC)
-Client ID: iOSSDK_hvxbincerennv
-Client Secret: IZYKF5c975Lkjazjhosplmroopifkhjgeegagrpf
-AppId: 4152
-ProjectId: 3030
+== Configuration values for the "Phoenix SDK Test Project" (https://dashboard.phoenixplatform.eu/) ==
+!! these values should be deleted from the app once the codebase goes public !!
+
+Region: EU (https://api.phoenixplatform.eu)
+API Version: v1
+Company Id: 3
+Project Id: 2030
+
+Application Id (iOS): 3152
+Client Id (iOS): iOSSDKApp_napmxilutp
+Client Secret (iOS): Z4D1eCGO65pi45y5dewrmrgenndrfnzarnzdilrl
+
+Application Id (Android): 4154
+Client Id (Android): AndroidSDKApp_kypopf
+Client Secret (Android): OCN20qleymuqjlqbfcwbcwnjdwphdgoxpocrpxvp
 ```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
@@ -119,7 +129,8 @@ As an example, your configuration file will look like:
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
     "project_id": 20,
-    "region": "EU"
+    "region": "EU",
+    "company_id" : 10
 }
 
 ```
@@ -201,14 +212,11 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         }];
 ```
 
+The Phoenix.startup() method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time.
+
 Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
-
-Setting a network delegate is optional, but recommended if you require more context when an error occurs.
-
-Startup is necessary in order to initialise the framework after it's been configured.
-
 
 ### Authentication ###
 
@@ -218,20 +226,24 @@ If you have a registered account on the Phoenix Platform you will be able to log
 ```
 #!swift
 
-    // Optionally, login to a user's account...
-    phoenix.login(withUsername: username, password: password, callback: { (authenticated) -> () in
-        print("Logged in \(authenticated)")
-    })
-        
+// Optionally, login to a user's account...
+phoenix.login(withUsername: username, password: password, callback: { (authenticated) -> () in
+print("Logged in \(authenticated)")
+})
+
 ```
+
 
 **Objective-C:**
 
 ```
-    // Optionally, login to a user's account...
-    [phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-        NSLog(@"Logged in %d", authenticated);
-    }];
+#!objc
+
+// Optionally, login to a user's account...
+[phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
+NSLog(@"Logged in %d", authenticated);
+}];
+
 ```
 
 You will then be logged in to a user's account (if 'authenticated' is true). Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method (as seen below).
@@ -240,7 +252,7 @@ You will then be logged in to a user's account (if 'authenticated' is true). Onc
 ```
 #!swift
 
-    phoenix.logout()
+phoenix.logout()
 
 ```
 
@@ -249,6 +261,78 @@ You will then be logged in to a user's account (if 'authenticated' is true). Onc
 
 ```
 
-    [phoenix logout];
+[phoenix logout];
 
 ```
+
+
+
+## Phoenix Modules ##
+
+The Phoenix platform is composed of a series of modules that can be used as required by the developer.
+
+In this section, each modules are described, including its functions and sample code on how to use them.
+
+### Identity Module ###
+
+The identity module is responsible to perform user management within the Phoenix platform, allowing to create, retrieve and update users.
+
+#### Create user ####
+
+The code to create a user for each language is as follows:
+
+Setting a network delegate is optional, but recommended if you require more context when an error occurs.
+
+Startup is necessary in order to initialise the framework after it's been configured.
+
+
+
+**Objective-C:**
+
+```
+#!objc
+
+    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password
+        firstName:firstname lastName:lastname avatarURL:avatarURL];
+
+    __weak typeof(self) weakSelf = self;
+    
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+        // Treat the user and error appropriately. Notice that the callback might be performed
+        // In a background thread. Use dispatch_async to handle it in the main thread.
+    }];
+
+```
+
+**Swift:**
+
+
+```
+#!swift
+        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
+                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        
+        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
+            
+            guard let this = self else {
+                return
+            }
+            
+            // Treat the user and error appropriately. Notice that the callback might be performed
+            // In a background thread. Use dispatch_async to handle it in the main thread.
+            
+        })
+```
+
+Notice that the createUser method can return the following errors:
+
+* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
+* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+
+
+Those errors will be wrapped within an NSError using as domain IdentityError.domain.
+
+Notice that calling this methods **won't** start using the user's credentials. 
+You'll need to perform an authentication with the new user's credentials in order to do so.
+
+Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.

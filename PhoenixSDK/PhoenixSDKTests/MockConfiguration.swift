@@ -10,40 +10,50 @@ import Foundation
 
 import PhoenixSDK
 
-public struct MockConfiguration: PhoenixConfigurationProtocol {
-    
-    public var clientID: String = "123"
-    public var clientSecret: String = "123"
-    public var projectID: Int = 123
-    public var applicationID: Int = 123
-    public var region: Phoenix.Region? = .Europe
-    
+public class MockConfiguration: Phoenix.Configuration {
+
     public var mockInvalid:Bool = false
     public var mockMissingProperty: Bool = false
+    
+    override init() {
+        super.init()
+        self.clientID = "123"
+        self.clientSecret = "123"
+        self.projectID = 123
+        self.applicationID = 123
+        self.companyId = 12
+        self.region = .Europe
+    }
+    
+    /// - Returns: A copy of the configuration object.
+    override public func clone() -> PhoenixConfigurationProtocol {
+        let copy = MockConfiguration()
+        copy.region = self.region
+        copy.applicationID = self.applicationID
+        copy.projectID = self.projectID
+        copy.clientID = String(self.clientID)
+        copy.clientSecret = String(self.clientSecret)
+        copy.companyId = companyId
+        copy.mockInvalid = mockInvalid
+        copy.mockMissingProperty = mockMissingProperty
+        return copy
+    }
 
     /// - Returns: True if the configuration is correct and can be used to initialize
     /// the Phoenix SDK.
-    public var isValid: Bool {
+    override public var isValid: Bool {
         if mockInvalid {
-           return false
+            return false
         }
-        
         // For now only check if there is a missing property.
-        return !self.hasMissingProperty
+        return !super.isValid
     }
     
     /// - Returns: True if there is a missing property in the configuration
-    public var hasMissingProperty: Bool {
+    override public var hasMissingProperty: Bool {
         if mockMissingProperty {
             return true
         }
-        
-        return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-            applicationID <= 0 || region == nil
-    }
-    
-    public func clone() -> PhoenixConfigurationProtocol {
-        let tmp = self
-        return tmp
+        return super.hasMissingProperty
     }
 }

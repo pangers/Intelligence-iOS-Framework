@@ -19,7 +19,7 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     private let request:NSURLRequest
     
     /// The Phoenix authentication to prepare the request with.
-    private let authentication:Phoenix.Authentication
+    internal let authentication:Phoenix.Authentication
     
     /// Default initializer with all required parameters
     init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {
@@ -57,6 +57,11 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
         
         self.error = error
         self.output = (data:data, response:response as? NSHTTPURLResponse)
+        
+        if let statusCode = self.output?.response?.statusCode where statusCode != 200 {
+            // TODO: Error handling for non 200
+            self.error = NSError(domain: "", code: 123, userInfo: nil)
+        }
     }
     
 

@@ -12,28 +12,6 @@ import Foundation
 /// has successfully authenticated the user or not.
 public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
 
-// In case we need exponential backoff.
-//private let maximumDelay = 5 * 60 // 5 minutes
-//
-//private func exponentialBackoff() -> ( block: (()->Bool) ) -> Void
-//{
-//    var delay = 3
-//    
-//    func backoff ( block:( () -> Bool) ) {
-//        
-//        if !block() {
-//            sleep(UInt32(delay))
-//            
-//            delay = min(maximumDelay, delay*2)
-//            
-//            backoff(block)
-//        }
-//        
-//    }
-//    
-//    return backoff
-//}
-
 internal extension Phoenix {
 
     /// Operation to authenticate the user based on the received SDK configuration and Authentication.
