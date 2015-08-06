@@ -10,8 +10,9 @@ import Foundation
 
 class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
-    init(withNetwork network: Phoenix.Network) {
-        super.init(network: network, request: NSURLRequest())
+    init(withNetwork network: Phoenix.Network, projectId: Int) {
+        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(projectId)
+        super.init(network: network, request: request)
     }
     
 }

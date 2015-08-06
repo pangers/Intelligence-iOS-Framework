@@ -9,6 +9,7 @@
 import Foundation
 
 private let phoenixIdentityAPIVersion = "identity/v1"
+private let phoenixLocationAPIVersion = "location/v1"
 
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
@@ -50,7 +51,7 @@ internal extension NSURLRequest {
         return mutable
     }
     
-    // MARK: URL Request factory for authentication
+    // MARK:- Authentication Module
     
     /// - Parameters:
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
@@ -143,7 +144,7 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
-    // MARK: User CRUD
+    // MARK:- Identity Module
     
     /// - Returns: An NSURLRequest to create the given user.
     /// - Parameters:
@@ -176,7 +177,13 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
-    // MARK: URL Paths
+    // MARK:- Location Module
+    
+    class func phx_httpURLRequestForDownloadGeofences(projectId: Int) -> NSURLRequest {
+        
+    }
+    
+    // MARK:- URL Paths
     
     /// - Returns: the path to the API endpoint to obtain an OAuth token.
     private class func phx_oauthTokenURLPath() -> String {
@@ -185,12 +192,30 @@ internal extension NSURLRequest {
     
     /// - Returns: The path to get current user's information.
     private class func phx_usersMeURLPath() -> String {
-        return "\(phoenixIdentityAPIVersion)/users/me"
+        return phoenixIdentityAPIVersion.appendUsers("me")
+    }
+    
+    private class func phx_path(withProjectId projectId: Int) -> String {
+        return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences"
     }
     
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
     /// - Returns: The path for most requests related to a user.
     private class func phx_usersURLPath(projectId:Int) -> String {
-        return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users"
+        return phoenixIdentityAPIVersion.appendProjects(projectId).appendUsers(nil)
     }
+}
+
+private extension String {
+    /// - Returns: New string with 'users(/userId)' appended to existing string.
+    /// - Parameter userId: Optional string value to cater for id or 'me'.
+    func appendUsers(userId: String?) -> String {
+        return self + "users" + (userId != nil ? "/\(userId)" : "")
+    }
+    /// - Returns: New string with 'projects/projectId' appended to existing string.
+    /// - Parameter projectId: Required value specifying the project.
+    func appendProjects(projectId: Int) -> String {
+        return self + "projects/\(projectId)"
+    }
+    
 }
