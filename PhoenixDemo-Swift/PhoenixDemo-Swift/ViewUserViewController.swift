@@ -10,18 +10,11 @@ import UIKit
 
 import PhoenixSDK
 
-class ViewUserViewController : UIViewController {
+class ViewUserViewController : UIViewController, UISearchBarDelegate {
     
     var fetchMe: Bool = false
     
-    var user:Phoenix.User? {
-        didSet {
-            displayUser()
-        }
-    }
-    var phoenix: Phoenix? {
-        return PhoenixManager.manager.phoenix
-    }
+    @IBOutlet weak var infoLabel: UILabel!
     
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var passwordLabel: UILabel!
@@ -29,6 +22,16 @@ class ViewUserViewController : UIViewController {
     @IBOutlet weak var firstNameLabel: UILabel!
     @IBOutlet weak var lastNameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
+    
+    var user:Phoenix.User? {
+        didSet {
+            displayUser()
+        }
+    }
+    
+    var phoenix: Phoenix? {
+        return PhoenixManager.manager.phoenix
+    }
     
     override func viewDidLoad() {
         displayUser()
@@ -58,21 +61,55 @@ class ViewUserViewController : UIViewController {
             return
         }
         
-        if user.userId != 0 {
-            idLabel.text = "User Id: \(user.userId)"
-        }
-        else {
-            idLabel.text = "User Id: --"
-        }
-        
         let lastName = user.lastName ?? "N/A"
         let password = user.password ?? "N/A"
         let avatar = user.avatarURL ?? "N/A"
         
-        userLabel.text = "Username: \(user.username)"
-        passwordLabel.text = "Password: \(password)"
-        avatarURLLabel.text = "AvatarURL: \(avatar)"
-        firstNameLabel.text = "FirstName: \(user.firstName)"
-        lastNameLabel.text = "LastName: \(lastName)"
+        NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
+            if user.userId != 0 {
+                self.idLabel.text = "User Id: \(user.userId)"
+            }
+            else {
+                self.idLabel.text = "User Id: --"
+            }
+
+            self.userLabel.text = "Username: \(self.user?.username)"
+            self.passwordLabel.text = "Password: \(password)"
+            self.avatarURLLabel.text = "AvatarURL: \(avatar)"
+            self.firstNameLabel.text = "FirstName: \(self.user?.firstName)"
+            self.lastNameLabel.text = "LastName: \(lastName)"
+            self.infoLabel.text = ""
+        }))
     }
+    
+    // the beta 4 has an issue with empty labels in a stack layout, so use a space instead.
+    func showInformation(information:String) {
+        NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
+            self.infoLabel.text = information ?? " "
+        }))
+    }
+    
+    // MARK:- UISearchBarDelegate
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        guard let userIdText = searchBar.text,
+            let userId = Int(userIdText) else {
+                showInformation("Couldn't get an integer from the user Id you typed")
+                return
+        }
+        
+        // clear info label
+        self.infoLabel.text = ""
+        searchBar.resignFirstResponder()
+        
+        phoenix?.identity.getUser(userId) { (user, error) -> Void in
+            if user != nil {
+                self.user = user
+            }
+            else {
+                self.showInformation("Error occured while loading user data: \(error)")
+            }
+        }
+    }
+
 }
