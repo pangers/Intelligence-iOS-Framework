@@ -71,7 +71,7 @@ internal extension Phoenix {
         private let authenticateQueue: NSOperationQueue
 
         /// Configuration passed through from Network initializer (assumed to be valid).
-        private let configuration: PhoenixConfigurationProtocol
+        private let configuration: Phoenix.Configuration
         
         /// The current phoenix authentication.
         internal var authentication: Authentication
@@ -105,7 +105,7 @@ internal extension Phoenix {
         /// Initialize new instance of Phoenix Networking class
         /// - Parameters:
         ///     - withConfiguration: The configuration object used.
-        init(withConfiguration configuration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) {
+        init(withConfiguration configuration: Phoenix.Configuration, withTokenStorage tokenStorage:TokenStorage) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
             self.authentication = Authentication(withTokenStorage: tokenStorage)

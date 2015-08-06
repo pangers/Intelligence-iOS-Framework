@@ -162,7 +162,7 @@ extension Phoenix {
         /// - Parameters:
         ///     - withJSON: The json dictionary as obtained from the backend.
         ///     - withConfiguration: The configuration that holds the company Id.
-        convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:PhoenixConfigurationProtocol) {
+        convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:Phoenix.Configuration) {
             guard let userId = json[idKey] as? Int,
             let username = json[usernameKey] as? String,
             let firstName = json[firstNameKey] as? String else {

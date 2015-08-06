@@ -24,7 +24,7 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public class Configuration: NSObject {
+    @objc(PHXConfiguration) public class Configuration: NSObject {
         
         /// Flag specifying whether or not to download geofences on launch.
         public var useGeofences = true

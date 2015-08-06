@@ -37,7 +37,7 @@ internal extension Phoenix {
         ///     - session: An NSURLSession to use for the requests.
         ///     - authentication: The authentication to use.
         ///     - configuration: The SDK configuration
-        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol) {
+        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: Phoenix.Configuration) {
             self.urlSession = session
             self.authentication = authentication
             

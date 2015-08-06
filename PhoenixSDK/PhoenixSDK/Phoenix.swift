@@ -15,7 +15,7 @@ public final class Phoenix: NSObject {
 
     /// Private configuration. Can't be modified once initialized.
     /// Provide a Phoenix.Configuration object to initialize it.
-    private let configuration: PhoenixConfigurationProtocol
+    private let configuration: Phoenix.Configuration
     
     /// The network manager instance.
     internal let network: Network
@@ -31,7 +31,7 @@ public final class Phoenix: NSObject {
     }
     
     /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: PhoenixConfigurationProtocol {
+    public var currentConfiguration: Phoenix.Configuration {
         return configuration.clone()
     }
     
@@ -60,7 +60,7 @@ public final class Phoenix: NSObject {
     /// will be copied and kept privately to avoid future mutability.
     ///     - withTokenStorage: The token storage to be used.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) throws {
+    public init(withConfiguration phoenixConfiguration: Phoenix.Configuration, withTokenStorage tokenStorage:TokenStorage) throws {
         self.configuration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: self.configuration, withTokenStorage:tokenStorage)
 
@@ -96,7 +96,7 @@ public final class Phoenix: NSObject {
     ///     - phoenixConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    convenience public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
+    convenience public init(withConfiguration phoenixConfiguration: Phoenix.Configuration) throws {
         try self.init(withConfiguration:phoenixConfiguration, withTokenStorage:PhoenixKeychain())
     }
     

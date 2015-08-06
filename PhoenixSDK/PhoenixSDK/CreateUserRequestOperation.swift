@@ -11,7 +11,7 @@ import Foundation
 class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters
-    init(session:NSURLSession, user:PhoenixUser, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, user:PhoenixUser, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration)
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
         errorCode = IdentityError.UserCreationError.rawValue

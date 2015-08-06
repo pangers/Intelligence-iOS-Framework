@@ -14,7 +14,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
-    var configuration:PhoenixConfigurationProtocol?
+    var configuration:Phoenix.Configuration?
     
     let successfulResponseCreateUser = "{" +
         "\"TotalRecords\": 1," +
@@ -63,7 +63,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             self.identity = Phoenix.Identity(withNetwork: network, withConfiguration: configuration!)
         }
         catch{
-            
+            XCTAssert(false, "Must provide valid config")
         }
     }
     

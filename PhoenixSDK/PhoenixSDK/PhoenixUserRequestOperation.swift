@@ -10,7 +10,7 @@ import Foundation
 
 class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
     var user: Phoenix.User?
-    var configuration: PhoenixConfigurationProtocol?
+    var configuration: Phoenix.Configuration?
     var errorCode: Int = 0
     
     /// The operation will run synchronously the data task and store the error and output.

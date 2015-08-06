@@ -18,18 +18,20 @@ extension Phoenix {
         
         /// A reference to the network manager
         private let network: Network
+        private let configuration: Phoenix.Configuration
         
         /// Default initializer. Requires a network.
         /// - Parameter network: The network that will be used.
-        init(withNetwork network:Network) {
+        init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
+            self.configuration = configuration
         }
         
         /// Download a list of geofences.
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
-        func downloadGeofences(projectId: Int, callback: PhoenixGeofencesCallback?) {
+        func downloadGeofences(callback: PhoenixGeofencesCallback?) {
             
-            let operation = DownloadGeofencesRequestOperation(withNetwork: network)
+            let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
             
             // set the completion block to notify the caller
             operation.completionBlock = {
