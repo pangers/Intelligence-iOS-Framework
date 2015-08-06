@@ -34,7 +34,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         do {
             try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
             self.configuration!.region = .Europe
-            try self.phoenix = Phoenix(withConfiguration: configuration!)
+            try self.phoenix = Phoenix(withConfiguration: configuration!, withTokenStorage:storage)
         }
         catch {
         }
@@ -110,9 +110,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let statusCode = Int32(200)
         let expectationOperation = expectationWithDescription("")
         phoenix!.network.authentication.configure(withUsername: "username", password: "password")
-        Injector.storage.accessToken = "Somevalue"
-        Injector.storage.refreshToken = "Somevalue"
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
+        mockExpiredTokenStorage()
         
         mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
         mockResponseForAuthentication(200, anonymous: false)
@@ -130,11 +128,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
-        // Mock using the injector storage that we have a token, but expired
-        Injector.storage.accessToken = "Somevalue"
-        Injector.storage.refreshToken = ""
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
-        
+        // Mock that we have a token, but expired
+        mockExpiredTokenStorage()
         XCTAssert(!checkAuthenticated, "Phoenix is not authenticated before a response")
         
         mockResponseForAuthentication(200)
@@ -154,10 +149,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
     func testAnonymousLogout() {
-        // Mock using the injector storage that we have a token
-        Injector.storage.accessToken = "Somevalue"
-        Injector.storage.refreshToken = ""
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
+        // Mock that we have a token
+        mockValidTokenStorage()
         XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
         
         phoenix?.logout()
@@ -243,9 +236,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Mocks a 401 response in a request, and how the authentication is later scheduled
     func testEnqueueAuthorizationOn401Operation() {
         // Mock a valid authentication
-        Injector.storage.accessToken = "Something"
-        Injector.storage.refreshToken = "Something"
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10000)
+        mockValidTokenStorage()
         
         let url = NSURL(string: "http://www.google.com/")!
         
@@ -311,9 +302,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Mocks a 403 response in a request, and how the authentication is later scheduled
     func testEnqueueAuthorizationOn403Operation() {
         // Mock a valid authentication
-        Injector.storage.accessToken = "Something"
-        Injector.storage.refreshToken = "Something"
-        Injector.storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10000)
+        mockValidTokenStorage()
         
         let url = NSURL(string: "http://www.google.com/")!
         
@@ -343,7 +332,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let expectation = expectationWithDescription("")
         let statusCode = Int32(200)
-        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), withRequest: initialRequest, withAuthentication: PhoenixSDK.Phoenix.Authentication())
+        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), withRequest: initialRequest, withAuthentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
         op.completionBlock = {
             expectation.fulfill()
             let (data, response) = op.output!
@@ -374,7 +363,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         })
 
         // Force Invalidate tokens
-        PhoenixSDK.Phoenix.Authentication().invalidateTokens()
+        mockExpiredTokenStorage()
         phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
             expectationOperation.fulfill()
         }
