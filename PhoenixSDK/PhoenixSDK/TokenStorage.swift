@@ -1,5 +1,5 @@
 //
-//  SimpleStorage.swift
+//  TokenStorage.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 30/07/2015.
