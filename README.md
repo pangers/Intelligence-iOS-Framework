@@ -367,9 +367,9 @@ The following code snippets illustrate how to use each of the methods in Objecti
 #!swift
 
 // Get user via our current credentials
-phoenix.identity.getMe({ (user, error) -> Void in
+phoenix.identity.getMe{ (user, error) -> Void in
     // Get the user and treat the error
-})
+}
 
 // Get the user via it's id
 phoenix.identity.getUser(userId) { (user, error) -> Void in
