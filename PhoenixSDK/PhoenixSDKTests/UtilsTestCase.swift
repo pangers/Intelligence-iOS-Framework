@@ -49,7 +49,7 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
     }
     
-    func testSimpleStorageNoDate() {
+    func testTokenStorageNoDate() {
         let storage = MockSimpleStorage()
         storage.tokenExpirationDate = nil
         

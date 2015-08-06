@@ -66,9 +66,9 @@ internal extension Phoenix {
     /// and also handles the JSON responses of the identity module, reading and
     /// storing the data it requires to identify the user later on.
     ///
-    /// Relies on the SimpleStorage found in the Injector object to store and load
+    /// Relies on the TokenStorage passed to store and load
     /// the tokens. The default Phoenix storage is PhoenixKeychain. The developer
-    /// can override the SimpleStorage protocol and provide a different implementation,
+    /// can override the TokenStorage protocol and provide a different implementation,
     /// such as storing it in CoreData, a file, NSUserDefaults,...
     final class Authentication: PhoenixAuthenticationProtocol {
 

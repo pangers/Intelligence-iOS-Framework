@@ -128,7 +128,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
-        // Mock using the injector storage that we have a token, but expired
+        // Mock that we have a token, but expired
         mockExpiredTokenStorage()
         XCTAssert(!checkAuthenticated, "Phoenix is not authenticated before a response")
         
@@ -149,7 +149,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
     func testAnonymousLogout() {
-        // Mock using the injector storage that we have a token
+        // Mock that we have a token
         mockValidTokenStorage()
         XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
         
