@@ -29,7 +29,7 @@
     [self showUser];
     
     if ([self fetchMe]) {
-        [[[[PHXPhoenixManager sharedManager] phoenix] identity] getMe:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+        [[[[PHXPhoenixManager sharedManager] phoenix] identity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self setUser:user];
                 if (error != nil) {
@@ -42,7 +42,7 @@
     }
 }
 
--(void)setUser:(id<PHXPhoenixUser>)user
+-(void)setUser:(PHXPhoenixUser*)user
 {
     _user = user;
     

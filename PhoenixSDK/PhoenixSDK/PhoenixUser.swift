@@ -30,114 +30,31 @@ public enum UserType : String {
     
 }
 
-/// A protocol defining the Phoenix Users behaviour.
-@objc(PHXPhoenixUser) public protocol PhoenixUser {
-    
-    /// The user id. Non modifiable. The implementer should use a let.
-    var userId:Int { get }
-    
-    /// The company id. Non modifiable. Should be fetched from the Configuration of Phoenix.
-    var companyId:Int {get}
-    
-    /// The username
-    var username:String {get set}
-    
-    /// The password
-    var password:String? {get set}
-    
-    /// The firstname
-    var firstName:String {get set}
-    
-    /// The lastname
-    var lastName:String? {get set}
-    
-    /// The avatar URL
-    var avatarURL:String? {get set}
-    
-}
-
-/// Extends phoenix user to provide the variables that should be disregarded by the user.
-/// Also provides a toJSON method to return a JSON dictionary from the values of the user.
-extension PhoenixUser {
-    
-    /// The locking count will always be 0 and should be ignored by the developer
-    var lockingCount:Int {
-        return 0
-    }
-
-    /// The reference will be empty and should be ignored by the developer
-    var reference:String {
-        return ""
-    }
-
-    /// Is active is true. Developers should ignore this value
-    var isActive:Bool {
-        return true
-    }
-    
-    /// The metadata will be empty and should be ignored.
-    var metadata:String {
-        return ""
-    }
-    
-    /// The user type will always be User.
-    var userTypeId:UserType {
-        return .User
-    }
-    
-    /// - Returns: Provides a JSONDictionary with the user data.
-    func toJSON() -> JSONDictionary {
-        var dictionary:JSONDictionary = [
-            companyIdKey: self.companyId,
-            usernameKey: self.username,
-            firstNameKey: self.firstName,
-            lockingCountKey: self.lockingCount,
-            referenceKey: self.reference,
-            isActiveKey: self.isActive,
-            metadataKey: self.metadata,
-            userTypeKey: self.userTypeId.rawValue,
-        ]
-        dictionary ?+= (lastNameKey, lastName)
-        dictionary ?+= (passwordKey, password)
-        dictionary ?+= (avatarURLKey, avatarURL)
-        // If we have the user Id add it.
-        if userId != 0 {
-            dictionary[idKey] = userId
-        }
-        return dictionary
-    }
-    
-    /// - Returns: True if the user is valid to be sent to a create request.
-    var isValidToCreate:Bool {
-        guard let password = password else {
-            return false
-        }
-        return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
-            !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
-    }
-}
-
 
 extension Phoenix {
 
     /// The user class implementation
-    @objc(PHXPhoenixUser) public class User : NSObject, PhoenixUser {
+    @objc(PHXPhoenixUser) public final class User : NSObject {
         
         /// The user Id as a let
         @objc public let userId:Int
         
-        /// The company Id as a let.
+        /// The company Id as a let. Should be fetched from the Configuration of Phoenix.
         @objc public  var companyId:Int
         
+        /// The username
         @objc public var username:String
         
+        /// The password
         @objc public var password:String?
         
+        /// The firstname
         @objc public var firstName:String
-
+        
         /// The last name
         @objc public var lastName:String?
         
+        /// The avatar URL
         @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
@@ -170,6 +87,63 @@ extension Phoenix {
             }
             let lastName = json[lastNameKey] as? String
             self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+        }
+        
+        
+        /// The locking count will always be 0 and should be ignored by the developer
+        var lockingCount:Int {
+            return 0
+        }
+        
+        /// The reference will be empty and should be ignored by the developer
+        var reference:String {
+            return ""
+        }
+        
+        /// Is active is true. Developers should ignore this value
+        var isActive:Bool {
+            return true
+        }
+        
+        /// The metadata will be empty and should be ignored.
+        var metadata:String {
+            return ""
+        }
+        
+        /// The user type will always be User.
+        var userTypeId:UserType {
+            return .User
+        }
+        
+        /// - Returns: Provides a JSONDictionary with the user data.
+        func toJSON() -> JSONDictionary {
+            var dictionary:JSONDictionary = [
+                companyIdKey: self.companyId,
+                usernameKey: self.username,
+                firstNameKey: self.firstName,
+                lockingCountKey: self.lockingCount,
+                referenceKey: self.reference,
+                isActiveKey: self.isActive,
+                metadataKey: self.metadata,
+                userTypeKey: self.userTypeId.rawValue,
+            ]
+            dictionary ?+= (lastNameKey, lastName)
+            dictionary ?+= (passwordKey, password)
+            dictionary ?+= (avatarURLKey, avatarURL)
+            // If we have the user Id add it.
+            if userId != 0 {
+                dictionary[idKey] = userId
+            }
+            return dictionary
+        }
+        
+        /// - Returns: True if the user is valid to be sent to a create request.
+        var isValidToCreate:Bool {
+            guard let password = password else {
+                return false
+            }
+            return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
+                !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
         }
     }
 }

@@ -12,7 +12,7 @@ import Foundation
 public typealias PhoenixNetworkErrorCallback = (error:NSError?) -> Void
 
 /// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
-public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Void
+public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc public protocol PhoenixIdentity : PhoenixModule {
@@ -26,7 +26,7 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
     /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
     /// The NSError domain is IdentityError.domain
-    func createUser(user:PhoenixUser, callback:PhoenixUserCallback?)
+    func createUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
     /// Gets a user data from the current user credentials.
     /// - Parameters:
@@ -43,7 +43,7 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?)
+    func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
 }
 
@@ -69,7 +69,7 @@ extension Phoenix {
             // stub
         }
         
-        @objc func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func createUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
                 // TODO: Raise error regarding no such user.
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
@@ -106,7 +106,7 @@ extension Phoenix {
             // stub
         }
         
-        @objc func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             // stub
         }
 

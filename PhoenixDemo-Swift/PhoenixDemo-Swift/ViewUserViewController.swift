@@ -14,7 +14,7 @@ class ViewUserViewController : UIViewController {
     
     var fetchMe: Bool = false
     
-    var user:PhoenixUser? {
+    var user:Phoenix.User? {
         didSet {
             displayUser()
         }
@@ -37,7 +37,7 @@ class ViewUserViewController : UIViewController {
         }
     }
     
-    func displayMe(user: PhoenixUser?, error: NSError?) {
+    func displayMe(user: Phoenix.User?, error: NSError?) {
         NSOperationQueue.mainQueue().addOperationWithBlock({ [weak self] in
             guard let user = user else {
                 let alert = UIAlertController(title: "Error", message: error?.description ?? "Unknown error", preferredStyle: .Alert)
