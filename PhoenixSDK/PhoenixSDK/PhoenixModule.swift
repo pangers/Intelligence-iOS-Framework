@@ -1,5 +1,5 @@
 //
-//  PhoenixModules.swift
+//  PhoenixModule.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 03/08/2015.

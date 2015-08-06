@@ -14,7 +14,7 @@ internal typealias PhoenixGeofencesCallback = (geofences: [PhoenixGeofence]?, er
 extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
-    class Location {
+    class Location: PhoenixModule {
         
         /// A reference to the network manager
         private let network: Network
@@ -25,6 +25,10 @@ extension Phoenix {
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
+        }
+        
+        @objc func startup() {
+            // stub
         }
         
         /// Download a list of geofences.
