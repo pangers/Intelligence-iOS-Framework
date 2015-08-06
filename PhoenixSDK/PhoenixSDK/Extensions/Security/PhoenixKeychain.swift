@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PhoenixKeychain: TSDKeychain, SimpleStorage {
+class PhoenixKeychain: TSDKeychain, TokenStorage {
     
     init() {
         super.init("PhoenixSDK", service: "com.tigerspike.PhoenixSDK")
@@ -40,7 +40,7 @@ class PhoenixKeychain: TSDKeychain, SimpleStorage {
     }
     
     // Subscript implementation
-    subscript(index: String) -> AnyObject? {
+    @objc subscript(index: String) -> AnyObject? {
         get {
             // return an appropriate subscript value here
             return objectForKey(index)

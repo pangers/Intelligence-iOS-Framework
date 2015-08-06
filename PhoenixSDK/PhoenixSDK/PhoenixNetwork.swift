@@ -105,10 +105,10 @@ internal extension Phoenix {
         /// Initialize new instance of Phoenix Networking class
         /// - Parameters:
         ///     - withConfiguration: The configuration object used.
-        init(withConfiguration configuration: PhoenixConfigurationProtocol) {
+        init(withConfiguration configuration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
-            self.authentication = Authentication()
+            self.authentication = Authentication(withTokenStorage: tokenStorage)
             self.configuration = configuration
         }
         
