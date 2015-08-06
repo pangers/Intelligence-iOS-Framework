@@ -71,7 +71,6 @@ extension Phoenix {
         
         @objc func createUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
-                // TODO: Raise error regarding no such user.
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
             }
             
@@ -79,10 +78,7 @@ extension Phoenix {
             
             // set the completion block to notify the caller
             operation.completionBlock = {
-                guard let callback = callback else {
-                    return;
-                }
-                callback(user: operation.user, error: operation.error)
+                callback?(user:operation.user, error:operation.error)
             }
             
             // Execute the network operation
@@ -91,11 +87,9 @@ extension Phoenix {
         
         @objc func getMe(callback:PhoenixUserCallback?) {
             let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            
             operation.completionBlock = {
-                guard let callback = callback else {
-                    return
-                }
-                callback(user: operation.user, error: operation.error)
+                callback?(user:operation.user, error:operation.error)
             }
             
             // Execute the network operation
@@ -103,7 +97,17 @@ extension Phoenix {
         }
         
         @objc func getUser(userId:Int, callback:PhoenixUserCallback?) {
-            // stub
+            if !Phoenix.User.isUserIdValid(userId) {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.GetUserError.rawValue, userInfo: nil) )
+            }
+            
+            let operation = GetUserByIdRequestOperation(session: network.sessionManager, userId: userId, authentication: network.authentication, configuration: configuration)
+            
+            operation.completionBlock = {
+                callback?(user:operation.user, error:operation.error)
+            }
+            
+            network.executeNetworkOperation(operation)
         }
         
         @objc func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?) {

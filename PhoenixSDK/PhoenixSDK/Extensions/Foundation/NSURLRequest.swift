@@ -176,6 +176,19 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    /// Creates the NSURLRequest to get the user id.
+    /// - Parameters:
+    ///     - userId: The Id of the user that we want to get.
+    ///     - withConfiguration: The configuration that is being currently used.
+    class func phx_httpURLRequestForGetUserById(userId:Int, withConfiguration configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(userId)", relativeToURL: configuration.baseURL) {
+            return NSURLRequest(URL: url)
+        }
+        assertionFailure("Couldn't create the users/me URL.")
+        return NSURLRequest()
+    }
+    
     // MARK: URL Paths
     
     /// - Returns: the path to the API endpoint to obtain an OAuth token.

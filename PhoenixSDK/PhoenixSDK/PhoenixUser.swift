@@ -22,6 +22,8 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+private let invalidUserId = Int.min
+
 /// The user types that the SDK supports
 public enum UserType : String {
     
@@ -100,6 +102,11 @@ extension Phoenix {
             }
             
             return User(withJSON: userDictionary, withConfiguration: withConfiguration)
+        }
+        
+        /// Checks if the user Id provided is a valid user Id.
+        class func isUserIdValid(userId:Int) -> Bool {
+            return userId != invalidUserId && userId >= 0
         }
         
         /// The locking count will always be 0 and should be ignored by the developer

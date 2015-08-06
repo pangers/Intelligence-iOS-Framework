@@ -8,9 +8,13 @@
 
 import Foundation
 
+/// Operation to wrap the create user request.
 class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
     
+    /// The output user created, as provided by the backend
     var user: Phoenix.User?
+    
+    /// The configuration used through Phoenix.
     let configuration: PhoenixConfigurationProtocol
 
     /// Default initializer with all required parameters
