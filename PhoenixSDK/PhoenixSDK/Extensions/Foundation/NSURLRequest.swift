@@ -50,7 +50,7 @@ internal extension NSURLRequest {
         return mutable
     }
     
-    // MARK: URL Request factory
+    // MARK: URL Request factory for authentication
     
     /// - Parameters:
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
@@ -143,10 +143,54 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    // MARK: User CRUD
+    
+    /// - Returns: An NSURLRequest to create the given user.
+    /// - Parameters:
+    ///     - withUser: The user to create.
+    ///     - configuration: The configuratio to use.
+    class func phx_httpURLRequestForCreateUser(withUser:PhoenixUser, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
+            
+            // Create URL encoded POST with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+            request.HTTPBody = [withUser.toJSON()].phx_toJSONData()
+            
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the users URL.")
+        return NSURLRequest()
+    }
+    
+    class func phx_httpURLRequestForGetUserMe(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
+            return NSURLRequest(URL: url)
+        }
+        assertionFailure("Couldn't create the users/me URL.")
+        return NSURLRequest()
+    }
+    
     // MARK: URL Paths
     
     /// - Returns: the path to the API endpoint to obtain an OAuth token.
     private class func phx_oauthTokenURLPath() -> String {
         return "\(phoenixIdentityAPIVersion)/oauth/token"
+    }
+    
+    /// - Returns: The path to get current user's information.
+    private class func phx_usersMeURLPath() -> String {
+        return "\(phoenixIdentityAPIVersion)/users/me"
+    }
+    
+    /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
+    /// - Returns: The path for most requests related to a user.
+    private class func phx_usersURLPath(projectId:Int) -> String {
+        return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users"
     }
 }

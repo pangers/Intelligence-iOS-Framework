@@ -3,5 +3,6 @@
     "client_secret": "CLIENT_SECRET",
     "application_id": "adb",
     "project_id": 20,
-    "region": "EU"
+    "region": "EU",
+    "company_id": 5
 }

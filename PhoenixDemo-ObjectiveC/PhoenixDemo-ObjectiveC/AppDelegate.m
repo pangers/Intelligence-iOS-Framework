@@ -7,12 +7,17 @@
 //
 
 #import "AppDelegate.h"
+#import "PHXPhoenixManager.h"
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
+    
+    // startup the manager
+    [[PHXPhoenixManager sharedManager] startup];
+    
 	return YES;
 }
 

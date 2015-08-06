@@ -9,19 +9,19 @@
 import Foundation
 
 /// The network delegate. Currently only shows authentication failed.
-@objc public protocol PhoenixNetworkDelegate {
-    func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?)
+@objc(PHXPhoenixNetworkDelegate) public protocol PhoenixNetworkDelegate {
+    
+    optional
+    
+    /// Called when an authentication failure occurs in the Phoenix SDK.
+    /// - Parameters:
+    ///     - error: The error that occured
+    func phoenixAuthenticationFailed(error: NSError?)
 }
 
 /// The callback alias for internal purposes. The caller should parse this data into an object/struct rather
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
-
-/// Alias for an array loaded from a JSON object.
-internal typealias JSONArray = [AnyObject]
-
-/// Alias for a dictionary loaded from a JSON object.
-internal typealias JSONDictionary = [String: AnyObject]
 
 // MARK: Status code constants
 
@@ -45,6 +45,7 @@ enum HTTPStatus : Int {
 
 /// An enumeration of the HTTP Methods available to use
 enum HTTPRequestMethod : String {
+    
     /// GET
     case GET = "GET"
 
@@ -60,7 +61,7 @@ internal extension Phoenix {
         // MARK: Instance variables
 
         /// NSURLSession with default session configuration.
-        lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        private(set) internal lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 
         /// Contains concurrently executable operations for requests that rely on an authenticated session.
         /// Will be suspended if the authentication queue needs to perform authentications.
@@ -274,10 +275,8 @@ internal extension Phoenix {
                 
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
-                    // PSDK-26: #4 - When I open the sample app, And the /token endpoint is not available (404 error)
-                    // PSDK-26: #5 - When I open the sample app, And the /token endpoint returns a 401 Unauthorised
-                    // An exception is raised to the developer, And the SDK does not automatically attempt to get a token again
-                    delegate?.authenticationFailed(data, response: response, error: error)
+                    // An exception is raised to the developer.
+                    delegate?.phoenixAuthenticationFailed?(error)
                 }
             }
             
@@ -309,7 +308,7 @@ internal extension Phoenix {
         }
         
         // TODO: Remove this method (hack - since we have no API calls yet)
-        func anonymousLogin(callback: PhoenixAuthenticationCallback?) {
+        func anonymousLogin(callback: PhoenixAuthenticationCallback? = nil) {
             authentication.username = nil
             authentication.password = nil
             authentication.invalidateTokens()

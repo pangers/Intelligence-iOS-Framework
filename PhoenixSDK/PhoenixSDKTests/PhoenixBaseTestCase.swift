@@ -12,34 +12,36 @@ import XCTest
 import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
-
-    override func setUp() {
-        Injector.storage = MockSimpleStorage()
-    }
     
+    typealias MockCallback = (()->Void)
     typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
     let tokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
     let tokenMethod = "POST"
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     
-    // MARK: Helpers
-    
-    func mockResponsesForAuthentication(responses: [MockResponse]) {
-        mockResponseForURL(tokenUrl, method: tokenMethod, responses: responses)
+    override func setUp() {
+        super.setUp()
+        Injector.storage = MockSimpleStorage()
     }
     
-    func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true) {
-        let responseData = (statusCode == 200) ?
-            (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
-        mockResponseForURL(tokenUrl, method: tokenMethod, responses: [(responseData, statusCode, nil)])
+    override func tearDown() {
+        super.tearDown()
+        OHHTTPStubs.removeAllStubs()
     }
     
-    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse]) {
+    // MARK: URL Mock
+    
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), callback:MockCallback? = nil, expectation: XCTestExpectation? = nil) {
+        mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
+    }
+    
+    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
         let count = responses.count
-        var expectations = [(MockResponse, XCTestExpectation)]()
+        var runs = [(MockCallback?, MockResponse, XCTestExpectation)]()
         for i in 0..<count {
-            expectations += [ (responses[i], expectationWithDescription("mock \(url) iteration \(i)")) ]
+            runs += [ (callbacks?[i], responses[i], expectations?[i] ??
+                expectationWithDescription("mock \(url) iteration \(i)")) ]
         }
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
@@ -49,16 +51,34 @@ class PhoenixBaseTestCase : XCTestCase {
                 return request.URL! == url
             },
             withStubResponse: { _ in
-                // Fulfil a single expectation
-                let (response, expectation) = expectations.first!
-                expectations.removeAtIndex(0)
+                let (callback, response, expectation) = runs.first!
+                runs.removeAtIndex(0)
+                // Execute callback before fulfilling expectation so we can chain multiple expectations together
+                callback?()
                 expectation.fulfill()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
                 return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
-            })
+        })
     }
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?) ) {
-        mockResponseForURL(url, method: method, responses: [response])
+    // MARK: - Authentication Mock
+    
+    
+    func mockAuthenticationResponse(response: MockResponse) {
+        mockAuthenticationResponses([response])
+    }
+    
+    func mockAuthenticationResponses(responses: [MockResponse]) {
+        mockResponseForURL(tokenUrl, method: tokenMethod, responses: responses)
+    }
+    
+    /// Mock the authentication response
+    func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true, callback:MockCallback? = nil) {
+        let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
+        
+        mockResponseForURL(tokenUrl,
+            method: tokenMethod,
+            response: (data:responseData, statusCode: statusCode, headers: nil),
+            callback: callback)
     }
 }
