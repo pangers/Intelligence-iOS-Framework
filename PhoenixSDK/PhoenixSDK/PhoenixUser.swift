@@ -161,8 +161,13 @@ extension Phoenix {
             guard let password = password else {
                 return false
             }
-            return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
-                !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
+            
+            let hasUsername = !username.isEmpty
+            let hasPassword = !password.isEmpty
+            let hasCompanyId = companyId > 0
+            let hasFirstName = firstName.isEmpty
+            
+            return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
     }
 }
