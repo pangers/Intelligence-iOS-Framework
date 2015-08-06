@@ -87,19 +87,21 @@
 
 - (void) showAlertWithTitle:(NSString*) title withMessage:(NSString*) message extraAction:(UIAlertAction*)action
 {
-    UIAlertController* controller = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    
-    // Add dismiss action
-    [controller addAction:[UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [controller dismissViewControllerAnimated:YES completion:nil];
-    }]];
-    
-    if ( action != nil )
-    {
-        [controller addAction:action];
-    }
-    
-    [self presentViewController:controller animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController* controller = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        // Add dismiss action
+        [controller addAction:[UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [controller dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        
+        if ( action != nil )
+        {
+            [controller addAction:action];
+        }
+        
+        [self presentViewController:controller animated:YES completion:nil];
+    });
 }
 
 - (UIAlertAction*) createActionShowUser:(PHXPhoenixUser*)user

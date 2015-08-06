@@ -40,3 +40,19 @@ public enum IdentityError: Int, ErrorType {
     case InvalidUserError = 2002
     
 }
+
+
+/// Enumeration to list the errors that can occur in the identity module.
+public enum RequestError: Int, ErrorType {
+    
+    /// The domain passed to NSErrors.
+    static let domain = "RequestError"
+    
+    /// The request failed with a non 200 error code.
+    case RequestFailedError = 3001
+
+    /// The authentication operation failed, canceling all 
+    /// pending operations.
+    case AuthenticationFailedError = 3002
+
+}
