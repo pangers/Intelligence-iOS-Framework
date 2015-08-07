@@ -165,7 +165,7 @@ extension Phoenix {
             let hasUsername = !username.isEmpty
             let hasPassword = !password.isEmpty
             let hasCompanyId = companyId > 0
-            let hasFirstName = firstName.isEmpty
+            let hasFirstName = !firstName.isEmpty
             
             return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
