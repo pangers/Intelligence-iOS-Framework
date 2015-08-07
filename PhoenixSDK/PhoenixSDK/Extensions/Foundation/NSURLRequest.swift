@@ -148,8 +148,30 @@ internal extension NSURLRequest {
     /// - Returns: An NSURLRequest to create the given user.
     /// - Parameters:
     ///     - withUser: The user to create.
-    ///     - configuration: The configuratio to use.
+    ///     - configuration: The configuration to use.
     class func phx_httpURLRequestForCreateUser(withUser:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
+            
+            // Create URL encoded POST with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+            request.HTTPBody = [withUser.toJSON()].phx_toJSONData()
+            
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the users URL.")
+        return NSURLRequest()
+    }
+    
+    /// - Returns: An NSURLRequest to update the given user.
+    /// - Parameters:
+    ///     - withUser: The user to create.
+    ///     - configuration: The configuration to use.
+    class func phx_httpURLRequestForUpdateUser(withUser:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
@@ -167,6 +189,9 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    /// - Returns: An NSURLRequest to get the user with the used credentials.
+    /// - Parameters:
+    ///     - configuration: The configuratio to use.
     class func phx_httpURLRequestForGetUserMe(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
