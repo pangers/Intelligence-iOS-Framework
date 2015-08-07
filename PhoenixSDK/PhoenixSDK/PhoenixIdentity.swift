@@ -72,6 +72,7 @@ extension Phoenix {
         @objc func createUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                return
             }
             
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
@@ -98,7 +99,8 @@ extension Phoenix {
         
         @objc func getUser(userId:Int, callback:PhoenixUserCallback?) {
             if !Phoenix.User.isUserIdValid(userId) {
-                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.GetUserError.rawValue, userInfo: nil) )
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                return
             }
             
             let operation = GetUserByIdRequestOperation(session: network.sessionManager, userId: userId, authentication: network.authentication, configuration: configuration)

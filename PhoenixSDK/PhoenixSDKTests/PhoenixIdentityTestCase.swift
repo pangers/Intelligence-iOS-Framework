@@ -266,7 +266,26 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Wait for calls to be made and the callback to be notified
         }
     }
-    
+
+    func testGetUserByIdInvalidId() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+
+        identity!.getUser(-1) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
     func testGetUserByIdNoUsersBack() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
