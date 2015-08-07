@@ -30,7 +30,7 @@
     [self showUser];
     
     if ([self fetchMe]) {
-        [[[[PHXPhoenixManager sharedManager] phoenix] identity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
+        [[self phoenixIdentity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self setUser:user];
                 if (error != nil) {
@@ -41,6 +41,14 @@
             }];
         }];
     }
+}
+
+-(Phoenix*) phoenix {
+    return [PHXPhoenixManager sharedManager].phoenix;
+}
+
+-(id<PhoenixIdentity>) phoenixIdentity {
+    return [self phoenix].identity;
 }
 
 -(void)setUser:(PHXPhoenixUser*)user
@@ -86,7 +94,7 @@
     NSInteger userId = [[[NSNumberFormatter alloc] init] numberFromString:searchBar.text].integerValue;
     [searchBar resignFirstResponder];
     
-    [[[[PHXPhoenixManager sharedManager] phoenix] identity] getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+    [[self phoenixIdentity] getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;
