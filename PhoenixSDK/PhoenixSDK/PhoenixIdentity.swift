@@ -75,6 +75,11 @@ extension Phoenix {
                 return
             }
             
+            if !user.isPasswordSecure() {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+                return
+            }
+            
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller

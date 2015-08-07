@@ -12,7 +12,8 @@ import XCTest
 
 class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
-    let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+    let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
+    let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
     var configuration:PhoenixConfigurationProtocol?
     
@@ -316,12 +317,51 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     // Assures that when the user is not valid to create, an error is returned.
     func testIdentityErrorOnUserCondition() {
         let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+
+        assertURLNotCalled(request)
         
         identity!.createUser(user) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+        }
+    }
+
+    // MARK:- Password security
+    
+    func testPasswordRequirementsVerification() {
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123456789", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only numbers passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "abcdefghf", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only letters passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "abc", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only letters below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only  numbers below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "test123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Numbers and letters below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "testing123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with no uppercase, numbers and more than 8 characters passes the test")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "test1234", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with no uppercase, numbers and exactly 8 characters passes the test")
+        
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with uppercase, numbers and more than 8 characters fails the test")
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Test1234", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with uppercase, numbers and exactly 8 characters fails the test")
+    }
+    
+    func testCreateUserFailureDueToPasswordSecurity() {
+        let user = userWeakPassword
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+
+        // Assert that the call won't be done.
+        assertURLNotCalled(request)
+
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
         }
     }
 

@@ -22,6 +22,17 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+/// Reg exp to verify password. Checks that the password:
+/// * Contains at least 1 character in the A-Z range (uppercase).
+/// * Contains at least 1 character in the a-z range (lowercase).
+/// * Contains at least 1 character in the 0-9 range (number).
+/// * Has at least 8 characters.
+private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
+
+/// The regular expression unwrapped. Shouldn't fail unless the pattern is modified.
+private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
+
+/// A constant to mark an invalid user Id.
 private let invalidUserId = Int.min
 
 /// The user types that the SDK supports
@@ -181,5 +192,18 @@ extension Phoenix {
             
             return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
+        
+        /// A password is considered secure if it has at least 8 characters, and uses
+        /// at least a number and a letter.
+        /// - Returns: True if the password is secure.
+        func isPasswordSecure() -> Bool {
+            guard let password = self.password else {
+                return false
+            }
+            
+            let matches = passwordRegularExpression.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
+            return matches.count > 0
+        }
+
     }
 }
