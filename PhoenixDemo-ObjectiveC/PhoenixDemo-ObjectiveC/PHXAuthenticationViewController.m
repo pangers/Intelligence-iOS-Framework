@@ -1,36 +1,36 @@
 //
-//  AuthenticationViewController.m
+//  PHXAuthenticationViewController.m
 //  PhoenixDemo-ObjectiveC
 //
 //  Created by Chris Nevin on 04/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "AuthenticationViewController.h"
+#import "PHXAuthenticationViewController.h"
 
 @import PhoenixSDK;
 
 #import "PHXPhoenixManager.h"
 
-typedef NS_ENUM(NSUInteger) {
-    Login,
-    LoggedIn,
-    LoggingIn,
-    LoginFailed,
-} LoginMessage;
+typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
+    PHXLogin,
+    PHXLoggedIn,
+    PHXLoggingIn,
+    PHXLoginFailed,
+};
 
-@interface AuthenticationViewController()
+@interface PHXAuthenticationViewController()
 {
-    LoginMessage currentStatus;
+    PHXLoginMessage currentStatus;
 }
 @end
 
 
-@implementation AuthenticationViewController
+@implementation PHXAuthenticationViewController
 
-- (LoginMessage)status {
+- (PHXLoginMessage)status {
     if ([self loggedIn]) {
-        return LoggedIn;
+        return PHXLoggedIn;
     } else {
         return currentStatus;
     }
@@ -38,13 +38,13 @@ typedef NS_ENUM(NSUInteger) {
 
 - (NSString*)messageForStatus {
     switch ([self status]) {
-        case LoggedIn:
+        case PHXLoggedIn:
             return @"Logged in";
-        case Login:
+        case PHXLogin:
             return @"Login";
-        case LoggingIn:
+        case PHXLoggingIn:
             return @"Logging in...";
-        case LoginFailed:
+        case PHXLoginFailed:
             return @"Login failed!";
         default:
             return @"";
@@ -53,11 +53,11 @@ typedef NS_ENUM(NSUInteger) {
 
 - (UIColor*)colorForStatus {
     switch ([self status]) {
-        case LoggingIn:
+        case PHXLoggingIn:
             return [UIColor purpleColor];
-        case LoggedIn:
+        case PHXLoggedIn:
             return [UIColor grayColor];
-        case LoginFailed:
+        case PHXLoginFailed:
             return [UIColor redColor];
         default:
             return [UIColor blackColor];
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger) {
     
     if (self.loggedIn) { return; }
     
-    currentStatus = LoggingIn;
+    currentStatus = PHXLoggingIn;
     [self.tableView reloadData];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter Details" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -128,14 +128,14 @@ typedef NS_ENUM(NSUInteger) {
         NSString *username = alert.textFields.firstObject.text;
         NSString *password = alert.textFields.lastObject.text;
         if (!(username.length != 0 && password.length != 0)) {
-            currentStatus = Login;
+            currentStatus = PHXLogin;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
             return;
         }
         [self.phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-            currentStatus = authenticated ? LoggedIn : LoginFailed;
+            currentStatus = authenticated ? PHXLoggedIn : PHXLoginFailed;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger) {
 }
 
 - (void)logout {
-    currentStatus = Login;
+    currentStatus = PHXLogin;
     [self.phoenix logout];
     [self.tableView reloadData];
 }

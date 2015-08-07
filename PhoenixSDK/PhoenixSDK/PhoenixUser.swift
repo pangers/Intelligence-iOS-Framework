@@ -32,7 +32,6 @@ public enum UserType : String {
     
 }
 
-
 extension Phoenix {
 
     /// The user class implementation
@@ -146,9 +145,22 @@ extension Phoenix {
                 metadataKey: self.metadata,
                 userTypeKey: self.userTypeId.rawValue,
             ]
-            dictionary ?+= (lastNameKey, lastName)
-            dictionary ?+= (passwordKey, password)
-            dictionary ?+= (avatarURLKey, avatarURL)
+            
+            /// Optioanlly set a key if there is a valid value
+            func optionallySet(key: String, value: AnyObject?) {
+                // Check if value exists
+                if let value = value {
+                    // Set value for key
+                    dictionary[key] = value
+                } else {
+                    // Otherwise do not set key
+                }
+            }
+            // Optionally add a bunch of key-values to the dictionary...
+            optionallySet(lastNameKey, value: lastName)
+            optionallySet(passwordKey, value: password)
+            optionallySet(avatarURLKey, value: avatarURL)
+            
             // If we have the user Id add it.
             if userId != invalidUserId {
                 dictionary[idKey] = userId
