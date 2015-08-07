@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// Operation to get me, inherits from PhoenixUserRequestOperation, which performs most of
+/// necessary parsing and error handling.
 class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters

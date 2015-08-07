@@ -1,5 +1,5 @@
 //
-//  AuthenticationViewController.h
+//  PHXAuthenticationViewController.h
 //  PhoenixDemo-ObjectiveC
 //
 //  Created by Chris Nevin on 04/08/2015.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AuthenticationViewController : UITableViewController
+@interface PHXAuthenticationViewController : UITableViewController
 
 @end

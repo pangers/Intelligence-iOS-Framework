@@ -19,7 +19,7 @@
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
 		FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674791B7105190085BEC8 /* Authentication.storyboard */; };
-		FE16747D1B71052C0085BEC8 /* AuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */; };
+		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
 		FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
 /* End PBXBuildFile section */
@@ -45,8 +45,8 @@
 		FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIdentityModuleViewController.h; sourceTree = "<group>"; };
 		FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIdentityModuleViewController.m; sourceTree = "<group>"; };
 		FE1674791B7105190085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
-		FE16747B1B71052C0085BEC8 /* AuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationViewController.h; sourceTree = "<group>"; };
-		FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationViewController.m; sourceTree = "<group>"; };
+		FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXAuthenticationViewController.h; sourceTree = "<group>"; };
+		FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXAuthenticationViewController.m; sourceTree = "<group>"; };
 		FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../PhoenixSDK/build/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,8 +134,8 @@
 		FE0C64DC1B722B0A008C02D7 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				FE16747B1B71052C0085BEC8 /* AuthenticationViewController.h */,
-				FE16747C1B71052C0085BEC8 /* AuthenticationViewController.m */,
+				FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */,
+				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
 				FE1674791B7105190085BEC8 /* Authentication.storyboard */,
 			);
 			name = Authentication;
@@ -214,7 +214,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE16747D1B71052C0085BEC8 /* AuthenticationViewController.m in Sources */,
+				FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */,
 				FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
 				BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */,
