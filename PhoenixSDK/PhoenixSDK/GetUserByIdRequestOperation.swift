@@ -1,27 +1,27 @@
 //
-//  GetUserMeRequestOperation.swift
+//  GetUserByIdRequestOperation.swift
 //  PhoenixSDK
 //
-//  Created by Chris Nevin on 04/08/2015.
+//  Created by Josep Rodriguez on 06/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-/// An operation to wrap the get user me request.
-class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
-    
-    /// The user obtained
+/// Operation used to retrieve a user data based on its id.
+class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
+
+    /// The user that was loaded during the request. Can be nil if the request failed or didn't yet occur.
     var user: Phoenix.User?
     
-    /// The configuration used throughout Phoenix.
+    /// The configuration that is in use in Phoenix.
     let configuration: PhoenixConfigurationProtocol
-
+    
     /// Default initializer with all required parameters
-    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
-
+        let request = NSURLRequest.phx_httpURLRequestForGetUserById(userId,withConfiguration:configuration)
+        
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
     }
     
@@ -50,5 +50,4 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
         // If all conditions succeed, parse the user.
         user = Phoenix.User.fromResponseData(data, withConfiguration:configuration)
     }
-
 }

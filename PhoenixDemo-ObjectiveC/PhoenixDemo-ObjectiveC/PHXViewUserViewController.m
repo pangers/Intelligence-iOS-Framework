@@ -9,7 +9,7 @@
 #import "PHXViewUserViewController.h"
 #import "PHXPhoenixManager.h"
 
-@interface PHXViewUserViewController ()
+@interface PHXViewUserViewController () <UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *idLabel;
 @property (weak, nonatomic) IBOutlet UILabel *username;
@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastname;
 @property (weak, nonatomic) IBOutlet UILabel *avatarURL;
 
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 @end
 
@@ -30,20 +31,29 @@
     
     if ([self fetchMe]) {
         __weak typeof(self) weakSelf = self;
-        [[[[PHXPhoenixManager sharedManager] phoenix] identity] getMe:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+
+        [[self phoenixIdentity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
             [weakSelf showMe:user error:error];
         }];
     }
 }
 
--(void)setUser:(id<PHXPhoenixUser>)user
+-(Phoenix*) phoenix {
+    return [PHXPhoenixManager sharedManager].phoenix;
+}
+
+-(id<PhoenixIdentity>) phoenixIdentity {
+    return [self phoenix].identity;
+}
+
+-(void)setUser:(PHXPhoenixUser*)user
 {
     _user = user;
     
     [self showUser];
 }
 
-- (void) showMe:(id<PHXPhoenixUser>)user error:(NSError*)error {
+- (void) showMe:(PHXPhoenixUser*)user error:(NSError*)error {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         [self setUser:user];
         if (error != nil) {
@@ -56,6 +66,7 @@
 
 -(void) showUser
 {
+
     if ( self.idLabel == nil ) {
         return; // No views set
     }
@@ -64,12 +75,43 @@
         return; // No user set
     }
     
-    self.idLabel.text = [NSString stringWithFormat:@"User Id: %d", (int) self.user.userId];
-    self.username.text = [NSString stringWithFormat:@"Username: %@", self.user.username];
-    self.password.text = [NSString stringWithFormat:@"Password: %@", self.user.password];
-    self.firstname.text = [NSString stringWithFormat:@"Firstname: %@", self.user.firstName];
-    self.lastname.text = [NSString stringWithFormat:@"Lastname: %@", self.user.lastName];
-    self.avatarURL.text = [NSString stringWithFormat:@"Avatar url: %@", self.user.avatarURL];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.idLabel.text = [NSString stringWithFormat:@"User Id: %d", (int) self.user.userId];
+        self.username.text = [NSString stringWithFormat:@"Username: %@", self.user.username];
+        self.password.text = [NSString stringWithFormat:@"Password: %@", self.user.password];
+        self.firstname.text = [NSString stringWithFormat:@"Firstname: %@", self.user.firstName];
+        self.lastname.text = [NSString stringWithFormat:@"Lastname: %@", self.user.lastName];
+        self.avatarURL.text = [NSString stringWithFormat:@"Avatar url: %@", self.user.avatarURL];        
+    });
+}
+
+-(void) showInformation:(NSString*) info{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!info) {
+            self.infoLabel.text = @" ";
+        }
+        else {
+            self.infoLabel.text = info;
+        }
+    });
+}
+
+-(void)searchBarSearchButtonClicked:(nonnull UISearchBar *)searchBar
+{
+    NSInteger userId = [[[NSNumberFormatter alloc] init] numberFromString:searchBar.text].integerValue;
+    [searchBar resignFirstResponder];
+    
+    [[self phoenixIdentity] getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+        if (user)
+        {
+            self.user = user;
+            [self showInformation:@" "];
+        }
+        else
+        {
+            [self showInformation:[NSString stringWithFormat:@"There was an error while getting the user: %@", error]];
+        }
+    }];
 }
 
 @end

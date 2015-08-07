@@ -38,7 +38,10 @@ public enum IdentityError: Int, ErrorType {
     
     /// The user is invalid.
     case InvalidUserError = 2002
-    
+
+    /// The user retrieval request was unsuccessful.
+    case GetUserError = 2003
+
 }
 
 

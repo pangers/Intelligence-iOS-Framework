@@ -22,6 +22,8 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+private let invalidUserId = Int.min
+
 /// The user types that the SDK supports
 public enum UserType : String {
     
@@ -30,131 +32,35 @@ public enum UserType : String {
     
 }
 
-/// A protocol defining the Phoenix Users behaviour.
-@objc(PHXPhoenixUser) public protocol PhoenixUser {
-    
-    /// The user id. Non modifiable. The implementer should use a let.
-    var userId:Int { get }
-    
-    /// The company id. Non modifiable. Should be fetched from the Configuration of Phoenix.
-    var companyId:Int {get}
-    
-    /// The username
-    var username:String {get set}
-    
-    /// The password
-    var password:String? {get set}
-    
-    /// The firstname
-    var firstName:String {get set}
-    
-    /// The lastname
-    var lastName:String? {get set}
-    
-    /// The avatar URL
-    var avatarURL:String? {get set}
-    
-}
-
-/// Extends phoenix user to provide the variables that should be disregarded by the user.
-/// Also provides a toJSON method to return a JSON dictionary from the values of the user.
-extension PhoenixUser {
-    
-    /// The locking count will always be 0 and should be ignored by the developer
-    var lockingCount:Int {
-        return 0
-    }
-
-    /// The reference will be empty and should be ignored by the developer
-    var reference:String {
-        return ""
-    }
-
-    /// Is active is true. Developers should ignore this value
-    var isActive:Bool {
-        return true
-    }
-    
-    /// The metadata will be empty and should be ignored.
-    var metadata:String {
-        return ""
-    }
-    
-    /// The user type will always be User.
-    var userTypeId:UserType {
-        return .User
-    }
-    
-    /// - Returns: Provides a JSONDictionary with the user data.
-    func toJSON() -> JSONDictionary {
-        var dictionary:JSONDictionary = [
-            companyIdKey: self.companyId,
-            usernameKey: self.username,
-            firstNameKey: self.firstName,
-            lockingCountKey: self.lockingCount,
-            referenceKey: self.reference,
-            isActiveKey: self.isActive,
-            metadataKey: self.metadata,
-            userTypeKey: self.userTypeId.rawValue,
-        ]
-        /// Optioanlly set a key if there is a valid value
-        func optionallySet(key: String, value: AnyObject?) {
-            // Check if value exists
-            if let value = value {
-                // Set value for key
-                dictionary[key] = value
-            } else {
-                // Otherwise do not set key
-            }
-        }
-        // Optionally add a bunch of key-values to the dictionary...
-        optionallySet(lastNameKey, value: lastName)
-        optionallySet(passwordKey, value: password)
-        optionallySet(avatarURLKey, value: avatarURL)
-        
-        // If we have the user Id add it.
-        if userId != 0 {
-            dictionary[idKey] = userId
-        }
-        return dictionary
-    }
-    
-    /// - Returns: True if the user is valid to be sent to a create request.
-    var isValidToCreate:Bool {
-        guard let password = password else {
-            return false
-        }
-        return (companyId > 0 && !username.isEmpty && !password.isEmpty &&
-            !firstName.isEmpty/* && (lastName != nil ? lastName!.isEmpty : false)*/)
-    }
-}
-
-
 extension Phoenix {
 
     /// The user class implementation
-    @objc(PHXPhoenixUser) public class User : NSObject, PhoenixUser {
+    @objc(PHXPhoenixUser) public final class User : NSObject {
         
         /// The user Id as a let
         @objc public let userId:Int
         
-        /// The company Id as a let.
+        /// The company Id as a let. Should be fetched from the Configuration of Phoenix.
         @objc public  var companyId:Int
         
+        /// The username
         @objc public var username:String
         
+        /// The password
         @objc public var password:String?
         
+        /// The firstname
         @objc public var firstName:String
-
+        
         /// The last name
         @objc public var lastName:String?
         
+        /// The avatar URL
         @objc public var avatarURL:String?
         
         /// Default initializer receiveing all parameters required.
-        public init(userId:Int?, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.userId = userId ?? 0
+        public init(userId:Int, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
+            self.userId = userId
             self.companyId = companyId
             self.username = username
             self.password = password
@@ -165,7 +71,7 @@ extension Phoenix {
         
         /// Convenience initializer with no user id.
         convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.init(userId:nil, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
+            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
         }
         
         /// Parses the JSON dictionary to create the User object. If it fails to
@@ -182,6 +88,98 @@ extension Phoenix {
             }
             let lastName = json[lastNameKey] as? String
             self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+        }
+        
+        /// Creates a user from a data response from the backend.
+        /// - Parameters:
+        ///     - data: The data obtained from the backend.
+        ///     - withConfiguration: The configuration object.
+        class func fromResponseData(data:NSData, withConfiguration:PhoenixConfigurationProtocol) -> User? {
+            guard let usersArray = data.phx_jsonDictionary?["Data"] as? JSONArray,
+                let userDictionary = usersArray.first as? JSONDictionary else {
+                return nil
+            }
+            
+            return User(withJSON: userDictionary, withConfiguration: withConfiguration)
+        }
+        
+        /// Checks if the user Id provided is a valid user Id.
+        class func isUserIdValid(userId:Int) -> Bool {
+            return userId != invalidUserId && userId >= 0
+        }
+        
+        /// The locking count will always be 0 and should be ignored by the developer
+        var lockingCount:Int {
+            return 0
+        }
+        
+        /// The reference will be empty and should be ignored by the developer
+        var reference:String {
+            return ""
+        }
+        
+        /// Is active is true. Developers should ignore this value
+        var isActive:Bool {
+            return true
+        }
+        
+        /// The metadata will be empty and should be ignored.
+        var metadata:String {
+            return ""
+        }
+        
+        /// The user type will always be User.
+        var userTypeId:UserType {
+            return .User
+        }
+        
+        /// - Returns: Provides a JSONDictionary with the user data.
+        func toJSON() -> JSONDictionary {
+            var dictionary:JSONDictionary = [
+                companyIdKey: self.companyId,
+                usernameKey: self.username,
+                firstNameKey: self.firstName,
+                lockingCountKey: self.lockingCount,
+                referenceKey: self.reference,
+                isActiveKey: self.isActive,
+                metadataKey: self.metadata,
+                userTypeKey: self.userTypeId.rawValue,
+            ]
+            
+            /// Optioanlly set a key if there is a valid value
+            func optionallySet(key: String, value: AnyObject?) {
+                // Check if value exists
+                if let value = value {
+                    // Set value for key
+                    dictionary[key] = value
+                } else {
+                    // Otherwise do not set key
+                }
+            }
+            // Optionally add a bunch of key-values to the dictionary...
+            optionallySet(lastNameKey, value: lastName)
+            optionallySet(passwordKey, value: password)
+            optionallySet(avatarURLKey, value: avatarURL)
+            
+            // If we have the user Id add it.
+            if userId != invalidUserId {
+                dictionary[idKey] = userId
+            }
+            return dictionary
+        }
+        
+        /// - Returns: True if the user is valid to be sent to a create request.
+        var isValidToCreate:Bool {
+            guard let password = password else {
+                return false
+            }
+            
+            let hasUsername = !username.isEmpty
+            let hasPassword = !password.isEmpty
+            let hasCompanyId = companyId > 0
+            let hasFirstName = !firstName.isEmpty
+            
+            return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
     }
 }
