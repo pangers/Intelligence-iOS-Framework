@@ -113,7 +113,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
-        mockResponseForAuthentication(200)
+        mockValidTokenStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -121,7 +121,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             response: (data: geofencesResponse, statusCode:200, headers:nil))
         
         location!.downloadGeofences { (geofences, error) -> Void in
-            XCTAssert(geofences.count == 2, "Geofences failed to load")
+            XCTAssert(geofences?.count == 2, "Geofences failed to load")
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
@@ -137,7 +137,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
-        mockResponseForAuthentication(200)
+        mockValidTokenStorage()
         
         // Mock
         mockResponseForURL(request,
