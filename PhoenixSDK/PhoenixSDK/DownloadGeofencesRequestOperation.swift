@@ -10,9 +10,21 @@ import Foundation
 
 class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
+    var geofences: JSONDictionary?
+    
     init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration)
         super.init(network: network, request: request)
+    }
+    
+    override func main() {
+        super.main()
+        // TODO: Handle error?
+        
+        guard let dictionary = self.output?.data?.phx_jsonDictionary else {
+            return
+        }
+        geofences = dictionary
     }
     
 }

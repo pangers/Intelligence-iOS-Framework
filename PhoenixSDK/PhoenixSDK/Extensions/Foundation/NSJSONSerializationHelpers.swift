@@ -17,7 +17,7 @@ func ?+= (inout lhs: JSONDictionary, rhs: (String, AnyObject?)) {
 }
 
 /// Alias for an array loaded from a JSON object.
-internal typealias JSONArray = [AnyObject]
+internal typealias JSONArray = [JSONDictionary]
 
 /// Alias for a dictionary loaded from a JSON object.
 internal typealias JSONDictionary = [String: AnyObject]

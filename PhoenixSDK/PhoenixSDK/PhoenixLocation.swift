@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// A generic PhoenixGeofencesCallback in which we get either an array of PhoenixGeofence or an error.
-internal typealias PhoenixGeofencesCallback = (geofences: [PhoenixGeofence]?, error:NSError?) -> Void
+/// A generic PhoenixGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
+internal typealias PhoenixGeofencesCallback = (geofences: [Geofence], error:NSError?) -> Void
 
 extension Phoenix {
     
@@ -20,15 +20,27 @@ extension Phoenix {
         private let network: Network
         private let configuration: Phoenix.Configuration
         
+        /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
+        var geofences: [Geofence] {
+            didSet {
+                print("New Geofences: \(geofences)")
+            }
+        }
+        
         /// Default initializer. Requires a network.
         /// - Parameter network: The network that will be used.
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
+            self.geofences = Geofence.geofencesFromCache()
+            print("Geofences: \(geofences)")
         }
         
         @objc func startup() {
-            // stub
+            // TODO: Setup location monitoring, etc..
+            downloadGeofences { [weak self] (geofences, error) -> Void in
+                self?.geofences = geofences
+            }
         }
         
         /// Download a list of geofences.
@@ -42,11 +54,7 @@ extension Phoenix {
                 guard let callback = callback else {
                     return
                 }
-                
-                // TODO: Parse geo fences...
-                let gf = [PhoenixGeofence]()
-                
-                callback(geofences: gf, error: operation.error)
+                callback(geofences: Geofence.geofencesFromJSON(operation.geofences), error: operation.error)
             }
             
             // Execute the network operation

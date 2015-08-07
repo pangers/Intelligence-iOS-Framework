@@ -52,6 +52,8 @@ public final class Phoenix: NSObject {
     /// The identity module, used to manage users in the Phoenix backend.
     @objc public internal(set) var identity:PhoenixIdentity
 
+    internal(set) var location: Phoenix.Location
+    
     // MARK: Initializer
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -66,7 +68,8 @@ public final class Phoenix: NSObject {
 
         // Modules
         self.identity = Identity(withNetwork: network, withConfiguration: configuration)
-
+        self.location = Location(withNetwork: network, configuration: configuration)
+        
         super.init()
         
         if (self.configuration.hasMissingProperty)
@@ -133,7 +136,10 @@ public final class Phoenix: NSObject {
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
     public func startup(withCallback callback: PhoenixAuthenticationCallback? = nil) {
-        network.anonymousLogin(callback)
+        network.anonymousLogin { [weak self] (authenticated) -> () in
+            self?.location.startup()
+            callback?(authenticated: authenticated)
+        }
     }
     
     /// Shutdowns the Phoenix SDK.
