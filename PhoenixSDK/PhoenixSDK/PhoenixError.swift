@@ -39,6 +39,9 @@ public enum IdentityError: Int, ErrorType {
     /// The user is invalid.
     case InvalidUserError = 2002
     
+    /// The password provided is too weak. See `Phoenix.User` password field to see
+    /// the security requirements of the password.
+    case WeakPasswordError = 2003
 }
 
 
