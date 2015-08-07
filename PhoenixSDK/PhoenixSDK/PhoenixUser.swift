@@ -29,6 +29,9 @@ private let userTypeKey = "UserTypeId"
 /// * Has at least 8 characters.
 private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
 
+/// The regular expression unwrapped. Shouldn't fail unless the pattern is modified.
+private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
+
 /// The user types that the SDK supports
 public enum UserType : String {
     
@@ -196,8 +199,7 @@ extension PhoenixUser {
             return false
         }
         
-        let regExp:NSRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
-        let matches = regExp.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
+        let matches = passwordRegularExpression.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
         return matches.count > 0
     }
     
