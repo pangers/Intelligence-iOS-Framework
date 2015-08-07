@@ -64,3 +64,10 @@ public enum RequestError: Int, ErrorType {
     case AuthenticationFailedError = 3002
 
 }
+
+internal enum GeofenceError: ErrorType {
+    /// Error to return when we have a property error. Internal use only.
+    case InvalidPropertyError(GeofenceKey)
+    /// Error to return when parsing JSON fails.
+    case InvalidJSONError
+}

@@ -8,7 +8,7 @@
 
 import Foundation
 
-private enum GeofenceKey: String {
+internal enum GeofenceKey: String {
     /// Top level data key
     case DataKey = "Data"
     /// Identifier within a data object.
@@ -31,11 +31,6 @@ private enum GeofenceKey: String {
     case LatitudeKey = "Latitude"
     /// Longitude key within a geolocation object.
     case LongitudeKey = "Longitude"
-}
-
-private enum GeofenceError: ErrorType {
-    /// Error to return when we have a property error. Internal use only.
-    case InvalidPropertyError(GeofenceKey)
 }
 
 extension Geofence {
@@ -70,34 +65,36 @@ extension Geofence {
     }
     
     /// Writes JSONDictionary to file.
-    class func storeJSON(json: JSONDictionary?) {
-        guard let path = jsonPath(), json = json?.phx_toJSONData() else { return }
+    class func storeJSON(json: JSONDictionary?) throws {
+        guard let path = jsonPath(), json = json?.phx_toJSONData() else {
+            throw GeofenceError.InvalidJSONError
+        }
         json.writeToFile(path, atomically: true)
     }
     
     /// - Returns: Cached array of Geofence objects or nil.
-    private class func readJSON() -> JSONDictionary? {
-        guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.phx_jsonDictionary else { return nil }
+    private class func readJSON() throws -> JSONDictionary? {
+        guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.phx_jsonDictionary else {
+            throw GeofenceError.InvalidJSONError
+        }
         return json
     }
     
     /// - Returns: An array of cached Geofence objects.
-    class func geofencesFromCache() -> [Geofence] {
-        return geofencesFromJSON(readJSON(), readFromCache: true)
+    class func geofencesFromCache() throws -> [Geofence] {
+        return try geofencesFromJSON(readJSON(), readFromCache: true)
     }
     
     /// - Returns: An array of Geofence objects or throws a GeofenceError.
-    class func geofencesFromJSON(json: JSONDictionary?, readFromCache: Bool? = false) -> [Geofence] {
-        if readFromCache! == false { storeJSON(json) }
-        guard let json = json else { return [Geofence]() }
-        do {
-            let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
-            return data.map({ geofenceFromJSON($0) }).filter({ $0 != nil }).map({ $0! })
+    class func geofencesFromJSON(json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
+        if readFromCache! == false {
+            try storeJSON(json)
         }
-        catch {
-            //assert(false, "Failed to load multiple geofences")
-            return [Geofence]()
+        guard let json = json else {
+            throw GeofenceError.InvalidJSONError
         }
+        let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
+        return data.map({ geofenceFromJSON($0) }).filter({ $0 != nil }).map({ $0! })
     }
     
     /// - Returns: A Geofence object or throws a GeofenceError.
@@ -117,15 +114,9 @@ extension Geofence {
             geofence.name = try geoValue(forKey: .NameKey, dictionary: json)
             geofence.address = try geoValue(forKey: .AddressKey, dictionary: json)
             return geofence
-        }
-        catch let err as GeofenceError {
-            switch err {
-            case .InvalidPropertyError(let key):
-            print("Failed to load geofence (\(key.rawValue))")
-            }
-            return nil
         } catch {
-            assert(false, "Unhandled error")
+            // Silently fail for this geofence, letting others continue to be parsed.
+            return nil
         }
     }
 }

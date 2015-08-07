@@ -34,7 +34,11 @@ extension Phoenix {
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
-            self.geofences = Geofence.geofencesFromCache()
+            do {
+                self.geofences = try Geofence.geofencesFromCache()
+            } catch {
+                self.geofences = []
+            }
             print("Geofences: \(geofences)")
         }
         

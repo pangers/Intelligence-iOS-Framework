@@ -154,20 +154,66 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         }
     }
     
-    /// Test reading and saving of geofences to caches directory
-    func testSaveReadGeofences() {
-        // Valid response
-        Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
-        XCTAssert(Geofence.geofencesFromCache().count == 2)
-        // Missing data key from response
-        Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
-        XCTAssert(Geofence.geofencesFromCache().count == 0)
-        // Data is invalid, cannot be loaded as JSON.
-        NSData.writeToFile(NSData())(Geofence.jsonPath()!, atomically: true)
-        XCTAssert(Geofence.geofencesFromCache().count == 0)
-        // One of these responses will be invalid
-        Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
-        XCTAssert(Geofence.geofencesFromCache().count == 1)
+    /// Test valid read
+    func testStoreGeofences() {
+        do {
+            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+        } catch {
+            XCTAssert(false)
+        }
     }
     
+    /// Test Valid response
+    func testStoreReadGeofences() {
+        do {
+            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            let fences = try Geofence.geofencesFromCache()
+            XCTAssert(fences.count == 2)
+        } catch {
+            XCTAssert(false)
+        }
+    }
+    
+    /// Test Missing data key from response. InvalidPropertyError
+    func testStoreReadMissingDataKeyGeofences() {
+        do {
+            try Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            let fences = try Geofence.geofencesFromCache()
+            XCTAssert(fences.count == 0)
+        } catch let err as GeofenceError {
+            switch err {
+            case .InvalidPropertyError(_): XCTAssert(true)
+            default: XCTAssert(false)
+            }
+        } catch {
+            XCTAssert(false)
+        }
+    }
+    
+    /// Test Data is invalid, cannot be loaded as JSON. InvalidJSONError
+    func testInvalidJSONGeofences() {
+        do {
+            NSData().writeToFile(Geofence.jsonPath()!, atomically: true)
+            let fences = try Geofence.geofencesFromCache()
+            XCTAssert(fences.count == 0)
+        } catch let err as GeofenceError {
+            switch err {
+            case .InvalidJSONError: XCTAssert(true)
+            default: XCTAssert(false)
+            }
+        } catch {
+            XCTAssert(false)
+        }
+    }
+    
+    /// Test One of these responses will be invalid
+    func testOneInvalidGeofence() {
+        do {
+            try Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            let fences = try Geofence.geofencesFromCache()
+            XCTAssert(fences.count == 1)
+        } catch {
+            XCTAssert(false)
+        }
+    }
 }

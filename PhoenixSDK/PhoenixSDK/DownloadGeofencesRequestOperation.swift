@@ -26,14 +26,18 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
     override func main() {
         super.main()
-        if error != nil {
-            error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
-            return
+        defer {
+            if geofences.count == 0 || error != nil {
+                error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
+            }
         }
-        guard let dictionary = output?.data?.phx_jsonDictionary else {
-            return
+        do {
+            if let dictionary = output?.data?.phx_jsonDictionary {
+                geofences = try Geofence.geofencesFromJSON(dictionary)
+            }
+        } catch {
+            
         }
-        geofences = Geofence.geofencesFromJSON(dictionary)
     }
     
 }
