@@ -89,7 +89,7 @@ public final class Phoenix: NSObject {
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
-    ///     - tokenStorage: The token storage to use.
+    ///     - withTokenStorage: The token storage to use.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
     }
