@@ -22,6 +22,8 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
+
 /// The user types that the SDK supports
 public enum UserType : String {
     
@@ -189,29 +191,9 @@ extension PhoenixUser {
             return false
         }
         
-        /// - Returns: true if the character is between 0 and 9.
-        func isDigit(char:Character) -> Bool {
-            return char >= "0" && char <= "9"
-        }
-
-        /// - Returns: true if the character is a lower case letter.
-        func isLowerCaseLetter(char:Character) -> Bool {
-            return char >= "a" && char <= "z"
-        }
-
-        /// - Returns: true if the character is a lower case letter.
-        func isUpperCaseLetter(char:Character) -> Bool {
-            return char >= "A" && char <= "Z"
-        }
-
-        // perform the checks
-        let passwordHasCorrectLength = password.characters.count >= strongPasswordCharacterCountThreshold
-        let passwordContainsNumbers = password.characters.filter(isDigit).count > 0
-        let passwordContainsLetters = password.characters.filter(isLowerCaseLetter).count > 0
-        let passwordContainsUpercaseLetters = password.characters.filter(isUpperCaseLetter).count > 0
-
-        // verify all checks are satisfied.
-        return passwordHasCorrectLength && passwordContainsNumbers && passwordContainsLetters && passwordContainsUpercaseLetters
+        let regExp:NSRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
+        let matches = regExp.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
+        return matches.count > 0
     }
     
 }
