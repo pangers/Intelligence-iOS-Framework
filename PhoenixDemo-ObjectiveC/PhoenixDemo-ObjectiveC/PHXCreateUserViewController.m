@@ -21,7 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
-@property (strong, nonatomic) id<PHXPhoenixUser> lastCreatedUser;
+@property (strong, nonatomic) PHXPhoenixUser* lastCreatedUser;
 
 @end
 
@@ -49,7 +49,7 @@
     
     __weak typeof(self) weakSelf = self;
     
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
         [weakSelf showProgress:NO];
 
         if ( error != nil ) {
@@ -104,7 +104,7 @@
     });
 }
 
-- (UIAlertAction*) createActionShowUser:(id<PHXPhoenixUser>)user
+- (UIAlertAction*) createActionShowUser:(PHXPhoenixUser*)user
 {
     __weak typeof(self) weakSelf = self;
     return [UIAlertAction actionWithTitle:@"View user" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

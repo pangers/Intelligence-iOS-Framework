@@ -36,7 +36,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "}]" +
     "}"
 
-    let successfulResponseGetMe = "{" +
+    let successfulResponseGetUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
         "\"Id\": 6016," +
@@ -56,6 +56,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "}]" +
     "}"
     
+    let noUsersResponse = "{" +
+        "\"TotalRecords\": 0," +
+        "\"Data\": []" +
+    "}"
+    
     override func setUp() {
         super.setUp()
         do {
@@ -70,6 +75,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     override func tearDown() {
         super.tearDown()
+        self.configuration = nil
         self.identity =  nil
     }
     
@@ -143,13 +149,13 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
         
-        // Mock 200 on auth
-        mockResponseForAuthentication(200)
+        // Mock request being authorized
+        mockValidTokenStorage()
         
         // Mock
         mockResponseForURL(request,
             method: "GET",
-            response: (data: successfulResponseGetMe, statusCode:200, headers:nil))
+            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
         
         identity!.getMe { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -166,15 +172,109 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
         
-        // Mock 200 on auth
-        mockResponseForAuthentication(200)
+        // Mock request being authorized
+        mockValidTokenStorage()
         
         // Mock
         mockResponseForURL(request,
             method: "GET",
-            response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
+            response: (data: "", statusCode:400, headers:nil))
         
         identity!.getMe { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    func testGetUserMeNoUsersBack() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "GET",
+            response: (data: noUsersResponse, statusCode:200, headers:nil))
+        
+        identity!.getMe { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    // MARK:- Get User by id
+    
+    func testGetUserByIdSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "GET",
+            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
+        
+        identity!.getUser(10) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    func testGetUserByIdFailure() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "GET",
+            response: (data: "", statusCode:400, headers:nil))
+        
+        identity!.getUser(10) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
+    func testGetUserByIdInvalidId() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+
+        identity!.getUser(-1) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
@@ -186,7 +286,31 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Wait for calls to be made and the callback to be notified
         }
     }
-    
+
+    func testGetUserByIdNoUsersBack() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "GET",
+            response: (data: noUsersResponse, statusCode:200, headers:nil))
+        
+        identity!.getUser(10) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
     
     // MARK:- Helpers
     
