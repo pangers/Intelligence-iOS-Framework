@@ -24,6 +24,9 @@ private let userTypeKey = "UserTypeId"
 
 private let invalidUserId = Int.min
 
+/// The minimum number of characters a password needs to have to be secure.
+private let strongPasswordCharacterCountThreshold = 8
+
 /// The user types that the SDK supports
 public enum UserType : String {
     
@@ -168,11 +171,14 @@ extension Phoenix {
             
             return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
+
+        /// - Returns: true if the user is valid to be updated. The requirements
+        /// are the same as in isValidToCreate, but we also need to provide a valid userId.
+        var isValidToUpdate:Bool {
+            return (isValidToCreate && userId != invalidUserId)
+        }
     }
 }
-
-/// The minimum number of characters a password needs to have to be secure.
-private let strongPasswordCharacterCountThreshold = 8
 
 /// Extension to provide password security requirements validation.
 extension Phoenix.User {
