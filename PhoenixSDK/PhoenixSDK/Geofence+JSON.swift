@@ -65,6 +65,7 @@ extension Geofence {
     }
     
     /// Writes JSONDictionary to file.
+    /// - Parameter json: Optional JSONDictionary object.
     class func storeJSON(json: JSONDictionary?) throws {
         guard let path = jsonPath(), json = json?.phx_toJSONData() else {
             throw GeofenceError.InvalidJSONError
@@ -82,11 +83,13 @@ extension Geofence {
     
     /// - Returns: An array of cached Geofence objects.
     class func geofencesFromCache() throws -> [Geofence] {
-        return try geofencesFromJSON(readJSON(), readFromCache: true)
+        return try geofences(withJSON: readJSON(), readFromCache: true)
     }
     
     /// - Returns: An array of Geofence objects or throws a GeofenceError.
-    class func geofencesFromJSON(json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
+    /// - Parameter json: Optional JSONDictionary object.
+    /// - Parameter readFromCache: If reading from cache we don't want to save `json` to file.
+    class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
         if readFromCache! == false {
             try storeJSON(json)
         }
@@ -94,11 +97,12 @@ extension Geofence {
             throw GeofenceError.InvalidJSONError
         }
         let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
-        return data.map({ geofenceFromJSON($0) }).filter({ $0 != nil }).map({ $0! })
+        return data.map({ geofence(withJSON: $0) }).filter({ $0 != nil }).map({ $0! })
     }
     
     /// - Returns: A Geofence object or throws a GeofenceError.
-    class func geofenceFromJSON(json: JSONDictionary) -> Geofence? {
+    /// - Parameter json: Optional JSONDictionary object.
+    class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
             let createDate: String = try geoValue(forKey: .CreateDateKey, dictionary: json)
             let modifyDate: String = try geoValue(forKey: .ModifyDateKey, dictionary: json)

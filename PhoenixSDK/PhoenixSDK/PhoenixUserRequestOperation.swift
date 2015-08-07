@@ -30,7 +30,7 @@ class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
             return
         }
         // If all conditions succeed, parse the user.
-        user = Phoenix.User(withJSON: userData, withConfiguration: configuration)
+        user = Phoenix.User(withJSON: userData, configuration: configuration)
         if user == nil {
             error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
         }

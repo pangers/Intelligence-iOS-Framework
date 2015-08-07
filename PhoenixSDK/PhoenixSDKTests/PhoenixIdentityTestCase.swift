@@ -59,8 +59,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         super.setUp()
         do {
             self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
-            let network = Phoenix.Network(withConfiguration: configuration!, withTokenStorage:storage)
-            self.identity = Phoenix.Identity(withNetwork: network, withConfiguration: configuration!)
+            let network = Phoenix.Network(withConfiguration: configuration!, tokenStorage:storage)
+            self.identity = Phoenix.Identity(withNetwork: network, configuration: configuration!)
         }
         catch{
             XCTAssert(false, "Must provide valid config")

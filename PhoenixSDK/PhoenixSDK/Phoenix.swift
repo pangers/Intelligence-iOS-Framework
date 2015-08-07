@@ -58,16 +58,16 @@ public final class Phoenix: NSObject {
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameters:
-    ///     - phoenixConfiguration: The configuration to use. The configuration
+    ///     - withConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
-    ///     - withTokenStorage: The token storage to be used.
+    ///     - tokenStorage: The token storage to be used.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration phoenixConfiguration: Phoenix.Configuration, withTokenStorage tokenStorage:TokenStorage) throws {
+    public init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
         self.configuration = phoenixConfiguration.clone()
-        self.network = Network(withConfiguration: self.configuration, withTokenStorage:tokenStorage)
+        self.network = Network(withConfiguration: self.configuration, tokenStorage:tokenStorage)
 
         // Modules
-        self.identity = Identity(withNetwork: network, withConfiguration: configuration)
+        self.identity = Identity(withNetwork: network, configuration: configuration)
         self.location = Location(withNetwork: network, configuration: configuration)
         
         super.init()
@@ -89,18 +89,18 @@ public final class Phoenix: NSObject {
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
-    ///     - withTokenStorage: The token storage to use.
+    ///     - tokenStorage: The token storage to use.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
-        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), withTokenStorage: tokenStorage)
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
     }
 
     /// Initializes the Phoenix entry point with a configuration object. Will use the PhoenixKeychain token storage.
     /// - Parameters:
-    ///     - phoenixConfiguration: The configuration to use. The configuration
+    ///     - withConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
     convenience public init(withConfiguration phoenixConfiguration: Phoenix.Configuration) throws {
-        try self.init(withConfiguration:phoenixConfiguration, withTokenStorage:PhoenixKeychain())
+        try self.init(withConfiguration:phoenixConfiguration, tokenStorage:PhoenixKeychain())
     }
     
     /// Provides a convenience initializer to load the configuration from a JSON file. Will use the PhoenixKeychain token storage.
@@ -117,7 +117,7 @@ public final class Phoenix: NSObject {
     
     /// Attempt to authenticate with a username and password.
     /// - Parameters
-    ///     - username: Username of account to attempt login with.
+    ///     - withUsername: Username of account to attempt login with.
     ///     - password: Password associated with username.
     ///     - callback: Block/function to call once executed.
     public func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
@@ -130,6 +130,7 @@ public final class Phoenix: NSObject {
     }
     
     /// Starts up the Phoenix SDK, triggering:
+    /// - Parameter callback: Callback to trigger on success/failure.
     ///   - Anonymous authentication
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's

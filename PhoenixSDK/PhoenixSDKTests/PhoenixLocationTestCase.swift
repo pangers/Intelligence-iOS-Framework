@@ -95,7 +95,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         do {
             self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
             self.configurationDisabled = try Phoenix.Configuration(fromFile: "confignogeofences", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
-            let network = Phoenix.Network(withConfiguration: configuration!, withTokenStorage:storage)
+            let network = Phoenix.Network(withConfiguration: configuration!, tokenStorage:storage)
             self.location = Phoenix.Location(withNetwork: network, configuration: configuration!)
         }
         catch{

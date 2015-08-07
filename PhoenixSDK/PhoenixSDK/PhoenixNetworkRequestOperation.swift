@@ -29,7 +29,7 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     }
     
     /// Alternative initializer with all required parameters
-    init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {
+    init(withSession session:NSURLSession, request:NSURLRequest, authentication:Phoenix.Authentication) {
         self.urlSession = session
         self.request = request
         self.authentication = authentication

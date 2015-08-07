@@ -29,11 +29,12 @@ extension Phoenix {
         
         /// Default initializer. Requires a network and configuration class.
         /// - Parameters: 
-        ///     - network: The network that will be used.
+        ///     - withNetwork: The network that will be used.
         ///     - configuration: The configuration class to use.
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
+            // Initialise with cached geofences, startup may never succeed if networking/parsing error occurs.
             if self.configuration.useGeofences {
                 do {
                     self.geofences = try Geofence.geofencesFromCache()

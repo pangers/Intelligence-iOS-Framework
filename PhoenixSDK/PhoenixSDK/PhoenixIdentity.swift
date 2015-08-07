@@ -62,7 +62,7 @@ extension Phoenix {
         /// - Parameters:
         ///     - network: The network that will be used.
         ///     - configuration: The configuration class to use.
-        init(withNetwork network:Network, withConfiguration configuration:Phoenix.Configuration) {
+        init(withNetwork network:Network, configuration:Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
         }
@@ -77,7 +77,7 @@ extension Phoenix {
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
             }
             
-            let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
+            let operation = CreateUserRequestOperation(withSession: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller
             operation.completionBlock = {
@@ -92,7 +92,7 @@ extension Phoenix {
         }
         
         @objc func getMe(callback:PhoenixUserCallback?) {
-            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            let operation = GetUserMeRequestOperation(withSession: network.sessionManager, authentication: network.authentication, configuration: configuration)
             operation.completionBlock = {
                 guard let callback = callback else {
                     return

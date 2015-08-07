@@ -105,7 +105,8 @@ internal extension Phoenix {
         /// Initialize new instance of Phoenix Networking class
         /// - Parameters:
         ///     - withConfiguration: The configuration object used.
-        init(withConfiguration configuration: Phoenix.Configuration, withTokenStorage tokenStorage:TokenStorage) {
+        ///     - tokenStorage: The token storage to use.
+        init(withConfiguration configuration: Phoenix.Configuration, tokenStorage:TokenStorage) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
             self.authentication = Authentication(withTokenStorage: tokenStorage)
@@ -157,7 +158,7 @@ internal extension Phoenix {
         ///     - request: NSURLRequest with a valid URL.
         ///     - callback: Block/function to call once executed.
         func executeRequest(request: NSURLRequest, callback: PhoenixNetworkingCallback) {
-            let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, withRequest: request, withAuthentication: authentication)
+            let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, request: request, authentication: authentication)
             
             operation.completionBlock = {
                 // Other error code can fallthrough to caller who implements callback func to handle.

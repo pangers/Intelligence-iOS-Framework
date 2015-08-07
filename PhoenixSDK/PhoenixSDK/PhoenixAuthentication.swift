@@ -156,9 +156,10 @@ internal extension Phoenix {
         }
         
         /// - Parameter json: The JSONDictionary to load the access from.
+        /// - Parameter tokenStorage: The token storage to use.
         /// - Returns: an optional Authentication object depending on whether the authentication
         /// could be extracted from the JSONDictionary received.
-        convenience init?(json: JSONDictionary, withTokenStorage tokenStorage:TokenStorage) {
+        convenience init?(withJSON json: JSONDictionary, tokenStorage:TokenStorage) {
             self.init(withTokenStorage:tokenStorage)
             if ( !loadAuthorizationFromJSON(json) ) {
                 return nil

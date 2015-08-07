@@ -33,7 +33,7 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
         }
         do {
             if let dictionary = output?.data?.phx_jsonDictionary {
-                geofences = try Geofence.geofencesFromJSON(dictionary)
+                geofences = try Geofence.geofences(withJSON: dictionary)
             }
         } catch {
             
