@@ -51,6 +51,9 @@ enum HTTPRequestMethod : String {
 
     /// POST
     case POST = "POST"
+
+    /// PUT
+    case PUT = "PUT"
 }
 
 internal extension Phoenix {
