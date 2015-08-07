@@ -29,15 +29,9 @@
     [self showUser];
     
     if ([self fetchMe]) {
+        __weak typeof(self) weakSelf = self;
         [[[[PHXPhoenixManager sharedManager] phoenix] identity] getMe:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self setUser:user];
-                if (error != nil) {
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:error.description preferredStyle:UIAlertControllerStyleAlert];
-                    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-                    [self presentViewController:alert animated:true completion:nil];
-                }
-            }];
+            [weakSelf showMe:user error:error];
         }];
     }
 }
@@ -47,6 +41,17 @@
     _user = user;
     
     [self showUser];
+}
+
+- (void) showMe:(id<PHXPhoenixUser>)user error:(NSError*)error {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self setUser:user];
+        if (error != nil) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:error.description preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [self presentViewController:alert animated:true completion:nil];
+        }
+    }];
 }
 
 -(void) showUser

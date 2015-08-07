@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// Operation to create a user, inherits from PhoenixUserRequestOperation, which performs most of
+/// necessary parsing and error handling.
 class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters
