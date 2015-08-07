@@ -194,18 +194,24 @@ extension PhoenixUser {
             return char >= "0" && char <= "9"
         }
 
-        /// - Returns: true if the character is **not** between 0 and 9.
-        func isLetter(char:Character) -> Bool {
-            return !isDigit(char)
+        /// - Returns: true if the character is a lower case letter.
+        func isLowerCaseLetter(char:Character) -> Bool {
+            return char >= "a" && char <= "z"
+        }
+
+        /// - Returns: true if the character is a lower case letter.
+        func isUpperCaseLetter(char:Character) -> Bool {
+            return char >= "A" && char <= "Z"
         }
 
         // perform the checks
         let passwordHasCorrectLength = password.characters.count >= strongPasswordCharacterCountThreshold
         let passwordContainsNumbers = password.characters.filter(isDigit).count > 0
-        let passwordContainsLetters = password.characters.filter(isLetter).count > 0
+        let passwordContainsLetters = password.characters.filter(isLowerCaseLetter).count > 0
+        let passwordContainsUpercaseLetters = password.characters.filter(isUpperCaseLetter).count > 0
 
         // verify all checks are satisfied.
-        return passwordHasCorrectLength && passwordContainsNumbers && passwordContainsLetters
+        return passwordHasCorrectLength && passwordContainsNumbers && passwordContainsLetters && passwordContainsUpercaseLetters
     }
     
 }
