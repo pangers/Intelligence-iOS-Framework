@@ -66,10 +66,20 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
         self.output = (data:data, response:response as? NSHTTPURLResponse)
         
         if let statusCode = self.output?.response?.statusCode where statusCode != 200 {
-            // TODO: Error handling for non 200
-            self.error = NSError(domain: "", code: 123, userInfo: nil)
+            self.error = NSError(domain: RequestError.domain, code:RequestError.RequestFailedError.rawValue, userInfo: nil)
         }
     }
     
+    /// Called when the authentication operation failed while this operation
+    /// was in the queue. It is responsible to cancel itself, set its error,
+    /// and call its completion block.
+    func authenticationFailed() {
+        cancel()
+        
+        if !self.finished {
+            self.error = NSError(domain: RequestError.domain,code:RequestError.AuthenticationFailedError.rawValue,userInfo:nil)
+            completionBlock?()
+        }
+    }
 
 }

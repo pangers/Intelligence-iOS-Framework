@@ -81,17 +81,19 @@ class CreateUserViewController : UIViewController {
     }
 
     func showAlert(title:String, message:String, extraAction:UIAlertAction? = nil) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .Cancel, handler: { (UIAlertAction) -> Void in
-            alertController.dismissViewControllerAnimated(true, completion:nil)
-        }))
-        
-        if let action = extraAction {
-            alertController.addAction(action)
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: .Cancel, handler: { (UIAlertAction) -> Void in
+                alertController.dismissViewControllerAnimated(true, completion:nil)
+            }))
+            
+            if let action = extraAction {
+                alertController.addAction(action)
+            }
+            
+            self.presentViewController(alertController, animated: true, completion:nil)            
         }
-        
-        self.presentViewController(alertController, animated: true, completion:nil)
     }
 
     func createShowUserActionWithUser(user:PhoenixUser) -> UIAlertAction {
