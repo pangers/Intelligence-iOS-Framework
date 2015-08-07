@@ -22,6 +22,11 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+/// Reg exp to verify password. Checks that the password:
+/// * Contains at least 1 character in the A-Z range (uppercase).
+/// * Contains at least 1 character in the a-z range (lowercase).
+/// * Contains at least 1 character in the 0-9 range (number).
+/// * Has at least 8 characters.
 private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
 
 /// The user types that the SDK supports
