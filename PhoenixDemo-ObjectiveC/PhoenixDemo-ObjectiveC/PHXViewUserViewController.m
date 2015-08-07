@@ -11,12 +11,12 @@
 
 @interface PHXViewUserViewController () <UISearchBarDelegate>
 
-@property (weak, nonatomic) IBOutlet UILabel *idLabel;
-@property (weak, nonatomic) IBOutlet UILabel *username;
-@property (weak, nonatomic) IBOutlet UILabel *password;
-@property (weak, nonatomic) IBOutlet UILabel *firstname;
-@property (weak, nonatomic) IBOutlet UILabel *lastname;
-@property (weak, nonatomic) IBOutlet UILabel *avatarURL;
+@property (weak, nonatomic) IBOutlet UITextField *idLabel;
+@property (weak, nonatomic) IBOutlet UITextField *username;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (weak, nonatomic) IBOutlet UITextField *firstname;
+@property (weak, nonatomic) IBOutlet UITextField *lastname;
+@property (weak, nonatomic) IBOutlet UITextField *avatarURL;
 
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
@@ -69,12 +69,12 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.idLabel.text = [NSString stringWithFormat:@"User Id: %d", (int) self.user.userId];
-        self.username.text = [NSString stringWithFormat:@"Username: %@", self.user.username];
-        self.password.text = [NSString stringWithFormat:@"Password: %@", self.user.password];
-        self.firstname.text = [NSString stringWithFormat:@"Firstname: %@", self.user.firstName];
-        self.lastname.text = [NSString stringWithFormat:@"Lastname: %@", self.user.lastName];
-        self.avatarURL.text = [NSString stringWithFormat:@"Avatar url: %@", self.user.avatarURL];        
+        self.idLabel.text = [NSString stringWithFormat:@"%d", (int) self.user.userId];
+        self.username.text = self.user.username;
+        self.password.text = self.user.password;
+        self.firstname.text = self.user.firstName;
+        self.lastname.text = self.user.lastName;
+        self.avatarURL.text = self.user.avatarURL;
     });
 }
 
@@ -95,6 +95,26 @@
     [searchBar resignFirstResponder];
     
     [[self phoenixIdentity] getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+        if (user)
+        {
+            self.user = user;
+            [self showInformation:@" "];
+        }
+        else
+        {
+            [self showInformation:[NSString stringWithFormat:@"There was an error while getting the user: %@", error]];
+        }
+    }];
+}
+
+- (IBAction)didTapUpdateUser:(id)sender {
+    self.user.username = self.username.text;
+    self.user.password = self.password.text;
+    self.user.firstName = self.firstname.text;
+    self.user.lastName = self.lastname.text;
+    self.user.avatarURL = self.avatarURL.text;
+    
+    [[self phoenixIdentity] updateUser:self.user callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;
