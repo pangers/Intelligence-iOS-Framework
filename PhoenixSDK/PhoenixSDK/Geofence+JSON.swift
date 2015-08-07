@@ -66,7 +66,7 @@ extension Geofence {
     /// - Returns: Path to Geofences JSON file.
     class func jsonPath() -> String? {
         guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
-        return path.stringByAppendingPathComponent("/Geofences.json")
+        return "\(path)/Geofences.json"
     }
     
     /// Writes JSONDictionary to file.
@@ -91,7 +91,7 @@ extension Geofence {
         if readFromCache! == false { storeJSON(json) }
         guard let json = json else { return [Geofence]() }
         do {
-            let data: JSONArray = try geoValue(forKey: .DataKey, dictionary: json)
+            let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
             return data.map({ geofenceFromJSON($0) }).filter({ $0 != nil }).map({ $0! })
         }
         catch {

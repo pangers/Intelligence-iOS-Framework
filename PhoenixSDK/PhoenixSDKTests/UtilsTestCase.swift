@@ -66,7 +66,7 @@ class UtilsTestCase: PhoenixBaseTestCase {
     func testGuardedJSONParsing() {
         let wrongJSONData = "sadasda{\\".dataUsingEncoding(NSUTF8StringEncoding)!
         
-        XCTAssertNil(wrongJSONData.phx_jsonArray, "Json array loaded from wrong data")
+        XCTAssertNil(wrongJSONData.phx_jsonDictionaryArray, "Json array loaded from wrong data")
         XCTAssertNil(wrongJSONData.phx_jsonDictionary, "Json dictionary loaded from wrong data")
     }
 }

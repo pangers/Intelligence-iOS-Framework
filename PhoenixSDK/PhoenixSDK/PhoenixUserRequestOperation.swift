@@ -26,7 +26,7 @@ class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
             error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
             return
         }
-        guard let userData = (self.output?.data?.phx_jsonDictionary?["Data"] as? JSONArray)?.first, configuration = configuration else {
+        guard let userData = (self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray)?.first, configuration = configuration else {
             return
         }
         // If all conditions succeed, parse the user.
