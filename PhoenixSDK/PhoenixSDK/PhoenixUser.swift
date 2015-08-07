@@ -42,7 +42,8 @@ public enum UserType : String {
     /// The username
     var username:String {get set}
     
-    /// The password
+    /// The password. In order to meet Phoenix security requirements it must contain
+    ///  at least a number and a letter, and it's length must be at least 8 characters.
     var password:String? {get set}
     
     /// The firstname
