@@ -173,3 +173,38 @@ extension Phoenix {
         }
     }
 }
+
+/// The minimum number of characters a password needs to have to be secure.
+private let strongPasswordCharacterCountThreshold = 8
+
+/// Extension to provide password security requirements validation.
+extension PhoenixUser {
+    
+    /// A password is considered secure if it has at least 8 characters, and uses
+    /// at least a number and a letter.
+    /// - Returns: True if the password is secure.
+    func isPasswordSecure() -> Bool {
+        guard let password = self.password else {
+            return false
+        }
+        
+        /// - Returns: true if the character is between 0 and 9.
+        func isDigit(char:Character) -> Bool {
+            return char >= "0" && char <= "9"
+        }
+
+        /// - Returns: true if the character is **not** between 0 and 9.
+        func isLetter(char:Character) -> Bool {
+            return !isDigit(char)
+        }
+
+        // perform the checks
+        let passwordHasCorrectLength = password.characters.count >= strongPasswordCharacterCountThreshold
+        let passwordContainsNumbers = password.characters.filter(isDigit).count > 0
+        let passwordContainsLetters = password.characters.filter(isLetter).count > 0
+
+        // verify all checks are satisfied.
+        return passwordHasCorrectLength && passwordContainsNumbers && passwordContainsLetters
+    }
+    
+}
