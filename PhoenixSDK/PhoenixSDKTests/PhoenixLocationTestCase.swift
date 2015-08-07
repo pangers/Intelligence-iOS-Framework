@@ -13,6 +13,7 @@ import XCTest
 class PhoenixLocationTestCase: PhoenixBaseTestCase {
     var location:Phoenix.Location?
     var configuration:Phoenix.Configuration?
+    var configurationDisabled:Phoenix.Configuration?
     
     let geofencesResponse = "{" +
         "\"TotalRecords\": 2," +
@@ -93,6 +94,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         super.setUp()
         do {
             self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
+            self.configurationDisabled = try Phoenix.Configuration(fromFile: "confignogeofences", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
             let network = Phoenix.Network(withConfiguration: configuration!, withTokenStorage:storage)
             self.location = Phoenix.Location(withNetwork: network, configuration: configuration!)
         }
@@ -120,7 +122,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             method: "GET",
             response: (data: geofencesResponse, statusCode:200, headers:nil))
         
-        location!.downloadGeofences { (geofences, error) -> Void in
+        try! location!.downloadGeofences { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
@@ -128,6 +130,24 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    /// Download method should fail if flag is disabled.
+    func testDownloadGeofencesFailDisabledFlag() {
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        do {
+            try location!.downloadGeofences { (geofences, error) -> Void in
+            }
+        } catch let err as GeofenceError {
+            switch err {
+            case .CannotRequestGeofencesWhenDisabled: XCTAssert(true)
+            default: XCTAssert(false)
+            }
+        } catch {
+            XCTAssert(false)
         }
     }
     
@@ -144,7 +164,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             method: "GET",
             response: (data: geofencesResponse, statusCode:401, headers:nil))
         
-        location!.downloadGeofences { (geofences, error) -> Void in
+        try! location!.downloadGeofences { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }

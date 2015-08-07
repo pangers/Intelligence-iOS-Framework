@@ -21,7 +21,7 @@ extension Phoenix {
         private let configuration: Phoenix.Configuration
         
         /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
-        var geofences: [Geofence] {
+        var geofences: [Geofence]? {
             didSet {
                 print("New Geofences: \(geofences)")
             }
@@ -34,39 +34,48 @@ extension Phoenix {
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
-            do {
-                self.geofences = try Geofence.geofencesFromCache()
-            } catch {
-                self.geofences = []
+            if self.configuration.useGeofences {
+                do {
+                    self.geofences = try Geofence.geofencesFromCache()
+                } catch {
+                }
+                print("Geofences: \(geofences)")
             }
-            print("Geofences: \(geofences)")
         }
         
         @objc func startup() {
             // TODO: Setup location monitoring, etc..
-            downloadGeofences { [weak self] (geofences, error) -> Void in
-                if let geofences = geofences {
-                    self?.geofences = geofences
+            do {
+                try downloadGeofences { [weak self] (geofences, error) -> Void in
+                    if let geofences = geofences {
+                        self?.geofences = geofences
+                    }
                 }
+            }
+            catch {
+                // Flag Disabled.
             }
         }
         
         /// Download a list of geofences.
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
-        func downloadGeofences(callback: PhoenixGeofencesCallback?) {
-            
-            let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
-            
-            // set the completion block to notify the caller
-            operation.completionBlock = {
-                guard let callback = callback else {
-                    return
+        func downloadGeofences(callback: PhoenixGeofencesCallback?) throws {
+            if configuration.useGeofences {
+                let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
+                
+                // set the completion block to notify the caller
+                operation.completionBlock = {
+                    guard let callback = callback else {
+                        return
+                    }
+                    callback(geofences: operation.geofences, error: operation.error)
                 }
-                callback(geofences: operation.geofences, error: operation.error)
+                
+                // Execute the network operation
+                network.executeNetworkOperation(operation)
+            } else {
+                throw GeofenceError.CannotRequestGeofencesWhenDisabled
             }
-            
-            // Execute the network operation
-            network.executeNetworkOperation(operation)
         }
         
     }

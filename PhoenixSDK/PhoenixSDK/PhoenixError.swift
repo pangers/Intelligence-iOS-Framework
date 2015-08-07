@@ -70,4 +70,6 @@ internal enum GeofenceError: ErrorType {
     case InvalidPropertyError(GeofenceKey)
     /// Error to return when parsing JSON fails.
     case InvalidJSONError
+    /// Error, use_geofences in Configuration file is set to false.
+    case CannotRequestGeofencesWhenDisabled
 }
