@@ -94,9 +94,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
         
         identity!.createUser(user) { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user != nil, "User not found")
             XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -118,11 +118,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
 
         identity!.createUser(user) { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -157,9 +157,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
         
         identity!.getMe { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user != nil, "User not found")
             XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -180,11 +180,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: "", statusCode:400, headers:nil))
         
         identity!.getMe { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -205,11 +205,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: noUsersResponse, statusCode:200, headers:nil))
         
         identity!.getMe { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -232,9 +232,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
         
         identity!.getUser(10) { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user != nil, "User not found")
             XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -255,11 +255,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: "", statusCode:400, headers:nil))
         
         identity!.getUser(10) { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -299,11 +299,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             response: (data: noUsersResponse, statusCode:200, headers:nil))
         
         identity!.getUser(10) { (user, error) -> Void in
-            expectCallback.fulfill()
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
