@@ -52,13 +52,13 @@ extension Geofence {
     }
     
     /// - Returns: Path to Geofences JSON file.
-    private class func jsonPath() -> String? {
+    class func jsonPath() -> String? {
         guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
         return path.stringByAppendingPathComponent("/Geofences.json")
     }
     
     /// Writes JSONDictionary to file.
-    private class func storeJSON(json: JSONDictionary?) {
+    class func storeJSON(json: JSONDictionary?) {
         guard let path = jsonPath(), json = json?.phx_toJSONData() else { return }
         json.writeToFile(path, atomically: true)
     }
@@ -109,7 +109,7 @@ extension Geofence {
         catch let err as GeofenceError {
             switch err {
             case .InvalidPropertyError(let key):
-            assert(false, "Failed to load geofence (\(key.rawValue))")
+            print("Failed to load geofence (\(key.rawValue))")
             }
             return nil
         } catch {

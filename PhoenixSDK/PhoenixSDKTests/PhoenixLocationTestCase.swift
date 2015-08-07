@@ -39,6 +39,56 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         "\"Radius\": 26.18}]" +
     "}"
     
+    let geofencesInvalidResponse = "{" +
+        "\"TotalRecords\": 2," +
+        "\"Data2\": [{" +
+        "\"Geolocation\": {" +
+        "\"Latitude\": 51.5229702," +
+        "\"Longitude\": -0.1400708}," +
+        "\"Id\": 1005," +
+        "\"ProjectId\": 2030," +
+        "\"Name\": \"Fitzroy Square\"," +
+        "\"CreateDate\": \"2015-07-08T08:05:23.55\"," +
+        "\"ModifyDate\": \"2015-07-08T08:05:23.55\"," +
+        "\"Address\": \"6 Fitzroy Square, Kings Cross, London W1T 5HJ, UK\"," +
+        "\"Radius\": 61.62},{" +
+        "\"Geolocation\": {" +
+        "\"Latitude\": 51.5201001," +
+        "\"Longitude\": -0.1342616}," +
+        "\"Id\": 1004," +
+        "\"ProjectId\": 2030," +
+        "\"Name\": \"Tigerspike London\"," +
+        "\"CreateDate\": \"2015-07-08T08:04:48.403\"," +
+        "\"ModifyDate\": \"2015-07-08T08:04:48.403\"," +
+        "\"Address\": \"10-16 Goodge Street, Fitzrovia, London W1T 2QB, UK\"," +
+        "\"Radius\": 26.18}]" +
+    "}"
+    
+    let geofencesInvalidResponseKey = "{" +
+        "\"TotalRecords\": 2," +
+        "\"Data\": [{" +
+        "\"Geolocation\": {" +
+        "\"Latitude\": 51.5229702," +
+        "\"Longitude\": -0.1400708}," +
+        "\"IdFailed\": 1005," +
+        "\"ProjectId\": 2030," +
+        "\"Name\": \"Fitzroy Square\"," +
+        "\"CreateDate\": \"2015-07-08T08:05:23.55\"," +
+        "\"ModifyDate\": \"2015-07-08T08:05:23.55\"," +
+        "\"Address\": \"6 Fitzroy Square, Kings Cross, London W1T 5HJ, UK\"," +
+        "\"Radius\": 61.62},{" +
+        "\"Geolocation\": {" +
+        "\"Latitude\": 51.5201001," +
+        "\"Longitude\": -0.1342616}," +
+        "\"Id\": 1004," +
+        "\"ProjectId\": 2030," +
+        "\"Name\": \"Tigerspike London\"," +
+        "\"CreateDate\": \"2015-07-08T08:04:48.403\"," +
+        "\"ModifyDate\": \"2015-07-08T08:04:48.403\"," +
+        "\"Address\": \"10-16 Goodge Street, Fitzrovia, London W1T 2QB, UK\"," +
+        "\"Radius\": 26.18}]" +
+    "}"
+    
     override func setUp() {
         super.setUp()
         do {
@@ -57,7 +107,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         self.location =  nil
     }
     
-    
+    /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
@@ -81,6 +131,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         }
     }
     
+    /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
@@ -103,5 +154,20 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         }
     }
     
+    /// Test reading and saving of geofences to caches directory
+    func testSaveReadGeofences() {
+        // Valid response
+        Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+        XCTAssert(Geofence.geofencesFromCache().count == 2)
+        // Missing data key from response
+        Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+        XCTAssert(Geofence.geofencesFromCache().count == 0)
+        // Data is invalid, cannot be loaded as JSON.
+        NSData.writeToFile(NSData())(Geofence.jsonPath()!, atomically: true)
+        XCTAssert(Geofence.geofencesFromCache().count == 0)
+        // One of these responses will be invalid
+        Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+        XCTAssert(Geofence.geofencesFromCache().count == 1)
+    }
     
 }
