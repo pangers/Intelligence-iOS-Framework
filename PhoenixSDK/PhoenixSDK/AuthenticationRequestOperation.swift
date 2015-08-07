@@ -21,7 +21,7 @@ internal extension Phoenix {
     /// In order to use the callback approach (in which more than one callback can be notified),
     /// **the completion block must not be overridden**. If it is, the callbacks won't be notified of the 
     /// outcome of the operation.
-    class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
+    internal final class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         
         /// The URL session
         private let urlSession:NSURLSession

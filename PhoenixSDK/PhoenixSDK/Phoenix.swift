@@ -52,6 +52,7 @@ public final class Phoenix: NSObject {
     /// The identity module, used to manage users in the Phoenix backend.
     @objc public internal(set) var identity:PhoenixIdentity
 
+    /// The location module, used to internally manages geofences and user location. Hidden from developers.
     internal(set) var location: Phoenix.Location
     
     // MARK: Initializer

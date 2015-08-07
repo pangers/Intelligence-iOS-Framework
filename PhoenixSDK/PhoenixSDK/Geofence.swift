@@ -30,7 +30,7 @@ protocol GeofenceProtocol {
 }
 
 /// An instance of a geofence with a latitude/longitude/radius combination.
-class Geofence: GeofenceProtocol {
+internal final class Geofence: GeofenceProtocol {
     var longitude = 0.0
     var latitude = 0.0
     var id = 0

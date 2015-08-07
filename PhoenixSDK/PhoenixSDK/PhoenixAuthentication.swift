@@ -40,7 +40,7 @@ internal protocol PhoenixAuthenticationProtocol {
 
 /// Extension over PhoenixAuthenticationProtocol. Adds functionality to check if the 
 /// authentication being used is anonymous and if it requires authentication.
-extension PhoenixAuthenticationProtocol {
+internal extension PhoenixAuthenticationProtocol {
     
     /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
     var requiresAuthentication: Bool {
@@ -70,7 +70,7 @@ internal extension Phoenix {
     /// the tokens. The default Phoenix storage is PhoenixKeychain. The developer
     /// can override the TokenStorage protocol and provide a different implementation,
     /// such as storing it in CoreData, a file, NSUserDefaults,...
-    final class Authentication: PhoenixAuthenticationProtocol {
+    internal final class Authentication: PhoenixAuthenticationProtocol {
 
         // MARK: Instance variables
         

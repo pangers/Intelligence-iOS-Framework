@@ -133,7 +133,7 @@ extension PhoenixUser {
 extension Phoenix {
 
     /// The user class implementation
-    @objc(PHXPhoenixUser) public class User : NSObject, PhoenixUser {
+    @objc(PHXPhoenixUser) public final class User : NSObject, PhoenixUser {
         
         /// The user Id as a let
         @objc public let userId:Int

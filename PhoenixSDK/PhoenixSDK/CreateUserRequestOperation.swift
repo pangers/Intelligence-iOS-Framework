@@ -10,7 +10,7 @@ import Foundation
 
 /// Operation to create a user, inherits from PhoenixUserRequestOperation, which performs most of
 /// necessary parsing and error handling.
-class CreateUserRequestOperation : PhoenixUserRequestOperation {
+final internal class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters
     init(withSession session:NSURLSession, user:PhoenixUser, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {

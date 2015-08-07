@@ -50,7 +50,7 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
 extension Phoenix {
 
     /// The PhoenixIdentity implementation.
-    class Identity : PhoenixIdentity {
+    internal final class Identity : PhoenixIdentity {
 
         /// A reference to the network manager
         private let network:Network

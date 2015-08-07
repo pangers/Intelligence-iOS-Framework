@@ -9,7 +9,7 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
-class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
+internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?

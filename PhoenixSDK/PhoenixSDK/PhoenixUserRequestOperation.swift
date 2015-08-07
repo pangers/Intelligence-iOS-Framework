@@ -10,7 +10,7 @@ import Foundation
 
 /// Base class for User request operations. Inherits from PhoenixNetworkRequestOperation.
 /// Handles most of the error handling and parsing.
-class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
+internal class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
     
     /// User will be set if response is parsable.
     var user: Phoenix.User?

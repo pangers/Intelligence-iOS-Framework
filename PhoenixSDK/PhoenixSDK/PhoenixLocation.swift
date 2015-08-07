@@ -14,7 +14,7 @@ internal typealias PhoenixGeofencesCallback = (geofences: [Geofence]?, error:NSE
 extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
-    class Location: PhoenixModule {
+    internal final class Location: PhoenixModule {
         
         /// A reference to the network manager
         private let network: Network

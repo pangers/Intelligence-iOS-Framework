@@ -10,7 +10,7 @@ import Foundation
 
 /// Operation to get me, inherits from PhoenixUserRequestOperation, which performs most of
 /// necessary parsing and error handling.
-class GetUserMeRequestOperation : PhoenixUserRequestOperation {
+final internal class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     /// Default initializer with all required parameters
     init(withSession session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
