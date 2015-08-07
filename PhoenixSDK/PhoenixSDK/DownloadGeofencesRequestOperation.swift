@@ -11,8 +11,8 @@ import Foundation
 /// NSOperation that handles downloading geofences.
 class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
-    /// Dictionary containing geofences in JSONDictionary format.
-    var geofences: JSONDictionary?
+    /// Array containing Geofence objects.
+    var geofences: [Geofence]
     
     /// Default initializer. Requires a network and configuration class.
     /// - Parameters:
@@ -20,6 +20,7 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     ///     - configuration: The configuration class to use.
     init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration)
+        geofences = []
         super.init(network: network, request: request)
     }
     
@@ -32,7 +33,7 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
         guard let dictionary = output?.data?.phx_jsonDictionary else {
             return
         }
-        geofences = dictionary
+        geofences = Geofence.geofencesFromJSON(dictionary)
     }
     
 }

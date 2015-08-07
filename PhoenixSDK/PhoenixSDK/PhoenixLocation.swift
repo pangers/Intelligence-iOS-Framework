@@ -56,7 +56,7 @@ extension Phoenix {
                 guard let callback = callback else {
                     return
                 }
-                callback(geofences: Geofence.geofencesFromJSON(operation.geofences), error: operation.error)
+                callback(geofences: operation.geofences, error: operation.error)
             }
             
             // Execute the network operation
