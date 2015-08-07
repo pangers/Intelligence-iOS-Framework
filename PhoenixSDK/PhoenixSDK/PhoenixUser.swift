@@ -22,6 +22,17 @@ private let isActiveKey = "IsActive"
 private let metadataKey = "MetaData"
 private let userTypeKey = "UserTypeId"
 
+/// Reg exp to verify password. Checks that the password:
+/// * Contains at least 1 character in the A-Z range (uppercase).
+/// * Contains at least 1 character in the a-z range (lowercase).
+/// * Contains at least 1 character in the 0-9 range (number).
+/// * Has at least 8 characters.
+private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
+
+/// The regular expression unwrapped. Shouldn't fail unless the pattern is modified.
+private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
+
+/// A constant to mark an invalid user Id.
 private let invalidUserId = Int.min
 
 /// The minimum number of characters a password needs to have to be secure.
@@ -148,9 +159,22 @@ extension Phoenix {
                 metadataKey: self.metadata,
                 userTypeKey: self.userTypeId.rawValue,
             ]
-            dictionary ?+= (lastNameKey, lastName)
-            dictionary ?+= (passwordKey, password)
-            dictionary ?+= (avatarURLKey, avatarURL)
+            
+            /// Optioanlly set a key if there is a valid value
+            func optionallySet(key: String, value: AnyObject?) {
+                // Check if value exists
+                if let value = value {
+                    // Set value for key
+                    dictionary[key] = value
+                } else {
+                    // Otherwise do not set key
+                }
+            }
+            // Optionally add a bunch of key-values to the dictionary...
+            optionallySet(lastNameKey, value: lastName)
+            optionallySet(passwordKey, value: password)
+            optionallySet(avatarURLKey, value: avatarURL)
+            
             // If we have the user Id add it.
             if userId != invalidUserId {
                 dictionary[idKey] = userId
@@ -186,23 +210,8 @@ extension Phoenix {
                 return false
             }
             
-            /// - Returns: true if the character is between 0 and 9.
-            func isDigit(char:Character) -> Bool {
-                return char >= "0" && char <= "9"
-            }
-            
-            /// - Returns: true if the character is **not** between 0 and 9.
-            func isLetter(char:Character) -> Bool {
-                return !isDigit(char)
-            }
-            
-            // perform the checks
-            let passwordHasCorrectLength = password.characters.count >= strongPasswordCharacterCountThreshold
-            let passwordContainsNumbers = password.characters.filter(isDigit).count > 0
-            let passwordContainsLetters = password.characters.filter(isLetter).count > 0
-            
-            // verify all checks are satisfied.
-            return passwordHasCorrectLength && passwordContainsNumbers && passwordContainsLetters
+            let matches = passwordRegularExpression.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
+            return matches.count > 0
         }
 
     }

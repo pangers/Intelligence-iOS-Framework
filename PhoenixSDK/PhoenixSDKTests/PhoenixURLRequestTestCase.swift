@@ -22,7 +22,7 @@ class PhoenixURLRequestTestCase: XCTestCase {
         
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let user = Phoenix.User(companyId: companyId, username: username, password: password, firstName: firstname, lastName: lastname, avatarURL: avatarURL)
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: MockConfiguration())
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(withUser:user, configuration: MockConfiguration())
 
         XCTAssertEqual(request.URL!.absoluteString, "https://api.phoenixplatform.eu/identity/v1/projects/123/users")
         
@@ -46,7 +46,6 @@ class PhoenixURLRequestTestCase: XCTestCase {
         XCTAssertEqual(userDictionary["IsActive"] as! Int, 1)
         XCTAssertEqual(userDictionary["Reference"] as! String, "")
         
-        print(userDictionary)
     }
     
 }

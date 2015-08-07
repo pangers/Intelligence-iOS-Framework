@@ -76,6 +76,7 @@ internal extension Phoenix {
         
         private var storage:TokenStorage;
         
+        /// The id for the logged in user
         var userId: Int? {
             get {
                 return storage.userId

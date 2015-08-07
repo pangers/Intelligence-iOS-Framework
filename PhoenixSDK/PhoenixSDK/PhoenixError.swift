@@ -38,13 +38,13 @@ public enum IdentityError: Int, ErrorType {
     
     /// The user is invalid.
     case InvalidUserError = 2002
-
-    /// The user retrieval request was unsuccessful.
-    case GetUserError = 2003
-
+    
     /// The password provided is too weak. See `Phoenix.User` password field to see
     /// the security requirements of the password.
-    case WeakPasswordError = 2004
+    case WeakPasswordError = 2003
+
+    /// The user retrieval request was unsuccessful.
+    case GetUserError = 2004
     
     /// The user update request was not finished successfully.
     case UserUpdateError = 2005

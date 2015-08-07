@@ -151,12 +151,12 @@ internal extension NSURLRequest {
     ///     - configuration: The configuration to use.
     class func phx_httpURLRequestForCreateUser(withUser user:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(user.userId)", relativeToURL: configuration.baseURL) {
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
             request.HTTPBody = [user.toJSON()].phx_toJSONData()
             
             if let finalRequest = request.copy() as? NSURLRequest {
@@ -171,15 +171,15 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - withUser: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForUpdateUser(withUser:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_httpURLRequestForUpdateUser(user:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(user.userId)", relativeToURL: configuration.baseURL) {
             
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
             request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = [withUser.toJSON()].phx_toJSONData()
+            request.HTTPBody = [user.toJSON()].phx_toJSONData()
             
             if let finalRequest = request.copy() as? NSURLRequest {
                 return finalRequest

@@ -102,6 +102,7 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         self.infoLabel.text = ""
         searchBar.resignFirstResponder()
         
+        // gets the user by its id and treats it in the callback.
         phoenix?.identity.getUser(userId) { (user, error) -> Void in
             if user != nil {
                 self.user = user
