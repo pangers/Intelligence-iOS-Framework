@@ -105,10 +105,10 @@ internal extension Phoenix {
         /// Initialize new instance of Phoenix Networking class
         /// - Parameters:
         ///     - withConfiguration: The configuration object used.
-        init(withConfiguration configuration: PhoenixConfigurationProtocol) {
+        init(withConfiguration configuration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
-            self.authentication = Authentication()
+            self.authentication = Authentication(withTokenStorage: tokenStorage)
             self.configuration = configuration
         }
         
@@ -272,6 +272,15 @@ internal extension Phoenix {
             defer {
                 // Continue worker queue if we have authentication object
                 workerQueue.suspended = !self.isAuthenticated
+                
+                // If the worker queue is suspended, cancel all its tasks
+                if workerQueue.suspended {
+                    for operation in workerQueue.operations {
+                        if let operation = operation as? PhoenixNetworkRequestOperation {
+                            operation.authenticationFailed()
+                        }
+                    }
+                }
                 
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {

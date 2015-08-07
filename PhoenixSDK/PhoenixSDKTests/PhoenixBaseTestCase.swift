@@ -19,10 +19,10 @@ class PhoenixBaseTestCase : XCTestCase {
     let tokenMethod = "POST"
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    var storage = MockSimpleStorage()
     
     override func setUp() {
         super.setUp()
-        Injector.storage = MockSimpleStorage()
     }
     
     override func tearDown() {
@@ -32,7 +32,7 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), callback:MockCallback? = nil, expectation: XCTestExpectation? = nil) {
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
         mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
     }
     
@@ -81,4 +81,32 @@ class PhoenixBaseTestCase : XCTestCase {
             response: (data:responseData, statusCode: statusCode, headers: nil),
             callback: callback)
     }
+    
+    func assertURLNotCalled(url:NSURL, method:String? = "GET") {
+        OHHTTPStubs.stubRequestsPassingTest(
+            { request in
+                if let method = method where method != request.HTTPMethod {
+                    return false
+                }
+                
+                XCTAssertFalse(request.URL! == url,"URL \(url) was called.")
+                return false
+            },
+            withStubResponse: { _ in
+                return OHHTTPStubsResponse() // Never reached
+        })
+    }
+
+    func mockExpiredTokenStorage() {
+        storage.accessToken = "Somevalue"
+        storage.refreshToken = "Somevalue"
+        storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)        
+    }
+    
+    func mockValidTokenStorage() {
+        storage.accessToken = "Somevalue"
+        storage.refreshToken = ""
+        storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
+    }
+
 }

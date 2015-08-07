@@ -55,12 +55,14 @@ public final class Phoenix: NSObject {
     // MARK: Initializer
     
     /// Initializes the Phoenix entry point with a configuration object.
-    /// - Parameter phoenixConfiguration: The configuration to use. The configuration
+    /// - Parameters:
+    ///     - phoenixConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
+    ///     - withTokenStorage: The token storage to be used.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
+    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) throws {
         self.configuration = phoenixConfiguration.clone()
-        self.network = Network(withConfiguration: self.configuration)
+        self.network = Network(withConfiguration: self.configuration, withTokenStorage:tokenStorage)
 
         // Modules
         self.identity = Identity(withNetwork: network, withConfiguration: configuration)
@@ -84,8 +86,28 @@ public final class Phoenix: NSObject {
     /// - Parameters:
     ///     - withFile: The JSON file name (no extension) of the configuration.
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
+    ///     - withTokenStorage: The token storage to use.
+    convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), withTokenStorage: tokenStorage)
+    }
+
+    /// Initializes the Phoenix entry point with a configuration object. Will use the PhoenixKeychain token storage.
+    /// - Parameters:
+    ///     - phoenixConfiguration: The configuration to use. The configuration
+    /// will be copied and kept privately to avoid future mutability.
+    /// - Throws: **ConfigurationError** if the configuration is invalid
+    convenience public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
+        try self.init(withConfiguration:phoenixConfiguration, withTokenStorage:PhoenixKeychain())
+    }
+    
+    /// Provides a convenience initializer to load the configuration from a JSON file. Will use the PhoenixKeychain token storage.
+    /// - Throws: **ConfigurationError** if the configuration is invalid or there is a problem
+    /// reading the file.
+    /// - Parameters:
+    ///     - withFile: The JSON file name (no extension) of the configuration.
+    ///     - inBundle: The bundle to use. Defaults to the main bundle.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
-        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle))
+        try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
 
     // MARK:- Authentication
