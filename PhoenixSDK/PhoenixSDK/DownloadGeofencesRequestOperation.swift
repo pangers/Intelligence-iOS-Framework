@@ -12,7 +12,7 @@ import Foundation
 class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
     /// Array containing Geofence objects.
-    var geofences: [Geofence]
+    var geofences: [Geofence]?
     
     /// Default initializer. Requires a network and configuration class.
     /// - Parameters:
@@ -27,7 +27,7 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     override func main() {
         super.main()
         defer {
-            if geofences.count == 0 || error != nil {
+            if geofences?.count == 0 || error != nil {
                 error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
             }
         }

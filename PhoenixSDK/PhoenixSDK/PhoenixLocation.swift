@@ -9,7 +9,7 @@
 import Foundation
 
 /// A generic PhoenixGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
-internal typealias PhoenixGeofencesCallback = (geofences: [Geofence], error:NSError?) -> Void
+internal typealias PhoenixGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
 extension Phoenix {
     
@@ -45,7 +45,9 @@ extension Phoenix {
         @objc func startup() {
             // TODO: Setup location monitoring, etc..
             downloadGeofences { [weak self] (geofences, error) -> Void in
-                self?.geofences = geofences
+                if let geofences = geofences {
+                    self?.geofences = geofences
+                }
             }
         }
         
