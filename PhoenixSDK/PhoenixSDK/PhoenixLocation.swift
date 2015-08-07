@@ -27,8 +27,10 @@ extension Phoenix {
             }
         }
         
-        /// Default initializer. Requires a network.
-        /// - Parameter network: The network that will be used.
+        /// Default initializer. Requires a network and configuration class.
+        /// - Parameters: 
+        ///     - network: The network that will be used.
+        ///     - configuration: The configuration class to use.
         init(withNetwork network:Network, configuration: Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration

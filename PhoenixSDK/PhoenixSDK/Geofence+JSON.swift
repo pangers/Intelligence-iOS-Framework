@@ -9,20 +9,32 @@
 import Foundation
 
 private enum GeofenceKey: String {
+    /// Top level data key
     case DataKey = "Data"
+    /// Identifier within a data object.
     case IdKey = "Id"
+    /// Project Identifier key within a data object.
     case ProjectIdKey = "ProjectId"
+    /// Name key within a data object.
     case NameKey = "Name"
+    /// Address key within a data object.
     case AddressKey = "Address"
+    /// Radius key within a data object.
     case RadiusKey = "Radius"
-    case GeolocationKey = "Geolocation"
-    case LatitudeKey = "Latitude"
-    case LongitudeKey = "Longitude"
+    /// Modify date key within a data object.
     case ModifyDateKey = "ModifyDate"
+    /// Create date key within a data object.
     case CreateDateKey = "CreateDate"
+    /// Geolocation key within a data object.
+    case GeolocationKey = "Geolocation"
+    /// Latitude key within a geolocation object.
+    case LatitudeKey = "Latitude"
+    /// Longitude key within a geolocation object.
+    case LongitudeKey = "Longitude"
 }
 
 private enum GeofenceError: ErrorType {
+    /// Error to return when we have a property error. Internal use only.
     case InvalidPropertyError(GeofenceKey)
 }
 

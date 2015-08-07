@@ -8,10 +8,16 @@
 
 import Foundation
 
+/// NSOperation that handles downloading geofences.
 class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
+    /// Dictionary containing geofences in JSONDictionary format.
     var geofences: JSONDictionary?
     
+    /// Default initializer. Requires a network and configuration class.
+    /// - Parameters:
+    ///     - network: The network that will be used.
+    ///     - configuration: The configuration class to use.
     init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration)
         super.init(network: network, request: request)
@@ -19,7 +25,6 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     
     override func main() {
         super.main()
-        // TODO: Handle error?
         if error != nil {
             error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
             return
