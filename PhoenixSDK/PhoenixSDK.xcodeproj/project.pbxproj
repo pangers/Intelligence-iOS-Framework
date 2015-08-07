@@ -41,6 +41,7 @@
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
 		FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */; };
+		FE2D5EEA1B74C298008A590E /* PhoenixLocationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D5EE91B74C298008A590E /* PhoenixLocationTestCase.swift */; };
 		FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */; };
 		FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */; };
 		FEDE07711B73530A009BC6B6 /* PhoenixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE07701B73530A009BC6B6 /* PhoenixLocation.swift */; };
@@ -135,6 +136,7 @@
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
 		FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegionTestCase.swift; sourceTree = "<group>"; };
+		FE2D5EE91B74C298008A590E /* PhoenixLocationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocationTestCase.swift; sourceTree = "<group>"; };
 		FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDKeychain.swift; sourceTree = "<group>"; };
 		FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixKeychain.swift; sourceTree = "<group>"; };
 		FEDE07701B73530A009BC6B6 /* PhoenixLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocation.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 		BB0A23871B70D4A100CE0C81 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				FE2D5EE81B74C287008A590E /* Location */,
 				BB0A23881B70D4A600CE0C81 /* Identity */,
 			);
 			name = Modules;
@@ -356,6 +359,14 @@
 				BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		FE2D5EE81B74C287008A590E /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				FE2D5EE91B74C298008A590E /* PhoenixLocationTestCase.swift */,
+			);
+			name = Location;
 			sourceTree = "<group>";
 		};
 		FE75E3331B6F6F6000DD400D /* Security */ = {
@@ -602,6 +613,7 @@
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
+				FE2D5EEA1B74C298008A590E /* PhoenixLocationTestCase.swift in Sources */,
 				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
 				BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */,
 				BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */,

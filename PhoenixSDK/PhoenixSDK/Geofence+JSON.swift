@@ -83,7 +83,7 @@ extension Geofence {
             return data.map({ geofenceFromJSON($0) }).filter({ $0 != nil }).map({ $0! })
         }
         catch {
-            assert(false, "Failed to load multiple geofences")
+            //assert(false, "Failed to load multiple geofences")
             return [Geofence]()
         }
     }

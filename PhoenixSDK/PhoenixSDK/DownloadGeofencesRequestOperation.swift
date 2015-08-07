@@ -20,8 +20,11 @@ class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
     override func main() {
         super.main()
         // TODO: Handle error?
-        
-        guard let dictionary = self.output?.data?.phx_jsonDictionary else {
+        if error != nil {
+            error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
+            return
+        }
+        guard let dictionary = output?.data?.phx_jsonDictionary else {
             return
         }
         geofences = dictionary

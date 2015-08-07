@@ -57,13 +57,9 @@ class UtilsTestCase: PhoenixBaseTestCase {
     }
     
     func testDataToJSONArray() {
-        guard let array = "[0,1,2,3]".dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonArray else {
+        guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonArray else {
             XCTAssert(false,"Couldn't load an array from the NSData")
             return
-        }
-        
-        for (index,value) in array.enumerate() {
-            XCTAssert(index == value as! Int, "Unexpected value parsed")
         }
     }
 

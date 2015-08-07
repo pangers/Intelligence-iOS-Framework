@@ -41,6 +41,14 @@ public enum IdentityError: Int, ErrorType {
     
 }
 
+/// Enumeration to list the errors that can occur in the identity module.
+public enum LocationError: Int, ErrorType {
+    /// The domain passed to NSErrors.
+    static let domain = "LocationError"
+    
+    /// The request failed with a non 200 error code.
+    case RequestFailedError = 3001
+}
 
 /// Enumeration to list the errors that can occur in the identity module.
 public enum RequestError: Int, ErrorType {

@@ -137,7 +137,9 @@ public final class Phoenix: NSObject {
     // platform is available for the app to start, need to rethink this.
     public func startup(withCallback callback: PhoenixAuthenticationCallback? = nil) {
         network.anonymousLogin { [weak self] (authenticated) -> () in
-            self?.location.startup()
+            if authenticated {
+                self?.location.startup()
+            }
             callback?(authenticated: authenticated)
         }
     }
