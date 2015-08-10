@@ -8,30 +8,14 @@
 
 import Foundation
 
-/// The network delegate. Currently only shows authentication failed.
-@objc(PHXPhoenixNetworkDelegate) public protocol PhoenixNetworkDelegate {
-    
-    optional
-    
-    // TODO: This is actually logging into the application user. Really a token issue.
-    //      What should we do to describe this to the user?
-    /// Called when an authentication failure occurs in the Phoenix SDK.
-    /// - Parameters:
-    ///     - error: The error that occured
-    func phoenixAuthenticationFailed(error: NSError?)
-}
-
 /// The callback alias for internal purposes. The caller should parse this data into an object/struct rather
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-/// A generic network callback, passing an optional error if the call failed.
-public typealias PhoenixNetworkErrorCallback = (error: NSError?) -> Void
-
 // MARK: Status code constants
 
 /// Enumeration containing the possible status to use.
-enum HTTPStatus : Int {
+internal enum HTTPStatus : Int {
 
     /// Success code
     case Success = 200
@@ -49,7 +33,7 @@ enum HTTPStatus : Int {
 // MARK: HTTP Method constants
 
 /// An enumeration of the HTTP Methods available to use
-enum HTTPRequestMethod : String {
+internal enum HTTPRequestMethod : String {
     
     /// GET
     case GET = "GET"
@@ -81,6 +65,8 @@ internal extension Phoenix {
         /// The current phoenix authentication.
         internal var authentication: Authentication
         
+        weak internal var phoenix: Phoenix?
+        
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
         
@@ -88,9 +74,6 @@ internal extension Phoenix {
         var isAuthenticated:Bool {
             return !authentication.requiresAuthentication
         }
-        
-        /// A delegate to receive notifications from the network manager.
-        weak var delegate:PhoenixNetworkDelegate?
         
         // MARK: Initializers
         
@@ -242,7 +225,7 @@ internal extension Phoenix {
             }
             let response = operation.output?.response
             let data = operation.output?.data
-            let error = operation.error
+            //let error = operation.error
             
             defer {
                 // Continue worker queue if we have authentication object
@@ -260,7 +243,8 @@ internal extension Phoenix {
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
                     // An exception is raised to the developer.
-                    delegate?.phoenixAuthenticationFailed?(error)
+                    // Access token was not returned, we need to raise this to the developer as they may have configured something wrong.
+                    phoenix?.errorCallback?(NSError(domain: ConfigurationError.domain, code: ConfigurationError.InvalidClientCredentials.rawValue, userInfo: nil))
                 }
             }
             

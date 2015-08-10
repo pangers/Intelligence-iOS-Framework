@@ -13,6 +13,9 @@ import Foundation
 /// Refer to the Readme file to obtain further instructions on setup.
 public enum ConfigurationError: Int, ErrorType {
     
+    /// The domain passed to NSErrors.
+    static let domain = "ConfigurationError"
+    
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
     
@@ -25,6 +28,9 @@ public enum ConfigurationError: Int, ErrorType {
     
     /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
+    
+    /// There is an issue with the client credentials you have provided. Cannot authenticate with Phoenix Platform.
+    case InvalidClientCredentials = 1005
 }
 
 /// Enumeration to list the errors that can occur in the identity module.

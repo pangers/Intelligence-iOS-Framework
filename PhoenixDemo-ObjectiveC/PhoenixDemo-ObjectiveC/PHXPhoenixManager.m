@@ -8,7 +8,7 @@
 
 #import "PHXPhoenixManager.h"
 
-@interface PHXPhoenixManager () <PHXPhoenixNetworkDelegate>
+@interface PHXPhoenixManager()
 
 @property(nonatomic,readwrite,strong) Phoenix* phoenix;
 
@@ -34,7 +34,6 @@
         }
         
         NSParameterAssert(err == nil && instance.phoenix != nil);
-        [instance.phoenix setNetworkDelegate:instance];
     });
     
     return instance;
@@ -42,8 +41,10 @@
 
 -(void) startup
 {
-    // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [self.phoenix startup];
+    // Start phoenix, will throw a network error if something is configured incorrectly.
+    [self.phoenix startup:^(NSError * _Nonnull error) {
+        NSLog(@"Fundamental error occurred: %@", error);
+    }];
 }
 
 

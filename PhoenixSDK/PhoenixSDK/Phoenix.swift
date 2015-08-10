@@ -8,39 +8,11 @@
 
 import Foundation
 
+/// Fundamental issue occurred, probably related to configuration.
+public typealias PhoenixErrorCallback = (NSError) -> ()
+
 /// The main Phoenix entry point. Aggregates modules in it.
 public final class Phoenix: NSObject {
-    
-    // MARK: Modules
-    
-    /// The identity module, used to manage users in the Phoenix backend.
-    @objc public internal(set) var identity:PhoenixIdentity
-
-    // MARK: Instance variables
-
-    /// Private configuration. Can't be modified once initialized.
-    /// Provide a Phoenix.Configuration object to initialize it.
-    private let configuration: PhoenixConfigurationProtocol
-    
-    /// The network manager instance.
-    internal let network: Network
-
-    /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: PhoenixConfigurationProtocol {
-        return configuration.clone()
-    }
-    
-    /// Delegate implementing failure methods that a developer should implement to catch
-    /// errors that the Phoenix SDK is unable to handle.
-    /// - SeeAlso: `PhoenixNetworkDelegate`
-    public var networkDelegate: PhoenixNetworkDelegate? {
-        get {
-            return network.delegate
-        }
-        set {
-            network.delegate = newValue
-        }
-    }
     
     // MARK: Initializer
     
@@ -49,23 +21,19 @@ public final class Phoenix: NSObject {
     ///     - phoenixConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
     ///     - withTokenStorage: The token storage to be used.
+    ///     - errorCallback: Callback that handles very bad errors requiring developer action. These will usually be related to networking and therefore do not throw an exception.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) throws {
-        self.configuration = phoenixConfiguration.clone()
-        self.network = Network(withConfiguration: self.configuration, withTokenStorage:tokenStorage)
-
-        // Modules
-        self.identity = Identity(withNetwork: network, withConfiguration: configuration)
-
+    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol, withTokenStorage:TokenStorage) throws {
+        self.myConfiguration = phoenixConfiguration.clone()
+        self.network = Network(withConfiguration: self.myConfiguration, withTokenStorage: withTokenStorage)
+        self.identity = Identity(withNetwork: network, withConfiguration: myConfiguration)
+        
         super.init()
         
-        if (self.configuration.hasMissingProperty)
-        {
+        if (self.myConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError
         }
-        
-        if (!self.configuration.isValid)
-        {
+        if (!self.myConfiguration.isValid) {
             throw ConfigurationError.InvalidPropertyError
         }
     }
@@ -100,6 +68,31 @@ public final class Phoenix: NSObject {
         try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
     
+    // MARK: Instance variables
+    
+    /// Private configuration. Can't be modified once initialized.
+    /// Provide a Phoenix.Configuration object to initialize it.
+    private let myConfiguration: PhoenixConfigurationProtocol
+    
+    /// The network manager instance.
+    internal let network: Network
+    
+    /// - Returns: A **copy** of the configuration.
+    public var configuration: PhoenixConfigurationProtocol {
+        return myConfiguration.clone()
+    }
+    
+    /// Called by Phoenix when the SDK does not know how to deal with
+    /// the current error it has encountered.
+    /// Currently only serves:
+    ///     - ConfigurationError.InvalidClientCredentials (1005)
+    internal var errorCallback: PhoenixErrorCallback?
+    
+    // MARK: Modules
+    
+    /// The identity module, used to manage users in the Phoenix backend.
+    @objc public internal(set) var identity:PhoenixIdentity
+
     // MARK:- Startup/Shutdown
     
     // TODO: Need to define how this works, since it can fail...
@@ -107,8 +100,10 @@ public final class Phoenix: NSObject {
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
     /// Starts up the Phoenix SDK.
-    public func startup() {
+    /// - Parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
+    public func startup(callback: PhoenixErrorCallback) {
         // Login as Application User.
+        self.errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
     }
     
