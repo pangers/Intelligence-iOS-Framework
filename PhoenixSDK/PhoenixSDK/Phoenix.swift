@@ -20,16 +20,6 @@ public final class Phoenix: NSObject {
     /// The network manager instance.
     internal let network: Network
 
-    /// Returns true if Phoenix is currently authenticated against the backend
-    internal var isAuthenticated: Bool {
-        return network.isAuthenticated
-    }
-    
-    /// Returns true if Phoenix is currently authenticated against the backend with a valid username and password
-    public var isLoggedIn: Bool {
-        return network.isLoggedIn
-    }
-    
     /// - Returns: A **copy** of the configuration.
     public var currentConfiguration: PhoenixConfigurationProtocol {
         return configuration.clone()
@@ -109,31 +99,14 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
-
-    // MARK:- Authentication
     
-    /// Attempt to authenticate with a username and password.
-    /// - Parameters
-    ///     - username: Username of account to attempt login with.
-    ///     - password: Password associated with username.
-    ///     - callback: Block/function to call once executed.
-    public func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
-        network.login(withUsername: username, password: password, callback: callback)
-    }
-    
-    /// Logout of currently logged in user's account.
-    public func logout() {
-        network.logout()
-    }
-    
-    /// Starts up the Phoenix SDK, triggering:
-    ///   - Anonymous authentication
+    /// Starts up the Phoenix SDK.
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
-    public func startup(withCallback callback: PhoenixAuthenticationCallback? = nil) {
-        network.anonymousLogin(callback)
+    public func startup() {
+        network.enqueueAuthenticationOperationIfRequired()
     }
     
     /// Shutdowns the Phoenix SDK.

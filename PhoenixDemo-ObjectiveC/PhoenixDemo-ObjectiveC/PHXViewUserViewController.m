@@ -30,11 +30,11 @@
     [self showUser];
     
     if ([self fetchMe]) {
-        __weak typeof(self) weakSelf = self;
+        //__weak typeof(self) weakSelf = self;
 
-        [[self phoenixIdentity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
+        /*[[self phoenixIdentity] getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
             [weakSelf showMe:user error:error];
-        }];
+        }];*/
     }
 }
 

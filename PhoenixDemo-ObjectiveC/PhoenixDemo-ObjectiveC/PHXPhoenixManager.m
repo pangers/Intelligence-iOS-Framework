@@ -43,9 +43,7 @@
 -(void) startup
 {
     // Instantiate Phoenix using PhoenixConfiguration.json file.
-    [self.phoenix startupWithCallback:^(BOOL authenticated) {
-        NSLog(@"Anonymous login %d", authenticated);
-    }];
+    [self.phoenix startup];
 }
 
 

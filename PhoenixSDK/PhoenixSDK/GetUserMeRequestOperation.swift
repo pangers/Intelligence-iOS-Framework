@@ -16,12 +16,14 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
     
     /// The configuration used throughout Phoenix.
     let configuration: PhoenixConfigurationProtocol
+    
+    let callback: PhoenixUserCallback
 
     /// Default initializer with all required parameters
-    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol, callback: PhoenixUserCallback) {
         self.configuration = configuration
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
-
+        self.callback = callback
         super.init(withSession: session, withRequest: request, withAuthentication: authentication)
     }
     
@@ -37,6 +39,7 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
             
             // Set userId in authentication class (so we can use it in future requests requiring userId).
             authentication.userId = user?.userId
+            self.callback(user: user, error: error)
         }
         
         if error != nil {
@@ -49,6 +52,7 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
         
         // If all conditions succeed, parse the user.
         user = Phoenix.User.fromResponseData(data, withConfiguration:configuration)
+        
     }
 
 }

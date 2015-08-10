@@ -10,7 +10,7 @@ import Foundation
 
 /// Defines an authentication callback, which only returns whether the request
 /// has successfully authenticated the user or not.
-public typealias PhoenixAuthenticationCallback = (authenticated: Bool) -> ()
+internal typealias PhoenixAuthenticationCallback = (accessToken: String?) -> ()
 
 internal extension Phoenix {
 
@@ -23,6 +23,8 @@ internal extension Phoenix {
     /// outcome of the operation.
     class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         
+        var accessToken: String?
+        
         /// The URL session
         private let urlSession:NSURLSession
         
@@ -30,68 +32,57 @@ internal extension Phoenix {
         private let authentication: PhoenixAuthenticationProtocol
         
         /// The callback objects that will be notified upon completion.
-        private lazy var callbacks = [PhoenixAuthenticationCallback]()
+        private let callback: PhoenixAuthenticationCallback
+        
+        convenience init(network: Phoenix.Network, configuration: PhoenixConfigurationProtocol, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
+            self.init(session: network.sessionManager, authentication: network.authentication, configuration: configuration, username: username, password: password, callback: callback)
+        }
         
         /// Default initializer
         /// - Parameters: 
         ///     - session: An NSURLSession to use for the requests.
         ///     - authentication: The authentication to use.
         ///     - configuration: The SDK configuration
-        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol) {
+        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
             self.urlSession = session
             self.authentication = authentication
+            self.callback = callback
             
             super.init()
             
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            let request = NSURLRequest.phx_requestForAuthentication(authentication, configuration: configuration),
-                preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
+            
+            let request: NSURLRequest
+            if let username = username, password = password {
+                request = NSURLRequest.phx_requestForAuthenticationWithUserCredentials(configuration, username: username, password: password)
+            } else {
+                request = NSURLRequest.phx_requestForAuthenticationWithClientCredentials(configuration)
+            }
+            let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
             
             self.input = preparedRequest
             
-            // Set the completion block to call the callbacks.
             self.completionBlock = { [weak self] in
-                guard let this = self else {
-                    return
-                }
-                
-                for callback in this.callbacks {
-                    callback(authenticated: !this.authentication.requiresAuthentication)
-                }
-                
-                this.callbacks = []
+                self?.callback(accessToken: self?.accessToken)
             }
         }
         
         /// Performs a request oeration
         override func main() {
             assert(self.input != nil, "Can't execute an Authentication operation with no request.")
-            
-//          Exponential backoff. Deactivated to avoid locking an account. See `
-//            let backoff = exponentialBackoff()
-//            backoff(block:requestAuthentication)
-            
-            if !requestAuthentication() {
-                cancel()
-            }
-        }
-        
-        /// Actually executes the request and returns true if it successfully loaded the
-        /// authentication response.
-        func requestAuthentication() -> Bool {
             guard let request = input else {
                 assert(false, "Can't execute an Authentication operation with no request.")
             }
-
+            
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
             
             // TODO: Remove Logging
             // Once we know exactly what we are getting back from the server
             // and can handle it appropriately, currently things are a bit ambiguous
             // so exposing the data we have received will help us define action plans
-            // for how to deal with the response. 
+            // for how to deal with the response.
             //
             // Such as:
             // "This account is locked due to an excess of invalid authentication attempts"
@@ -110,27 +101,10 @@ internal extension Phoenix {
             self.error = error
             self.output = (data:data, response:response as? NSHTTPURLResponse)
             
-            guard let jsonDictionary = data?.phx_jsonDictionary else {
-                return false
+            guard let jsonDictionary = data?.phx_jsonDictionary, accessToken = jsonDictionary[accessTokenKey] as? String where !accessToken.isEmpty else {
+                return
             }
-            
-            if !self.authentication.loadAuthorizationFromJSON(jsonDictionary) {
-                return false
-            }
-            
-            return !self.authentication.requiresAuthentication
+            self.accessToken = accessToken
         }
-        
-        /// Adds a callback to the list of callbacks to be notified.
-        /// It will be strongly held until the operation finishes.
-        func addCallback(callback:PhoenixAuthenticationCallback) {
-            if self.finished {
-                callback(authenticated: !self.authentication.requiresAuthentication)
-            }
-            else {
-                callbacks += [callback]
-            }
-        }
-        
     }
 }

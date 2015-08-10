@@ -18,7 +18,6 @@
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
-		FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674791B7105190085BEC8 /* Authentication.storyboard */; };
 		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
 		FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
@@ -44,7 +43,6 @@
 		BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXViewUserViewController.m; sourceTree = "<group>"; };
 		FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIdentityModuleViewController.h; sourceTree = "<group>"; };
 		FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIdentityModuleViewController.m; sourceTree = "<group>"; };
-		FE1674791B7105190085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
 		FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXAuthenticationViewController.h; sourceTree = "<group>"; };
 		FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXAuthenticationViewController.m; sourceTree = "<group>"; };
 		FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../PhoenixSDK/build/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 			children = (
 				FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */,
 				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
-				FE1674791B7105190085BEC8 /* Authentication.storyboard */,
 			);
 			name = Authentication;
 			sourceTree = "<group>";
@@ -203,7 +200,6 @@
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
 				7FDAAB0E1B5D360800DF2BE6 /* Main.storyboard in Resources */,
-				FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

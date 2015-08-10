@@ -7,10 +7,10 @@
 //
 
 #import "PHXAuthenticationViewController.h"
+#import "PHXPhoenixManager.h"
+#import "PHXViewUserViewController.h"
 
 @import PhoenixSDK;
-
-#import "PHXPhoenixManager.h"
 
 typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     PHXLogin,
@@ -22,11 +22,20 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 @interface PHXAuthenticationViewController()
 {
     PHXLoginMessage currentStatus;
+    PHXPhoenixUser *loggedInUser;
 }
 @end
 
 
 @implementation PHXAuthenticationViewController
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"LoginViewUser"]) {
+        PHXViewUserViewController *viewUser = segue.destinationViewController;
+        viewUser.user = loggedInUser;
+        loggedInUser = nil;
+    }
+}
 
 - (PHXLoginMessage)status {
     if ([self loggedIn]) {
@@ -69,12 +78,12 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 }
 
 - (BOOL)loggedIn {
-    return [[self phoenix] isLoggedIn];
+    return [[[self phoenix] identity] isLoggedIn];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setTitle:@"Authentication"];
+    [self setTitle:@"Login"];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -134,10 +143,14 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
             }];
             return;
         }
-        [self.phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-            currentStatus = authenticated ? PHXLoggedIn : PHXLoginFailed;
+        [self.phoenix.identity loginWithUsername:username password:password callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+            currentStatus = self.phoenix.identity.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
+                if (currentStatus == PHXLoggedIn) {
+                    loggedInUser = user;
+                    [self performSegueWithIdentifier:@"LoginViewUser" sender:self];
+                }
             }];
         }];
     }]];
@@ -146,7 +159,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 
 - (void)logout {
     currentStatus = PHXLogin;
-    [self.phoenix logout];
+    [self.phoenix.identity logout];
     [self.tableView reloadData];
 }
 
