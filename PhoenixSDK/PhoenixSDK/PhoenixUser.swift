@@ -39,7 +39,7 @@ private let invalidUserId = Int.min
 private let strongPasswordCharacterCountThreshold = 8
 
 /// The user types that the SDK supports
-public enum UserType : String {
+private enum UserType : String {
     
     /// Regular user
     case User = "User"
@@ -143,8 +143,8 @@ extension Phoenix {
         }
         
         /// The user type will always be User.
-        var userTypeId:UserType {
-            return .User
+        var userTypeId: String {
+            return UserType.User.rawValue
         }
         
         /// - Returns: Provides a JSONDictionary with the user data.
@@ -157,7 +157,7 @@ extension Phoenix {
                 referenceKey: self.reference,
                 isActiveKey: self.isActive,
                 metadataKey: self.metadata,
-                userTypeKey: self.userTypeId.rawValue,
+                userTypeKey: self.userTypeId,
             ]
             
             /// Optioanlly set a key if there is a valid value
