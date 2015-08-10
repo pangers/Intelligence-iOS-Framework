@@ -12,8 +12,6 @@ import PhoenixSDK
 
 class ViewUserViewController : UIViewController, UISearchBarDelegate {
     
-    var fetchMe: Bool = false
-    
     @IBOutlet weak var infoLabel: UILabel!
     
     @IBOutlet weak var userLabel: UILabel!
@@ -35,9 +33,6 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         displayUser()
-        if fetchMe {
-            phoenix?.identity.getMe(displayMe)
-        }
     }
     
     func displayMe(user: Phoenix.User?, error: NSError?) {

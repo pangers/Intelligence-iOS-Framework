@@ -28,6 +28,7 @@ class AuthenticationViewController: UITableViewController {
         }
     }
     
+    private var loggedInUser: Phoenix.User?
     private var _loginMessage = LoginMessages.Login
     private var loginMessage: LoginMessages {
         get {
@@ -38,7 +39,7 @@ class AuthenticationViewController: UITableViewController {
         }
     }
     private var loggedIn: Bool {
-        return phoenix?.isLoggedIn == true
+        return phoenix?.identity.loggedIn == true
     }
     private var phoenix: Phoenix? {
         return PhoenixManager.manager.phoenix
@@ -47,6 +48,14 @@ class AuthenticationViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Authentication"
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "LoginViewUser" {
+            if let viewUser = segue.destinationViewController as? ViewUserViewController {
+                viewUser.user = loggedInUser
+            }
+        }
     }
     
     // MARK:- UITableViewDataSource
@@ -114,8 +123,14 @@ class AuthenticationViewController: UITableViewController {
                 reloadUI(.Login)
                 return
             }
-            self?.phoenix?.login(withUsername: username, password: password, callback: { (authenticated) -> () in
-                reloadUI(authenticated ? .LoggedIn : .LoginFailed)
+            self?.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+                reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
+                if self?.loginMessage == .LoggedIn {
+                    self?.loggedInUser = user
+                    NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
+                        self?.performSegueWithIdentifier("LoginViewUser", sender: self)
+                    }
+                }
             })
         }))
         presentViewController(alert, animated: true) { }
@@ -123,7 +138,7 @@ class AuthenticationViewController: UITableViewController {
     
     func logout() {
         loginMessage = .Login
-        phoenix?.logout()
+        phoenix?.identity.logout()
         tableView.reloadData()
     }
 }

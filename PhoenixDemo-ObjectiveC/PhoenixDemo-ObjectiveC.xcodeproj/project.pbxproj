@@ -82,7 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23791B70B89F00CE0C81 /* Phoenix */,
-				FE0C64DC1B722B0A008C02D7 /* Authentication */,
 				BB0A236E1B70B1A400CE0C81 /* Identity */,
 				FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
@@ -110,6 +109,8 @@
 			isa = PBXGroup;
 			children = (
 				BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */,
+				FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */,
+				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
 				FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */,
 				FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */,
 				BB0A23751B70B25F00CE0C81 /* PHXCreateUserViewController.h */,
@@ -127,15 +128,6 @@
 				BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */,
 			);
 			name = Phoenix;
-			sourceTree = "<group>";
-		};
-		FE0C64DC1B722B0A008C02D7 /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-				FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */,
-				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
-			);
-			name = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

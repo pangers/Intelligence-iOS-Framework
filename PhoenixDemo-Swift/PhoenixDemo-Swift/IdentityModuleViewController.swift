@@ -10,10 +10,4 @@ import UIKit
 
 class IdentityModuleViewController : UITableViewController {
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // If we are presenting `GetMe` segue, set `fetchMe` to true.
-        if segue.identifier == "GetMe" {
-            (segue.destinationViewController as? ViewUserViewController)?.fetchMe = true
-        }
-    }
 }

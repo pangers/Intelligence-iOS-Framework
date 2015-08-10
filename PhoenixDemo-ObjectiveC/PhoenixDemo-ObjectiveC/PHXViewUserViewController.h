@@ -13,6 +13,5 @@
 @interface PHXViewUserViewController : UIViewController
 
 @property (strong, nonatomic) PHXPhoenixUser* user;
-@property BOOL fetchMe;
 
 @end
