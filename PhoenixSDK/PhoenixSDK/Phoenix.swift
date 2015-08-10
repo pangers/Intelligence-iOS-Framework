@@ -100,12 +100,13 @@ public final class Phoenix: NSObject {
         try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
     
-    /// Starts up the Phoenix SDK.
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
+    /// Starts up the Phoenix SDK.
     public func startup() {
+        // Login as Application User.
         network.enqueueAuthenticationOperationIfRequired()
     }
     
