@@ -66,7 +66,8 @@ internal extension NSURLRequest {
     
     /// - Parameters:
     ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
-    ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
+    ///     - username: Username to authenticate with.
+    ///     - password: Password to authenticate with.
     /// - Returns: An user credentials authentication NSURLRequest that can be used to obtain an authentication token.
     class func phx_requestForAuthenticationWithUserCredentials(configuration: PhoenixConfigurationProtocol, username: String, password: String) -> NSURLRequest {
         if configuration.clientID.isEmpty || configuration.clientSecret.isEmpty {
