@@ -48,7 +48,10 @@ internal extension Phoenix {
     final class Network {
         
         // MARK: Instance variables
-
+        
+        /// A link to the owner of this Network class (Phoenix) used for propagating errors upwards.
+        weak internal var phoenix: Phoenix?
+        
         /// NSURLSession with default session configuration.
         private(set) internal lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 
@@ -64,8 +67,6 @@ internal extension Phoenix {
         
         /// The current phoenix authentication.
         internal var authentication: Authentication
-        
-        weak internal var phoenix: Phoenix?
         
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?

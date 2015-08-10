@@ -21,6 +21,8 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     /// The Phoenix authentication to prepare the request with.
     internal let authentication:Phoenix.Authentication
     
+    /// Temporary access token currently only used by 'getUserMe' and is the access_token we receive from the 'login'.
+    /// Only valid for this request.
     internal var temporaryAccessToken: String?
     
     /// Default initializer with all required parameters

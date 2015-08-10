@@ -22,6 +22,7 @@ internal extension NSURLRequest {
     
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
+    /// - Parameter temporaryAccessToken: Currently only used by 'getUserMe' and is the access_token we receive from the 'login'.
     /// - Returns: An NSURLRequest which is equal to this one, but adding the required headers to
     /// authenticate it against the backend.
     func phx_preparePhoenixRequest(withAuthentication authentication: PhoenixAuthenticationProtocol, temporaryAccessToken: String? = nil) -> NSURLRequest {
