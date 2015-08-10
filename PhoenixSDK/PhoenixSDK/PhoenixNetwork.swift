@@ -96,7 +96,7 @@ internal extension Phoenix {
         ///
         /// Currently intercepts:
         ///   - 401: token_expired (EXPIRE token, need to refresh)
-        ///   - 403: invalid_token (NULL out token, need to reauthenticate)
+        ///   - 403: invalid_token (INVALID access, cannot use this method)
         ///
         /// - Parameters:
         ///     - data: The data that was obtained from the backend.
@@ -118,7 +118,7 @@ internal extension Phoenix {
 
                 // 'invalid_token' in 'error' field of response
             case HTTPStatus.TokenInvalid.rawValue:
-                authentication.clearAccessToken()
+                fallthrough
                 
             default:
                 return false

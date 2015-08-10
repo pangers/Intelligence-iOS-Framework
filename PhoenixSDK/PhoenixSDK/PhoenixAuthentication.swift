@@ -69,7 +69,7 @@ internal extension Phoenix {
         
         // MARK: Functions
         
-        /// Clear our current access token, should occur when 401/403 is received.
+        /// Clear our current access token, should occur when 401 is received.
         func clearAccessToken() {
             // Refresh token may still be valid but access token has expired
             accessToken = nil
