@@ -11,23 +11,15 @@ import Foundation
 /// The authentication protocol. Defines the variables that need to be provided by
 /// Authentication.
 internal protocol PhoenixAuthenticationProtocol {
-    /// The id for the logged in user
+    /// The id for the logged in user.
     var userId: Int? { get set }
     
-    /// The accesstoken
+    /// The access token used in OAuth bearer header for requests.
     var accessToken: String? { get set }
-}
-
-/// Extension over PhoenixAuthenticationProtocol. Adds functionality to check if the 
-/// authentication being used is anonymous and if it requires authentication.
-extension PhoenixAuthenticationProtocol {
     
     /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
-    var requiresAuthentication: Bool {
-        return accessToken == nil
-    }
+    var requiresAuthentication: Bool { get }
 }
-
 
 internal extension Phoenix {
 
@@ -43,9 +35,12 @@ internal extension Phoenix {
 
         // MARK: Instance variables
         
-        private var storage:TokenStorage;
+        private var storage: TokenStorage
         
-        /// The id for the logged in user
+        var requiresAuthentication: Bool {
+            return accessToken == nil
+        }
+        
         var userId: Int? {
             get {
                 return storage.userId
@@ -55,7 +50,6 @@ internal extension Phoenix {
             }
         }
         
-        /// The access token used in OAuth bearer header for requests.
         var accessToken: String? {
             get {
                 return storage.accessToken

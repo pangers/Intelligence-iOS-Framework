@@ -13,6 +13,8 @@ import Foundation
     
     optional
     
+    // TODO: This is actually logging into the application user. Really a token issue.
+    //      What should we do to describe this to the user?
     /// Called when an authentication failure occurs in the Phoenix SDK.
     /// - Parameters:
     ///     - error: The error that occured

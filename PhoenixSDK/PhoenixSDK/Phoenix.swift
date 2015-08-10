@@ -11,6 +11,11 @@ import Foundation
 /// The main Phoenix entry point. Aggregates modules in it.
 public final class Phoenix: NSObject {
     
+    // MARK: Modules
+    
+    /// The identity module, used to manage users in the Phoenix backend.
+    @objc public internal(set) var identity:PhoenixIdentity
+
     // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
@@ -37,11 +42,6 @@ public final class Phoenix: NSObject {
         }
     }
     
-    // MARK: The Phoenix SDK modules
-    
-    /// The identity module, used to manage users in the Phoenix backend.
-    @objc public internal(set) var identity:PhoenixIdentity
-
     // MARK: Initializer
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -99,6 +99,8 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
+    
+    // MARK:- Startup/Shutdown
     
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's
