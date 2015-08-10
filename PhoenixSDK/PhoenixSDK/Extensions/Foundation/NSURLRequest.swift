@@ -173,12 +173,12 @@ internal extension NSURLRequest {
     ///     - configuration: The configuration to use.
     class func phx_httpURLRequestForUpdateUser(user:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
         // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(user.userId)", relativeToURL: configuration.baseURL) {
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID, userId: user.userId), relativeToURL: configuration.baseURL) {
             
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
             request.HTTPBody = [user.toJSON()].phx_toJSONData()
             
             if let finalRequest = request.copy() as? NSURLRequest {
@@ -228,7 +228,7 @@ internal extension NSURLRequest {
     
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
     /// - Returns: The path for most requests related to a user.
-    private class func phx_usersURLPath(projectId:Int) -> String {
-        return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users"
+    private class func phx_usersURLPath(projectId:Int, userId: Int? = nil) -> String {
+        return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users" + (userId != nil ? "/\(userId!)" : "")
     }
 }
