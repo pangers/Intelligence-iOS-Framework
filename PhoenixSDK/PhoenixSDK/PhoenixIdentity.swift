@@ -151,13 +151,13 @@ extension Phoenix {
         
         /// Gets a user data from the current user credentials.
         /// - Parameters:
-        ///     - temporaryAccessToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
+        ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
         ///     - callback: The user callback to pass. Will be called with either an error or a user.
-        @objc private func getMe(temporaryAccessToken: String, callback:PhoenixUserCallback) {
+        @objc private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
             let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration, callback: callback)
             
             // This operation will use a temporary access token obtained from login request.
-            operation.temporaryAccessToken = temporaryAccessToken
+            operation.disposableLoginToken = disposableLoginToken
             
             // Execute the network operation
             network.executeNetworkOperation(operation)

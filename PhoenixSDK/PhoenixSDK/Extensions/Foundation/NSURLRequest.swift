@@ -23,10 +23,10 @@ internal extension NSURLRequest {
     
     /// Add authentication headers to NSURLRequest.
     /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
-    /// - Parameter temporaryAccessToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
+    /// - Parameter disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
     /// - Returns: An NSURLRequest which is equal to this one, but adding the required headers to
     /// authenticate it against the backend.
-    func phx_preparePhoenixRequest(withAuthentication authentication: PhoenixAuthenticationProtocol, temporaryAccessToken: String? = nil) -> NSURLRequest {
+    func phx_preparePhoenixRequest(withAuthentication authentication: PhoenixAuthenticationProtocol, disposableLoginToken: String? = nil) -> NSURLRequest {
         // Somehow the NSURLRequest is immutable (perhaps if subclassed?)
         guard let mutable = mutableCopy() as? NSMutableURLRequest else {
             assertionFailure("The mutable copy of this \(self.dynamicType) should return an NSMutableURLRequest.")
@@ -43,7 +43,7 @@ internal extension NSURLRequest {
         headerFields[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         
         // If we have an access token append `Bearer` to header
-        if let token = temporaryAccessToken ?? authentication.accessToken {
+        if let token = disposableLoginToken ?? authentication.accessToken {
             headerFields[HTTPHeaderAuthorizationKey] = "Bearer \(token)"
         }
         
