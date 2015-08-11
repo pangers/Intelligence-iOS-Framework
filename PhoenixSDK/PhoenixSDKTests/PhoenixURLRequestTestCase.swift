@@ -26,25 +26,25 @@ class PhoenixURLRequestTestCase: XCTestCase {
 
         XCTAssertEqual(request.URL!.absoluteString, "https://api.phoenixplatform.eu/identity/v1/projects/123/users")
         
-        guard let userDictionary = request.HTTPBody?.phx_jsonArray?.first as? JSONDictionary else {
+        guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")
             return
         }
 
         // Variable
-        XCTAssertEqual(userDictionary["CompanyId"] as! Int, companyId)
-        XCTAssertEqual(userDictionary["Username"] as! String, username)
-        XCTAssertEqual(userDictionary["Password"] as! String, password)
-        XCTAssertEqual(userDictionary["FirstName"] as! String, firstname)
-        XCTAssertEqual(userDictionary["LastName"] as! String, lastname)
-        XCTAssertEqual(userDictionary["AvatarUrl"] as! String, avatarURL)
+        XCTAssertEqual(userDictionary["CompanyId"] as? Int, companyId)
+        XCTAssertEqual(userDictionary["Username"] as? String, username)
+        XCTAssertEqual(userDictionary["Password"] as? String, password)
+        XCTAssertEqual(userDictionary["FirstName"] as? String, firstname)
+        XCTAssertEqual(userDictionary["LastName"] as? String, lastname)
+        XCTAssertEqual(userDictionary["AvatarUrl"] as? String, avatarURL)
 
         // Fixed by SDK
-        XCTAssertEqual(userDictionary["UserTypeId"] as! String, "User")
-        XCTAssertEqual(userDictionary["MetaData"] as! String, "")
-        XCTAssertEqual(userDictionary["LockingCount"] as! Int, 0)
-        XCTAssertEqual(userDictionary["IsActive"] as! Int, 1)
-        XCTAssertEqual(userDictionary["Reference"] as! String, "")
+        XCTAssertEqual(userDictionary["UserTypeId"] as? String, "User")
+        XCTAssertEqual(userDictionary["MetaData"] as? String, "")
+        XCTAssertEqual(userDictionary["LockingCount"] as? Int, 0)
+        XCTAssertEqual(userDictionary["IsActive"] as? Int, 1)
+        XCTAssertEqual(userDictionary["Reference"] as? String, "")
         
         print(userDictionary)
     }

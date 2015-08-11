@@ -16,56 +16,7 @@ private enum ConfigurationKey: String {
     case ProjectID = "project_id"
     case Region = "region"
     case CompanyId = "company_id"
-}
-
-/// A protocol defining the Phoenix required configuration.
-/// The implementation is Phoenix.Configuration.
-@objc(PHXPhoenixConfigurationProtocol) public protocol PhoenixConfigurationProtocol {
-    
-    /// The client Id.
-    var clientID: String { get set }
-    
-    /// The client secret
-    var clientSecret: String { get set }
-    
-    /// The project Id
-    var projectID: Int { get set }
-    
-    /// The application Id
-    var applicationID: Int { get set }
-    
-    /// The company Id
-    var companyId: Int { get set }
-    
-    /// The region
-    var region: Phoenix.Region { get set }
-    
-    /// - Returns: True if the configuration is valid
-    var isValid: Bool { get }
-    
-    /// - Returns: True if a property is missing.
-    var hasMissingProperty: Bool { get }
-
-    /// - Returns: a clone of the object
-    func clone() -> PhoenixConfigurationProtocol
-    
-}
-
-/// Extension to the configuraiton protocol to verify whether the configuration provided is
-/// valid or not. Also has the baseURL helper method.
-/// This extension is used for internal purposes only, and should not be overriden by the 
-/// developer.
-extension PhoenixConfigurationProtocol {
- 
-    /// - Returns: Optional base URL to call.
-    var baseURL: NSURL? {
-        // nil on no region
-        if region == .NoRegion {
-            return nil
-        }
-        
-        return NSURL(string: self.region.baseURL())
-    }
+    case UseGeofences = "use_geofences"
 }
 
 public extension Phoenix {
@@ -73,7 +24,11 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    public class Configuration: NSObject, PhoenixConfigurationProtocol {
+    // TODO: Make final so Developers cannot override this!
+    @objc(PHXConfiguration) public class Configuration: NSObject {
+        
+        /// Flag specifying whether or not to download geofences on launch.
+        public var useGeofences = true
         
         /// The client ID
         public var clientID = ""
@@ -122,8 +77,9 @@ public extension Phoenix {
         }
         
         /// - Returns: A copy of the configuration object.
-        public func clone() -> PhoenixConfigurationProtocol {
+        public func clone() -> Configuration {
             let copy = Configuration()
+            copy.useGeofences = self.useGeofences
             copy.region = self.region
             copy.applicationID = self.applicationID
             copy.projectID = self.projectID
@@ -160,6 +116,7 @@ public extension Phoenix {
             }
             
             // Fetch from the contents dictionary
+            self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
             self.clientID = try value(forKey: .ClientID, inContents:contents)
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
@@ -179,6 +136,16 @@ public extension Phoenix {
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
                 applicationID <= 0 || region == .NoRegion || companyId <= 0
+        }
+        
+        /// - Returns: Optional base URL to call.
+        var baseURL: NSURL? {
+            // nil on no region
+            if region == .NoRegion {
+                return nil
+            }
+            
+            return NSURL(string: self.region.baseURL())
         }
     }
 }

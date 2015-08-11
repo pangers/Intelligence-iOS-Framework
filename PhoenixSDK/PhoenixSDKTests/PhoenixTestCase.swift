@@ -26,7 +26,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
+            let phoenix = try Phoenix(withConfiguration: configuration, tokenStorage:storage)
             XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -39,7 +39,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         do {
             let config = MockConfiguration()
             config.mockInvalid = true
-            let _ = try Phoenix(withConfiguration: config, withTokenStorage:storage)
+            let _ = try Phoenix(withConfiguration: config, tokenStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {

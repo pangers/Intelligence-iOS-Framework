@@ -10,29 +10,23 @@ import Foundation
 
 /// The main Phoenix entry point. Aggregates modules in it.
 public final class Phoenix: NSObject {
-    
-    // MARK: Instance variables
 
     /// Private configuration. Can't be modified once initialized.
     /// Provide a Phoenix.Configuration object to initialize it.
-    private let configuration: PhoenixConfigurationProtocol
+    private let configuration: Phoenix.Configuration
+    
+    /// - Returns: A **copy** of the configuration.
+    public var currentConfiguration: Phoenix.Configuration {
+        return configuration.clone()
+    }
     
     /// The network manager instance.
     internal let network: Network
 
-    /// Returns true if Phoenix is currently authenticated against the backend
-    internal var isAuthenticated: Bool {
-        return network.isAuthenticated
-    }
-    
     /// Returns true if Phoenix is currently authenticated against the backend with a valid username and password
+    // TODO: Does this make sense anymore?
     public var isLoggedIn: Bool {
         return network.isLoggedIn
-    }
-    
-    /// - Returns: A **copy** of the configuration.
-    public var currentConfiguration: PhoenixConfigurationProtocol {
-        return configuration.clone()
     }
     
     /// Delegate implementing failure methods that a developer should implement to catch
@@ -52,21 +46,25 @@ public final class Phoenix: NSObject {
     /// The identity module, used to manage users in the Phoenix backend.
     @objc public internal(set) var identity:PhoenixIdentity
 
+    /// The location module, used to internally manages geofences and user location. Hidden from developers.
+    internal(set) var location: Phoenix.Location
+    
     // MARK: Initializer
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameters:
-    ///     - phoenixConfiguration: The configuration to use. The configuration
+    ///     - withConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
-    ///     - withTokenStorage: The token storage to be used.
+    ///     - tokenStorage: The token storage to be used.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) throws {
+    public init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
         self.configuration = phoenixConfiguration.clone()
-        self.network = Network(withConfiguration: self.configuration, withTokenStorage:tokenStorage)
+        self.network = Network(withConfiguration: self.configuration, tokenStorage:tokenStorage)
 
         // Modules
         self.identity = Identity(withNetwork: network, withConfiguration: configuration)
-
+        self.location = Location(withNetwork: network, configuration: configuration)
+        
         super.init()
         
         if (self.configuration.hasMissingProperty)
@@ -88,16 +86,16 @@ public final class Phoenix: NSObject {
     ///     - inBundle: The bundle to use. Defaults to the main bundle.
     ///     - withTokenStorage: The token storage to use.
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
-        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), withTokenStorage: tokenStorage)
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
     }
 
     /// Initializes the Phoenix entry point with a configuration object. Will use the PhoenixKeychain token storage.
     /// - Parameters:
-    ///     - phoenixConfiguration: The configuration to use. The configuration
+    ///     - withConfiguration: The configuration to use. The configuration
     /// will be copied and kept privately to avoid future mutability.
     /// - Throws: **ConfigurationError** if the configuration is invalid
-    convenience public init(withConfiguration phoenixConfiguration: PhoenixConfigurationProtocol) throws {
-        try self.init(withConfiguration:phoenixConfiguration, withTokenStorage:PhoenixKeychain())
+    convenience public init(withConfiguration phoenixConfiguration: Phoenix.Configuration) throws {
+        try self.init(withConfiguration:phoenixConfiguration, tokenStorage:PhoenixKeychain())
     }
     
     /// Provides a convenience initializer to load the configuration from a JSON file. Will use the PhoenixKeychain token storage.
@@ -114,9 +112,12 @@ public final class Phoenix: NSObject {
     
     /// Attempt to authenticate with a username and password.
     /// - Parameters
-    ///     - username: Username of account to attempt login with.
+    ///     - withUsername: Username of account to attempt login with.
     ///     - password: Password associated with username.
     ///     - callback: Block/function to call once executed.
+    // TODO: Refactor login with username/password to call every time. Then chain getUserMe.
+    // TODO: Chain getUserMe, return user data in callback. PhoenixAuthenticationCallback should be private.
+    // TODO: Hide getUserMe from interface of Identity.
     public func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
         network.login(withUsername: username, password: password, callback: callback)
     }
@@ -126,16 +127,32 @@ public final class Phoenix: NSObject {
         network.logout()
     }
     
-    /// Starts up the Phoenix SDK, triggering:
-    ///   - Anonymous authentication
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
+    // TODO: Remove callback
+    // Starts up modules. No callbacks.
+    // Anonymously logins into the SDK then:
+    // - Cannot request anything on behalf of the user.
+    // - Calls Application Installed/Updated.
+    // - Ask for user location. (Developer does this, then notifies module (or automated)).
+    // - Initialises Geofence load/download.
+    // - Startup Events module, send stored events.
+    // - Register for Push notifications. (Developer does this, then passes to module).
+    /// Starts up the Phoenix SDK.
     public func startup(withCallback callback: PhoenixAuthenticationCallback? = nil) {
-        network.anonymousLogin(callback)
+        network.anonymousLogin { [weak self] (authenticated) -> () in
+            if authenticated {
+                self?.location.startup()
+            }
+            callback?(authenticated: authenticated)
+        }
     }
     
+    // Saving to files.
+    // Stopping events.
+    // Stopping queues.
     /// Shutdowns the Phoenix SDK.
     public func shutdown() {
         

@@ -15,7 +15,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
-    var configuration:PhoenixConfigurationProtocol?
+    var configuration:Phoenix.Configuration?
     
     let successfulResponseCreateUser = "{" +
         "\"TotalRecords\": 1," +
@@ -65,11 +65,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         super.setUp()
         do {
             self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
-            let network = Phoenix.Network(withConfiguration: configuration!, withTokenStorage:storage)
+            let network = Phoenix.Network(withConfiguration: configuration!, tokenStorage:storage)
             self.identity = Phoenix.Identity(withNetwork: network, withConfiguration: configuration!)
         }
         catch{
-            
+            XCTAssert(false, "Must provide valid config")
         }
     }
     
