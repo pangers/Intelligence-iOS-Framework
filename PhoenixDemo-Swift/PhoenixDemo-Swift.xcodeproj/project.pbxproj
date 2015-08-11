@@ -17,10 +17,24 @@
 		BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */; };
 		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
-		BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
+		FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; };
+		FEF4A7561B7A28F800CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FEF4A7541B7A28E700CD8603 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FEF4A7561B7A28F800CD8603 /* PhoenixSDK.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7FDAAAD91B5D35AE00DF2BE6 /* PhoenixDemo-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoenixDemo-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,9 +49,9 @@
 		BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
 		BB3534861B6FAB5800C67500 /* PhoenixManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixManager.swift; sourceTree = "<group>"; };
 		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
-		BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../../../Library/Developer/Xcode/DerivedData/PhoenixSDK-crtfqvcfmeujokezpbpaskdrsxjl/Build/Products/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
+		FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB72766D1B5FE5E700F098DA /* PhoenixSDK.framework in Frameworks */,
+				FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +69,7 @@
 		7FDAAAD01B5D35AE00DF2BE6 = {
 			isa = PBXGroup;
 			children = (
-				BB72766C1B5FE5E700F098DA /* PhoenixSDK.framework */,
+				FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */,
 				7FDAAADB1B5D35AE00DF2BE6 /* PhoenixDemo-Swift */,
 				7FDAAADA1B5D35AE00DF2BE6 /* Products */,
 			);
@@ -115,6 +129,7 @@
 				7FDAAAD51B5D35AE00DF2BE6 /* Sources */,
 				7FDAAAD61B5D35AE00DF2BE6 /* Frameworks */,
 				7FDAAAD71B5D35AE00DF2BE6 /* Resources */,
+				FEF4A7541B7A28E700CD8603 /* CopyFiles */,
 			);
 			buildRules = (
 			);
