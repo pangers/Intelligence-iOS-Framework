@@ -21,7 +21,7 @@ internal extension Phoenix {
     /// In order to use the callback approach (in which more than one callback can be notified),
     /// **the completion block must not be overridden**. If it is, the callbacks won't be notified of the 
     /// outcome of the operation.
-    class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
+    internal final class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         
         var json: JSONDictionary?
         
@@ -34,7 +34,7 @@ internal extension Phoenix {
         /// The callback objects that will be notified upon completion.
         private let callback: PhoenixAuthenticationCallback
         
-        convenience init(network: Phoenix.Network, configuration: PhoenixConfigurationProtocol, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
+        convenience init(network: Phoenix.Network, configuration: Phoenix.Configuration, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
             self.init(session: network.sessionManager, authentication: network.authentication, configuration: configuration, username: username, password: password, callback: callback)
         }
         
@@ -43,7 +43,10 @@ internal extension Phoenix {
         ///     - session: An NSURLSession to use for the requests.
         ///     - authentication: The authentication to use.
         ///     - configuration: The SDK configuration
-        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
+        ///     - username: Optional username to send for login.
+        ///     - password: Optional password to send for login.
+        ///     - callback: Callback to trigger on completion.
+        init(session:NSURLSession, authentication: PhoenixAuthenticationProtocol, configuration: Phoenix.Configuration, username: String? = nil, password: String? = nil, callback: PhoenixAuthenticationCallback) {
             self.urlSession = session
             self.authentication = authentication
             self.callback = callback

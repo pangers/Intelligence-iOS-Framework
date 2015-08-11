@@ -25,10 +25,17 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     internal var temporaryAccessToken: String?
     
     /// Default initializer with all required parameters
-    init(withSession session:NSURLSession, withRequest request:NSURLRequest, withAuthentication authentication:Phoenix.Authentication) {
+    init(withSession session:NSURLSession, request:NSURLRequest, authentication:Phoenix.Authentication) {
         self.urlSession = session
         self.request = request
         self.authentication = authentication
+    }
+    
+    /// Default initializer, Network contains urlSession and authentication objects.
+    init(withNetwork network: Phoenix.Network, request: NSURLRequest) {
+        self.urlSession = network.sessionManager
+        self.request = request
+        self.authentication = network.authentication
     }
     
     /// The operation will run synchronously the data task and store the error and output.

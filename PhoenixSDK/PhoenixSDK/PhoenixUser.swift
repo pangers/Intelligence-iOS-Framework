@@ -90,8 +90,8 @@ extension Phoenix {
         ///
         /// - Parameters:
         ///     - withJSON: The json dictionary as obtained from the backend.
-        ///     - withConfiguration: The configuration that holds the company Id.
-        convenience internal init?(withJSON json:JSONDictionary, withConfiguration configuration:PhoenixConfigurationProtocol) {
+        ///     - configuration: The configuration that holds the company Id.
+        convenience internal init?(withJSON json:JSONDictionary, configuration:Phoenix.Configuration) {
             guard let userId = json[idKey] as? Int,
             let username = json[usernameKey] as? String,
             let firstName = json[firstNameKey] as? String else {
@@ -105,13 +105,13 @@ extension Phoenix {
         /// - Parameters:
         ///     - data: The data obtained from the backend.
         ///     - withConfiguration: The configuration object.
-        class func fromResponseData(data:NSData, withConfiguration:PhoenixConfigurationProtocol) -> User? {
+        class func fromResponseData(data:NSData, withConfiguration:Phoenix.Configuration) -> User? {
             guard let usersArray = data.phx_jsonDictionary?["Data"] as? JSONArray,
                 let userDictionary = usersArray.first as? JSONDictionary else {
                 return nil
             }
             
-            return User(withJSON: userDictionary, withConfiguration: withConfiguration)
+            return User(withJSON: userDictionary, configuration: withConfiguration)
         }
         
         /// Checks if the user Id provided is a valid user Id.

@@ -41,7 +41,7 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.Authentication(withJSON: correctJsonDictionary, tokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary")
         XCTAssert(Phoenix.Authentication(withJSON: correctWithRefreshTokenJsonDictionary, tokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary with all the values")
     }
-
+    
     func testInitializeAuthenticationParsedValues() {
         guard let authentication = Phoenix.Authentication(withJSON: correctWithRefreshTokenJsonDictionary, tokenStorage:storage) else {
             XCTAssert(false, "Didn't acquire an authentication")

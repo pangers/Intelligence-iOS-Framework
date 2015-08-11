@@ -15,16 +15,15 @@ class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
     var user: Phoenix.User?
     
     /// The configuration used throughout Phoenix.
-    let configuration: PhoenixConfigurationProtocol
-    
+    let configuration: Phoenix.Configuration
     let callback: PhoenixUserCallback
 
     /// Default initializer with all required parameters
-    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol, callback: PhoenixUserCallback) {
+    init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration, callback: PhoenixUserCallback) {
         self.configuration = configuration
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
         self.callback = callback
-        super.init(withSession: session, withRequest: request, withAuthentication: authentication)
+        super.init(withSession: session, request: request, authentication: authentication)
     }
     
     /// The operation will run synchronously the data task and store the error and output.

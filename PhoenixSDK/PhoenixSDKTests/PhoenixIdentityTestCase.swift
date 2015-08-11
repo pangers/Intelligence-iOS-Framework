@@ -15,7 +15,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
-    
+
     let expectationTimeout:NSTimeInterval = 5
     
     let successfulResponseCreateUser = "{" +

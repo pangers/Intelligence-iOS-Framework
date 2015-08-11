@@ -43,7 +43,7 @@ internal enum HTTPRequestMethod : String {
 internal extension Phoenix {
     
     /// Acts as a Network manager for the Phoenix SDK, encapsulating authenticationg requests within it.
-    final class Network {
+    internal final class Network {
         
         // MARK: Instance variables
         
@@ -61,7 +61,7 @@ internal extension Phoenix {
         internal let authenticateQueue: NSOperationQueue
 
         /// Configuration passed through from Network initializer (assumed to be valid).
-        private let configuration: PhoenixConfigurationProtocol
+        private let configuration: Phoenix.Configuration
         
         /// The current phoenix authentication.
         internal var authentication: Authentication
@@ -79,8 +79,8 @@ internal extension Phoenix {
         /// Initialize new instance of Phoenix Networking class
         /// - Parameters:
         ///     - withConfiguration: The configuration object used.
-        ///     - withTokenStorage: The storage for the token.
-        init(withConfiguration configuration: PhoenixConfigurationProtocol, withTokenStorage tokenStorage:TokenStorage) {
+        ///     - tokenStorage: The token storage to use.
+        init(withConfiguration configuration: Phoenix.Configuration, tokenStorage:TokenStorage) {
             self.authenticateQueue = NSOperationQueue()
             self.authenticateQueue.maxConcurrentOperationCount = 1
             self.authentication = Authentication(withTokenStorage: tokenStorage)
@@ -132,7 +132,7 @@ internal extension Phoenix {
         ///     - request: NSURLRequest with a valid URL.
         ///     - callback: Block/function to call once executed.
         func executeRequest(request: NSURLRequest, callback: PhoenixNetworkingCallback) {
-            let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, withRequest: request, withAuthentication: authentication)
+            let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, request: request, authentication: authentication)
             
             operation.completionBlock = {
                 // Other error code can fallthrough to caller who implements callback func to handle.

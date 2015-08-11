@@ -19,9 +19,6 @@ internal protocol PhoenixAuthenticationProtocol {
     
     /// The expiration date of the access token.
     var accessTokenExpirationDate: NSDate? { get set }
-
-    /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
-    var requiresAuthentication: Bool { get }
 }
 
 internal extension Phoenix {
@@ -34,7 +31,7 @@ internal extension Phoenix {
     /// the tokens. The default Phoenix storage is PhoenixKeychain. The developer
     /// can override the TokenStorage protocol and provide a different implementation,
     /// such as storing it in CoreData, a file, NSUserDefaults,...
-    final class Authentication: PhoenixAuthenticationProtocol {
+    internal final class Authentication: PhoenixAuthenticationProtocol {
 
         // MARK: Instance variables
         

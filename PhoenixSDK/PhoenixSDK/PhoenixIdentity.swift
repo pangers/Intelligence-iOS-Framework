@@ -62,11 +62,11 @@ extension Phoenix {
         private let network:Network
         
         /// The configuration of the Phoenix SDK
-        private let configuration:PhoenixConfigurationProtocol
+        private let configuration:Phoenix.Configuration
         
         /// Default initializer. Requires a network.
         /// - Parameter network: The network that will be used.
-        init(withNetwork network:Network, withConfiguration configuration:PhoenixConfigurationProtocol) {
+        init(withNetwork network:Network, withConfiguration configuration:Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
         }

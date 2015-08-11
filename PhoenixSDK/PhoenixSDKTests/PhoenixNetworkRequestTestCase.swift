@@ -38,29 +38,6 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         }
     }
     
-    /// Verify correct behaviour on token obtained
-    /*func testLoginBehaviour() {
-        XCTAssert(checkLoggedIn, "Phoenix is authenticated before a response")
-        
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
-        
-        let expectation = expectationWithDescription("logged in")
-        phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
-            XCTAssert(user != nil)
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(!self.checkLoggedIn, "Phoenix is not authenticated after a successful response")
-        }
-    }*/
-    
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
         // Mock that we have a token, but expired
@@ -187,7 +164,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let expectation = expectationWithDescription("")
         let statusCode = Int32(200)
-        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), withRequest: initialRequest, withAuthentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
+        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), request: initialRequest, authentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
         op.completionBlock = {
             expectation.fulfill()
             let (data, response) = op.output!
