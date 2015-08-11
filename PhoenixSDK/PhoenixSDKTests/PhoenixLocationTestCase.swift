@@ -97,6 +97,9 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             self.configurationDisabled = try Phoenix.Configuration(fromFile: "confignogeofences", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
             let network = Phoenix.Network(withConfiguration: configuration!, tokenStorage:storage)
             self.location = Phoenix.Location(withNetwork: network, configuration: configuration!)
+            
+            XCTAssert(self.configuration?.useGeofences == true)
+            XCTAssert(self.configurationDisabled?.useGeofences == false)
         }
         catch{
             XCTAssert(false, "Must provide valid config")
