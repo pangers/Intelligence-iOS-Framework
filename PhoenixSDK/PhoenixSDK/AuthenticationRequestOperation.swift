@@ -74,6 +74,7 @@ internal extension Phoenix {
             assert(self.input != nil, "Can't execute an Authentication operation with no request.")
             guard let request = input else {
                 assert(false, "Can't execute an Authentication operation with no request.")
+                return
             }
             
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
