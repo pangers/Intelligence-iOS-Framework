@@ -14,7 +14,18 @@ public typealias PhoenixErrorCallback = (NSError) -> ()
 /// The main Phoenix entry point. Aggregates modules in it.
 public final class Phoenix: NSObject {
     
-    // MARK: Initializer
+    /// Private configuration. Can't be modified once initialized.
+    /// Provide a Phoenix.Configuration object to initialize it.
+    private let myConfiguration: PhoenixConfigurationProtocol
+    
+    /// Called by Phoenix when the SDK does not know how to deal with
+    /// the current error it has encountered.
+    internal var errorCallback: PhoenixErrorCallback?
+    
+    /// The network manager instance.
+    internal let network: Network
+    
+    // MARK: Initializers
     
     /// Initializes the Phoenix entry point with a configuration object.
     /// - Parameters:
@@ -70,36 +81,21 @@ public final class Phoenix: NSObject {
     
     // MARK: Instance variables
     
-    /// Private configuration. Can't be modified once initialized.
-    /// Provide a Phoenix.Configuration object to initialize it.
-    private let myConfiguration: PhoenixConfigurationProtocol
-    
-    /// The network manager instance.
-    internal let network: Network
-    
     /// - Returns: A **copy** of the configuration.
     public var configuration: PhoenixConfigurationProtocol {
         return myConfiguration.clone()
     }
-    
-    /// Called by Phoenix when the SDK does not know how to deal with
-    /// the current error it has encountered.
-    /// Currently only serves:
-    ///     - ConfigurationError.InvalidClientCredentials (1005)
-    internal var errorCallback: PhoenixErrorCallback?
     
     // MARK: Modules
     
     /// The identity module, used to manage users in the Phoenix backend.
     @objc public internal(set) var identity:PhoenixIdentity
 
-    // MARK:- Startup/Shutdown
-    
     // TODO: Need to define how this works, since it can fail...
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
-    /// Starts up the Phoenix SDK.
+    /// Starts up the Phoenix SDK modules.
     /// - Parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
     public func startup(callback: PhoenixErrorCallback) {
         // Login as Application User.
@@ -107,7 +103,7 @@ public final class Phoenix: NSObject {
         network.enqueueAuthenticationOperationIfRequired()
     }
     
-    /// Shutdowns the Phoenix SDK.
+    /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
         
     }
