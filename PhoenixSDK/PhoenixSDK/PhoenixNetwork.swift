@@ -226,7 +226,7 @@ internal extension Phoenix {
             }
             let response = operation.output?.response
             let data = operation.output?.data
-            //let error = operation.error
+            var error = operation.error
             
             defer {
                 // Continue worker queue if we have authentication object
@@ -244,8 +244,10 @@ internal extension Phoenix {
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
                     // An exception is raised to the developer.
-                    // Access token was not returned, we need to raise this to the developer as they may have configured something wrong.
-                    phoenix?.errorCallback?(NSError(domain: ConfigurationError.domain, code: ConfigurationError.InvalidClientCredentials.rawValue, userInfo: nil))
+                    if error == nil {
+                        error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+                    }
+                    phoenix?.errorCallback?(error!)
                 }
             }
             

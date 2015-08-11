@@ -28,9 +28,6 @@ public enum ConfigurationError: Int, ErrorType {
     
     /// There is a missing property in the configuration.
     case MissingPropertyError = 1004
-    
-    /// There is an issue with the client credentials you have provided. Cannot authenticate with Phoenix Platform.
-    case InvalidClientCredentials = 1005
 }
 
 /// Enumeration to list the errors that can occur in the identity module.

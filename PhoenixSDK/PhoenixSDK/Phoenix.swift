@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Fundamental issue occurred, probably related to configuration.
+/// Error occurred, probably network related.
 public typealias PhoenixErrorCallback = (NSError) -> ()
 
 /// The main Phoenix entry point. Aggregates modules in it.
