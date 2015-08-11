@@ -12,8 +12,6 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-// MARK: Status code constants
-
 /// Enumeration containing the possible status to use.
 internal enum HTTPStatus : Int {
 
