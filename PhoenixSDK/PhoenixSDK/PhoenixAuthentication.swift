@@ -111,6 +111,7 @@ internal extension Phoenix {
         func clearAccessToken() {
             // Refresh token may still be valid but access token has expired
             accessToken = nil
+            accessTokenExpirationDate = nil
         }
         
         /// Reset to a clean-slate.
