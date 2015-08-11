@@ -20,14 +20,37 @@ class PhoenixBaseTestCase : XCTestCase {
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     var storage = MockSimpleStorage()
+    var configuration:Phoenix.Configuration?
+    var phoenix:Phoenix?
+    
+    /// Check if we have an unexpired access_token.
+    /// This all happens internally in the isAuthenticated method.
+    var checkAuthenticated: Bool {
+        return self.phoenix?.network.isAuthenticated ?? false
+    }
+    
+    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
+    /// This all happens internally in the isLoggedIn method.
+    var checkLoggedIn: Bool {
+        return self.phoenix?.identity.loggedIn ?? false
+    }
     
     override func setUp() {
         super.setUp()
+        do {
+            try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
+            self.configuration!.region = .Europe
+            try self.phoenix = Phoenix(withConfiguration: configuration!, withTokenStorage:storage)
+        }
+        catch {
+        }
     }
     
     override func tearDown() {
         super.tearDown()
         OHHTTPStubs.removeAllStubs()
+        phoenix = nil
+        configuration = nil
     }
     
     // MARK: URL Mock
@@ -48,7 +71,7 @@ class PhoenixBaseTestCase : XCTestCase {
                 if let method = method where method != request.HTTPMethod {
                     return false
                 }
-                return request.URL! == url
+                return ObjCBool(request.URL! == url)
             },
             withStubResponse: { _ in
                 let (callback, response, expectation) = runs.first!
@@ -99,13 +122,11 @@ class PhoenixBaseTestCase : XCTestCase {
 
     func mockExpiredTokenStorage() {
         storage.accessToken = "Somevalue"
-        storage.refreshToken = "Somevalue"
         storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)        
     }
     
     func mockValidTokenStorage() {
         storage.accessToken = "Somevalue"
-        storage.refreshToken = ""
         storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
     }
 

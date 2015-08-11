@@ -94,17 +94,28 @@ internal extension Phoenix {
             storage = tokenStorage
         }
         
+        /// Convenience initializer
+        /// - Parameter withJSON: JSON file to attempt to get access token information from.
+        /// - Parameter tokenStorage: Where to store access tokens.
+        convenience init?(withJSON json: JSONDictionary, tokenStorage: TokenStorage) {
+            self.init(withTokenStorage: tokenStorage)
+            if update(withJSON: json) == false {
+                return nil
+            }
+        }
+        
         // MARK: Functions
         
         /// Update access token and expiration date.
-        func update(withJSON json: JSONDictionary?) {
+        func update(withJSON json: JSONDictionary?) -> Bool {
             guard let token = json?[accessTokenKey] as? String,
                 expire = json?[expiresInKey] as? Double
                 where !token.isEmpty && expire > 0 else {
-                    return
+                    return false
             }
             accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
             accessToken = token
+            return true
         }
         
         /// Clear our current access token, should occur when 401 is received.

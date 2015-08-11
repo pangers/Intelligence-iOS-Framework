@@ -14,7 +14,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     func testPhoenixInitializer() {
         do {
             let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
-            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
+            XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing phoenix.")
@@ -27,7 +27,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
             let phoenix = try Phoenix(withConfiguration: configuration, withTokenStorage:storage)
-            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
+            XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing Phoenix")
@@ -50,23 +50,10 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         }
     }
     
-    @objc class Helper:  NSObject, PhoenixNetworkDelegate {
-        func authenticationFailed(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            
-        }
-    }
-    
     // Mock configuration fakes an invalid configuration
     func testPhoenixGetterSetterWorks() {
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
-            XCTAssert(phoenix.currentConfiguration.clientID == "CLIENT_ID", "Invalid client ID read")
-            
-            
-            let helper:PhoenixNetworkDelegate = Helper()
-            phoenix.networkDelegate = helper
-            
-            XCTAssert(phoenix.networkDelegate! === helper, "The getter works")
+            _ = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing phoenix.")
