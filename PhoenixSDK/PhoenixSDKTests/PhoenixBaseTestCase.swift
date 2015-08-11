@@ -24,13 +24,13 @@ class PhoenixBaseTestCase : XCTestCase {
     var phoenix:Phoenix?
     
     /// Check if we have an unexpired access_token.
-    /// This all happens internally in the isAuthenticated method.
+    /// This all happens internally in the authenticated property.
     var checkAuthenticated: Bool {
-        return self.phoenix?.network.isAuthenticated ?? false
+        return self.phoenix?.network.authenticated ?? false
     }
     
     /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
-    /// This all happens internally in the isLoggedIn method.
+    /// This all happens internally in the loggedIn property.
     var checkLoggedIn: Bool {
         return self.phoenix?.identity.loggedIn ?? false
     }

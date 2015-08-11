@@ -12,7 +12,7 @@ import Foundation
 public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-@objc public protocol PhoenixIdentity : PhoenixModule {
+@objc public protocol PhoenixIdentity {
     
     /// - Returns: True if user has logged in with username and password.
     var loggedIn: Bool { get }

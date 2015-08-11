@@ -137,32 +137,26 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
     }
     
-    // MARK:- GetMe
-    
+    // MARK:- Login/Logout
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
-    func testAnonymousAuthThenUserLoginThenUserLogout() {
+    func testLoginLogout() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
+        // Fake anonymous login
+        mockValidTokenStorage()
+        
         // Create expectation for login...
-        
-        let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil),
-            MockResponse(anonymousTokenSuccessfulResponse, 200, nil)]
+        let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
         mockAuthenticationResponses(responses)
-        
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "Hola"
-        let statusCode = Int32(200)
-        // We're logged out, lets enqeuue a generic request to force enqueue an anonymous login
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
         
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
         mockResponseForURL(request,
             method: "GET",
             response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
         
-        let expectation = expectationWithDescription("login-logout-google-anonymous-login expectation")
+        let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
             // Ensure we're logged in...
             XCTAssert(user != nil && error == nil, "Method should return authenticated = true")
@@ -180,11 +174,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
             
             XCTAssert(self.phoenix?.network.authentication.userId == nil)
-            
-            // Execute google request to enqueue authentication
-            self.phoenix?.network.executeRequest(initialRequest, callback: { (data, response, error) -> () in
-                expectation.fulfill()
-            })
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
@@ -194,36 +184,71 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     }
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
-    /// that the access_token does not match the previous one.
-    /*func testLoginFailed() {
+    /// that the userId does gets set and unset correctly.
+    func testLoginGetMeFailure() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
-        // Create expectation for login...
+        // Fake anonymous login
+        mockValidTokenStorage()
         
+        // Create expectation for login...
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
         mockAuthenticationResponses(responses)
         
         let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
         mockResponseForURL(request,
             method: "GET",
-            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
+            response: (data: nil, statusCode:400, headers:nil))
         
+        let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
             // Ensure we're logged in...
-            XCTAssert(user != nil && error == nil, "Method should return authenticated = true")
+            XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
             
             // Ensure user was parsed.
-            XCTAssert(user?.userId == 6016)
+            XCTAssert(user?.userId == nil)
+            XCTAssert(self.phoenix?.network.authentication.userId == nil)
+            XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
             
-            // Ensure user id was stored
-            XCTAssert(self.phoenix?.network.authentication.userId != nil)
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated == false, "Phoenix is authenticated after a login-logout-anonymouslogin")
+            XCTAssert(self.checkLoggedIn == false, "Phoenix is authenticated after a login-logout-anonymouslogin")
         }
-    }*/
+    }
+    
+    /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
+    /// that the userId does gets set and unset correctly.
+    func testLoginFailure() {
+        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
+        
+        // Fake anonymous login
+        mockValidTokenStorage()
+        
+        // Create expectation for login...
+        let responses = [MockResponse(nil, 400, nil)]
+        mockAuthenticationResponses(responses)
+        
+        let expectation = expectationWithDescription("Expectation")
+        phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
+            // Ensure we're logged in...
+            XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
+            
+            // Ensure user was parsed.
+            XCTAssert(user?.userId == nil)
+            XCTAssert(self.phoenix?.network.authentication.userId == nil)
+            XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
+            
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error,"Error in expectation")
+            XCTAssert(self.checkLoggedIn == false, "Phoenix is authenticated after a login-logout-anonymouslogin")
+        }
+    }
     
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
     func testLogout() {
@@ -234,82 +259,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         phoenix?.identity.logout()
         XCTAssert(!checkLoggedIn, "Phoenix is not authenticated after a successful response")
     }
-    
-    
-    
-
-    /*func testGetMeSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
-        
-        // Mock request being authorized
-        mockValidTokenStorage()
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
-        
-        identity!.getMe { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }
-    
-    func testGetMeFailure() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
-        
-        // Mock request being authorized
-        mockValidTokenStorage()
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: "", statusCode:400, headers:nil))
-        
-        identity!.getMe { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }
-    
-    func testGetUserMeNoUsersBack() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
-        
-        // Mock request being authorized
-        mockValidTokenStorage()
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: noUsersResponse, statusCode:200, headers:nil))
-        
-        identity!.getMe { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.GetUserError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }*/
     
     // MARK:- Get User by id
     
