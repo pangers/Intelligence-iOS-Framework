@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8164.2" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekT-aQ-9TR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8164.2" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekT-aQ-9TR">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8135.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -233,57 +233,79 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0he-uF-Dey">
-                                <rect key="frame" x="257" y="201" width="85" height="198"/>
+                                <rect key="frame" x="20" y="184" width="560" height="233.5"/>
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t7T-Z2-eQz">
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Id" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jee-Im-KyP">
-                                        <rect key="frame" x="35.5" y="0.0" width="14.5" height="20.5"/>
+                                        <rect key="frame" x="273" y="35.5" width="14.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWc-W7-ICg">
-                                        <rect key="frame" x="3" y="35.5" width="79" height="20.5"/>
+                                        <rect key="frame" x="240.5" y="71" width="79" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4x-fE-n4t">
-                                        <rect key="frame" x="5.5" y="71" width="74" height="20.5"/>
+                                        <rect key="frame" x="243" y="106.5" width="74" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="First name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="948-im-eJt">
-                                        <rect key="frame" x="2.5" y="106.5" width="80" height="20.5"/>
+                                        <rect key="frame" x="240" y="142" width="80" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YC8-CO-KLM">
-                                        <rect key="frame" x="3" y="142" width="79.5" height="20.5"/>
+                                        <rect key="frame" x="240.5" y="177.5" width="79.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Avatar URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RPD-Z0-biD">
-                                        <rect key="frame" x="0.0" y="177.5" width="85" height="20.5"/>
+                                        <rect key="frame" x="237.5" y="213" width="85" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="t7T-Z2-eQz" secondAttribute="trailing" id="2EC-oD-RRA"/>
+                                    <constraint firstItem="t7T-Z2-eQz" firstAttribute="leading" secondItem="0he-uF-Dey" secondAttribute="leading" id="PAi-nB-4sc"/>
+                                </constraints>
                             </stackView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="FMj-zC-J3F">
+                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="MM1-fo-SXu" id="mrt-5Y-oWc"/>
+                                </connections>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="0he-uF-Dey" firstAttribute="centerY" secondItem="bmE-qV-ULn" secondAttribute="centerY" id="1Ao-iI-EH6"/>
+                            <constraint firstItem="FMj-zC-J3F" firstAttribute="top" secondItem="MtZ-bB-RrJ" secondAttribute="bottom" id="Cu8-gR-urk"/>
                             <constraint firstItem="0he-uF-Dey" firstAttribute="centerX" secondItem="bmE-qV-ULn" secondAttribute="centerX" id="XC8-tJ-wA1"/>
+                            <constraint firstItem="FMj-zC-J3F" firstAttribute="leading" secondItem="bmE-qV-ULn" secondAttribute="leading" id="YIL-Pa-RXi"/>
+                            <constraint firstItem="0he-uF-Dey" firstAttribute="leading" secondItem="bmE-qV-ULn" secondAttribute="leadingMargin" id="aVB-JJ-lJV"/>
+                            <constraint firstAttribute="trailing" secondItem="FMj-zC-J3F" secondAttribute="trailing" id="uHh-Mz-kZ0"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="avatarURL" destination="RPD-Z0-biD" id="F8L-mA-4aS"/>
                         <outlet property="firstname" destination="948-im-eJt" id="yA2-H0-Nhz"/>
                         <outlet property="idLabel" destination="Jee-Im-KyP" id="TgC-dy-W6Q"/>
+                        <outlet property="infoLabel" destination="t7T-Z2-eQz" id="bV9-44-ywZ"/>
                         <outlet property="lastname" destination="YC8-CO-KLM" id="1Fg-tF-y9I"/>
                         <outlet property="password" destination="h4x-fE-n4t" id="H69-2g-rMv"/>
                         <outlet property="username" destination="DWc-W7-ICg" id="9YT-8m-EVV"/>

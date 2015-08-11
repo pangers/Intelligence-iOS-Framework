@@ -277,15 +277,14 @@ In this section, each modules are described, including its functions and sample 
 
 The identity module is responsible to perform user management within the Phoenix platform, allowing to create, retrieve and update users.
 
+Notice that calling this methods **won't** start using the user's credentials. 
+You'll need to perform an authentication with the new user's credentials in order to do so.
+
+Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.
+
 #### Create user ####
 
 The code to create a user for each language is as follows:
-
-Setting a network delegate is optional, but recommended if you require more context when an error occurs.
-
-Startup is necessary in order to initialise the framework after it's been configured.
-
-
 
 **Objective-C:**
 
@@ -328,12 +327,65 @@ Notice that the createUser method can return the following errors:
 
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
 * IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
 
 Those errors will be wrapped within an NSError using as domain IdentityError.domain.
 
-Notice that calling this methods **won't** start using the user's credentials. 
-You'll need to perform an authentication with the new user's credentials in order to do so.
+#### Get User ####
+
+There are two different ways to get a user:
+
+* Obtaining a user from its id.
+* Obtaining your user data from its token credentials.
+
+The SDK offers two methods to obtain a user based on those two different approaches in the identity modules.
+
+The following code snippets illustrate how to use each of the methods in Objective-C and Swift.
+
+**Objective-C:**
+
+```
+#!objc
+
+// Get user via our current credentials
+[phoenix getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
+    // Get the user and treat the error.
+}];
+
+// Get the user via it's id
+[phoenix getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+    // Get the user and treat the error
+}];
+
+
+```
+
+**Swift:**
+
+
+```
+#!swift
+
+// Get user via our current credentials
+phoenix.identity.getMe{ (user, error) -> Void in
+    // Get the user and treat the error
+}
+
+// Get the user via it's id
+phoenix.identity.getUser(userId) { (user, error) -> Void in
+    // Get the user and treat the error
+}
+
+
+```
+
+Notice that the get user methods can return the following errors:
+
+* IdentityError.InvalidUserError : When the request can't be created with the provided user data (i.e. wrong userId, or authentication tokens).
+* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
+
+Those errors will be wrapped within an NSError using as domain IdentityError.domain.
 
 Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.
 

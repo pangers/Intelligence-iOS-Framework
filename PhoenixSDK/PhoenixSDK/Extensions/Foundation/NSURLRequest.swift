@@ -150,7 +150,7 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - withUser: The user to create.
     ///     - configuration: The configuratio to use.
-    class func phx_httpURLRequestForCreateUser(withUser:PhoenixUser, configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_httpURLRequestForCreateUser(withUser:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
@@ -182,6 +182,19 @@ internal extension NSURLRequest {
     class func phx_httpURLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID), relativeToURL: configuration.baseURL) {
+            return NSURLRequest(URL: url)
+        }
+        assertionFailure("Couldn't create the download geofences URL.")
+        return NSURLRequest()
+        }
+        
+    /// Creates the NSURLRequest to get the user id.
+    /// - Parameters:
+    ///     - userId: The Id of the user that we want to get.
+    ///     - withConfiguration: The configuration that is being currently used.
+    class func phx_httpURLRequestForGetUserById(userId:Int, withConfiguration configuration:Phoenix.Configuration) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(userId)", relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
         }
         assertionFailure("Couldn't create the users/me URL.")

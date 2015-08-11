@@ -20,7 +20,7 @@ class CreateUserViewController : UIViewController {
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    var lastUserCreated:PhoenixUser?
+    var lastUserCreated:Phoenix.User?
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -96,7 +96,7 @@ class CreateUserViewController : UIViewController {
         }
     }
 
-    func createShowUserActionWithUser(user:PhoenixUser) -> UIAlertAction {
+    func createShowUserActionWithUser(user:Phoenix.User) -> UIAlertAction {
         return UIAlertAction(title: "View user", style: .Default, handler: { [weak self] (UIAlertAction) -> Void in
             
             guard let this = self else {

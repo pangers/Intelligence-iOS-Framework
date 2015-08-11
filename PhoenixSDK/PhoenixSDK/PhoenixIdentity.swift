@@ -12,7 +12,7 @@ import Foundation
 public typealias PhoenixNetworkErrorCallback = (error:NSError?) -> Void
 
 /// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
-public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Void
+public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc public protocol PhoenixIdentity : PhoenixModule {
@@ -26,7 +26,7 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
     /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
     /// The NSError domain is IdentityError.domain
-    func createUser(user:PhoenixUser, callback:PhoenixUserCallback?)
+    func createUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
     /// Gets a user data from the current user credentials.
     /// - Parameters:
@@ -43,14 +43,14 @@ public typealias PhoenixUserCallback = (user:PhoenixUser?, error:NSError?) -> Vo
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?)
+    func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
 }
 
 extension Phoenix {
 
     /// The PhoenixIdentity implementation.
-    internal final class Identity : PhoenixIdentity {
+    class Identity : PhoenixIdentity {
 
         /// A reference to the network manager
         private let network:Network
@@ -58,11 +58,9 @@ extension Phoenix {
         /// The configuration of the Phoenix SDK
         private let configuration:Phoenix.Configuration
         
-        /// Default initializer. Requires a network and configuration class.
-        /// - Parameters:
-        ///     - network: The network that will be used.
-        ///     - configuration: The configuration class to use.
-        init(withNetwork network:Network, configuration:Phoenix.Configuration) {
+        /// Default initializer. Requires a network.
+        /// - Parameter network: The network that will be used.
+        init(withNetwork network:Network, withConfiguration configuration:Phoenix.Configuration) {
             self.network = network
             self.configuration = configuration
         }
@@ -71,20 +69,22 @@ extension Phoenix {
             // stub
         }
         
-        @objc func createUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func createUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
-                // TODO: Raise error regarding no such user.
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                return
             }
             
-            let operation = CreateUserRequestOperation(withSession: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
+            if !user.isPasswordSecure() {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+                return
+            }
+            
+            let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller
             operation.completionBlock = {
-                guard let callback = callback else {
-                    return;
-                }
-                callback(user: operation.user, error: operation.error)
+                callback?(user:operation.user, error:operation.error)
             }
             
             // Execute the network operation
@@ -92,12 +92,10 @@ extension Phoenix {
         }
         
         @objc func getMe(callback:PhoenixUserCallback?) {
-            let operation = GetUserMeRequestOperation(withSession: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
+            
             operation.completionBlock = {
-                guard let callback = callback else {
-                    return
-                }
-                callback(user: operation.user, error: operation.error)
+                callback?(user:operation.user, error:operation.error)
             }
             
             // Execute the network operation
@@ -105,10 +103,21 @@ extension Phoenix {
         }
         
         @objc func getUser(userId:Int, callback:PhoenixUserCallback?) {
-            // stub
+            if !Phoenix.User.isUserIdValid(userId) {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                return
+            }
+            
+            let operation = GetUserByIdRequestOperation(session: network.sessionManager, userId: userId, authentication: network.authentication, configuration: configuration)
+            
+            operation.completionBlock = {
+                callback?(user:operation.user, error:operation.error)
+            }
+            
+            network.executeNetworkOperation(operation)
         }
         
-        @objc func updateUser(user:PhoenixUser, callback:PhoenixUserCallback?) {
+        @objc func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             // stub
         }
 

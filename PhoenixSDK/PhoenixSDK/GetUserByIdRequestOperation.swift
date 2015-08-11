@@ -1,26 +1,26 @@
 //
-//  CreateUserRequestOperation.swift
+//  GetUserByIdRequestOperation.swift
 //  PhoenixSDK
 //
-//  Created by Josep Rodriguez on 03/08/2015.
+//  Created by Josep Rodriguez on 06/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-/// Operation to wrap the create user request.
-class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
-    
-    /// The output user created, as provided by the backend
+/// Operation used to retrieve a user data based on its id.
+class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
+
+    /// The user that was loaded during the request. Can be nil if the request failed or didn't yet occur.
     var user: Phoenix.User?
     
-    /// The configuration used through Phoenix.
+    /// The configuration that is in use in Phoenix.
     let configuration: Phoenix.Configuration
-
+    
     /// Default initializer with all required parameters
-    init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
+    init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration)
+        let request = NSURLRequest.phx_httpURLRequestForGetUserById(userId,withConfiguration:configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }
@@ -32,8 +32,11 @@ class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
         // If after checking everything the user is nil, create an error.
         defer {
             if user == nil {
-                error = NSError(domain: IdentityError.domain, code: IdentityError.UserCreationError.rawValue, userInfo: nil)
+                error = NSError(domain: IdentityError.domain, code: IdentityError.GetUserError.rawValue, userInfo: nil)
             }
+            
+            // Set userId in authentication class (so we can use it in future requests requiring userId).
+            authentication.userId = user?.userId
         }
         
         if error != nil {
@@ -47,5 +50,4 @@ class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
         // If all conditions succeed, parse the user.
         user = Phoenix.User.fromResponseData(data, withConfiguration:configuration)
     }
-    
 }

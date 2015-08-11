@@ -20,9 +20,23 @@
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
 		FE16747A1B7105190085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674791B7105190085BEC8 /* Authentication.storyboard */; };
 		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
-		FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
+		FEF4A7511B7A28DA00CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; };
+		FEF4A7581B7A291000CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FEF4A7571B7A290900CD8603 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FEF4A7581B7A291000CD8603 /* PhoenixSDK.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7FDAAB001B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoenixDemo-ObjectiveC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,8 +61,8 @@
 		FE1674791B7105190085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
 		FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXAuthenticationViewController.h; sourceTree = "<group>"; };
 		FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXAuthenticationViewController.m; sourceTree = "<group>"; };
-		FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoenixSDK.framework; path = "../PhoenixSDK/build/Debug-iphoneos/PhoenixSDK.framework"; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
+		FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE22F8861B5FE48000711EBF /* PhoenixSDK.framework in Frameworks */,
+				FEF4A7511B7A28DA00CD8603 /* PhoenixSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +80,7 @@
 		7FDAAAF71B5D360800DF2BE6 = {
 			isa = PBXGroup;
 			children = (
-				FE22F8851B5FE48000711EBF /* PhoenixSDK.framework */,
+				FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */,
 				7FDAAB021B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC */,
 				7FDAAB011B5D360800DF2BE6 /* Products */,
 			);
@@ -151,6 +165,7 @@
 				7FDAAAFC1B5D360800DF2BE6 /* Sources */,
 				7FDAAAFD1B5D360800DF2BE6 /* Frameworks */,
 				7FDAAAFE1B5D360800DF2BE6 /* Resources */,
+				FEF4A7571B7A290900CD8603 /* CopyFiles */,
 			);
 			buildRules = (
 			);

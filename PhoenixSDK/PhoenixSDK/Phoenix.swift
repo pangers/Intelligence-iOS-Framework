@@ -62,7 +62,7 @@ public final class Phoenix: NSObject {
         self.network = Network(withConfiguration: self.configuration, tokenStorage:tokenStorage)
 
         // Modules
-        self.identity = Identity(withNetwork: network, configuration: configuration)
+        self.identity = Identity(withNetwork: network, withConfiguration: configuration)
         self.location = Location(withNetwork: network, configuration: configuration)
         
         super.init()

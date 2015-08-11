@@ -317,7 +317,8 @@ internal extension Phoenix {
             authentication.reset()
         }
         
-        // TODO: Remove this method (hack - since we have no API calls yet)
+        /// Performs a login with an anonymous user, flushing the previous tokens in the process.
+        /// - Parameter callback: The callback that will be notified of the outcome.
         func anonymousLogin(callback: PhoenixAuthenticationCallback? = nil) {
             authentication.username = nil
             authentication.password = nil
