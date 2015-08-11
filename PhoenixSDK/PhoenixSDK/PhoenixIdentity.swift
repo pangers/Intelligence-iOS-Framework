@@ -56,7 +56,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 extension Phoenix {
 
     /// The PhoenixIdentity implementation.
-    class Identity : PhoenixIdentity {
+    final class Identity : PhoenixIdentity {
 
         /// A reference to the network manager
         private let network:Network

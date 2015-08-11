@@ -9,7 +9,7 @@
 import UIKit
 
 /// Operation used to retrieve a user data based on its id.
-class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
+internal final class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
 
     /// The user that was loaded during the request. Can be nil if the request failed or didn't yet occur.
     var user: Phoenix.User?

@@ -33,7 +33,7 @@ internal enum GeofenceKey: String {
     case LongitudeKey = "Longitude"
 }
 
-extension Geofence {
+internal extension Geofence {
     
     /// - Returns: Date formatter capable of parsing dates formatted like: '2015-07-08T08:04:48.403'
     private class var dateFormatter: NSDateFormatter {
@@ -59,14 +59,14 @@ extension Geofence {
     }
     
     /// - Returns: Path to Geofences JSON file.
-    class func jsonPath() -> String? {
+    internal class func jsonPath() -> String? {
         guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
         return "\(path)/Geofences.json"
     }
     
     /// Writes JSONDictionary to file.
     /// - Parameter json: Optional JSONDictionary object.
-    class func storeJSON(json: JSONDictionary?) throws {
+    internal class func storeJSON(json: JSONDictionary?) throws {
         guard let path = jsonPath(), json = json?.phx_toJSONData() else {
             throw GeofenceError.InvalidJSONError
         }
@@ -82,14 +82,14 @@ extension Geofence {
     }
     
     /// - Returns: An array of cached Geofence objects.
-    class func geofencesFromCache() throws -> [Geofence] {
+    internal class func geofencesFromCache() throws -> [Geofence] {
         return try geofences(withJSON: readJSON(), readFromCache: true)
     }
     
     /// - Returns: An array of Geofence objects or throws a GeofenceError.
     /// - Parameter json: Optional JSONDictionary object.
     /// - Parameter readFromCache: If reading from cache we don't want to save `json` to file.
-    class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
+    internal class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
         if readFromCache! == false {
             try storeJSON(json)
         }
@@ -102,7 +102,7 @@ extension Geofence {
     
     /// - Returns: A Geofence object or throws a GeofenceError.
     /// - Parameter json: Optional JSONDictionary object.
-    class func geofence(withJSON json: JSONDictionary) -> Geofence? {
+    internal class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
             let createDate: String = try geoValue(forKey: .CreateDateKey, dictionary: json)
             let modifyDate: String = try geoValue(forKey: .ModifyDateKey, dictionary: json)

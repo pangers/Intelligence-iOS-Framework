@@ -106,6 +106,7 @@ public final class Phoenix: NSObject {
         // Login as Application User.
         self.errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
+        location.startup()
     }
     
     /// Shutdowns the Phoenix SDK modules.

@@ -9,7 +9,7 @@
 import Foundation
 
 /// An operation to wrap the get user me request.
-class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
+internal final class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
     
     /// The user obtained
     var user: Phoenix.User?
