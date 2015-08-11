@@ -17,6 +17,9 @@ internal protocol PhoenixAuthenticationProtocol {
     /// The access token used in OAuth bearer header for requests.
     var accessToken: String? { get set }
     
+    /// The expiration date of the access token.
+    var accessTokenExpirationDate: NSDate? { get set }
+
     /// Returns: Boolean indicating whether or not we need to authenticate in the current state in order to retrieve tokens.
     var requiresAuthentication: Bool { get }
 }
@@ -38,7 +41,10 @@ internal extension Phoenix {
         private var storage: TokenStorage
         
         var requiresAuthentication: Bool {
-            return accessToken == nil
+            guard let _ = accessToken, _ = accessTokenExpirationDate else {
+                return true
+            }
+            return false
         }
         
         var userId: Int? {
@@ -55,10 +61,31 @@ internal extension Phoenix {
                 return storage.accessToken
             }
             set {
+                // If access token is invalid, clear expiry
+                if newValue == nil || newValue!.isEmpty {
+                    accessTokenExpirationDate = nil
+                }
                 storage.accessToken = newValue
             }
         }
-        
+
+        var accessTokenExpirationDate: NSDate? {
+            get {
+                let date = storage.tokenExpirationDate
+                
+                // Only return valid expiration date if it is not expired
+                if date?.timeIntervalSinceNow <= 0 {
+                    self.accessTokenExpirationDate = nil
+                    return nil
+                }
+                
+                return date
+            }
+            set {
+                storage.tokenExpirationDate = newValue
+            }
+        }
+
         // MARK: Initializers
 
         /// Default initializer
@@ -68,6 +95,17 @@ internal extension Phoenix {
         }
         
         // MARK: Functions
+        
+        /// Update access token and expiration date.
+        func update(withJSON json: JSONDictionary?) {
+            guard let token = json?[accessTokenKey] as? String,
+                expire = json?[expiresInKey] as? Double
+                where !token.isEmpty && expire > 0 else {
+                    return
+            }
+            accessTokenExpirationDate = NSDate(timeIntervalSinceNow: expire)
+            accessToken = token
+        }
         
         /// Clear our current access token, should occur when 401 is received.
         func clearAccessToken() {

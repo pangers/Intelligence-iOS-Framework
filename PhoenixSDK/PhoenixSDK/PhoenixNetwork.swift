@@ -207,8 +207,8 @@ internal extension Phoenix {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            authenticationOperation = Phoenix.AuthenticationRequestOperation(network: self, configuration: configuration) { [weak self] (accessToken) -> () in
-                self?.authentication.accessToken = accessToken
+            authenticationOperation = Phoenix.AuthenticationRequestOperation(network: self, configuration: configuration) { [weak self] (json) -> () in
+                self?.authentication.update(withJSON: json)
                 self?.didCompleteAuthenticationOperation()
             }
             authenticateQueue.addOperation(authenticationOperation!)

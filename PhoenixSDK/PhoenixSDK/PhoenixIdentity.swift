@@ -86,9 +86,9 @@ extension Phoenix {
             // Force application login first, since this won't be triggered by adding an item to the authentication queue.
             network.enqueueAuthenticationOperationIfRequired()
             // Create login operation...
-            let loginOperation = Phoenix.AuthenticationRequestOperation(network: network, configuration: configuration, username: username, password: password, callback: { [weak self] (accessToken) -> () in
+            let loginOperation = Phoenix.AuthenticationRequestOperation(network: network, configuration: configuration, username: username, password: password, callback: { [weak self] (json) -> () in
                 // Perform get me request with this access token
-                if let accessToken = accessToken {
+                if let accessToken = json?[accessTokenKey] as? String {
                     self?.getMe(accessToken, callback: callback)
                 } else {
                     callback(user: nil, error: NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil))

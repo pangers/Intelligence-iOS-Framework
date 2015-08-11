@@ -10,7 +10,7 @@ import Foundation
 
 /// Defines an authentication callback, which only returns whether the request
 /// has successfully authenticated the user or not.
-internal typealias PhoenixAuthenticationCallback = (accessToken: String?) -> ()
+internal typealias PhoenixAuthenticationCallback = (json: JSONDictionary?) -> ()
 
 internal extension Phoenix {
 
@@ -23,7 +23,7 @@ internal extension Phoenix {
     /// outcome of the operation.
     class AuthenticationRequestOperation : TSDOperation<NSURLRequest, (data:NSData?, response:NSHTTPURLResponse?)> {
         
-        var accessToken: String?
+        var json: JSONDictionary?
         
         /// The URL session
         private let urlSession:NSURLSession
@@ -65,7 +65,7 @@ internal extension Phoenix {
             self.input = preparedRequest
             
             self.completionBlock = { [weak self] in
-                self?.callback(accessToken: self?.accessToken)
+                self?.callback(json: self?.json)
             }
         }
         
@@ -104,7 +104,7 @@ internal extension Phoenix {
             guard let jsonDictionary = data?.phx_jsonDictionary, accessToken = jsonDictionary[accessTokenKey] as? String where !accessToken.isEmpty else {
                 return
             }
-            self.accessToken = accessToken
+            self.json = jsonDictionary
         }
     }
 }
