@@ -106,3 +106,15 @@ PhoenixSDK/docs/Protocols/PhoenixIdentity.html
 PhoenixSDK/docs/Protocols/PhoenixModule.html
 PhoenixSDK/docs/Protocols/PhoenixNetworkDelegate.html
 PhoenixSDK/docs/Protocols/PhoenixUser.html
+demopatch.diff
+patch.diff
+PhoenixDemo-ObjectiveC/PhoenixDemo-ObjectiveC.xcodeproj/project.pbxproj.rej
+PhoenixDemo-Swift/PhoenixDemo-Swift.xcodeproj/project.pbxproj.rej
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/AuthenticationRequestOperation.d
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/AuthenticationRequestOperation.dia
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/AuthenticationRequestOperation.swiftdeps
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/CreateUserRequestOperation.d
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/CreateUserRequestOperation.dia
+PhoenixSDK/build/PhoenixSDK.build/Release-iphoneos/PhoenixSDK.build/Objects-normal/arm64/CreateUserRequestOperation.swiftdeps
+PhoenixSDK/docs/docsets/.docset/Contents/Resources/Documents/Protocols/PhoenixConfigurationProtocol.html
+PhoenixSDK/docs/Protocols/PhoenixConfigurationProtocol.html
