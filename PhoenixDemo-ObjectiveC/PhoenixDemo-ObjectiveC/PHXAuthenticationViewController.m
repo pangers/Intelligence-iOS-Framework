@@ -12,6 +12,8 @@
 
 @import PhoenixSDK;
 
+static NSString * const ViewUserSegue = @"LoginViewUser";
+
 typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     PHXLogin,
     PHXLoggedIn,
@@ -30,7 +32,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 @implementation PHXAuthenticationViewController
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"LoginViewUser"]) {
+    if ([segue.identifier isEqualToString:ViewUserSegue]) {
         PHXViewUserViewController *viewUser = segue.destinationViewController;
         viewUser.user = loggedInUser;
         loggedInUser = nil;
@@ -149,7 +151,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
                 [self.tableView reloadData];
                 if (currentStatus == PHXLoggedIn) {
                     loggedInUser = user;
-                    [self performSegueWithIdentifier:@"LoginViewUser" sender:self];
+                    [self performSegueWithIdentifier:ViewUserSegue sender:self];
                 }
             }];
         }];

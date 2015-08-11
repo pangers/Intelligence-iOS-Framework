@@ -11,6 +11,8 @@ import PhoenixSDK
 
 class AuthenticationViewController: UITableViewController {
     
+    private let ViewUserSegue = "LoginViewUser"
+    
     // Valid messages
     private enum LoginMessages: String {
         case None = ""
@@ -51,7 +53,7 @@ class AuthenticationViewController: UITableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "LoginViewUser" {
+        if segue.identifier == ViewUserSegue {
             if let viewUser = segue.destinationViewController as? ViewUserViewController {
                 viewUser.user = loggedInUser
             }
@@ -128,7 +130,7 @@ class AuthenticationViewController: UITableViewController {
                 if self?.loginMessage == .LoggedIn {
                     self?.loggedInUser = user
                     NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
-                        self?.performSegueWithIdentifier("LoginViewUser", sender: self)
+                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
                     }
                 }
             })
