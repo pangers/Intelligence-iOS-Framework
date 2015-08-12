@@ -8,12 +8,12 @@
 
 import Foundation
 
-private let accessTokenKey = "access_token"
-private let refreshTokenKey = "refresh_token"
-private let tokenExpirationKey = "token_expiration_date"
-private let usernameKey = "username"
-private let userIdKey = "userId"
-private let passwordKey = "password"
+// MARK:- Constants
+
+internal let userIdKey = "userId"
+internal let tokenExpirationKey = "token_expiration_date"
+internal let accessTokenKey = "access_token"
+internal let expiresInKey = "expires_in"
 
 /// The protocol to implement in order to become a simple storage.
 @objc public protocol TokenStorage {
@@ -26,40 +26,12 @@ private let passwordKey = "password"
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
 extension TokenStorage {
-    
     var userId: Int? {
         get {
             return self[userIdKey] as? Int
         }
         set {
             self[userIdKey] = newValue
-        }
-    }
-    
-    var username: String? {
-        get {
-            return self[usernameKey] as? String
-        }
-        set {
-            self[usernameKey] = newValue
-        }
-    }
-    
-    var password: String? {
-        get {
-            return self[passwordKey] as? String
-        }
-        set {
-            self[passwordKey] = newValue
-        }
-    }
-    
-    var refreshToken: String? {
-        get {
-            return self[refreshTokenKey] as? String
-        }
-        set {
-            self[refreshTokenKey] = newValue
         }
     }
     

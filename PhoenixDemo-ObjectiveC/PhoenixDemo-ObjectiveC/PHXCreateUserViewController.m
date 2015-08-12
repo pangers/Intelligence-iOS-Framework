@@ -40,7 +40,7 @@
     NSString* lastname = self.lastName.text;
     NSString* avatarURL = self.avatarURL.text;
     
-    PHXConfiguration *configuration = [[PHXPhoenixManager sharedManager].phoenix currentConfiguration];
+    PHXConfiguration *configuration = [[PHXPhoenixManager sharedManager].phoenix configuration];
     NSInteger companyID = configuration.companyId;
     
     PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password firstName:firstname lastName:lastname avatarURL:avatarURL];

@@ -41,7 +41,7 @@ class CreateUserViewController : UIViewController {
 
         showProgress(true)
 
-        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.currentConfiguration.companyId, username: usernameText, password: passwordText, firstName: firstNameText, lastName: lastNameText, avatarURL: avatarURLText)
+        let user = Phoenix.User(companyId: PhoenixManager.manager.phoenix!.configuration.companyId, username: usernameText, password: passwordText, firstName: firstNameText, lastName: lastNameText, avatarURL: avatarURLText)
         
         PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
             

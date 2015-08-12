@@ -13,8 +13,10 @@ import Foundation
 /// Refer to the Readme file to obtain further instructions on setup.
 public enum ConfigurationError: Int, ErrorType {
     
-    // TODO: Domain (change to NSError, unless ErrorType 
+    // TODO: Domain (change to NSError, unless ErrorType
     //      has been fixed and now returns code)
+    /// The domain passed to NSErrors.
+    static let domain = "ConfigurationError"
     
     /// Configuration file does not exist.
     case FileNotFoundError = 1001

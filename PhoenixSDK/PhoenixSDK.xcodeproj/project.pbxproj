@@ -27,7 +27,6 @@
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
 		BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */; };
-		BBC46D521B6F711700C8E418 /* PhoenixModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC46D511B6F711700C8E418 /* PhoenixModule.swift */; };
 		BBC46D591B6F71DF00C8E418 /* PhoenixUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC46D581B6F71DF00C8E418 /* PhoenixUser.swift */; };
 		BBC46D5B1B6F78D000C8E418 /* PhoenixIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC46D5A1B6F78D000C8E418 /* PhoenixIdentity.swift */; };
 		BBC46D601B6F8D9000C8E418 /* CreateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC46D5F1B6F8D9000C8E418 /* CreateUserRequestOperation.swift */; };
@@ -123,7 +122,6 @@
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
 		BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfiguration.swift; sourceTree = "<group>"; };
-		BBC46D511B6F711700C8E418 /* PhoenixModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixModule.swift; sourceTree = "<group>"; };
 		BBC46D581B6F71DF00C8E418 /* PhoenixUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixUser.swift; sourceTree = "<group>"; };
 		BBC46D5A1B6F78D000C8E418 /* PhoenixIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixIdentity.swift; sourceTree = "<group>"; };
 		BBC46D5F1B6F8D9000C8E418 /* CreateUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserRequestOperation.swift; sourceTree = "<group>"; };
@@ -313,7 +311,6 @@
 				BBC46D511B6F711700C8E418 /* PhoenixModule.swift */,
 				FEDE076F1B7352FB009BC6B6 /* Location */,
 				BBC46D5D1B6F8D4500C8E418 /* Identity */,
-				BBC46D511B6F711700C8E418 /* PhoenixModules.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -581,7 +578,6 @@
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
 				BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */,
 				FEDE07711B73530A009BC6B6 /* PhoenixLocation.swift in Sources */,
-				BBC46D521B6F711700C8E418 /* PhoenixModule.swift in Sources */,
 				FEF7EF751B6671C700066AA3 /* NSJSONSerializationHelpers.swift in Sources */,
 				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
 				BBC46D5B1B6F78D000C8E418 /* PhoenixIdentity.swift in Sources */,

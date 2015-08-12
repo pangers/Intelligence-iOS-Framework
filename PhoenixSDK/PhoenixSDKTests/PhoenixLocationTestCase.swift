@@ -12,7 +12,6 @@ import XCTest
 
 class PhoenixLocationTestCase: PhoenixBaseTestCase {
     var location:Phoenix.Location?
-    var configuration:Phoenix.Configuration?
     var configurationDisabled:Phoenix.Configuration?
     
     let geofencesResponse = "{" +
@@ -93,10 +92,8 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     override func setUp() {
         super.setUp()
         do {
-            self.configuration = try Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
             self.configurationDisabled = try Phoenix.Configuration(fromFile: "confignogeofences", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
-            let network = Phoenix.Network(withConfiguration: configuration!, tokenStorage:storage)
-            self.location = Phoenix.Location(withNetwork: network, configuration: configuration!)
+            self.location = self.phoenix?.location
             
             XCTAssert(self.configuration?.useGeofences == true)
             XCTAssert(self.configurationDisabled?.useGeofences == false)

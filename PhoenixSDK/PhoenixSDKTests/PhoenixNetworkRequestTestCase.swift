@@ -14,36 +14,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
 
     let expectationTimeout:NSTimeInterval = 3
     
-    var phoenix:Phoenix?
-    var configuration:Phoenix.Configuration?
-    
-    /// Check if we have an unexpired access_token.
-    /// This all happens internally in the isAuthenticated method.
-    var checkAuthenticated: Bool {
-        return self.phoenix?.network.isAuthenticated ?? false
-    }
-    
-    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
-    /// This all happens internally in the isLoggedIn method.
-    var checkLoggedIn: Bool {
-        return self.phoenix?.network.isLoggedIn ?? false
-    }
-    
     override func setUp() {
         super.setUp()
-        do {
-            try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
-            self.configuration!.region = .Europe
-            try self.phoenix = Phoenix(withConfiguration: configuration!, tokenStorage:storage)
-        }
-        catch {
-        }
     }
     
     override func tearDown() {
         super.tearDown()
-        phoenix = nil
-        configuration = nil
     }
     
     /// Verify correct behaviour on token obtained
@@ -52,79 +28,15 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
         
-        let expectation = expectationWithDescription("Started up")
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-            expectation.fulfill()
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated, "Phoenix is not authenticated after a successful response")
+            XCTAssert(!self.checkAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
-    
-    /// Verify correct behaviour on token obtained
-    func testLoginTokenObtained() {
-        XCTAssert(!self.phoenix!.isLoggedIn, "Phoenix is authenticated before a response")
-        
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        let expectation = expectationWithDescription("logged in")
-        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkLoggedIn, "Phoenix is not authenticated after a successful response")
-        }
-    }
-    
-    /// Verifies that when trying to do a request, an authorization with 'grant_type=password' will be fired if it is needed.
-    func testEnqueueAuthorizationLoginOnNewOperation() {
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "Hola"
-        let statusCode = Int32(200)
-        let expectationOperation = expectationWithDescription("")
-        phoenix!.network.authentication.configure(withUsername: "username", password: "password")
-        
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
-            expectationOperation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.phoenix!.isLoggedIn, "Phoenix is not authenticated after a successful response")
-        }
-    }
-    
-    /// Verifies that when trying to do a request, an authorization with 'grant_type=refresh_token' will be fired if it is needed.
-    func testEnqueueAuthorizationRefreshTokenOnNewOperation() {
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "Hola"
-        let statusCode = Int32(200)
-        let expectationOperation = expectationWithDescription("")
-        phoenix!.network.authentication.configure(withUsername: "username", password: "password")
-        mockExpiredTokenStorage()
-        
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
-            expectationOperation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.phoenix!.isLoggedIn, "Phoenix is not authenticated after a successful response")
-        }
-    }
-    
     
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
@@ -134,97 +46,24 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
         
-        let expectation = expectationWithDescription("Started up")
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-            expectation.fulfill()
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated, "Phoenix is authenticated after a successful response")
+            XCTAssert(!self.checkAuthenticated, "Phoenix is not authenticated after a successful response")
         }
     }
 
-    
-    /// Verify that we logout clearing our tokens successfully when anonymously logged in.
-    func testAnonymousLogout() {
-        // Mock that we have a token
-        mockValidTokenStorage()
-        XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        phoenix?.logout()
-        XCTAssert(!checkAuthenticated, "Phoenix is not authenticated after a successful response")
-    }
-
-    /// Verify correct behaviour on logout when logged in with username and password.
-    func testLoginLogoutTokenCleared() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        mockResponseForAuthentication(200, anonymous: false)
-        
-        let expectation = expectationWithDescription("Logged in and out")
-        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
-            XCTAssert(authenticated == true)
-            self.phoenix?.logout()
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(!self.checkLoggedIn, "Phoenix is authenticated after a logout")
-        }
-    }
-    
-    
-    /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue) 
-    /// that the access_token does not match the previous one.
-    func testLoginLogoutAnonymousLoginTokenComparison() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        // Create expectation for login...
-        
-        let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil),
-            MockResponse(anonymousTokenSuccessfulResponse, 200, nil)]
-        mockAuthenticationResponses(responses)
-        
-        let initialRequest = NSURLRequest(URL: NSURL(string: "http://www.google.com/")!)
-        let stringData = "Hola"
-        let statusCode = Int32(200)
-        // We're logged out, lets enqeuue a generic request to force enqueue an anonymous login
-        mockResponseForURL(initialRequest.URL!, method: nil, response: (data: stringData, statusCode: statusCode, headers: nil))
-        
-        let expectation = expectationWithDescription("login-logout-google-anonymous-login expectation")
-        phoenix?.login(withUsername: "username", password: "password") { (authenticated) -> () in
-            // Ensure we're logged in...
-            XCTAssert(authenticated == true, "Method should return authenticated = true")
-            
-            // Store token for use later
-            let loggedInToken = self.phoenix?.network.authentication.accessToken
-            
-            // Logout...
-            self.phoenix?.logout()
-            XCTAssert(self.phoenix?.isLoggedIn == false, "Phoenix should be logged out")
-            
-            // Execute google request to enqueue authentication
-            self.phoenix?.network.executeRequest(initialRequest, callback: { (data, response, error) -> () in
-                XCTAssert(self.phoenix?.network.authentication.accessToken != loggedInToken, "Tokens match")
-                expectation.fulfill()
-            })
-        }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated == true, "Phoenix is authenticated after a login-logout-anonymouslogin")
-        }
-    }
     
     /// Tests that an invalid JSON means no authentication obtained.
     func testAuthInvalidJSON() {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForURL(tokenUrl, method: tokenMethod, response: (data: "Broken JSON\'!@£$%^&*}", statusCode: 200, headers:nil))
         
-        phoenix?.startup(withCallback: { (authenticated) -> () in
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
@@ -309,19 +148,12 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         mockResponseForURL(url,
             method: "GET",
             response: (data:"", statusCode: 403, headers: nil))
-        mockResponseForAuthentication(200)
-        
-        var didReceiveNetworkError = false
-        
         phoenix!.network.executeRequest(NSURLRequest(URL: url)) { (data, response, error) -> () in
-            if response?.statusCode == 403 {
-                didReceiveNetworkError = true
-            }
+            XCTAssert(response?.statusCode == 403)
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(didReceiveNetworkError)
         }
     }
     
@@ -380,8 +212,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         mockResponseForAuthentication(401)
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == false)
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
@@ -395,8 +227,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(404)
         
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == false)
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         
@@ -411,8 +243,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(403)
         
-        phoenix?.startup(withCallback: { (authenticated) -> () in
-            XCTAssert(authenticated == false)
+        phoenix?.startup({ (error) -> () in
+            XCTAssert(false)
         })
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in

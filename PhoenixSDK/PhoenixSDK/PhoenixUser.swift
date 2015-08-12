@@ -43,7 +43,7 @@ public enum UserType : String {
     
 }
 
-extension Phoenix {
+public extension Phoenix {
 
     /// The user class implementation
     @objc(PHXPhoenixUser) public final class User : NSObject {

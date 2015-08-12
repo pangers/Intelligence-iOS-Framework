@@ -21,24 +21,27 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
     /// The Phoenix authentication to prepare the request with.
     internal let authentication:Phoenix.Authentication
     
-    /// Default initializer, Network contains urlSession and authentication objects.
-    init(network: Phoenix.Network, request: NSURLRequest) {
-        self.urlSession = network.sessionManager
-        self.request = request
-        self.authentication = network.authentication
-    }
+    /// Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
+    internal var disposableLoginToken: String?
     
-    /// Alternative initializer with all required parameters
+    /// Default initializer with all required parameters
     init(withSession session:NSURLSession, request:NSURLRequest, authentication:Phoenix.Authentication) {
         self.urlSession = session
         self.request = request
         self.authentication = authentication
     }
     
+    /// Default initializer, Network contains urlSession and authentication objects.
+    init(withNetwork network: Phoenix.Network, request: NSURLRequest) {
+        self.urlSession = network.sessionManager
+        self.request = request
+        self.authentication = network.authentication
+    }
+    
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         // Mutate request, adding bearer token
-        let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: self.authentication)
+        let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: self.authentication, disposableLoginToken: disposableLoginToken)
         
         let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(preparedRequest)
         

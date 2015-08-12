@@ -167,9 +167,8 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
         
         do {
             phoenix = try Phoenix(withFile: "config")
-            phoenix.networkDelegate = self
-            phoenix.startup(withCallback: { (authenticated) -> () in
-                // Perform requests inside this callback
+            phoenix.startup(withCallback: { (error) -> () in
+                // Handle critical/network error.
             }
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
@@ -204,11 +203,8 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
             NSLog(@"Error initialising Phoenix: %zd", err.code);
         }
         NSParameterAssert(err == nil && instance != nil);
-
-        __weak typeof(phoenix) weakPhoenix = phoenix;
-        [phoenix setNetworkDelegate:self];
-        [phoenix startupWithCallback:^(BOOL authenticated) {
-            // Perform requests inside this callback.
+        [phoenix startupWithCallback:^(NSError *error) {        
+            // Handle critical/network error.
         }];
 ```
 
@@ -227,8 +223,8 @@ If you have a registered account on the Phoenix Platform you will be able to log
 #!swift
 
 // Optionally, login to a user's account...
-phoenix.login(withUsername: username, password: password, callback: { (authenticated) -> () in
-print("Logged in \(authenticated)")
+phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+print("Logged in as: \(user)")
 })
 
 ```
@@ -240,8 +236,8 @@ print("Logged in \(authenticated)")
 #!objc
 
 // Optionally, login to a user's account...
-[phoenix loginWithUsername:username password:password callback:^(BOOL authenticated) {
-NSLog(@"Logged in %d", authenticated);
+[phoenix.identity loginWithUsername:username password:password callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+NSLog(@"Logged in as: %@", user);
 }];
 
 ```
@@ -252,7 +248,7 @@ You will then be logged in to a user's account (if 'authenticated' is true). Onc
 ```
 #!swift
 
-phoenix.logout()
+phoenix.identity.logout()
 
 ```
 
@@ -261,7 +257,7 @@ phoenix.logout()
 
 ```
 
-[phoenix logout];
+[phoenix.identity logout];
 
 ```
 
@@ -334,24 +330,14 @@ Those errors will be wrapped within an NSError using as domain IdentityError.dom
 
 #### Get User ####
 
-There are two different ways to get a user:
+Request the user information for a particular userId.
 
-* Obtaining a user from its id.
-* Obtaining your user data from its token credentials.
-
-The SDK offers two methods to obtain a user based on those two different approaches in the identity modules.
-
-The following code snippets illustrate how to use each of the methods in Objective-C and Swift.
+The following code snippets illustrate how to request a user's information in Objective-C and Swift.
 
 **Objective-C:**
 
 ```
 #!objc
-
-// Get user via our current credentials
-[phoenix getMe:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
-    // Get the user and treat the error.
-}];
 
 // Get the user via it's id
 [phoenix getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
@@ -366,11 +352,6 @@ The following code snippets illustrate how to use each of the methods in Objecti
 
 ```
 #!swift
-
-// Get user via our current credentials
-phoenix.identity.getMe{ (user, error) -> Void in
-    // Get the user and treat the error
-}
 
 // Get the user via it's id
 phoenix.identity.getUser(userId) { (user, error) -> Void in
