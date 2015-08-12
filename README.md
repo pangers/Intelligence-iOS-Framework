@@ -356,7 +356,7 @@ PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, err
 Notice that the createUser method can return the following errors:
 
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserUpdateError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+* IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
 
