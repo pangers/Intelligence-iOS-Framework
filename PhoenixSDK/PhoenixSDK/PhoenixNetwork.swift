@@ -70,7 +70,7 @@ internal extension Phoenix {
         private var authenticationOperation:AuthenticationRequestOperation?
         
         /// - Returns: true if the SDK is currently authenticated (anonymously or otherwise).
-        internal var authenticated: Bool {
+        internal var isAuthenticated: Bool {
             return !authentication.requiresAuthentication
         }
         
@@ -228,7 +228,7 @@ internal extension Phoenix {
             
             defer {
                 // Continue worker queue if we have authentication object
-                workerQueue.suspended = !self.authenticated
+                workerQueue.suspended = !self.isAuthenticated
                 
                 // If the worker queue is suspended, cancel all its tasks
                 if workerQueue.suspended {

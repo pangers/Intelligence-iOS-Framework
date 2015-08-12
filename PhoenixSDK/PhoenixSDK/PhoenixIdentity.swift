@@ -15,7 +15,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 @objc public protocol PhoenixIdentity {
     
     /// - Returns: True if user has logged in with username and password.
-    var loggedIn: Bool { get }
+    var isLoggedIn: Bool { get }
     
     /// Attempt to authenticate with a username and password.
     /// Logging in with associate events with this user.
@@ -78,7 +78,7 @@ extension Phoenix {
         
         // MARK:- Login
         
-        @objc var loggedIn: Bool {
+        @objc var isLoggedIn: Bool {
             return network.authentication.userId != nil
         }
         
