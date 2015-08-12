@@ -48,13 +48,7 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     }
     
     func displayUser() {
-        // No views set
-        if self.idLabel == nil || self.user == nil { return }
-        
-        guard let user = self.user else {
-            return
-        }
-        
+        guard let user = self.user else { return }
         NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
             if user.userId != 0 {
                 self.idLabel.text = "User Id: \(user.userId)"
