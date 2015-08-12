@@ -9,6 +9,7 @@
 import Foundation
 
 private let phoenixIdentityAPIVersion = "identity/v1"
+private let phoenixLocationAPIVersion = "location/v1"
 
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
@@ -50,13 +51,13 @@ internal extension NSURLRequest {
         return mutable
     }
     
-    // MARK: URL Request factory for authentication
+    // MARK:- Authentication Module
     
     /// - Parameters:
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
-    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     /// - Returns: An NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthentication(authentication: PhoenixAuthenticationProtocol, configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_requestForAuthentication(authentication: PhoenixAuthenticationProtocol, configuration: Phoenix.Configuration) -> NSURLRequest {
         if configuration.clientID.isEmpty || configuration.clientSecret.isEmpty {
             assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
             return NSURLRequest()
@@ -82,18 +83,18 @@ internal extension NSURLRequest {
     }
     
     /// - Parameters:
-    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     /// - Returns: An anonymous client credentials NSURLRequest that can be used to obtain an authentication token.
-    private class func phx_requestForAuthenticationWithClientCredentials(configuration: PhoenixConfigurationProtocol) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithClientCredentials(configuration: Phoenix.Configuration) -> NSURLRequest {
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=client_credentials"
         return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
     /// - Parameters:
-    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
     /// - Returns: A refresh token authentication NSURLRequest that can be used to obtain an authentication token.
-    private class func phx_requestForAuthenticationWithRefreshToken(configuration: PhoenixConfigurationProtocol, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithRefreshToken(configuration: Phoenix.Configuration, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
         // Guard required values
         guard let refreshToken = authentication.refreshToken else {
             assertionFailure("Refresh token is missing.")
@@ -105,10 +106,10 @@ internal extension NSURLRequest {
     }
     
     /// - Parameters:
-    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     ///     - authentication: Instance of Phoenix.Authentication optionally containing username/password/refreshToken.
     /// - Returns: An user credentials authentication NSURLRequest that can be used to obtain an authentication token.
-    private class func phx_requestForAuthenticationWithUserCredentials(configuration: PhoenixConfigurationProtocol, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
+    private class func phx_requestForAuthenticationWithUserCredentials(configuration: Phoenix.Configuration, authentication:PhoenixAuthenticationProtocol) -> NSURLRequest {
         // Guard required values
         guard let username = authentication.username, password = authentication.password else {
             assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
@@ -120,10 +121,10 @@ internal extension NSURLRequest {
     }
     
     /// - Parameters:
-    ///     - configuration: Instance of PhoenixConfigurationProtocol with valid clientID, clientSecret, and region.
+    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     ///     - postQuery: The query to be used in the given OAuth request
     /// - Returns: An authentication NSURLRequest built using the passed configuration and postQuery.
-    private class func phx_httpURLRequestForAuthentication(configuration: PhoenixConfigurationProtocol, postQuery:String) -> NSURLRequest {
+    private class func phx_httpURLRequestForAuthentication(configuration: Phoenix.Configuration, postQuery:String) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_oauthTokenURLPath(), relativeToURL: configuration.baseURL) {
             // Create URL encoded POST with query string
@@ -143,13 +144,13 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
-    // MARK: User CRUD
+    // MARK:- Identity Module
     
     /// - Returns: An NSURLRequest to create the given user.
     /// - Parameters:
     ///     - withUser: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForCreateUser(withUser user:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_httpURLRequestForCreateUser(withUser user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
@@ -171,7 +172,7 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - withUser: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForUpdateUser(user:Phoenix.User, configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_httpURLRequestForUpdateUser(user: Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID, userId: user.userId), relativeToURL: configuration.baseURL) {
             
@@ -192,7 +193,7 @@ internal extension NSURLRequest {
     /// - Returns: An NSURLRequest to get the user with the used credentials.
     /// - Parameters:
     ///     - configuration: The configuratio to use.
-    class func phx_httpURLRequestForGetUserMe(configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_httpURLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
@@ -201,11 +202,22 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    // MARK:- Location Module
+    
+    class func phx_httpURLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID), relativeToURL: configuration.baseURL) {
+            return NSURLRequest(URL: url)
+        }
+        assertionFailure("Couldn't create the download geofences URL.")
+        return NSURLRequest()
+        }
+        
     /// Creates the NSURLRequest to get the user id.
     /// - Parameters:
     ///     - userId: The Id of the user that we want to get.
     ///     - withConfiguration: The configuration that is being currently used.
-    class func phx_httpURLRequestForGetUserById(userId:Int, withConfiguration configuration:PhoenixConfigurationProtocol) -> NSURLRequest {
+    class func phx_httpURLRequestForGetUserById(userId:Int, withConfiguration configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(userId)", relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
@@ -214,7 +226,7 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
-    // MARK: URL Paths
+    // MARK:- URL Paths
     
     /// - Returns: the path to the API endpoint to obtain an OAuth token.
     private class func phx_oauthTokenURLPath() -> String {
@@ -223,12 +235,30 @@ internal extension NSURLRequest {
     
     /// - Returns: The path to get current user's information.
     private class func phx_usersMeURLPath() -> String {
-        return "\(phoenixIdentityAPIVersion)/users/me"
+        return phoenixIdentityAPIVersion.appendUsers("me")
+    }
+    
+    /// - Returns: The path to get a list of geofences.
+    private class func phx_geofencesPath(withProjectId projectId: Int) -> String {
+        return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences"
     }
     
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
     /// - Returns: The path for most requests related to a user.
     private class func phx_usersURLPath(projectId:Int, userId: Int? = nil) -> String {
-        return "\(phoenixIdentityAPIVersion)/projects/\(projectId)/users" + (userId != nil ? "/\(userId!)" : "")
+        return phoenixIdentityAPIVersion.appendProjects(projectId).appendUsers(userId != nil ? "\(userId!)" : nil)
+    }
+}
+
+private extension String {
+    /// - Returns: New string with 'users(/userId)' appended to existing string.
+    /// - Parameter userId: Optional string value to cater for id or 'me'.
+    func appendUsers(userId: String?) -> String {
+        return self + "/users" + (userId != nil ? "/\(userId!)" : "")
+    }
+    /// - Returns: New string with 'projects/projectId' appended to existing string.
+    /// - Parameter projectId: Required value specifying the project.
+    func appendProjects(projectId: Int) -> String {
+        return self + "/projects/\(projectId)"
     }
 }

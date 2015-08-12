@@ -16,7 +16,7 @@ internal enum TSDKeychainError: ErrorType {
     case ErrorCode(Int), NotFoundError
 }
 
-class TSDKeychain {
+internal class TSDKeychain {
     
     /// Value for kSecAttrAccount
     private let keychainAccount: String

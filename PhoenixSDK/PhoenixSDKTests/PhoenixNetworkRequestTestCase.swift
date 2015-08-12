@@ -20,13 +20,13 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Check if we have an unexpired access_token.
     /// This all happens internally in the isAuthenticated method.
     var checkAuthenticated: Bool {
-        return self.phoenix?.isAuthenticated ?? false
+        return self.phoenix?.network.isAuthenticated ?? false
     }
     
     /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
     /// This all happens internally in the isLoggedIn method.
     var checkLoggedIn: Bool {
-        return self.phoenix?.isLoggedIn ?? false
+        return self.phoenix?.network.isLoggedIn ?? false
     }
     
     override func setUp() {
@@ -34,7 +34,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         do {
             try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
             self.configuration!.region = .Europe
-            try self.phoenix = Phoenix(withConfiguration: configuration!, withTokenStorage:storage)
+            try self.phoenix = Phoenix(withConfiguration: configuration!, tokenStorage:storage)
         }
         catch {
         }
@@ -332,7 +332,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let expectation = expectationWithDescription("")
         let statusCode = Int32(200)
-        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), withRequest: initialRequest, withAuthentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
+        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), request: initialRequest, authentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
         op.completionBlock = {
             expectation.fulfill()
             let (data, response) = op.output!

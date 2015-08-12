@@ -15,14 +15,14 @@ class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
     var user: Phoenix.User?
     
     /// The configuration used through Phoenix.
-    let configuration: PhoenixConfigurationProtocol
+    let configuration: Phoenix.Configuration
 
     /// Default initializer with all required parameters
-    init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(withUser:user, configuration: configuration)
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(withUser: user, configuration: configuration)
         
-        super.init(withSession: session, withRequest: request, withAuthentication: authentication)
+        super.init(withSession: session, request: request, authentication: authentication)
     }
     
     /// The operation will run synchronously the data task and store the error and output.

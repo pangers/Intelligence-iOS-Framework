@@ -13,6 +13,9 @@ import Foundation
 /// Refer to the Readme file to obtain further instructions on setup.
 public enum ConfigurationError: Int, ErrorType {
     
+    // TODO: Domain (change to NSError, unless ErrorType 
+    //      has been fixed and now returns code)
+    
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
     
@@ -51,6 +54,15 @@ public enum IdentityError: Int, ErrorType {
 
 }
 
+/// Enumeration to list the errors that can occur in the identity module.
+public enum LocationError: Int, ErrorType {
+    
+    /// The domain passed to NSErrors.
+    static let domain = "LocationError"
+    
+    /// The request failed with a non 200 error code.
+    case RequestFailedError = 3001
+}
 
 /// Enumeration to list the errors that can occur in the identity module.
 public enum RequestError: Int, ErrorType {
@@ -65,4 +77,17 @@ public enum RequestError: Int, ErrorType {
     /// pending operations.
     case AuthenticationFailedError = 3002
 
+}
+
+/// These are internal errors thrown by the Geofence class.
+internal enum GeofenceError: ErrorType {
+    
+    /// Error to return when we have a property error. Internal use only.
+    case InvalidPropertyError(GeofenceKey)
+    
+    /// Error to return when parsing JSON fails.
+    case InvalidJSONError
+    
+    /// Error, use_geofences in Configuration file is set to false.
+    case CannotRequestGeofencesWhenDisabled
 }

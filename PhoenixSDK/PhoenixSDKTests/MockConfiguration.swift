@@ -26,7 +26,7 @@ public class MockConfiguration: Phoenix.Configuration {
     }
     
     /// - Returns: A copy of the configuration object.
-    override public func clone() -> PhoenixConfigurationProtocol {
+    override public func clone() -> MockConfiguration {
         let copy = MockConfiguration()
         copy.region = self.region
         copy.applicationID = self.applicationID

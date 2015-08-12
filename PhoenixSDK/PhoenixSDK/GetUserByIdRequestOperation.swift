@@ -15,14 +15,14 @@ class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
     var user: Phoenix.User?
     
     /// The configuration that is in use in Phoenix.
-    let configuration: PhoenixConfigurationProtocol
+    let configuration: Phoenix.Configuration
     
     /// Default initializer with all required parameters
-    init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:PhoenixConfigurationProtocol) {
+    init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
         let request = NSURLRequest.phx_httpURLRequestForGetUserById(userId,withConfiguration:configuration)
         
-        super.init(withSession: session, withRequest: request, withAuthentication: authentication)
+        super.init(withSession: session, request: request, authentication: authentication)
     }
     
     /// The operation will run synchronously the data task and store the error and output.
