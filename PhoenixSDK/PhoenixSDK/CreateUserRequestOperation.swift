@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation to wrap the create user request.
-class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
+internal final class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
     
     /// The output user created, as provided by the backend
     var user: Phoenix.User?

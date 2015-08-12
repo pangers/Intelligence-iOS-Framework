@@ -40,20 +40,6 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.Authentication(withJSON: emptyJsonDictionary, tokenStorage:storage) == nil, "Authentication obtained when passing a correct dictionary with empty values")
         XCTAssert(Phoenix.Authentication(withJSON: correctJsonDictionary, tokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary")
         XCTAssert(Phoenix.Authentication(withJSON: correctWithRefreshTokenJsonDictionary, tokenStorage:storage) != nil, "No Authentication obtained when passing a correct dictionary with all the values")
-        XCTAssert(Phoenix.Authentication(withJSON: correctWithRefreshTokenJsonDictionary, tokenStorage:storage)?.anonymous == true, "The authentication appears to be non anonymous")
-    }
-
-    func testUsernameAndPasswordStoredValues() {
-        guard let authentication = Phoenix.Authentication(withJSON: correctWithRefreshTokenJsonDictionary, tokenStorage:storage) else {
-            XCTAssert(false, "Didn't acquire an authentication")
-            return
-        }
-        
-        authentication.username = username
-        authentication.password = password
-        
-        XCTAssert(authentication.username == username, "Username stored correctly")
-        XCTAssert(authentication.password == password, "Password stored correctly")
     }
     
     func testInitializeAuthenticationParsedValues() {
@@ -61,8 +47,6 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
-        
-        XCTAssert(authentication.refreshToken == refreshToken, "Refresh token stored correctly")
         XCTAssert(authentication.accessToken == accessToken, "Access token stored correctly")
     }
 
@@ -71,9 +55,8 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
             XCTAssert(false, "Didn't acquire an authentication")
             return
         }
-        
-        authentication.expireAccessToken()
-        XCTAssert(authentication.accessToken == nil, "Access token is not expired")
+        mockExpiredTokenStorage()
+        XCTAssert(authentication.accessTokenExpirationDate == nil, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }
 
@@ -101,8 +84,8 @@ class PhoenixAuthenticationTestCase: PhoenixBaseTestCase {
             return
         }
         
-        authentication.invalidateTokens()
-        XCTAssert(authentication.refreshToken == nil, "Refresh token is not expired")
+        authentication.accessToken = nil
+        authentication.accessTokenExpirationDate = nil
         XCTAssert(authentication.accessToken == nil, "Access token is not expired")
         XCTAssert(authentication.requiresAuthentication, "Authorization is not expired")
     }

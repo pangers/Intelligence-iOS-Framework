@@ -48,7 +48,7 @@ internal extension NSData {
     }
 }
 
-extension Dictionary {
+internal extension Dictionary {
     
     /// Converts a JSON Dictionary to NSData. Accepts any Dictionary type, not just the JSONDictionary we defined.
     /// - Returns: nil or NSData representation of JSON Object.
@@ -63,7 +63,7 @@ extension Dictionary {
     }
 }
 
-extension CollectionType {
+internal extension CollectionType {
     
     /// Converts a JSON Array to NSData. Accepts any Collection type, not just the JSONArray/JSONDictionaryArray we defined.
     /// - Returns: nil or NSData representation of JSON Object.

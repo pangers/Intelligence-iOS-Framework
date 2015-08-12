@@ -21,7 +21,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOpe
     init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
         let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration)
         geofences = []
-        super.init(network: network, request: request)
+        super.init(withNetwork: network, request: request)
     }
     
     override func main() {

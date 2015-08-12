@@ -18,7 +18,6 @@
 		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
-		FE1674761B70FB490085BEC8 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE1674751B70FB490085BEC8 /* Authentication.storyboard */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
 		FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; };
 		FEF4A7561B7A28F800CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,7 +50,6 @@
 		BB3534861B6FAB5800C67500 /* PhoenixManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixManager.swift; sourceTree = "<group>"; };
 		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
-		FE1674751B70FB490085BEC8 /* Authentication.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -89,7 +87,6 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23781B70B89600CE0C81 /* Phoenix */,
-				FE0C64DB1B722AD8008C02D7 /* Authentication */,
 				BB3534831B6FAAB900C67500 /* Identity */,
 				BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */,
 				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
@@ -114,20 +111,12 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23641B70ADD700CE0C81 /* Identity.storyboard */,
+				FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */,
 				FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */,
 				BB3534841B6FAACA00C67500 /* CreateUserViewController.swift */,
 				BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */,
 			);
 			name = Identity;
-			sourceTree = "<group>";
-		};
-		FE0C64DB1B722AD8008C02D7 /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-				FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */,
-				FE1674751B70FB490085BEC8 /* Authentication.storyboard */,
-			);
-			name = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,7 +183,6 @@
 				7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */,
 				7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */,
-				FE1674761B70FB490085BEC8 /* Authentication.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

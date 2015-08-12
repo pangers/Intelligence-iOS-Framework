@@ -8,25 +8,12 @@
 
 import Foundation
 
-/// The network delegate. Currently only shows authentication failed.
-@objc(PHXPhoenixNetworkDelegate) public protocol PhoenixNetworkDelegate {
-    
-    optional
-    
-    /// Called when an authentication failure occurs in the Phoenix SDK.
-    /// - Parameters:
-    ///     - error: The error that occured
-    func phoenixAuthenticationFailed(error: NSError?)
-}
-
 /// The callback alias for internal purposes. The caller should parse this data into an object/struct rather
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-// MARK: Status code constants
-
 /// Enumeration containing the possible status to use.
-enum HTTPStatus : Int {
+internal enum HTTPStatus : Int {
 
     /// Success code
     case Success = 200
@@ -44,7 +31,7 @@ enum HTTPStatus : Int {
 // MARK: HTTP Method constants
 
 /// An enumeration of the HTTP Methods available to use
-enum HTTPRequestMethod : String {
+internal enum HTTPRequestMethod : String {
     
     /// GET
     case GET = "GET"
@@ -62,16 +49,19 @@ internal extension Phoenix {
     internal final class Network {
         
         // MARK: Instance variables
-
+        
+        /// A link to the owner of this Network class (Phoenix) used for propagating errors upwards.
+        weak internal var phoenix: Phoenix?
+        
         /// NSURLSession with default session configuration.
         private(set) internal lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 
         /// Contains concurrently executable operations for requests that rely on an authenticated session.
         /// Will be suspended if the authentication queue needs to perform authentications.
-        private lazy var workerQueue = NSOperationQueue()
+        internal lazy var workerQueue = NSOperationQueue()
         
         /// An operation queue to perform authentications. Will only enqueue an operation at a time as enforced by 'authenticationOperation != nil'.
-        private let authenticateQueue: NSOperationQueue
+        internal let authenticateQueue: NSOperationQueue
 
         /// Configuration passed through from Network initializer (assumed to be valid).
         private let configuration: Phoenix.Configuration
@@ -82,26 +72,10 @@ internal extension Phoenix {
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
         
-        /// - Returns: true if username and password are unset.
-        var isAnonymous: Bool {
-            return authentication.anonymous
-        }
-        
         /// - Returns: true if the SDK is currently authenticated (anonymously or otherwise).
-        var isAuthenticated:Bool {
+        internal var isAuthenticated: Bool {
             return !authentication.requiresAuthentication
         }
-        
-        /// - Returns: true if the SDK is currently authenticated with a username and password.
-        var isLoggedIn: Bool {
-            // Refresh token is only set when we are logged in, therefore if we check that we have a username, password and refreshToken that should fulfil the requirements of being logged in.
-            return !authentication.requiresAuthentication &&
-                !isAnonymous &&
-                authentication.refreshToken != nil
-        }
-        
-        /// A delegate to receive notifications from the network manager.
-        weak var delegate:PhoenixNetworkDelegate?
         
         // MARK: Initializers
         
@@ -123,7 +97,7 @@ internal extension Phoenix {
         ///
         /// Currently intercepts:
         ///   - 401: token_expired (EXPIRE token, need to refresh)
-        ///   - 403: invalid_token (NULL out token, need to reauthenticate)
+        ///   - 403: invalid_token (INVALID access, cannot use this method)
         ///
         /// - Parameters:
         ///     - data: The data that was obtained from the backend.
@@ -141,11 +115,11 @@ internal extension Phoenix {
             case HTTPStatus.TokenExpired.rawValue:
                 // TODO: It seems that the server can return 401 for any reason related to improper
                 // configuration or token expiry (we need to check 'error' field matches 'token_expired' to determine action.
-                authentication.expireAccessToken()
+                authentication.clearAccessToken()
 
                 // 'invalid_token' in 'error' field of response
             case HTTPStatus.TokenInvalid.rawValue:
-                authentication.invalidateTokens()
+                fallthrough
                 
             default:
                 return false
@@ -213,32 +187,16 @@ internal extension Phoenix {
         // MARK:- Authentication
         
         /// Enqueues an authentication operation if needed
-        /// - Parameters:
-        ///     - callback: The callback that will receive a call once the authentication finishes.
         /// - Returns: true if the operation was needed and has been enqueued.
-        private func enqueueAuthenticationOperationIfRequired(callback:PhoenixAuthenticationCallback? = nil) -> Bool {
+        internal func enqueueAuthenticationOperationIfRequired() -> Bool {
             // If we already have an authentication operation we do not need to schedule another one.
             if !authentication.requiresAuthentication {
-                
-                if let block = callback {
-                    block(authenticated: true)
-                }
                 return false
             }
-
-            if let authOp = authenticationOperation {
-                if let block = callback {
-                    authOp.addCallback(block)
-                }
-                return false
-            }
-            authenticationOperation = createAuthenticationOperation(callback)
+            createAuthenticationOperation()
             
             // Suspend worker queue until authentication succeeds
             workerQueue.suspended = true
-            
-            // Schedule authentication call
-            authenticateQueue.addOperation(authenticationOperation!)
             
             return true
         }
@@ -246,32 +204,29 @@ internal extension Phoenix {
         /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
         /// - Parameter callback: Contains data, response, and error information from request.
         /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
-        private func createAuthenticationOperation(callback: PhoenixAuthenticationCallback?) -> Phoenix.AuthenticationRequestOperation {
+        private func createAuthenticationOperation() {
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            let authenticationOperation = Phoenix.AuthenticationRequestOperation(session: sessionManager, authentication: authentication, configuration: configuration)
-            
-            authenticationOperation.addCallback { [weak self] (authenticated) -> () in
-                self?.didCompleteAuthenticationOperation(authenticationOperation)
+            authenticationOperation = Phoenix.AuthenticationRequestOperation(network: self, configuration: configuration) { [weak self] (json) -> () in
+                self?.authentication.update(withJSON: json)
+                self?.didCompleteAuthenticationOperation()
             }
-            
-            if let block = callback {
-                authenticationOperation.addCallback(block)
-            }
-            
-            return authenticationOperation
+            authenticateQueue.addOperation(authenticationOperation!)
         }
         
         /// Called once an authentication operation finishes, to handle its response.
         /// - Parameter authenticationOperation: The operation that just finished.
-        private func didCompleteAuthenticationOperation(authenticationOperation:Phoenix.AuthenticationRequestOperation) {
-            assert(authenticationOperation.finished)
-            self.authenticationOperation = nil
-            
-            let response = authenticationOperation.output?.response
-            let data = authenticationOperation.output?.data
-            let error = authenticationOperation.error
+        private func didCompleteAuthenticationOperation() {
+            defer {
+                authenticationOperation = nil
+            }
+            guard let operation = authenticationOperation else {
+                return
+            }
+            let response = operation.output?.response
+            let data = operation.output?.data
+            var error = operation.error
             
             defer {
                 // Continue worker queue if we have authentication object
@@ -289,44 +244,21 @@ internal extension Phoenix {
                 // Authentication object will be nil if we cannot parse the response.
                 if authentication.requiresAuthentication == true {
                     // An exception is raised to the developer.
-                    delegate?.phoenixAuthenticationFailed?(error)
+                    if error == nil {
+                        error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+                    }
+                    phoenix?.errorCallback?(error!)
                 }
             }
             
             // Regardless of how we hit this method, we should update our authentication headers
-            guard let json = data?.phx_jsonDictionary,
+            guard let _ = data?.phx_jsonDictionary,
                 httpResponse = response
                 where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
                     // Clear tokens if response is unreadable or unsuccessful.
-                    logout()
+                    authentication.reset()
                     return
             }
-            authentication.loadAuthorizationFromJSON(json)
-        }
-        
-        /// Attempt to authenticate with a username and password.
-        /// - Parameters
-        ///     - username: Username of account to attempt login with.
-        ///     - password: Password associated with username.
-        ///     - callback: Block/function to call once executed.
-        func login(withUsername username: String, password: String, callback: PhoenixAuthenticationCallback) {
-            authentication.configure(withUsername: username, password: password)
-            enqueueAuthenticationOperationIfRequired(callback)
-        }
-        
-        /// Clear all stored credentials and OAuth tokens, next request will be done anonymously after requesting a new OAuth token.
-        func logout() {
-            workerQueue.suspended = true
-            authentication.reset()
-        }
-        
-        /// Performs a login with an anonymous user, flushing the previous tokens in the process.
-        /// - Parameter callback: The callback that will be notified of the outcome.
-        func anonymousLogin(callback: PhoenixAuthenticationCallback? = nil) {
-            authentication.username = nil
-            authentication.password = nil
-            authentication.invalidateTokens()
-            enqueueAuthenticationOperationIfRequired(callback)
         }
     }
 }

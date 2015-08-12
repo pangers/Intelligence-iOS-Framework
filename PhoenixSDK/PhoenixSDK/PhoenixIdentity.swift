@@ -8,16 +8,27 @@
 
 import Foundation
 
-/// A generic network callback, passing an optional error if the call failed.
-public typealias PhoenixNetworkErrorCallback = (error:NSError?) -> Void
-
 /// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
 public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-@objc public protocol PhoenixIdentity : PhoenixModule {
+@objc public protocol PhoenixIdentity {
     
-    /// Creates a user in the backend.
+    /// - Returns: True if user has logged in with username and password.
+    var isLoggedIn: Bool { get }
+    
+    /// Attempt to authenticate with a username and password.
+    /// Logging in with associate events with this user.
+    /// - Parameters
+    ///     - username: Username of account to attempt login with.
+    ///     - password: Password associated with username.
+    ///     - callback: The user callback to pass. Will be called with either an error or a user.
+    func login(withUsername username: String, password: String, callback: PhoenixUserCallback)
+    
+    /// Logging out will no longer associate events with the authenticated user.
+    func logout()
+    
+    /// Registers a user in the backend.
     /// - Parameters:
     ///     - user: The PhoenixUser to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
@@ -28,11 +39,6 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
     /// The NSError domain is IdentityError.domain
     func createUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
-    /// Gets a user data from the current user credentials.
-    /// - Parameters:
-    ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func getMe(callback:PhoenixUserCallback?)
-    
     /// Gets a user data from a given user Id.
     /// - Parameters:
     ///     - userId: The user id to look for.
@@ -50,7 +56,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 extension Phoenix {
 
     /// The PhoenixIdentity implementation.
-    class Identity : PhoenixIdentity {
+    final class Identity : PhoenixIdentity {
 
         /// A reference to the network manager
         private let network:Network
@@ -69,6 +75,36 @@ extension Phoenix {
             // stub
         }
         
+        
+        // MARK:- Login
+        
+        @objc var isLoggedIn: Bool {
+            return network.authentication.userId != nil
+        }
+        
+        @objc func login(withUsername username: String, password: String, callback: PhoenixUserCallback) {
+            // Force application login first, since this won't be triggered by adding an item to the authentication queue.
+            network.enqueueAuthenticationOperationIfRequired()
+            // Create login operation...
+            let loginOperation = Phoenix.AuthenticationRequestOperation(network: network, configuration: configuration, username: username, password: password, callback: { [weak self] (json) -> () in
+                // Perform get me request with this access token
+                if let accessToken = json?[accessTokenKey] as? String {
+                    self?.getMe(accessToken, callback: callback)
+                } else {
+                    callback(user: nil, error: NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil))
+                }
+            })
+            network.authenticateQueue.addOperation(loginOperation)
+        }
+        
+        @objc func logout() {
+            // Clear userid.
+            network.authentication.userId = nil
+        }
+        
+        
+        // MARK: - User Management
+        
         @objc func createUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
             if !user.isValidToCreate {
                 callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
@@ -83,17 +119,6 @@ extension Phoenix {
             let operation = CreateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
             
             // set the completion block to notify the caller
-            operation.completionBlock = {
-                callback?(user:operation.user, error:operation.error)
-            }
-            
-            // Execute the network operation
-            network.executeNetworkOperation(operation)
-        }
-        
-        @objc func getMe(callback:PhoenixUserCallback?) {
-            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration)
-            
             operation.completionBlock = {
                 callback?(user:operation.user, error:operation.error)
             }
@@ -139,5 +164,21 @@ extension Phoenix {
             network.executeNetworkOperation(operation)
         }
 
+        
+        // MARK:- Private
+        
+        /// Gets a user data from the current user credentials.
+        /// - Parameters:
+        ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
+        ///     - callback: The user callback to pass. Will be called with either an error or a user.
+        @objc private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
+            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration, callback: callback)
+            
+            // This operation will use a temporary access token obtained from login request.
+            operation.disposableLoginToken = disposableLoginToken
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
+        }
     }
 }
