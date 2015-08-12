@@ -124,9 +124,11 @@ internal extension Phoenix {
         
         /// Reset to a clean-slate.
         func reset() {
-            if storage is PhoenixKeychain {
+            if let storage = storage as? PhoenixKeychain {
                 // Remove keychain elements.
-                (storage as! PhoenixKeychain).erase()
+                storage.userId = nil
+                storage.accessToken = nil
+                storage.tokenExpirationDate = nil
             } else {
                 // Tests need to execute differently.
                 clearAccessToken()
