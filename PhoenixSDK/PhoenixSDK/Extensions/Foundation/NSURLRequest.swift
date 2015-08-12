@@ -108,9 +108,9 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create the given user.
     /// - Parameters:
-    ///     - withUser: The user to create.
+    ///     - user: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForCreateUser(withUser user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_httpURLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
