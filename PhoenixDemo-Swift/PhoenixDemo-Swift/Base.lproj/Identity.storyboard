@@ -235,11 +235,11 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="sNP-Km-J2O">
                                 <rect key="frame" x="15" y="183" width="570" height="233.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0he-uF-Dey">
+                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0he-uF-Dey">
                                         <rect key="frame" x="0.0" y="0.0" width="570" height="233.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2w-1R-wU4">
-                                                <rect key="frame" x="0.0" y="0.0" width="570" height="20.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2w-1R-wU4">
+                                                <rect key="frame" x="283" y="0.0" width="4.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
@@ -281,10 +281,6 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="B2w-1R-wU4" secondAttribute="trailing" id="oly-bU-VQp"/>
-                                            <constraint firstItem="B2w-1R-wU4" firstAttribute="leading" secondItem="0he-uF-Dey" secondAttribute="leading" id="sF0-3V-XMU"/>
-                                        </constraints>
                                     </stackView>
                                 </subviews>
                             </stackView>
