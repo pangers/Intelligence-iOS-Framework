@@ -41,7 +41,7 @@ class AuthenticationViewController: UITableViewController {
         }
     }
     private var loggedIn: Bool {
-        return phoenix?.identity.loggedIn == true
+        return phoenix?.identity.isLoggedIn == true
     }
     private var phoenix: Phoenix? {
         return PhoenixManager.manager.phoenix

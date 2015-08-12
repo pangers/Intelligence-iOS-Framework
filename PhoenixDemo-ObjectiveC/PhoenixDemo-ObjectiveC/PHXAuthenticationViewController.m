@@ -80,7 +80,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 }
 
 - (BOOL)loggedIn {
-    return [[[self phoenix] identity] loggedIn];
+    return [[[self phoenix] identity] isLoggedIn];
 }
 
 - (void)viewDidLoad {
