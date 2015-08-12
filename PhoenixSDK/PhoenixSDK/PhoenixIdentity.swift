@@ -47,7 +47,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
     
     /// Updates a user in the backend.
     /// - Parameters:
-    ///     - user: The PhoenixUser to create.
+    ///     - user: The PhoenixUser to update.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
