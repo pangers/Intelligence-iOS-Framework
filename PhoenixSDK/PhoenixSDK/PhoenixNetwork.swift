@@ -215,7 +215,6 @@ internal extension Phoenix {
         /// Called once an authentication operation finishes, to handle its response.
         /// - Parameter authenticationOperation: The operation that just finished.
         private func didCompleteAuthenticationOperation() {
-            assert(authenticationOperation?.finished == true)
             defer {
                 authenticationOperation = nil
             }
