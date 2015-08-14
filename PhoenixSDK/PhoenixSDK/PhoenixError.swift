@@ -66,21 +66,33 @@ public enum LocationError: Int, ErrorType {
     case RequestFailedError = 3001
 }
 
-/// Enumeration to list the errors that can occur in the identity module.
+/// Enumeration to list the errors that can occur in any request.
 public enum RequestError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
     static let domain = "RequestError"
     
     /// The request failed with a non 200 error code.
-    case RequestFailedError = 3001
+    case RequestFailedError = 4001
     
     /// The authentication operation failed, canceling all 
     /// pending operations.
-    case AuthenticationFailedError = 3002
+    case AuthenticationFailedError = 4002
     
     /// Error to return when parsing JSON fails.
-    case ParseError = 3003
+    case ParseError = 4003
+}
+
+// Enumeration to list the errors that can occur in the installation module
+internal enum InstallationError: Int, ErrorType {
+    /// The domain passed to NSErrors.
+    static let domain = "InstallationError"
+    
+    /// Called 'create' method unnecessarily.
+    case UnnecessaryCreate = 5001
+    
+    /// Called 'update' method unnecessarily.
+    case UnnecessaryUpdate = 5002
 }
 
 /// These are internal errors thrown by the Geofence class.

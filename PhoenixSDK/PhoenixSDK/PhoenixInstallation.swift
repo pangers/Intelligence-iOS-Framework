@@ -82,11 +82,12 @@ extension Phoenix {
         func updateWithJSON(json: JSONDictionary) -> Bool {
             if let installation = json[Installation.InstallationId] as? String,
                 id = json[Installation.RequestId] as? Int,
+                installedVersion = json[Installation.InstalledVersion] as? String,
                 createDate = json[Installation.CreateDate] as? String {
                     storage.phoenix_storeInstallationID(installation)
                     storage.phoenix_storeInstallationCreateDate(createDate)
                     storage.phoenix_storeInstallationRequestID(id)
-                    storage.phoenix_storeApplicationVersion(version.phoenix_applicationVersionString)
+                    storage.phoenix_storeApplicationVersion(installedVersion)
                     return true
             }
             return false

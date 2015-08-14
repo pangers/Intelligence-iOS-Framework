@@ -38,7 +38,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "\"Identifiers\": []" +
         "}]" +
     "}"
-
+    
     let successfulResponseGetUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -75,14 +75,30 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 }
 ]
 }
-*/
+    */
     let successfulInstallationResponse = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
         "\"Id\": 1054," +
         "\"ProjectId\": 20," +
         "\"ApplicationId\": 10," +
-        "\"InstalledVersion\": \"0.1\"," +
+        "\"InstalledVersion\": \"1.0.1\"," +
+        "\"InstallationId\": \"bc1512a8-f0d3-4f91-a9c3-53af39667431\"," +
+        "\"DeviceTypeId\": \"Smartphone\"," +
+        "\"CreateDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"ModifyDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"OperatingSystemVersion\": \"9.0\"," +
+        "\"ModelReference\": \"iPhone\"" +
+        "}]" +
+    "}"
+    
+    let successfulInstallationUpdateResponse = "{" +
+        "\"TotalRecords\": 1," +
+        "\"Data\": [{" +
+        "\"Id\": 1054," +
+        "\"ProjectId\": 20," +
+        "\"ApplicationId\": 10," +
+        "\"InstalledVersion\": \"1.0.2\"," +
         "\"InstallationId\": \"bc1512a8-f0d3-4f91-a9c3-53af39667431\"," +
         "\"DeviceTypeId\": \"Smartphone\"," +
         "\"CreateDate\": \"2015-08-14T10:06:13.3850765Z\"," +
@@ -526,8 +542,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     // MARK:- Installation
     
     class VersionClass: PhoenixApplicationVersionProtocol {
+        var fakeVersion: String = "1.0.1"
         var phoenix_applicationVersionString: String? {
-            return "1.0.1"
+            return fakeVersion
         }
     }
     
@@ -607,7 +624,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
                 XCTAssert(false)
             }
         }
-        waitForExpectationsWithTimeout(3) { (_:NSError?) -> Void in
+        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
     }
@@ -628,11 +645,56 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "Expected error")
         }
         
+        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
+    func testUpdateInstallationSuccess() {
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        let storage = InstallationStorage()
+        let version = VersionClass()
+        let installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
+        
+        // Mock installation request
+        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
+        let data = jsonData.first!
+        installation.updateWithJSON(data)
+        
+        version.fakeVersion = "1.0.2"
+        let updateInstallation = Phoenix.Installation(configuration: configuration!, version: version, storage: installation.storage)
+        XCTAssert(updateInstallation.isUpdatedInstallation == true)
+        
+        mockResponseForURL(NSURLRequest.phx_httpURLRequestForUpdateInstallation(updateInstallation).URL!,
+            method: "PUT",
+            response: (data: successfulInstallationUpdateResponse, statusCode:200, headers:nil))
+        
+        identity?.updateInstallation(updateInstallation) { (installation, error) -> Void in
+            let json = installation.toJSON()
+            print(json)
+            if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
+                appID = json[Phoenix.Installation.ApplicationId] as? Int,
+                installationID = json[Phoenix.Installation.InstallationId] as? String,
+                id = json[Phoenix.Installation.RequestId] as? Int,
+                createDate = json[Phoenix.Installation.CreateDate] as? String,
+                modelRef = json[Phoenix.Installation.ModelReference] as? String,
+                installed = json[Phoenix.Installation.InstalledVersion] as? String,
+                OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
+                where
+                projectID == 20 && appID == 10 && OSVer == "9.0" &&
+                    installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
+                    modelRef == "iPhone" && installed == "1.0.2" && id == 1054 && createDate == "2015-08-14T10:06:13.3850765Z" {
+                        XCTAssert(true)
+            } else {
+                XCTAssert(false)
+            }
+        }
         waitForExpectationsWithTimeout(3) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
     }
-    
     
     // MARK:- Password security
     

@@ -198,6 +198,8 @@ extension Phoenix {
                 // If this call fails, it will retry again the next time we open the app.
                 let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
                 network.executeNetworkOperation(operation)
+            } else {
+                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.UnnecessaryCreate.rawValue, userInfo: nil))
             }
         }
         
@@ -211,6 +213,8 @@ extension Phoenix {
                 // If this call fails, it will retry again the next time we open the app.
                 let operation = UpdateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
                 network.executeNetworkOperation(operation)
+            } else {
+                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.UnnecessaryUpdate.rawValue, userInfo: nil))
             }
         }
 
