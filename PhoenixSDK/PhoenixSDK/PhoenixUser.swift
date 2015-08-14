@@ -199,7 +199,9 @@ public extension Phoenix {
         /// - Returns: true if the user is valid to be updated. The requirements
         /// are the same as in isValidToCreate, but we also need to provide a valid userId.
         var isValidToUpdate:Bool {
-            return (isValidToCreate && userId != invalidUserId)
+            let hasLastName = lastName?.isEmpty == false
+            let hasAvatarURL = avatarURL?.isEmpty == false
+            return (isValidToCreate && userId != invalidUserId && hasLastName && hasAvatarURL)
         }
         
         /// A password is considered secure if it has at least 8 characters, and uses
