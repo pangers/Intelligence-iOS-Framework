@@ -575,8 +575,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
         XCTAssert(installation.isUpdatedInstallation == false)
         XCTAssert(installation.isNewInstallation == true)
-        XCTAssert(installation.toJSON()["ProjectId"] as! Int == configuration!.projectID)
-        XCTAssert(installation.toJSON()["ApplicationId"] as! Int == configuration!.applicationID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
         XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
         XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
@@ -590,14 +590,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         identity?.createInstallation(installation) { (installation, error) -> Void in
             let json = installation.toJSON()
             print(json)
-            if let projectID = json["ProjectId"] as? Int,
-                appID = json["ApplicationId"] as? Int,
-                installationID = json["InstallationId"] as? String,
-                id = json["Id"] as? Int,
-                createDate = json["CreateDate"] as? String,
-                modelRef = json["ModelReference"] as? String,
-                installed = json["InstalledVersion"] as? String,
-                OSVer = json["OperatingSystemVersion"] as? String
+            if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
+                appID = json[Phoenix.Installation.ApplicationId] as? Int,
+                installationID = json[Phoenix.Installation.InstallationId] as? String,
+                id = json[Phoenix.Installation.RequestId] as? Int,
+                createDate = json[Phoenix.Installation.CreateDate] as? String,
+                modelRef = json[Phoenix.Installation.ModelReference] as? String,
+                installed = json[Phoenix.Installation.InstalledVersion] as? String,
+                OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
                 where
                 projectID == 20 && appID == 10 && OSVer == "9.0" &&
                     installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&

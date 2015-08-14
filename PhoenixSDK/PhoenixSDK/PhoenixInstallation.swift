@@ -14,7 +14,13 @@ extension Phoenix {
         // MARK:- Keys
         static let InstallationId = "InstallationId"
         static let RequestId = "Id"
+        static let ProjectId = "ProjectId"
+        static let ApplicationId = "ApplicationId"
         static let CreateDate = "CreateDate"
+        static let InstalledVersion = "InstalledVersion"
+        static let DeviceTypeId = "DeviceTypeId"
+        static let OperatingSystemVersion = "OperatingSystemVersion"
+        static let ModelReference = "ModelReference"
         
         // MARK:- Storage
         /// Configuration to use for configuring the installation request.
@@ -35,10 +41,17 @@ extension Phoenix {
         private var requestId: Int? { return storage.phoenix_installationRequestID }
         private var createDate: String? { return storage.phoenix_installationCreateDateString }
         
+        /// - Returns: True if valid to send an update with this object.
+        var isValidToUpdate: Bool {
+            return requestId != nil
+        }
+        
+        /// - Returns: True if app is a fresh install or request has not made it to Phoenix yet.
         var isNewInstallation: Bool {
             return storage.phoenix_isNewInstallation
         }
         
+        /// - Returns: True if app is updated or request has not made it to Phoenix yet.
         var isUpdatedInstallation: Bool {
             return storage.phoenix_isInstallationUpdated(version.phoenix_applicationVersionString)
         }
@@ -46,13 +59,13 @@ extension Phoenix {
         /// - Returns: JSON Dictionary representation used in Installation requests.
         func toJSON() -> JSONDictionary {
             var json: JSONDictionary = [
-                "ProjectId": projectId,
-                "ApplicationId": applicationId,
+                Installation.ProjectId: projectId,
+                Installation.ApplicationId: applicationId,
                 Installation.InstallationId: installationId,
-                "InstalledVersion": installedVersion,
-                "DeviceTypeId": deviceTypeId,
-                "OperatingSystemVersion": systemVersion,
-                "ModelReference": modelReference]
+                Installation.InstalledVersion: installedVersion,
+                Installation.DeviceTypeId: deviceTypeId,
+                Installation.OperatingSystemVersion: systemVersion,
+                Installation.ModelReference: modelReference]
             // Update Installation requires the Id of the previous Create Installation request.
             if requestId != nil {
                 json[Installation.RequestId] = requestId!
