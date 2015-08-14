@@ -71,11 +71,13 @@ public enum RequestError: Int, ErrorType {
     
     /// The request failed with a non 200 error code.
     case RequestFailedError = 3001
-
+    
     /// The authentication operation failed, canceling all 
     /// pending operations.
     case AuthenticationFailedError = 3002
-
+    
+    /// Error to return when parsing JSON fails.
+    case ParseError = 3003
 }
 
 /// These are internal errors thrown by the Geofence class.
@@ -83,9 +85,6 @@ internal enum GeofenceError: ErrorType {
     
     /// Error to return when we have a property error. Internal use only.
     case InvalidPropertyError(GeofenceKey)
-    
-    /// Error to return when parsing JSON fails.
-    case InvalidJSONError
     
     /// Error, use_geofences in Configuration file is set to false.
     case CannotRequestGeofencesWhenDisabled
