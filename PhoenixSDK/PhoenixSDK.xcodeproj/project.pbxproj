@@ -35,6 +35,7 @@
 		BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */; };
 		BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */; };
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
+		FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */; };
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
@@ -49,6 +50,9 @@
 		FEDE079B1B7398FE009BC6B6 /* Geofence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE07991B7398FE009BC6B6 /* Geofence.swift */; };
 		FEDE079E1B73A797009BC6B6 /* Geofence+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE079D1B73A797009BC6B6 /* Geofence+JSON.swift */; };
 		FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */; };
+		FEEF2D061B7DE3BC007C1730 /* CreateIntallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D051B7DE3BC007C1730 /* CreateIntallationRequestOperation.swift */; };
+		FEEF2D0E1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */; };
+		FEEF2D101B7DFE6D007C1730 /* PhoenixInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D0F1B7DFE6D007C1730 /* PhoenixInstallation.swift */; };
 		FEF7EF6F1B66630700066AA3 /* PhoenixAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */; };
 		FEF7EF751B6671C700066AA3 /* NSJSONSerializationHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF7EF741B6671C700066AA3 /* NSJSONSerializationHelpers.swift */; };
 /* End PBXBuildFile section */
@@ -130,6 +134,7 @@
 		BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixBaseTestCase.swift; sourceTree = "<group>"; };
 		BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTestCase.swift; sourceTree = "<group>"; };
 		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
+		FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSBundleInstallation.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegion.swift; sourceTree = "<group>"; };
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -144,6 +149,9 @@
 		FEDE07991B7398FE009BC6B6 /* Geofence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geofence.swift; sourceTree = "<group>"; };
 		FEDE079D1B73A797009BC6B6 /* Geofence+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Geofence+JSON.swift"; sourceTree = "<group>"; };
 		FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetwork.swift; sourceTree = "<group>"; };
+		FEEF2D051B7DE3BC007C1730 /* CreateIntallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateIntallationRequestOperation.swift; sourceTree = "<group>"; };
+		FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaultsInstallation.swift; sourceTree = "<group>"; };
+		FEEF2D0F1B7DFE6D007C1730 /* PhoenixInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixInstallation.swift; sourceTree = "<group>"; };
 		FEF7EF6E1B66630700066AA3 /* PhoenixAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthentication.swift; sourceTree = "<group>"; };
 		FEF7EF741B6671C700066AA3 /* NSJSONSerializationHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSJSONSerializationHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -308,7 +316,6 @@
 		BBC46D5C1B6F8D3200C8E418 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				BBC46D511B6F711700C8E418 /* PhoenixModule.swift */,
 				FEDE076F1B7352FB009BC6B6 /* Location */,
 				BBC46D5D1B6F8D4500C8E418 /* Identity */,
 			);
@@ -320,6 +327,7 @@
 			children = (
 				BBC46D5E1B6F8D7D00C8E418 /* Requests */,
 				BBC46D5A1B6F78D000C8E418 /* PhoenixIdentity.swift */,
+				FEEF2D0F1B7DFE6D007C1730 /* PhoenixInstallation.swift */,
 				BBC46D581B6F71DF00C8E418 /* PhoenixUser.swift */,
 			);
 			name = Identity;
@@ -329,6 +337,7 @@
 			isa = PBXGroup;
 			children = (
 				BBC46D5F1B6F8D9000C8E418 /* CreateUserRequestOperation.swift */,
+				FEEF2D051B7DE3BC007C1730 /* CreateIntallationRequestOperation.swift */,
 				FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */,
 				BB7116911B739DC5004536A5 /* GetUserByIdRequestOperation.swift */,
 			);
@@ -410,6 +419,8 @@
 		FEF7EF731B6671C700066AA3 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */,
+				FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */,
 				FEF7EF741B6671C700066AA3 /* NSJSONSerializationHelpers.swift */,
 				BBE209DD1B67C149000202B6 /* NSURLRequest.swift */,
 				BB0F0ED11B68DA03008679C9 /* NSURLSession.swift */,
@@ -580,6 +591,7 @@
 				FEDE07711B73530A009BC6B6 /* PhoenixLocation.swift in Sources */,
 				FEF7EF751B6671C700066AA3 /* NSJSONSerializationHelpers.swift in Sources */,
 				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
+				FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */,
 				BBC46D5B1B6F78D000C8E418 /* PhoenixIdentity.swift in Sources */,
 				BB0F0ED41B68EBF1008679C9 /* AuthenticationRequestOperation.swift in Sources */,
 				FEDE077F1B735692009BC6B6 /* DownloadGeofencesRequestOperation.swift in Sources */,
@@ -589,7 +601,10 @@
 				FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */,
 				FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */,
 				BBD7AF181B6A28F800F5B9C1 /* TokenStorage.swift in Sources */,
+				FEEF2D061B7DE3BC007C1730 /* CreateIntallationRequestOperation.swift in Sources */,
 				FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */,
+				FEEF2D101B7DFE6D007C1730 /* PhoenixInstallation.swift in Sources */,
+				FEEF2D0E1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift in Sources */,
 				FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */,
 				BB7116921B739DC5004536A5 /* GetUserByIdRequestOperation.swift in Sources */,
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,

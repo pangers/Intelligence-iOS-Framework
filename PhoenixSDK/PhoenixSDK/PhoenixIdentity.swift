@@ -30,7 +30,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
     
     /// Registers a user in the backend.
     /// - Parameters:
-    ///     - user: The PhoenixUser to create.
+    ///     - user: Phoenix User instance containing information about the user we are trying to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     /// The queue on which the callback is called is not guaranteed. It might or might not be the main thread.
     /// The developer is responsible to dispatch it to the main thread using dispatch_async to avoid deadlocks.
@@ -41,20 +41,19 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 
     /// Gets a user data from a given user Id.
     /// - Parameters:
-    ///     - userId: The user id to look for.
+    ///     - userId: The id of the user we want to get information about.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     func getUser(userId:Int, callback:PhoenixUserCallback?)
     
     /// Updates a user in the backend.
     /// - Parameters:
-    ///     - user: The PhoenixUser to create.
+    ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
-
 }
 
 extension Phoenix {
-
+    
     /// The PhoenixIdentity implementation.
     final class Identity : PhoenixIdentity {
 
@@ -64,15 +63,24 @@ extension Phoenix {
         /// The configuration of the Phoenix SDK
         private let configuration:Phoenix.Configuration
         
+        /// Installation object used for Create/Update Installation requests.
+        private let installation: Phoenix.Installation
+        
         /// Default initializer. Requires a network.
-        /// - Parameter network: The network that will be used.
-        init(withNetwork network:Network, withConfiguration configuration:Phoenix.Configuration) {
+        /// - Parameters
+        ///     - network: Network instance that will be used for sending requests.
+        ///     - configuration: Configuration instance that will be used for configuring requests.
+        ///     - bundle: Bundle will be used for interrogating app information using in Installation tasks.
+        init(withNetwork network:Network, configuration:Phoenix.Configuration, bundle: NSBundle, userDefaults: NSUserDefaults) {
             self.network = network
             self.configuration = configuration
+            self.installation = Phoenix.Installation(configuration: configuration, bundle: bundle, userDefaults: userDefaults)
         }
         
-        @objc func startup() {
+        internal func startup() {
             // stub
+            createInstallation()
+            updateInstallation()
         }
         
         
@@ -146,14 +154,45 @@ extension Phoenix {
             // stub
         }
 
+        // MARK:- Installation
         
+        internal func createInstallation() {
+            if installation.isNewInstallation {
+                // If this call fails, it will retry again the next time we open the app.
+                let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: installation, authentication: network.authentication)
+                network.executeNetworkOperation(operation)
+            }
+        }
+        
+        internal func updateInstallation() {
+            if installation.isUpdatedInstallation {
+                
+                // TODO: Wait until request succeeds, then store updated version
+                /*[{
+                "Id": 9778,
+                "ProjectId": 14104,
+                "InstallationId": "eb891333-ef3b-4892-93cd-18269be2613d",
+                "ApplicationId": 4078,
+                "InstalledVersion": "0.1.1",
+                "DeviceTypeId": "Smartphone",
+                "CreateDate": "2015-01-28T23:46:18.057",
+                "ModifyDate": "2015-01-28T23:46:18.057",
+                "OperatingSystemVersion": "5.0",
+                "ModelReference": "Nexus 5",
+                "UserId":59243
+                }]*/
+            }
+        }
+
+
+
         // MARK:- Private
-        
+
         /// Gets a user data from the current user credentials.
         /// - Parameters:
         ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
         ///     - callback: The user callback to pass. Will be called with either an error or a user.
-        @objc private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
+        private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
             let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration, callback: callback)
             
             // This operation will use a temporary access token obtained from login request.
