@@ -11,6 +11,10 @@ import Foundation
 /// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
 public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
+/// Called on completion of update or create installation request.
+/// - Returns: Installation object and optional error.
+internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installation, error: NSError?) -> Void
+
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc public protocol PhoenixIdentity {
     
@@ -172,13 +176,24 @@ extension Phoenix {
 
         // MARK:- Installation
         
-        internal func createInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
+        /// - Returns: An installation object to use in the below methods.
+        /// - Parameter installation: Optional installation object to use instead of self.installation.
+        internal func getInstallation(installation: Installation? = nil) -> Installation {
             let install: Installation
             if installation == nil {
                 install = self.installation
             } else {
                 install = installation!
             }
+            return install
+        }
+        
+        /// Schedules a create installation request if first install.
+        /// - Parameters:
+        ///     - installation: Optional installation object to use instead of self.installation.
+        ///     - callback: Optionally provide a callback to fire on completion.
+        internal func createInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
+            let install = getInstallation()
             if install.isNewInstallation {
                 // If this call fails, it will retry again the next time we open the app.
                 let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
@@ -186,26 +201,18 @@ extension Phoenix {
             }
         }
         
-        internal func updateInstallation() {
-            if installation.isUpdatedInstallation {
-                
-                // TODO: Wait until request succeeds, then store updated version
-                /*[{
-                "Id": 9778,
-                "ProjectId": 14104,
-                "InstallationId": "eb891333-ef3b-4892-93cd-18269be2613d",
-                "ApplicationId": 4078,
-                "InstalledVersion": "0.1.1",
-                "DeviceTypeId": "Smartphone",
-                "CreateDate": "2015-01-28T23:46:18.057",
-                "ModifyDate": "2015-01-28T23:46:18.057",
-                "OperatingSystemVersion": "5.0",
-                "ModelReference": "Nexus 5",
-                "UserId":59243
-                }]*/
+        /// Schedules an update installation request if version number changed.
+        /// - Parameters:
+        ///     - installation: Optional installation object to use instead of self.installation.
+        ///     - callback: Optionally provide a callback to fire on completion.
+        internal func updateInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
+            let install = getInstallation()
+            if install.isUpdatedInstallation {
+                // If this call fails, it will retry again the next time we open the app.
+                let operation = UpdateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
+                network.executeNetworkOperation(operation)
             }
         }
-
 
 
         // MARK:- Private

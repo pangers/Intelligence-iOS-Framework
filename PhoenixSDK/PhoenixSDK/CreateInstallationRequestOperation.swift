@@ -8,8 +8,6 @@
 
 import Foundation
 
-internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installation, error: NSError?) -> Void
-
 /// Operation to wrap the create user request.
 internal final class CreateInstallationRequestOperation : PhoenixNetworkRequestOperation {
 
