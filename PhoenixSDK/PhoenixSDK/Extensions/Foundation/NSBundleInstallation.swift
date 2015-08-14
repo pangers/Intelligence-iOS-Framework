@@ -8,9 +8,13 @@
 
 import Foundation
 
-extension NSBundle {
+protocol PhoenixApplicationVersionProtocol {
+    /// - Returns: Current app version.
+    var phoenix_applicationVersionString: String? {get}
+}
+
+extension NSBundle: PhoenixApplicationVersionProtocol {
     
-    /// Returns current app version.
     var phoenix_applicationVersionString: String? {
         guard let version = infoDictionary?["CFBundleShortVersionString"] as? String, build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
         return "\(version).\(build)"

@@ -74,13 +74,11 @@ extension Phoenix {
         init(withNetwork network:Network, configuration:Phoenix.Configuration, bundle: NSBundle, userDefaults: NSUserDefaults) {
             self.network = network
             self.configuration = configuration
-            self.installation = Phoenix.Installation(configuration: configuration, bundle: bundle, userDefaults: userDefaults)
+            self.installation = Phoenix.Installation(configuration: configuration, version: bundle, storage: userDefaults)
         }
         
         internal func startup() {
             // stub
-            createInstallation()
-            updateInstallation()
         }
         
         
@@ -174,10 +172,16 @@ extension Phoenix {
 
         // MARK:- Installation
         
-        internal func createInstallation() {
-            if installation.isNewInstallation {
+        internal func createInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
+            let install: Installation
+            if installation == nil {
+                install = self.installation
+            } else {
+                install = installation!
+            }
+            if install.isNewInstallation {
                 // If this call fails, it will retry again the next time we open the app.
-                let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: installation, authentication: network.authentication)
+                let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
                 network.executeNetworkOperation(operation)
             }
         }

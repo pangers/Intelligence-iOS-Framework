@@ -12,35 +12,35 @@ extension Phoenix {
     /// Manager used for Installation requests.
     internal struct Installation {
         // MARK:- Keys
-        private static let InstallationId = "InstallationId"
-        private static let RequestId = "Id"
-        private static let CreateDate = "CreateDate"
+        static let InstallationId = "InstallationId"
+        static let RequestId = "Id"
+        static let CreateDate = "CreateDate"
         
         // MARK:- Storage
         /// Configuration to use for configuring the installation request.
         let configuration: Configuration
         /// Bundle of application used to get version and build number.
-        let bundle: NSBundle
+        let version: PhoenixApplicationVersionProtocol
         /// User defaults to store response data for update installation request.
-        let userDefaults: NSUserDefaults
+        let storage: PhoenixInstallationStorageProtocol
         
         // MARK:- Parameters used in requests
         private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
         private var modelReference: String { return UIDevice.currentDevice().model }
         private var deviceTypeId: String { return "Smartphone" }
-        private var installationId: String { return userDefaults.phoenix_installationID }
-        private var installedVersion: String { return userDefaults.phoenix_storedApplicationVersion ?? bundle.phoenix_applicationVersionString ?? "" }
+        private var installationId: String { return storage.phoenix_installationID }
+        private var installedVersion: String { return storage.phoenix_storedApplicationVersion ?? version.phoenix_applicationVersionString ?? "" }
         private var applicationId: Int { return configuration.applicationID }
         private var projectId: Int { return configuration.projectID }
-        private var requestId: Int? { return userDefaults.phoenix_requestID }
-        private var createDate: String? { return userDefaults.phoenix_installationCreateDataString }
+        private var requestId: Int? { return storage.phoenix_installationRequestID }
+        private var createDate: String? { return storage.phoenix_installationCreateDateString }
         
         var isNewInstallation: Bool {
-            return userDefaults.phoenix_isNewInstallation
+            return storage.phoenix_isNewInstallation
         }
         
         var isUpdatedInstallation: Bool {
-            return userDefaults.phoenix_isInstallationUpdated(bundle.phoenix_applicationVersionString)
+            return storage.phoenix_isInstallationUpdated(version.phoenix_applicationVersionString)
         }
         
         /// - Returns: JSON Dictionary representation used in Installation requests.
@@ -70,10 +70,10 @@ extension Phoenix {
             if let installation = json[Installation.InstallationId] as? String,
                 id = json[Installation.RequestId] as? Int,
                 createDate = json[Installation.CreateDate] as? String {
-                    userDefaults.phoenix_storeInstallationID(installation)
-                    userDefaults.phoenix_storeInstallationCreateDate(createDate)
-                    userDefaults.phoenix_storeInstallationRequestID(id)
-                    userDefaults.phoenix_storeApplicationVersion(bundle.phoenix_applicationVersionString)
+                    storage.phoenix_storeInstallationID(installation)
+                    storage.phoenix_storeInstallationCreateDate(createDate)
+                    storage.phoenix_storeInstallationRequestID(id)
+                    storage.phoenix_storeApplicationVersion(version.phoenix_applicationVersionString)
                     return true
             }
             return false

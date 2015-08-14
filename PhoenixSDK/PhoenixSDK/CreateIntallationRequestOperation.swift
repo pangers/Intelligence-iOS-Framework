@@ -8,14 +8,19 @@
 
 import Foundation
 
+internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installation, error: NSError?) -> Void
+
 /// Operation to wrap the create user request.
 internal final class CreateInstallationRequestOperation : PhoenixNetworkRequestOperation {
 
     let installation: Phoenix.Installation
     
+    let callback: PhoenixInstallationCallback?
+    
     /// Default initializer with all required parameters
-    init(session:NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication) {
+    init(session:NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication, callback: PhoenixInstallationCallback?) {
         self.installation = installation
+        self.callback = callback
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation)
         super.init(withSession: session, request: request, authentication: authentication)
     }
@@ -23,6 +28,10 @@ internal final class CreateInstallationRequestOperation : PhoenixNetworkRequestO
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
+        
+        defer {
+            callback?(installation: installation, error: error)
+        }
         
         if error != nil {
             error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)

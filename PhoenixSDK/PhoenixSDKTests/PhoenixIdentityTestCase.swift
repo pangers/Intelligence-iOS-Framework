@@ -58,7 +58,40 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "\"Identifiers\": []" +
         "}]" +
     "}"
-    
+    /*
+
+"Data": [
+{
+"Id": 1066,
+"ProjectId": 2030,
+"InstallationId": "65fd6f9f-1b2b-4d25-80bd-b1193b07ee35",
+"ApplicationId": 3152,
+"InstalledVersion": "0.1",
+"DeviceTypeId": "Smartphone",
+"CreateDate": "2015-08-14T14:56:26.7564546Z",
+"ModifyDate": "2015-08-14T14:56:26.7564546Z",
+"OperatingSystemVersion": "5.0",
+"ModelReference": "Nexus 5"
+}
+]
+}
+*/
+    let successfulInstallationResponse = "{" +
+        "\"TotalRecords\": 1," +
+        "\"Data\": [{" +
+        "\"Id\": 1054," +
+        "\"ProjectId\": 20," +
+        "\"ApplicationId\": 10," +
+        "\"InstalledVersion\": \"0.1\"," +
+        "\"InstallationId\": \"bc1512a8-f0d3-4f91-a9c3-53af39667431\"," +
+        "\"DeviceTypeId\": \"Smartphone\"," +
+        "\"CreateDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"ModifyDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"OperatingSystemVersion\": \"9.0\"," +
+        "\"ModelReference\": \"iPhone\"" +
+        "}]" +
+    "}"
+
     let noUsersResponse = "{" +
         "\"TotalRecords\": 0," +
         "\"Data\": []" +
@@ -490,6 +523,96 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
 
+    // MARK:- Installation
+    
+    class VersionClass: PhoenixApplicationVersionProtocol {
+        var phoenix_applicationVersionString: String? {
+            return "1.0.1"
+        }
+    }
+    
+    class InstallationStorage: PhoenixInstallationStorageProtocol {
+        static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
+        var dictionary = [String: AnyObject]()
+        var phoenix_storedApplicationVersion: String? {
+            return dictionary["appVer"] as? String
+        }
+        func phoenix_storeApplicationVersion(version: String?) {
+            dictionary["appVer"] = version
+        }
+        var phoenix_isNewInstallation: Bool {
+            return phoenix_storedApplicationVersion == nil
+        }
+        func phoenix_isInstallationUpdated(applicationVersion: String?) -> Bool {
+            guard let version = applicationVersion, stored = phoenix_storedApplicationVersion else { return false }
+            return version != stored // Assumption: any version change is considered an update
+        }
+        var phoenix_installationID: String {
+            return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
+        }
+        func phoenix_storeInstallationID(newID: String?) {
+            dictionary["installID"] = newID
+        }
+        var phoenix_installationRequestID: Int? {
+            return dictionary["requestID"] as? Int
+        }
+        func phoenix_storeInstallationRequestID(newID: Int?) {
+            dictionary["requestID"] = newID
+        }
+        var phoenix_installationCreateDateString: String? {
+            return dictionary["date"] as? String
+        }
+        func phoenix_storeInstallationCreateDate(newDate: String?) {
+            dictionary["date"] = newDate
+        }
+    }
+    
+    
+    func testCreateInstallationSuccess() {
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        let storage = InstallationStorage()
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
+        XCTAssert(installation.isUpdatedInstallation == false)
+        XCTAssert(installation.isNewInstallation == true)
+        XCTAssert(installation.toJSON()["ProjectId"] as! Int == configuration!.projectID)
+        XCTAssert(installation.toJSON()["ApplicationId"] as! Int == configuration!.applicationID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        
+        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulInstallationResponse, statusCode:200, headers:nil))
+        
+        identity?.createInstallation(installation, callback:{ (installation, error) -> Void in
+            let json = installation.toJSON()
+            print(json)
+            if let projectID = json["ProjectId"] as? Int,
+                appID = json["ApplicationId"] as? Int,
+                installationID = json["InstallationId"] as? String,
+                id = json["Id"] as? Int,
+                createDate = json["CreateDate"] as? String,
+                modelRef = json["ModelReference"] as? String,
+                installed = json["InstalledVersion"] as? String,
+                OSVer = json["OperatingSystemVersion"] as? String
+                where
+                projectID == 20 && appID == 10 && OSVer == "9.0" &&
+                    installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
+                    modelRef == "iPhone" && installed == "1.0.1" && id == 1054 && createDate == "2015-08-14T10:06:13.3850765Z" {
+                    XCTAssert(true)
+            } else {
+                XCTAssert(false)
+            }
+        })
+        waitForExpectationsWithTimeout(3) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
     // MARK:- Password security
     
     func testPasswordRequirementsVerification() {
