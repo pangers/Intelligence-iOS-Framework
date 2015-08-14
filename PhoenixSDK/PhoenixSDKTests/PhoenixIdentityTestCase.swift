@@ -567,7 +567,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
     
-    
     func testCreateInstallationSuccess() {
         // Mock request being authorized
         mockValidTokenStorage()
@@ -588,7 +587,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             method: "POST",
             response: (data: successfulInstallationResponse, statusCode:200, headers:nil))
         
-        identity?.createInstallation(installation, callback:{ (installation, error) -> Void in
+        identity?.createInstallation(installation) { (installation, error) -> Void in
             let json = installation.toJSON()
             print(json)
             if let projectID = json["ProjectId"] as? Int,
@@ -607,11 +606,33 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             } else {
                 XCTAssert(false)
             }
-        })
+        }
         waitForExpectationsWithTimeout(3) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
     }
+    
+    func testCreateInstallationFailure() {
+        mockValidTokenStorage()
+        
+        let storage = InstallationStorage()
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
+        
+        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulInstallationResponse, statusCode:404, headers:nil))
+        
+        identity?.createInstallation(installation) { (installation, error) -> Void in
+            XCTAssert(error != nil, "Expected error")
+        }
+        
+        waitForExpectationsWithTimeout(3) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
     
     // MARK:- Password security
     
