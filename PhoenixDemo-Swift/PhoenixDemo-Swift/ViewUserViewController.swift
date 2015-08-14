@@ -14,12 +14,12 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var infoLabel: UILabel!
     
-    @IBOutlet weak var userLabel: UILabel!
-    @IBOutlet weak var passwordLabel: UILabel!
-    @IBOutlet weak var avatarURLLabel: UILabel!
-    @IBOutlet weak var firstNameLabel: UILabel!
-    @IBOutlet weak var lastNameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var username: UITextField!
+    @IBOutlet weak var password: UITextField!
+    @IBOutlet weak var firstname: UITextField!
+    @IBOutlet weak var lastname: UITextField!
+    @IBOutlet weak var avatarURL: UITextField!
     
     var user:Phoenix.User? {
         didSet {
@@ -48,18 +48,7 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     }
     
     func displayUser() {
-        guard let user = self.user else {
-            return
-        }
-        
-        if userLabel == nil {
-            return
-        }
-        
-        let lastName = user.lastName ?? "N/A"
-        let password = user.password ?? "N/A"
-        let avatar = user.avatarURL ?? "N/A"
-        
+        guard let user = self.user else { return }
         NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
             if user.userId != 0 {
                 self.idLabel.text = "User Id: \(user.userId)"
@@ -67,14 +56,30 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
             else {
                 self.idLabel.text = "User Id: --"
             }
-
-            self.userLabel.text = "Username: \(self.user?.username)"
-            self.passwordLabel.text = "Password: \(password)"
-            self.avatarURLLabel.text = "AvatarURL: \(avatar)"
-            self.firstNameLabel.text = "FirstName: \(self.user?.firstName)"
-            self.lastNameLabel.text = "LastName: \(lastName)"
-            self.infoLabel.text = ""
+            self.idLabel.text = "\(self.user!.userId)"
+            self.username.text = self.user!.username
+            self.password.text = self.user!.password    // should be empty
+            self.firstname.text = self.user!.firstName
+            self.lastname.text = self.user!.lastName
+            self.avatarURL.text = self.user!.avatarURL
         }))
+    }
+    
+    @IBAction func updateUser() {
+        guard let user = self.user else { return }
+        user.username = username.text ?? ""
+        user.password = password.text
+        user.firstName = firstname.text ?? ""
+        user.lastName = lastname.text
+        user.avatarURL = avatarURL.text
+        self.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+            if let user = user {
+                self.user = user
+                self.showInformation(" ")
+            } else if let error = error {
+                self.showInformation("There was an error while getting the user: \(error)")
+            }
+        })
     }
     
     // the beta 4 has an issue with empty labels in a stack layout, so use a space instead.

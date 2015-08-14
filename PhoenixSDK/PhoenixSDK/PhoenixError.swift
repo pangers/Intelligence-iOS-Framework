@@ -50,6 +50,9 @@ public enum IdentityError: Int, ErrorType {
 
     /// The user retrieval request was unsuccessful.
     case GetUserError = 2004
+    
+    /// The user update request was not finished successfully.
+    case UserUpdateError = 2005
 
 }
 

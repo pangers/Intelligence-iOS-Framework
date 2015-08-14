@@ -108,9 +108,9 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create the given user.
     /// - Parameters:
-    ///     - withUser: The user to create.
-    ///     - configuration: The configuratio to use.
-    class func phx_httpURLRequestForCreateUser(withUser:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
+    ///     - user: The user to create.
+    ///     - configuration: The configuration to use.
+    class func phx_httpURLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             
@@ -118,7 +118,7 @@ internal extension NSURLRequest {
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
             request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = [withUser.toJSON()].phx_toJSONData()
+            request.HTTPBody = [user.toJSON()].phx_toJSONData()
             
             if let finalRequest = request.copy() as? NSURLRequest {
                 return finalRequest
@@ -128,6 +128,31 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    /// - Returns: An NSURLRequest to update the given user.
+    /// - Parameters:
+    ///     - withUser: The user to create.
+    ///     - configuration: The configuration to use.
+    class func phx_httpURLRequestForUpdateUser(user: Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_usersURLPath(configuration.projectID, userId: user.userId), relativeToURL: configuration.baseURL) {
+            
+            // Create URL encoded POST with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+            request.HTTPBody = [user.toJSON()].phx_toJSONData()
+            
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the users URL.")
+        return NSURLRequest()
+    }
+    
+    /// - Returns: An NSURLRequest to get the user with the used credentials.
+    /// - Parameters:
+    ///     - configuration: The configuratio to use.
     class func phx_httpURLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
@@ -180,8 +205,8 @@ internal extension NSURLRequest {
     
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
     /// - Returns: The path for most requests related to a user.
-    private class func phx_usersURLPath(projectId:Int) -> String {
-        return phoenixIdentityAPIVersion.appendProjects(projectId).appendUsers(nil)
+    private class func phx_usersURLPath(projectId:Int, userId: Int? = nil) -> String {
+        return phoenixIdentityAPIVersion.appendProjects(projectId).appendUsers(userId != nil ? "\(userId!)" : nil)
     }
 }
 

@@ -290,8 +290,6 @@ The code to create a user for each language is as follows:
     PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password
         firstName:firstname lastName:lastname avatarURL:avatarURL];
 
-    __weak typeof(self) weakSelf = self;
-    
     [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
         // Treat the user and error appropriately. Notice that the callback might be performed
         // In a background thread. Use dispatch_async to handle it in the main thread.
@@ -307,15 +305,9 @@ The code to create a user for each language is as follows:
         let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
                     firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
         
-        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { [weak self] (user, error) -> Void in
-            
-            guard let this = self else {
-                return
-            }
-            
+        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
             // Treat the user and error appropriately. Notice that the callback might be performed
             // In a background thread. Use dispatch_async to handle it in the main thread.
-            
         })
 ```
 
@@ -327,6 +319,49 @@ Notice that the createUser method can return the following errors:
 
 
 Those errors will be wrapped within an NSError using as domain IdentityError.domain.
+
+#### Update user ####
+
+The code to update a user for each language is as follows:
+
+**Objective-C:**
+
+```
+#!objc
+
+PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithUserId:userID companyId:companyID username:username password:password
+firstName:firstname lastName:lastname avatarURL:avatarURL];
+
+[[PHXPhoenixManager sharedManager].phoenix.identity updateUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+// Treat the user and error appropriately. Notice that the callback might be performed
+// In a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+```
+
+**Swift:**
+
+
+```
+#!swift
+let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
+firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+
+PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+// Treat the user and error appropriately. Notice that the callback might be performed
+// In a background thread. Use dispatch_async to handle it in the main thread.
+})
+```
+
+Notice that the createUser method can return the following errors:
+
+* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
+* IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
+* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
+
+
+Those errors will be wrapped within an NSError using as domain IdentityError.domain.
+
 
 #### Get User ####
 

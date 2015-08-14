@@ -47,7 +47,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
     
     /// Updates a user in the backend.
     /// - Parameters:
-    ///     - user: The PhoenixUser to create.
+    ///     - user: The PhoenixUser to update.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
 
@@ -143,7 +143,25 @@ extension Phoenix {
         }
         
         @objc func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?) {
-            // stub
+            if !user.isValidToUpdate {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                return
+            }
+            
+            if !user.isPasswordSecure() {
+                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+                return
+            }
+            
+            let operation = UpdateUserRequestOperation(session: network.sessionManager, user: user, authentication: network.authentication, configuration: configuration)
+            
+            // set the completion block to notify the caller
+            operation.completionBlock = {
+                callback?(user:operation.user, error:operation.error)
+            }
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
         }
 
         
