@@ -46,7 +46,6 @@ class PhoenixURLRequestTestCase: XCTestCase {
         XCTAssertEqual(userDictionary["IsActive"] as? Int, 1)
         XCTAssertEqual(userDictionary["Reference"] as? String, "")
         
-        print(userDictionary)
     }
     
 }

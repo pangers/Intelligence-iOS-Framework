@@ -12,7 +12,9 @@ import XCTest
 
 class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
+    let fakeUpdateUser = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
+    let updateUserWeakPassword = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
 
@@ -71,70 +73,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         super.tearDown()
         self.configuration = nil
         self.identity =  nil
-    }
-    
-    // MARK:- Create User
-    
-    func testCreateUserSuccess() {
-        let user = fakeUser
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
-
-        // Mock 200 on auth
-        mockResponseForAuthentication(200)
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "POST",
-            response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
-        
-        identity!.createUser(user) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }
-    
-    func testCreateUserFailure() {
-        let user = fakeUser
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
-
-        // Mock 200 on auth
-        mockResponseForAuthentication(200)
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "POST",
-            response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
-
-        identity!.createUser(user) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }
-    
-    // Test the method that is used to see if the user is valid to be created
-    func testCreateUserConditions() {
-        XCTAssertFalse(Phoenix.User(companyId: 0, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No company allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No password allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "", lastName: "t", avatarURL: "t").isValidToCreate, "No firstname allows to create user")
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
-    
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
     }
     
     // MARK:- Login/Logout
@@ -260,6 +198,187 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!checkLoggedIn, "Phoenix is not authenticated after a successful response")
     }
     
+
+    // MARK:- Create User
+    
+    func testCreateUserSuccess() {
+        let user = fakeUser
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+
+        // Mock auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
+        
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    func testCreateUserFailure() {
+        let user = fakeUser
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+
+        // Mock auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
+
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    // Test the method that is used to see if the user is valid to be created
+    func testCreateUserConditions() {
+        XCTAssertFalse(Phoenix.User(companyId: 0, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No company allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "", lastName: "t", avatarURL: "t").isValidToCreate, "No firstname allows to create user")
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
+    
+        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
+        
+    }
+    
+    func testUserConstants() {
+        let fake = fakeUser
+        XCTAssert(fake.lockingCount == 0, "Locking count must be zero")
+        XCTAssert(fake.reference == "", "Reference must be empty")
+        XCTAssert(fake.isActive == true, "Active must be true")
+        XCTAssert(fake.metadata == "", "Metadata must be empty")
+        XCTAssert(fake.userTypeId == "User", "Type ID must be user")
+    }
+    
+    func testCreateUserFailureDueToPasswordSecurity() {
+        let user = userWeakPassword
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        
+        // Assert that the call won't be done.
+        assertURLNotCalled(request)
+        
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
+    // MARK:- Update User
+    
+    func testUpdateUserSuccess() {
+        let user = fakeUpdateUser
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        
+        // Mock auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "PUT",
+            response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
+        
+        identity!.updateUser(user) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    func testUpdateUserFailure() {
+        let user = fakeUpdateUser
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        
+        // Mock auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "PUT",
+            response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
+        
+        identity!.updateUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.UserUpdateError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    // Test the method that is used to see if the user is valid to be created
+    func testUpdateUserConditions() {
+        XCTAssertFalse(Phoenix.User(userId: 6016, companyId: 0, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No company allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No username allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "", lastName: "t", avatarURL: "t").isValidToUpdate, "No firstname allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "", avatarURL: "t").isValidToUpdate, "No lastname allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "").isValidToUpdate, "No Avatar blocks to create user")
+        XCTAssert(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToUpdate, "Can't send a complete user")
+        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToUpdate, "No user id")
+    }
+    
+    func testUpdateUserFailureDueToPasswordSecurity() {
+        let user = updateUserWeakPassword
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        
+        // Assert that the call won't be done.
+        assertURLNotCalled(request, method: HTTPRequestMethod.PUT.rawValue)
+        
+        identity!.updateUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
     // MARK:- Get User by id
     
     func testGetUserByIdSuccess() {
@@ -386,25 +505,4 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Test1234", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with uppercase, numbers and exactly 8 characters fails the test")
     }
     
-    func testCreateUserFailureDueToPasswordSecurity() {
-        let user = userWeakPassword
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
-
-        // Assert that the call won't be done.
-        assertURLNotCalled(request)
-
-        identity!.createUser(user) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
-    }
-
 }

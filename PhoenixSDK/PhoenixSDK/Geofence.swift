@@ -11,9 +11,11 @@ import Foundation
 /// An instance of a geofence with a latitude/longitude/radius combination.
 internal final class Geofence {
     /// Longitude of the geofence.
-    var longitude = 0.0
+    var longitude: Double = 0.0
     /// Latitude of the geofence.
-    var latitude = 0.0
+    var latitude: Double = 0.0
+    /// Radius around the longitude + latitude to include.
+    var radius: Double = 0.0
     /// Identifier of this geofence.
     var id = 0
     /// Project ID for this geofence.
@@ -23,9 +25,7 @@ internal final class Geofence {
     /// Address associated with this geofence.
     var address = ""
     /// Date this geofence was modified last on the server. (Unused)
-    var modifyDate = 0.0
+    var modifyDate: NSTimeInterval = 0.0
     /// Date this geofence was created on the server. (Unused)
-    var createDate = 0.0
-    /// Radius around the longitude + latitude to include.
-    var radius = 0.0
+    var createDate: NSTimeInterval = 0.0
 }

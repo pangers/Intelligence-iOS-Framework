@@ -35,8 +35,11 @@ private let passwordRegularExpression = try! NSRegularExpression(pattern: regExp
 /// A constant to mark an invalid user Id.
 private let invalidUserId = Int.min
 
+/// The minimum number of characters a password needs to have to be secure.
+private let strongPasswordCharacterCountThreshold = 8
+
 /// The user types that the SDK supports
-public enum UserType : String {
+private enum UserType : String {
     
     /// Regular user
     case User = "User"
@@ -140,8 +143,8 @@ public extension Phoenix {
         }
         
         /// The user type will always be User.
-        var userTypeId:UserType {
-            return .User
+        var userTypeId: String {
+            return UserType.User.rawValue
         }
         
         /// - Returns: Provides a JSONDictionary with the user data.
@@ -154,7 +157,7 @@ public extension Phoenix {
                 referenceKey: self.reference,
                 isActiveKey: self.isActive,
                 metadataKey: self.metadata,
-                userTypeKey: self.userTypeId.rawValue,
+                userTypeKey: self.userTypeId,
             ]
             
             /// Optioanlly set a key if there is a valid value
@@ -192,11 +195,19 @@ public extension Phoenix {
             
             return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
+
+        /// - Returns: true if the user is valid to be updated. The requirements
+        /// are the same as in isValidToCreate, but we also need to provide a valid userId.
+        var isValidToUpdate:Bool {
+            let hasLastName = lastName?.isEmpty == false
+            let hasAvatarURL = avatarURL?.isEmpty == false
+            return (isValidToCreate && userId != invalidUserId && hasLastName && hasAvatarURL)
+        }
         
         /// A password is considered secure if it has at least 8 characters, and uses
         /// at least a number and a letter.
         /// - Returns: True if the password is secure.
-        func isPasswordSecure() -> Bool {
+        @objc public func isPasswordSecure() -> Bool {
             guard let password = self.password else {
                 return false
             }
