@@ -10,8 +10,56 @@ import XCTest
 
 @testable import PhoenixSDK
 
+// MARK: - Fake Version Object
+
+class VersionClass: PhoenixApplicationVersionProtocol {
+    var fakeVersion: String = "1.0.1"
+    var phx_applicationVersionString: String? {
+        return fakeVersion
+    }
+}
+
+// MARK: - Fake Storage Object
+
+class InstallationStorage: PhoenixInstallationStorageProtocol {
+    static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
+    var dictionary = [String: AnyObject]()
+    var phx_applicationVersion: String? {
+        return dictionary["appVer"] as? String
+    }
+    func phx_storeApplicationVersion(version: String?) {
+        dictionary["appVer"] = version
+    }
+    var phx_isNewInstallation: Bool {
+        return phx_applicationVersion == nil
+    }
+    func phx_isInstallationUpdated(applicationVersion: String?) -> Bool {
+        guard let version = applicationVersion, stored = phx_applicationVersion else { return false }
+        return version != stored // Assumption: any version change is considered an update
+    }
+    var phx_installationID: String {
+        return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
+    }
+    func phx_storeInstallationID(newID: String?) {
+        dictionary["installID"] = newID
+    }
+    var phx_installationRequestID: Int? {
+        return dictionary["requestID"] as? Int
+    }
+    func phx_storeInstallationRequestID(newID: Int?) {
+        dictionary["requestID"] = newID
+    }
+    var phx_installationCreateDateString: String? {
+        return dictionary["date"] as? String
+    }
+    func phx_storeInstallationCreateDate(newDate: String?) {
+        dictionary["date"] = newDate
+    }
+}
+
 class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
+    // Version 1.0.1
     let successfulInstallationResponse = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -28,6 +76,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         "}]" +
     "}"
     
+    // Version 1.0.2
     let successfulInstallationUpdateResponse = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -44,52 +93,26 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         "}]" +
     "}"
     
-    let failedInstallationUpdateResponse = "{[fail;)]}"
+    // Generic failure
+    let failedInstallationResponse = "{[fail;)]}"
     
     
-    // MARK:- Installation
+    // MARK:- Create Installation
     
-    class VersionClass: PhoenixApplicationVersionProtocol {
-        var fakeVersion: String = "1.0.1"
-        var phx_applicationVersionString: String? {
-            return fakeVersion
-        }
-    }
-    
-    class InstallationStorage: PhoenixInstallationStorageProtocol {
-        static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
-        var dictionary = [String: AnyObject]()
-        var phx_applicationVersion: String? {
-            return dictionary["appVer"] as? String
-        }
-        func phx_storeApplicationVersion(version: String?) {
-            dictionary["appVer"] = version
-        }
-        var phx_isNewInstallation: Bool {
-            return phx_applicationVersion == nil
-        }
-        func phx_isInstallationUpdated(applicationVersion: String?) -> Bool {
-            guard let version = applicationVersion, stored = phx_applicationVersion else { return false }
-            return version != stored // Assumption: any version change is considered an update
-        }
-        var phx_installationID: String {
-            return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
-        }
-        func phx_storeInstallationID(newID: String?) {
-            dictionary["installID"] = newID
-        }
-        var phx_installationRequestID: Int? {
-            return dictionary["requestID"] as? Int
-        }
-        func phx_storeInstallationRequestID(newID: Int?) {
-            dictionary["requestID"] = newID
-        }
-        var phx_installationCreateDateString: String? {
-            return dictionary["date"] as? String
-        }
-        func phx_storeInstallationCreateDate(newDate: String?) {
-            dictionary["date"] = newDate
-        }
+    func prepareValidCreateInstallationObject() -> Phoenix.Installation {
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
+        XCTAssert(installation.isUpdatedInstallation == false, "Installation is not an update")
+        XCTAssert(installation.isNewInstallation == true, "Installation is new")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID, "Application ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil, "Request ID must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == "9.0", "OS must be 9.0")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == "iPhone", "Device type must be iPhone")
+        return installation
     }
     
     func testCreateInstallationSuccess() {
@@ -164,7 +187,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         mockResponseForURL(request,
             method: "POST",
-            response: (data: failedInstallationUpdateResponse, statusCode:200, headers:nil))
+            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
@@ -199,21 +222,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         }
     }
     
-    func prepareValidCreateInstallationObject() -> Phoenix.Installation {
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
-        XCTAssert(installation.isUpdatedInstallation == false, "Installation is not an update")
-        XCTAssert(installation.isNewInstallation == true, "Installation is new")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID, "Application ID must match configuration")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil, "Request ID must be nil")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == "9.0", "OS must be 9.0")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == "iPhone", "Device type must be iPhone")
-        return installation
-    }
+    // MARK: - Update Installation
     
     func prepareValidUpdateInstallationObject() -> Phoenix.Installation {
         var installation = prepareValidCreateInstallationObject()
@@ -302,7 +311,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         mockResponseForURL(request,
             method: "PUT",
-            response: (data: failedInstallationUpdateResponse, statusCode:200, headers:nil))
+            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
