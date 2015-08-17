@@ -193,7 +193,7 @@ internal extension NSURLRequest {
                 return finalRequest
             }
         }
-        assertionFailure("Couldn't create the create installation URL.")
+        assertionFailure("Couldn't create the update installation URL.")
         return NSURLRequest()
     }
     
