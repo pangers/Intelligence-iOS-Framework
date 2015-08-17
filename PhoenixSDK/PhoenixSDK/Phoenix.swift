@@ -39,8 +39,7 @@ public final class Phoenix: NSObject {
         let myConfiguration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
         // Modules
-        // TODO: Make Bundle exposed?
-        self.identity = Identity(withNetwork: network, configuration: myConfiguration, bundle: NSBundle.mainBundle(), userDefaults: userDefaults)
+        self.identity = Identity(withNetwork: network, configuration: myConfiguration, version: NSBundle.mainBundle(), storage: userDefaults)
         self.location = Location(withNetwork: network, configuration: myConfiguration)
 
         super.init()

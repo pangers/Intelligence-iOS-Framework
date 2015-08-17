@@ -74,11 +74,12 @@ extension Phoenix {
         /// - Parameters
         ///     - network: Network instance that will be used for sending requests.
         ///     - configuration: Configuration instance that will be used for configuring requests.
-        ///     - bundle: Bundle will be used for interrogating app information using in Installation tasks.
-        init(withNetwork network:Network, configuration:Phoenix.Configuration, bundle: NSBundle, userDefaults: NSUserDefaults) {
+        ///     - version: Version class will be used for interrogating app to get the current version.
+        ///     - storage: Storage class will be used for storing information about the installation.
+        init(withNetwork network:Network, configuration:Phoenix.Configuration, version: PhoenixApplicationVersionProtocol, storage: PhoenixInstallationStorageProtocol) {
             self.network = network
             self.configuration = configuration
-            self.installation = Phoenix.Installation(configuration: configuration, version: bundle, storage: userDefaults)
+            self.installation = Phoenix.Installation(configuration: configuration, version: version, storage: storage)
         }
         
         internal func startup() {
