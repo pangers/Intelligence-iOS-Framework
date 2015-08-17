@@ -89,10 +89,10 @@ internal enum InstallationError: Int, ErrorType {
     static let domain = "InstallationError"
     
     /// Called 'create' method unnecessarily.
-    case UnnecessaryCreate = 5001
+    case AlreadyInstalled = 5001
     
     /// Called 'update' method unnecessarily.
-    case UnnecessaryUpdate = 5002
+    case AlreadyUpdated = 5002
 }
 
 /// These are internal errors thrown by the Geofence class.

@@ -217,7 +217,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.UnnecessaryCreate.rawValue, "Expected create error")
+            XCTAssert(error?.code == InstallationError.AlreadyInstalled.rawValue, "Expected create error")
         }
     }
     
@@ -334,7 +334,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.UnnecessaryUpdate.rawValue, "Expected update error")
+            XCTAssert(error?.code == InstallationError.AlreadyUpdated.rawValue, "Expected update error")
         }
     }
 }

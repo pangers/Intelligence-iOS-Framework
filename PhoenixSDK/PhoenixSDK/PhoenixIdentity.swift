@@ -178,16 +178,10 @@ extension Phoenix {
 
         // MARK:- Installation
         
-        /// - Returns: An installation object to use in the below methods.
+        /// - Returns: An installation object to use in place of self.installation object.
         /// - Parameter installation: Optional installation object to use instead of self.installation.
         internal func getInstallation(installation obj: Installation? = nil) -> Installation {
-            let install: Installation
-            if obj == nil {
-                install = self.installation
-            } else {
-                install = obj!
-            }
-            return install
+            return obj != nil ? obj! : self.installation
         }
         
         /// Schedules a create installation request if first install.
@@ -201,7 +195,7 @@ extension Phoenix {
                 let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
                 network.executeNetworkOperation(operation)
             } else {
-                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.UnnecessaryCreate.rawValue, userInfo: nil))
+                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyInstalled.rawValue, userInfo: nil))
             }
         }
         
@@ -216,7 +210,7 @@ extension Phoenix {
                 let operation = UpdateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
                 network.executeNetworkOperation(operation)
             } else {
-                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.UnnecessaryUpdate.rawValue, userInfo: nil))
+                callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyUpdated.rawValue, userInfo: nil))
             }
         }
 
