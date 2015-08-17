@@ -591,11 +591,15 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
                 modelRef = json[Phoenix.Installation.ModelReference] as? String,
                 installed = json[Phoenix.Installation.InstalledVersion] as? String,
                 OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
-                where
-                projectID == 20 && appID == 10 && OSVer == "9.0" &&
+                where projectID == 20 &&
+                    appID == 10 &&
+                    OSVer == "9.0" &&
                     installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == "iPhone" && installed == "1.0.1" && id == 1054 && createDate == "2015-08-14T10:06:13.3850765Z" {
-                    XCTAssert(true)
+                    modelRef == "iPhone" &&
+                    installed == "1.0.1" &&
+                    id == 1054 &&
+                    createDate == "2015-08-14T10:06:13.3850765Z" {
+                        XCTAssert(true)
             } else {
                 XCTAssert(false)
             }
@@ -725,10 +729,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
                 modelRef = json[Phoenix.Installation.ModelReference] as? String,
                 installed = json[Phoenix.Installation.InstalledVersion] as? String,
                 OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
-                where
-                projectID == 20 && appID == 10 && OSVer == "9.0" &&
+                where projectID == 20 &&
+                    appID == 10 &&
+                    OSVer == "9.0" &&
                     installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == "iPhone" && installed == "1.0.2" && id == 1054 && createDate == "2015-08-14T10:06:13.3850765Z" {
+                    modelRef == "iPhone" &&
+                    installed == "1.0.2" &&
+                    id == 1054 &&
+                    createDate == "2015-08-14T10:06:13.3850765Z" {
                         XCTAssert(true)
             } else {
                 XCTAssert(false)
