@@ -82,7 +82,8 @@ extension Phoenix {
         }
         
         internal func startup() {
-            // stub
+            createInstallation(callback: nil)
+            updateInstallation(callback: nil)
         }
         
         
