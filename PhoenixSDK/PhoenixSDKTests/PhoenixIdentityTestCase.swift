@@ -571,15 +571,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         // Mock request being authorized
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
-        XCTAssert(installation.isUpdatedInstallation == false)
-        XCTAssert(installation.isNewInstallation == true)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        let installation = prepareValidCreateInstallationObject()
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         
@@ -616,8 +608,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateInstallationFailure() {
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         
@@ -638,15 +629,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         // Mock request being authorized
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
-        XCTAssert(installation.isUpdatedInstallation == false)
-        XCTAssert(installation.isNewInstallation == true)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        let installation = prepareValidCreateInstallationObject()
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         
@@ -676,7 +659,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let data = jsonData.first!
         installation.updateWithJSON(data)
         
-        XCTAssert(installation.isNewInstallation == false)
+        XCTAssert(installation.isNewInstallation == false, "Installation is not new")
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         assertURLNotCalled(request)
@@ -687,22 +670,37 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
     
+    func prepareValidCreateInstallationObject() -> Phoenix.Installation {
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
+        XCTAssert(installation.isUpdatedInstallation == false, "Installation is not an update")
+        XCTAssert(installation.isNewInstallation == true, "Installation is new")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        return installation
+    }
+    
+    func prepareValidUpdateInstallationObject() -> Phoenix.Installation {
+        var installation = prepareValidCreateInstallationObject()
+        
+        // Mock installation request
+        let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        installation.updateWithJSON(jsonData)
+        XCTAssert(installation.isNewInstallation == false, "Installation is not new")
+        
+        (installation.version as? VersionClass)?.fakeVersion = "1.0.2"
+        installation = Phoenix.Installation(configuration: configuration!, version: installation.version, storage: installation.storage)
+        XCTAssert(installation.isUpdatedInstallation == true, "Installation out of date")
+        return installation
+    }
+    
     func testUpdateInstallationSuccess() {
         // Mock request being authorized
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let version = VersionClass()
-        var installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
-        
-        // Mock installation request
-        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
-        let data = jsonData.first!
-        installation.updateWithJSON(data)
-        
-        version.fakeVersion = "1.0.2"
-        installation = Phoenix.Installation(configuration: configuration!, version: version, storage: installation.storage)
-        XCTAssert(installation.isUpdatedInstallation == true)
+        let installation = prepareValidUpdateInstallationObject()
         
         mockResponseForURL(NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!,
             method: "PUT",
@@ -728,6 +726,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             } else {
                 XCTAssert(false)
             }
+            XCTAssert(installation.isUpdatedInstallation == false)
         }
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
@@ -737,18 +736,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateInstallationFailure() {
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let version = VersionClass()
-        var installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
-        
-        // Mock installation request
-        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
-        let data = jsonData.first!
-        installation.updateWithJSON(data)
-        
-        version.fakeVersion = "1.0.2"
-        installation = Phoenix.Installation(configuration: configuration!, version: version, storage: installation.storage)
-        XCTAssert(installation.isUpdatedInstallation == true)
+        let installation = prepareValidUpdateInstallationObject()
         
         let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
         
@@ -769,18 +757,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateInstallationParseFailure() {
         mockValidTokenStorage()
         
-        let storage = InstallationStorage()
-        let version = VersionClass()
-        var installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
-        
-        // Mock installation request
-        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
-        let data = jsonData.first!
-        installation.updateWithJSON(data)
-        
-        version.fakeVersion = "1.0.2"
-        installation = Phoenix.Installation(configuration: configuration!, version: version, storage: installation.storage)
-        XCTAssert(installation.isUpdatedInstallation == true)
+        let installation = prepareValidUpdateInstallationObject()
         
         let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
         
@@ -801,17 +778,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateInstallationUnnecessary() {
         mockValidTokenStorage()
         
-        // Mock installation request
-        let storage = InstallationStorage()
-        let version = VersionClass()
-        version.fakeVersion = "1.0.2"
-        var installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
-        
-        let jsonData = successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
-        let data = jsonData.first!
-        installation.updateWithJSON(data)
-        
-        XCTAssert(installation.isUpdatedInstallation == false)
+        let installation = prepareValidUpdateInstallationObject()
+        let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        installation.updateWithJSON(jsonData)
+        XCTAssert(installation.isUpdatedInstallation == false, "Installation already up to date")
         
         let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
         assertURLNotCalled(request)
