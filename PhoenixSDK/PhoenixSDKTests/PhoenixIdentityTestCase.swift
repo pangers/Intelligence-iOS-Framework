@@ -636,6 +636,35 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
     
+    func testCreateInstallationParseFailure() {
+        // Mock request being authorized
+        mockValidTokenStorage()
+        
+        let storage = InstallationStorage()
+        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: storage)
+        XCTAssert(installation.isUpdatedInstallation == false)
+        XCTAssert(installation.isNewInstallation == true)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        
+        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: failedInstallationUpdateResponse, statusCode:200, headers:nil))
+        
+        identity?.createInstallation(installation) { (installation, error) -> Void in
+            XCTAssert(error != nil, "Expected error")
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
     func testCreateInstallationUnnecessary() {
         mockValidTokenStorage()
         
