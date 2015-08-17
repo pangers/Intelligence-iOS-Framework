@@ -184,7 +184,7 @@ internal extension NSURLRequest {
     class func phx_httpURLRequestForUpdateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
-            // Create URL encoded POST with query string
+            // Create URL encoded PUT with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
             request.HTTPMethod = HTTPRequestMethod.PUT.rawValue

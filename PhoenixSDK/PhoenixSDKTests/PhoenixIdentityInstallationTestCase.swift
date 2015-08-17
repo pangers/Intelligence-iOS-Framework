@@ -10,7 +10,7 @@ import XCTest
 
 @testable import PhoenixSDK
 
-// MARK: - Fake Version Object
+// MARK: Fake Version Object
 
 class VersionClass: PhoenixApplicationVersionProtocol {
     var fakeVersion: String = "1.0.1"
