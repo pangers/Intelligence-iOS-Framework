@@ -526,7 +526,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     class VersionClass: PhoenixApplicationVersionProtocol {
         var fakeVersion: String = "1.0.1"
-        var phoenix_applicationVersionString: String? {
+        var phx_applicationVersionString: String? {
             return fakeVersion
         }
     }
@@ -534,35 +534,35 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     class InstallationStorage: PhoenixInstallationStorageProtocol {
         static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
         var dictionary = [String: AnyObject]()
-        var phoenix_storedApplicationVersion: String? {
+        var phx_applicationVersion: String? {
             return dictionary["appVer"] as? String
         }
-        func phoenix_storeApplicationVersion(version: String?) {
+        func phx_storeApplicationVersion(version: String?) {
             dictionary["appVer"] = version
         }
-        var phoenix_isNewInstallation: Bool {
-            return phoenix_storedApplicationVersion == nil
+        var phx_isNewInstallation: Bool {
+            return phx_applicationVersion == nil
         }
-        func phoenix_isInstallationUpdated(applicationVersion: String?) -> Bool {
-            guard let version = applicationVersion, stored = phoenix_storedApplicationVersion else { return false }
+        func phx_isInstallationUpdated(applicationVersion: String?) -> Bool {
+            guard let version = applicationVersion, stored = phx_applicationVersion else { return false }
             return version != stored // Assumption: any version change is considered an update
         }
-        var phoenix_installationID: String {
+        var phx_installationID: String {
             return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
         }
-        func phoenix_storeInstallationID(newID: String?) {
+        func phx_storeInstallationID(newID: String?) {
             dictionary["installID"] = newID
         }
-        var phoenix_installationRequestID: Int? {
+        var phx_installationRequestID: Int? {
             return dictionary["requestID"] as? Int
         }
-        func phoenix_storeInstallationRequestID(newID: Int?) {
+        func phx_storeInstallationRequestID(newID: Int?) {
             dictionary["requestID"] = newID
         }
-        var phoenix_installationCreateDateString: String? {
+        var phx_installationCreateDateString: String? {
             return dictionary["date"] as? String
         }
-        func phoenix_storeInstallationCreateDate(newDate: String?) {
+        func phx_storeInstallationCreateDate(newDate: String?) {
             dictionary["date"] = newDate
         }
     }

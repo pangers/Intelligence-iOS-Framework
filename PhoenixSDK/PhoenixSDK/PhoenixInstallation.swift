@@ -34,12 +34,12 @@ extension Phoenix {
         private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
         private var modelReference: String { return UIDevice.currentDevice().model }
         private var deviceTypeId: String { return "Smartphone" }
-        private var installationId: String { return storage.phoenix_installationID }
-        private var installedVersion: String { return storage.phoenix_storedApplicationVersion ?? version.phoenix_applicationVersionString ?? "" }
+        private var installationId: String { return storage.phx_installationID }
+        private var installedVersion: String { return storage.phx_applicationVersion ?? version.phx_applicationVersionString ?? "" }
         private var applicationId: Int { return configuration.applicationID }
         private var projectId: Int { return configuration.projectID }
-        private var requestId: Int? { return storage.phoenix_installationRequestID }
-        private var createDate: String? { return storage.phoenix_installationCreateDateString }
+        private var requestId: Int? { return storage.phx_installationRequestID }
+        private var createDate: String? { return storage.phx_installationCreateDateString }
         
         /// - Returns: True if valid to send an update with this object.
         var isValidToUpdate: Bool {
@@ -48,12 +48,12 @@ extension Phoenix {
         
         /// - Returns: True if app is a fresh install or request has not made it to Phoenix yet.
         var isNewInstallation: Bool {
-            return storage.phoenix_isNewInstallation
+            return storage.phx_isNewInstallation
         }
         
         /// - Returns: True if app is updated or request has not made it to Phoenix yet.
         var isUpdatedInstallation: Bool {
-            return storage.phoenix_isInstallationUpdated(version.phoenix_applicationVersionString)
+            return storage.phx_isInstallationUpdated(version.phx_applicationVersionString)
         }
         
         /// - Returns: JSON Dictionary representation used in Installation requests.
@@ -84,10 +84,10 @@ extension Phoenix {
                 id = json[Installation.RequestId] as? Int,
                 installedVersion = json[Installation.InstalledVersion] as? String,
                 createDate = json[Installation.CreateDate] as? String {
-                    storage.phoenix_storeInstallationID(installation)
-                    storage.phoenix_storeInstallationCreateDate(createDate)
-                    storage.phoenix_storeInstallationRequestID(id)
-                    storage.phoenix_storeApplicationVersion(installedVersion)
+                    storage.phx_storeInstallationID(installation)
+                    storage.phx_storeInstallationCreateDate(createDate)
+                    storage.phx_storeInstallationRequestID(id)
+                    storage.phx_storeApplicationVersion(installedVersion)
                     return true
             }
             return false
