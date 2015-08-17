@@ -19,7 +19,7 @@ internal final class UpdateInstallationRequestOperation : PhoenixNetworkRequestO
     init(session:NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication, callback: PhoenixInstallationCallback?) {
         self.installation = installation
         self.callback = callback
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation)
+        let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation)
         super.init(withSession: session, request: request, authentication: authentication)
     }
     
@@ -38,13 +38,9 @@ internal final class UpdateInstallationRequestOperation : PhoenixNetworkRequestO
         
         guard let data = self.output?.data,
             jsonDataArray = (data.phx_jsonDictionary?["Data"] as? JSONDictionaryArray),
-            jsonData = jsonDataArray.first else {
-            return
-        }
-        
-        // Attempt to update stored values
-        if !installation.updateWithJSON(jsonData) {
-            error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            jsonData = jsonDataArray.first where installation.updateWithJSON(jsonData) == true else {
+                error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                return
         }
     }
 }

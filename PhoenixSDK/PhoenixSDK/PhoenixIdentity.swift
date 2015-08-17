@@ -178,12 +178,12 @@ extension Phoenix {
         
         /// - Returns: An installation object to use in the below methods.
         /// - Parameter installation: Optional installation object to use instead of self.installation.
-        internal func getInstallation(installation: Installation? = nil) -> Installation {
+        internal func getInstallation(installation obj: Installation? = nil) -> Installation {
             let install: Installation
-            if installation == nil {
+            if obj == nil {
                 install = self.installation
             } else {
-                install = installation!
+                install = obj!
             }
             return install
         }
@@ -193,7 +193,7 @@ extension Phoenix {
         ///     - installation: Optional installation object to use instead of self.installation.
         ///     - callback: Optionally provide a callback to fire on completion.
         internal func createInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
-            let install = getInstallation()
+            let install = getInstallation(installation: installation)
             if install.isNewInstallation {
                 // If this call fails, it will retry again the next time we open the app.
                 let operation = CreateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
@@ -208,7 +208,7 @@ extension Phoenix {
         ///     - installation: Optional installation object to use instead of self.installation.
         ///     - callback: Optionally provide a callback to fire on completion.
         internal func updateInstallation(installation: Installation? = nil, callback: PhoenixInstallationCallback?) {
-            let install = getInstallation()
+            let install = getInstallation(installation: installation)
             if install.isUpdatedInstallation {
                 // If this call fails, it will retry again the next time we open the app.
                 let operation = UpdateInstallationRequestOperation(session: network.sessionManager, installation: install, authentication: network.authentication, callback: callback)
