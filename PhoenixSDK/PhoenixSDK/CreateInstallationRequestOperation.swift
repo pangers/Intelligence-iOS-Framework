@@ -36,9 +36,8 @@ internal final class CreateInstallationRequestOperation : PhoenixNetworkRequestO
             return
         }
         
-        guard let data = self.output?.data,
-            jsonDataArray = (data.phx_jsonDictionary?["Data"] as? JSONDictionaryArray),
-            jsonData = jsonDataArray.first where installation.updateWithJSON(jsonData) == true else {
+        guard let jsonData = getFirstDataDictionary()
+            where installation.updateWithJSON(jsonData) == true else {
             error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

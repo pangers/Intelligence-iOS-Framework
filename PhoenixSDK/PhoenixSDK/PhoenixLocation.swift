@@ -39,6 +39,7 @@ internal extension Phoenix {
                 do {
                     self.geofences = try Geofence.geofencesFromCache()
                 } catch {
+                    // Ignore error...
                 }
                 print("Geofences: \(geofences)")
             }

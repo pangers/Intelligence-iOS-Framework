@@ -45,13 +45,13 @@ internal final class GetUserMeRequestOperation : PhoenixNetworkRequestOperation 
             return
         }
         
-        guard let data = self.output?.data else {
+        guard let userDictionary = getFirstDataDictionary() else {
+            error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
         
         // If all conditions succeed, parse the user.
-        user = Phoenix.User.fromResponseData(data, withConfiguration:configuration)
-        
+        user = Phoenix.User(withJSON: userDictionary, configuration: configuration)
     }
 
 }

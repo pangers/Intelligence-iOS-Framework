@@ -85,4 +85,14 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
         }
     }
 
+    // MARK:- Helpers
+    
+    /// Most API methods can use this helper to extract the first dictionary in the 'Data' array of output.
+    func getFirstDataDictionary() -> JSONDictionary? {
+        guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONArray,
+            dataDictionary = dataArray.first as? JSONDictionary else {
+                return nil
+        }
+        return dataDictionary
+    }
 }

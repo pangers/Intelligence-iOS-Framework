@@ -104,19 +104,6 @@ public extension Phoenix {
             self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
         }
         
-        /// Creates a user from a data response from the backend.
-        /// - Parameters:
-        ///     - data: The data obtained from the backend.
-        ///     - withConfiguration: The configuration object.
-        class func fromResponseData(data:NSData, withConfiguration:Phoenix.Configuration) -> User? {
-            guard let usersArray = data.phx_jsonDictionary?["Data"] as? JSONArray,
-                let userDictionary = usersArray.first as? JSONDictionary else {
-                return nil
-            }
-            
-            return User(withJSON: userDictionary, configuration: withConfiguration)
-        }
-        
         /// Checks if the user Id provided is a valid user Id.
         class func isUserIdValid(userId:Int) -> Bool {
             return userId != invalidUserId && userId >= 0
