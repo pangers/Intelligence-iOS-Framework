@@ -44,10 +44,8 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             XCTAssert(false, "File not found, but exception not thrown")
         }
         catch let err as ConfigurationError where err == .FileNotFoundError {
-            print(err)
         }
         catch let error {
-            print(error)
             XCTAssert(false, "Unexpected exception type.")
         }
     }
@@ -64,8 +62,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             // correct path
         }
         catch let error {
-            print(error)
-            XCTAssert(false, "Unexpected exception type.")
+           XCTAssert(false, "Unexpected exception type.")
         }
     }
     
@@ -81,7 +78,6 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             // correct path
         }
         catch let error {
-            print(error)
             XCTAssert(false, "Unexpected exception type.")
         }
     }

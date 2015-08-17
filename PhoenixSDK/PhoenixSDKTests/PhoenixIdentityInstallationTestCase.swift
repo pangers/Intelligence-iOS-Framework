@@ -101,8 +101,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
     func prepareValidCreateInstallationObject() -> Phoenix.Installation {
         let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
-        XCTAssert(installation.isUpdatedInstallation == false, "Installation is not an update")
-        XCTAssert(installation.isNewInstallation == true, "Installation is new")
+        XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
+        XCTAssert(installation.isNewInstallation == true, "Should be new installation")
         XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
         XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID, "Application ID must match configuration")
         XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
@@ -130,7 +130,6 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
             let json = installation.toJSON()
-            print(json)
             if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
                 appID = json[Phoenix.Installation.ApplicationId] as? Int,
                 installationID = json[Phoenix.Installation.InstallationId] as? String,
@@ -211,7 +210,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let data = jsonData.first!
         installation.updateWithJSON(data)
         
-        XCTAssert(installation.isNewInstallation == false, "Installation is not new")
+        XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         assertURLNotCalled(request)
@@ -230,11 +229,11 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         // Mock installation request
         let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
         installation.updateWithJSON(jsonData)
-        XCTAssert(installation.isNewInstallation == false, "Installation is not new")
+        XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         (installation.version as? VersionClass)?.fakeVersion = "1.0.2"
         installation = Phoenix.Installation(configuration: configuration!, version: installation.version, storage: installation.storage)
-        XCTAssert(installation.isUpdatedInstallation == true, "Installation out of date")
+        XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] != nil, "Create date must be set")
         XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] != nil, "Request ID must be set")
         return installation
@@ -253,7 +252,6 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
             let json = installation.toJSON()
-            print(json)
             if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
                 appID = json[Phoenix.Installation.ApplicationId] as? Int,
                 installationID = json[Phoenix.Installation.InstallationId] as? String,
@@ -329,7 +327,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let installation = prepareValidUpdateInstallationObject()
         let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
         installation.updateWithJSON(jsonData)
-        XCTAssert(installation.isUpdatedInstallation == false, "Installation already up to date")
+        XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated version")
         
         let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
         assertURLNotCalled(request)
