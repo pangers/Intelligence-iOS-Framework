@@ -235,6 +235,21 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
     // MARK:- Create User
     
+    // Assures that when the user is not valid to create, an error is returned.
+    func testCreateUserErrorOnUserCondition() {
+        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        
+        assertURLNotCalled(request)
+        
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+        }
+    }
+    
     func testCreateUserSuccess() {
         let user = fakeUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
@@ -506,23 +521,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Wait for calls to be made and the callback to be notified
         }
     }
-    
-    // MARK:- Helpers
-    
-    // Assures that when the user is not valid to create, an error is returned.
-    func testIdentityErrorOnUserCondition() {
-        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
-
-        assertURLNotCalled(request)
-        
-        identity!.createUser(user) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-        }
-    }
 
     // MARK:- Installation
     
@@ -658,6 +656,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -684,6 +683,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == InstallationError.UnnecessaryCreate.rawValue, "Expected create error")
         }
     }
     
@@ -758,6 +758,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == 404, "Expected 404 error")
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -789,6 +790,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -816,6 +818,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == InstallationError.UnnecessaryUpdate.rawValue, "Expected update error")
         }
     }
     
