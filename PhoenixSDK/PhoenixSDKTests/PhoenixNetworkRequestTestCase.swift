@@ -28,9 +28,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
         
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -46,9 +44,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         mockResponseForAuthentication(200)
         
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -62,9 +58,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForURL(tokenUrl, method: tokenMethod, response: (data: "Broken JSON\'!@£$%^&*}", statusCode: 200, headers:nil))
         
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -212,9 +206,8 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         mockResponseForAuthentication(401)
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
+        
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -227,10 +220,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(404)
         
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
-        
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
@@ -243,9 +233,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         mockResponseForAuthentication(403)
         
-        phoenix?.startup({ (error) -> () in
-            XCTAssert(false)
-        })
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
