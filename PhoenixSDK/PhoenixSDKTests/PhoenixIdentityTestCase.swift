@@ -674,11 +674,15 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
         XCTAssert(installation.isUpdatedInstallation == false, "Installation is not an update")
         XCTAssert(installation.isNewInstallation == true, "Installation is new")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil)
-        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil)
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID, "Application ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil, "Request ID must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == "9.0", "OS must be 9.0")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == "iPhone", "Device type must be iPhone")
         return installation
     }
     
@@ -693,6 +697,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         (installation.version as? VersionClass)?.fakeVersion = "1.0.2"
         installation = Phoenix.Installation(configuration: configuration!, version: installation.version, storage: installation.storage)
         XCTAssert(installation.isUpdatedInstallation == true, "Installation out of date")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] != nil, "Create date must be set")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] != nil, "Request ID must be set")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.2", "Installation version must be 1.0.2")
         return installation
     }
     
