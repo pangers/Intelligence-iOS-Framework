@@ -78,9 +78,12 @@ internal class PhoenixEventQueue {
         let seconds = eventInterval
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let currQueue = NSOperationQueue.currentQueue()
         dispatch_after(dispatchTime, queue, { [weak self] in
             self?.fire()
-            self?.runTimer()
+            currQueue?.addOperationWithBlock({ [weak self] () -> Void in
+                self?.runTimer()
+            })
         })
     }
     
