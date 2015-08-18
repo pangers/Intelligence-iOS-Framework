@@ -127,6 +127,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "POST",
             response: (data: successfulInstallationResponse, statusCode:200, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
             let json = installation.toJSON()
@@ -150,6 +151,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             } else {
                 XCTAssert(false)
             }
+            expectation.fulfill()
         }
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
@@ -167,9 +169,11 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "POST",
             response: (data: successfulInstallationResponse, statusCode:404, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
             XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected wrapped 4001 error")
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -189,9 +193,11 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "POST",
             response: (data: failedInstallationResponse, statusCode:200, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.createInstallation(installation) { (installation, error) -> Void in
-            XCTAssert(error != nil, "Expected error")
+            XCTAssertNotNil(error, "Expected error")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -250,6 +256,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "PUT",
             response: (data: successfulInstallationUpdateResponse, statusCode:200, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
             let json = installation.toJSON()
@@ -274,6 +281,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
                 XCTAssert(false)
             }
             XCTAssert(installation.isUpdatedInstallation == false)
+            expectation.fulfill()
         }
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
@@ -291,9 +299,11 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "PUT",
             response: (data: successfulInstallationUpdateResponse, statusCode:404, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
             XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected wrapped 4001 error")
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
@@ -312,9 +322,11 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             method: "PUT",
             response: (data: failedInstallationResponse, statusCode:200, headers:nil))
         
+        let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
