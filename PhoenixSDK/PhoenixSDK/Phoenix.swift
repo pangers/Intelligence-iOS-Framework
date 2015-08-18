@@ -41,7 +41,8 @@ public final class Phoenix: NSObject {
         // Modules
         self.identity = Identity(withNetwork: network, configuration: myConfiguration, version: NSBundle.mainBundle(), storage: userDefaults)
         self.location = Location(withNetwork: network, configuration: myConfiguration)
-
+        self.analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: userDefaults, applicationVersion: NSBundle.mainBundle())
+        
         super.init()
         
         if (myConfiguration.hasMissingProperty) {
@@ -85,7 +86,10 @@ public final class Phoenix: NSObject {
     // MARK: Modules
     
     /// The identity module, used to manage users in the Phoenix backend.
-    @objc public internal(set) var identity:PhoenixIdentity
+    @objc public internal(set) var identity: PhoenixIdentity
+    
+    // TODO: Documentation
+    @objc public internal(set) var analytics: PhoenixAnalytics
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
     internal(set) var location: Phoenix.Location
@@ -110,10 +114,11 @@ public final class Phoenix: NSObject {
         network.enqueueAuthenticationOperationIfRequired()
         location.startup()
         (identity as? Phoenix.Identity)?.startup()
+        (analytics as? Phoenix.Analytics)?.startup()
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        
+        (analytics as? Phoenix.Analytics)?.shutdown()
     }
 }
