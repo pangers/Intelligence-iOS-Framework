@@ -18,7 +18,7 @@ internal protocol PhoenixInstallationStorageProtocol {
     /// - Returns: False if we cannot get stored app version or current app version.
     func phx_isInstallationUpdated(applicationVersion: String?) -> Bool
     /// - Returns: Previous installation ID or zeros.
-    var phx_installationID: String {get}
+    var phx_installationID: String? {get}
     /// Stores installation ID that was returned by the server.
     func phx_storeInstallationID(newID: String?)
     /// - Returns: Previous request ID.
@@ -32,7 +32,6 @@ internal protocol PhoenixInstallationStorageProtocol {
     func phx_storeInstallationCreateDate(newDate: String?)
 }
 
-private let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
 private let phoenixAppVersionKey = "PhoenixAppVersion"
 private let phoenixInstallationIDKey = "PhoenixInstallationID"
 private let phoenixInstallationCreateDateKey = "PhoenixInstallationCreateDate"
@@ -61,8 +60,8 @@ extension NSUserDefaults: PhoenixInstallationStorageProtocol {
     
     // MARK:- Installation ID
     
-    var phx_installationID: String {
-        return objectForKey(phoenixInstallationIDKey) as? String ?? phoenixInstallationDefaultCreateID
+    var phx_installationID: String? {
+        return objectForKey(phoenixInstallationIDKey) as? String
     }
     
     func phx_storeInstallationID(newID: String?) {

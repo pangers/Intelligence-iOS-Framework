@@ -31,10 +31,11 @@ extension Phoenix {
         let storage: PhoenixInstallationStorageProtocol
         
         // MARK:- Parameters used in requests
+        internal let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
         private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
         private var modelReference: String { return UIDevice.currentDevice().model }
         private var deviceTypeId: String { return "Smartphone" }
-        private var installationId: String { return storage.phx_installationID }
+        private var installationId: String { return storage.phx_installationID ?? phoenixInstallationDefaultCreateID }
         private var installedVersion: String { return storage.phx_applicationVersion ?? version.phx_applicationVersionString ?? "" }
         private var applicationId: Int { return configuration.applicationID }
         private var projectId: Int { return configuration.projectID }
