@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 /// A generic PhoenixGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
 internal typealias PhoenixGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
@@ -15,6 +16,17 @@ internal extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location {
+        
+        
+        internal class func lastKnownLocation() -> CLLocationCoordinate2D? {
+            if CLLocationManager.locationServicesEnabled() {
+                return CLLocationManager().location?.coordinate
+            }
+            // TODO: Get stored location
+            return nil
+        }
+        
+        
         
         /// A reference to the network manager
         private let network: Network
@@ -79,7 +91,6 @@ internal extension Phoenix {
                 throw GeofenceError.CannotRequestGeofencesWhenDisabled
             }
         }
-        
     }
     
 }
