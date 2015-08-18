@@ -169,6 +169,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
+            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected wrapped 4001 error")
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
