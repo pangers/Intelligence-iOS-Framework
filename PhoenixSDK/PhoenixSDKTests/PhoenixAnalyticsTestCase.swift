@@ -1,0 +1,167 @@
+//
+//  PhoenixAnalyticsTestCase.swift
+//  PhoenixSDK
+//
+//  Created by Chris Nevin on 19/08/2015.
+//  Copyright © 2015 Tigerspike. All rights reserved.
+//
+
+import XCTest
+
+@testable import PhoenixSDK
+
+class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
+    
+    func genericEvent() -> Phoenix.Event {
+        let event = Phoenix.Event(withType: "Phoenix.Test.Event")
+        XCTAssert(event.targetId == nil)
+        XCTAssert(event.value == 0)
+        XCTAssert(event.eventType == "Phoenix.Test.Event")
+        return event
+    }
+    
+    func ensureJSONIncludesMandatoryPopulatedData(json: JSONDictionary) {
+        XCTAssert(json[Phoenix.Event.ApplicationIdKey] as! Int == configuration!.applicationID, "Expected application ID to match configuration")
+        XCTAssert(json[Phoenix.Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
+        XCTAssert(json[Phoenix.Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
+    }
+    
+    
+    /// Test a valid response is parsed correctly
+    func testAnalyticsSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNil(error, "Expected success")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    /// Test a invalid number of events is returned
+    func testAnalyticsInvalidCount() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["TotalRecords": 2, "Data": [eventJSON, eventJSON]]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNotNil(error, "Expected failure")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    /// Test a invalid response
+    func testAnalyticsInvalidResponse() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["Blah": "123"]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNotNil(error, "Expected failure")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    /// Test an error
+    func testAnalyticsError404() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: "", statusCode:404, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNotNil(error, "Expected failure")
+            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request error")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+}

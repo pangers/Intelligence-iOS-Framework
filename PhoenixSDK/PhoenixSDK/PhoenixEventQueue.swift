@@ -10,7 +10,7 @@ import Foundation
 
 /// Callback used for propogating events up for another class to manage sending them. 
 /// Takes a JSONDictionaryArray and relies on callee returning success/failure on response from server.
-typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, (success: Bool) -> ()) -> ()
+typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, (error: NSError?) -> ()) -> ()
 
 internal class PhoenixEventQueue {
     
@@ -127,11 +127,11 @@ internal class PhoenixEventQueue {
         // Set sending to true.
         isSending = true
         // Send events to function.
-        callback(events: eventArray) { [weak self] (success) in
+        callback(events: eventArray) { [weak self] (error) in
             guard let this = self else { return }
             objc_sync_enter(this)
             // If successful, remove this range.
-            if success {
+            if error == nil {
                 // Remove items in range we just sent.
                 this.eventArray.removeRange(range)
                 // Store remaining items.

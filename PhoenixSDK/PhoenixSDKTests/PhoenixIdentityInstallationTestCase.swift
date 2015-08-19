@@ -37,7 +37,7 @@ class InstallationStorage: PhoenixInstallationStorageProtocol {
         guard let version = applicationVersion, stored = phx_applicationVersion else { return false }
         return version != stored // Assumption: any version change is considered an update
     }
-    var phx_installationID: String {
+    var phx_installationID: String? {
         return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
     }
     func phx_storeInstallationID(newID: String?) {

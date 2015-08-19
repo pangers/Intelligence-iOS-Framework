@@ -52,7 +52,7 @@ internal extension Phoenix {
         /// Add automatically populated fields to dictionary.
         /// - parameter event: Event to prepare for sending.
         /// - returns: JSONDictionary representation of Event including populated fields.
-        private func prepareEvent(event: Event) -> JSONDictionary {
+        internal func prepareEvent(event: Event) -> JSONDictionary {
             var dictionary = event.toJSON()
 
             // FIXME: Are these fields correct? Using postman example...
@@ -72,9 +72,9 @@ internal extension Phoenix {
         /// Callback from EventQueue, responsible for propogating changes to the server.
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
-        private func sendEvents(events: JSONDictionaryArray, completion: (success: Bool) -> ()) {
-            let operation = AnalyticsRequestOperation(withNetwork: network, configuration: configuration, eventsJSON: events) { (success) -> Void in
-                completion(success: success)
+        internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
+            let operation = AnalyticsRequestOperation(withNetwork: network, configuration: configuration, eventsJSON: events) { (error) -> Void in
+                completion(error: error)
             }
             network.executeNetworkOperation(operation)
         }
