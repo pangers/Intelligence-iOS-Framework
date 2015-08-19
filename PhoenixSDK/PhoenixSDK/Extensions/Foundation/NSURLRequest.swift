@@ -113,7 +113,6 @@ internal extension NSURLRequest {
     class func phx_httpURLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
-            
             // Create URL encoded POST with query string
             let request = NSMutableURLRequest(URL: url)
             request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
@@ -152,7 +151,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to get the user with the used credentials.
     /// - Parameters:
-    ///     - configuration: The configuratio to use.
+    ///     - configuration: The configuration to use.
     class func phx_httpURLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
@@ -162,8 +161,46 @@ internal extension NSURLRequest {
         return NSURLRequest()
     }
     
+    /// - Returns: An NSURLRequest to create a given installation.
+    /// - Parameter installation: Installation object used to configure this request.
+    class func phx_httpURLRequestForCreateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
+            // Create URL encoded POST with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+            request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the create installation URL.")
+        return NSURLRequest()
+    }
+    
+    /// - Returns: An NSURLRequest to update a given installation.
+    /// - Parameter installation: Installation object used to configure this request.
+    class func phx_httpURLRequestForUpdateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
+        // Configure url
+        if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
+            // Create URL encoded PUT with query string
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+            request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the update installation URL.")
+        return NSURLRequest()
+    }
+    
     // MARK:- Location Module
     
+    /// - Returns: An NSURLRequest to download geofences.
+    /// - Parameter configuration: Configuration object used to configure this request.
     class func phx_httpURLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID), relativeToURL: configuration.baseURL) {
@@ -198,6 +235,11 @@ internal extension NSURLRequest {
         return phoenixIdentityAPIVersion.appendUsers("me")
     }
     
+    private class func phx_installationPath(applicationID: Int, projectID: Int) -> String {
+        let appID = "\(applicationID)"
+        return "\(phoenixIdentityAPIVersion.appendProjects(projectID).appendApplications(appID))/installations"
+    }
+    
     /// - Returns: The path to get a list of geofences.
     private class func phx_geofencesPath(withProjectId projectId: Int) -> String {
         return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences"
@@ -211,6 +253,10 @@ internal extension NSURLRequest {
 }
 
 private extension String {
+    func appendApplications(applicationId: String) -> String {
+        return self + "/applications/\(applicationId)"
+    }
+    
     /// - Returns: New string with 'users(/userId)' appended to existing string.
     /// - Parameter userId: Optional string value to cater for id or 'me'.
     func appendUsers(userId: String?) -> String {

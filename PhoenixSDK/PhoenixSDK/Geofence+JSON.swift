@@ -68,7 +68,7 @@ internal extension Geofence {
     /// - Parameter json: Optional JSONDictionary object.
     internal class func storeJSON(json: JSONDictionary?) throws {
         guard let path = jsonPath(), json = json?.phx_toJSONData() else {
-            throw GeofenceError.InvalidJSONError
+            throw RequestError.ParseError
         }
         json.writeToFile(path, atomically: true)
     }
@@ -76,7 +76,7 @@ internal extension Geofence {
     /// - Returns: Cached array of Geofence objects or nil.
     private class func readJSON() throws -> JSONDictionary? {
         guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.phx_jsonDictionary else {
-            throw GeofenceError.InvalidJSONError
+            throw RequestError.ParseError
         }
         return json
     }
@@ -94,7 +94,7 @@ internal extension Geofence {
             try storeJSON(json)
         }
         guard let json = json else {
-            throw GeofenceError.InvalidJSONError
+            throw RequestError.ParseError
         }
         let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
         return data.map({ geofence(withJSON: $0) }).filter({ $0 != nil }).map({ $0! })

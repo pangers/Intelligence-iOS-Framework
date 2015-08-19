@@ -35,8 +35,8 @@ internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOpe
             if let dictionary = output?.data?.phx_jsonDictionary {
                 geofences = try Geofence.geofences(withJSON: dictionary)
             }
-        } catch {
-            
+        } catch _ { // Suppress default 'error' let, so we can use our instance variable.
+            error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
         }
     }
     

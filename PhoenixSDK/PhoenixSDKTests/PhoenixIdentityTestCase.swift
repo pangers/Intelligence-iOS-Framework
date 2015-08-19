@@ -38,7 +38,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "\"Identifiers\": []" +
         "}]" +
     "}"
-
+    
     let successfulResponseGetUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -200,6 +200,21 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
 
     // MARK:- Create User
+    
+    // Assures that when the user is not valid to create, an error is returned.
+    func testCreateUserErrorOnUserCondition() {
+        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        
+        assertURLNotCalled(request)
+        
+        identity!.createUser(user) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+        }
+    }
     
     func testCreateUserSuccess() {
         let user = fakeUser
@@ -473,23 +488,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         }
     }
     
-    // MARK:- Helpers
-    
-    // Assures that when the user is not valid to create, an error is returned.
-    func testIdentityErrorOnUserCondition() {
-        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
-
-        assertURLNotCalled(request)
-        
-        identity!.createUser(user) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
-        }
-    }
-
     // MARK:- Password security
     
     func testPasswordRequirementsVerification() {

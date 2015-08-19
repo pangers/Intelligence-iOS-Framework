@@ -216,9 +216,9 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             NSData().writeToFile(Geofence.jsonPath()!, atomically: true)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 0)
-        } catch let err as GeofenceError {
+        } catch let err as RequestError {
             switch err {
-            case .InvalidJSONError: XCTAssert(true)
+            case .ParseError: XCTAssert(true)
             default: XCTAssert(false)
             }
         } catch {

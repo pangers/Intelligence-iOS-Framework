@@ -24,6 +24,8 @@ public final class Phoenix: NSObject {
     /// The network manager instance.
     internal let network: Network
     
+    internal let userDefaults = NSUserDefaults()
+    
     // MARK: Initializers
 
     /// Initializes the Phoenix entry point with a configuration object.
@@ -37,7 +39,7 @@ public final class Phoenix: NSObject {
         let myConfiguration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
         // Modules
-        self.identity = Identity(withNetwork: network, withConfiguration: myConfiguration)
+        self.identity = Identity(withNetwork: network, configuration: myConfiguration, version: NSBundle.mainBundle(), storage: userDefaults)
         self.location = Location(withNetwork: network, configuration: myConfiguration)
 
         super.init()
@@ -107,6 +109,7 @@ public final class Phoenix: NSObject {
         self.errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
         location.startup()
+        (identity as? Phoenix.Identity)?.startup()
     }
     
     /// Shutdowns the Phoenix SDK modules.

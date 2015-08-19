@@ -35,7 +35,7 @@ internal final class PhoenixKeychain: TSDKeychain, TokenStorage {
         executeManagedRequest(.Update, keyValues: values)
     }
     
-    func erase() {
+    private func erase() {
         executeManagedRequest(.Delete)
     }
     
