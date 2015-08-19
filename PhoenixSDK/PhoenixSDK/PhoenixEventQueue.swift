@@ -122,10 +122,12 @@ internal class PhoenixEventQueue {
     
     /// Attempt sending events to `callback` if possible.
     /// Won't execute if queue is paused, already sending, or there are no events to send.
-    internal func fire(withCompletion completion: ((error: NSError?) -> ())?) {
+    /// - parameter completion: Returns optional error if request fails. If nil, assume successful.
+    /// - returns: Returns True if queue is not paused/sending and contains items.
+    internal func fire(withCompletion completion: ((error: NSError?) -> ())?) -> Bool {
         objc_sync_enter(self)
         // Ensure we aren't already sending, paused, and have events to send.
-        if isSending || isPaused || eventArray.count == 0 { return }
+        if isSending || isPaused || eventArray.count == 0 { return false }
         // Calculate end index.
         let endIndex = eventArray.endIndex > maxEvents ? maxEvents : eventArray.endIndex
         // Store range, so we know what to remove.
@@ -149,5 +151,6 @@ internal class PhoenixEventQueue {
             objc_sync_exit(this)
         }
         objc_sync_exit(self)
+        return true
     }
 }
