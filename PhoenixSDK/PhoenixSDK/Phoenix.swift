@@ -24,7 +24,12 @@ public final class Phoenix: NSObject {
     /// The network manager instance.
     internal let network: Network
     
-    internal let userDefaults = NSUserDefaults()
+    /// Array of modules used for calling startup/shutdown methods easily.
+    internal var modules: [PhoenixModuleProtocol?] {
+        return [location,
+            (identity as? PhoenixModuleProtocol),
+            (analytics as? PhoenixModuleProtocol)]
+    }
     
     // MARK: Initializers
 
@@ -39,6 +44,7 @@ public final class Phoenix: NSObject {
         let myConfiguration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
         // Modules
+        let userDefaults = NSUserDefaults()
         self.identity = Identity(withNetwork: network, configuration: myConfiguration, version: NSBundle.mainBundle(), storage: userDefaults)
         self.location = Location(withNetwork: network, configuration: myConfiguration)
         self.analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: userDefaults, applicationVersion: NSBundle.mainBundle())
@@ -98,9 +104,7 @@ public final class Phoenix: NSObject {
     // Strange flow, startup method actually makes a network call, so it's
     // a little odd that the user has to have internet access and the
     // platform is available for the app to start, need to rethink this.
-    /// Starts up the Phoenix SDK modules.
-    /// - Parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
-    // Starts up modules. 
+    // Starts up modules.
     // Anonymously logins into the SDK then:
     // - Cannot request anything on behalf of the user.
     // - Calls Application Installed/Updated.
@@ -108,17 +112,17 @@ public final class Phoenix: NSObject {
     // - Initialises Geofence load/download.
     // - Startup Events module, send stored events.
     // - Register for Push notifications. (Developer does this, then passes to module).
+    /// Starts up the Phoenix SDK modules.
+    /// - Parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
     public func startup(callback: PhoenixErrorCallback) {
         // Login as Application User.
         self.errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
-        location.startup()
-        (identity as? Phoenix.Identity)?.startup()
-        (analytics as? Phoenix.Analytics)?.startup()
+        modules.map({ $0?.startup() })
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        (analytics as? Phoenix.Analytics)?.shutdown()
+        modules.map({ $0?.shutdown() })
     }
 }

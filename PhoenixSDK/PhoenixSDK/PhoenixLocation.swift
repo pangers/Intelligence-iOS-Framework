@@ -15,8 +15,7 @@ internal typealias PhoenixGeofencesCallback = (geofences: [Geofence]?, error:NSE
 internal extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
-    internal final class Location {
-        
+    internal final class Location: PhoenixModuleProtocol {
         
         internal class func lastKnownLocation() -> CLLocationCoordinate2D? {
             if CLLocationManager.locationServicesEnabled() {
@@ -25,7 +24,6 @@ internal extension Phoenix {
             // TODO: Get stored location
             return nil
         }
-        
         
         
         /// A reference to the network manager
@@ -69,6 +67,11 @@ internal extension Phoenix {
             catch {
                 // Flag Disabled.
             }
+        }
+        
+        func shutdown() {
+            // Clear geofences.
+            geofences = nil
         }
         
         /// Download a list of geofences.

@@ -16,7 +16,7 @@ import Foundation
 
 
 internal extension Phoenix {
-    internal final class Analytics: PhoenixAnalytics {
+    internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
         
         private let configuration: Configuration
         private let installation: PhoenixInstallationStorageProtocol
@@ -31,26 +31,28 @@ internal extension Phoenix {
             self.version = applicationVersion
         }
         
-        func startup() {
+        internal func startup() {
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
+        
+            track(Event(withType: "Phoenix.Test.Event.Type"))
         }
         
-        func shutdown() {
+        /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.
+        internal func shutdown() {
             eventQueue?.stopQueue()
         }
         
-        private func sendEvents(items: JSONDictionaryArray, completion: (Bool) -> ()) {
-            // TODO: Create network URLRequest, etc
-            // TODO: Call completion on success/failure
-            completion(false)
-        }
-        
+        /// Track user engagement and behavioral insight.
+        /// - parameter event: Event containing information to track.
         @objc func track(event: Phoenix.Event) {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
         
-        func prepareEvent(event: Event) -> JSONDictionary {
+        /// Add automatically populated fields to dictionary.
+        /// - parameter event: Event to prepare for sending.
+        /// - returns: JSONDictionary representation of Event including populated fields.
+        private func prepareEvent(event: Event) -> JSONDictionary {
             var dictionary = event.toJSON()
 
             // FIXME: Are these fields correct? Using postman example...
@@ -66,6 +68,17 @@ internal extension Phoenix {
             
             return dictionary
         }
+        
+        /// Callback from EventQueue, responsible for propogating changes to the server.
+        /// - parameter events:     Array of JSONified Events to send.
+        /// - parameter completion: Must be called on completion to notify caller of success/failure.
+        private func sendEvents(events: JSONDictionaryArray, completion: (success: Bool) -> ()) {
+            // TODO: Create network URLRequest, etc
+            // TODO: Call completion on success/failure
+            
+            print("Send events: \(events)")
+            
+            completion(success: false)
+        }
     }
-    
 }

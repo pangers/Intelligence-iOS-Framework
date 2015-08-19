@@ -59,7 +59,7 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
 extension Phoenix {
     
     /// The PhoenixIdentity implementation.
-    final class Identity : PhoenixIdentity {
+    final class Identity : PhoenixIdentity, PhoenixModuleProtocol {
 
         /// A reference to the network manager
         private let network:Network
@@ -82,11 +82,14 @@ extension Phoenix {
             self.installation = Phoenix.Installation(configuration: configuration, version: version, storage: storage)
         }
         
-        internal func startup() {
+        func startup() {
             createInstallation(callback: nil)
             updateInstallation(callback: nil)
         }
         
+        func shutdown() {
+            // Nothing to do currently.
+        }
         
         // MARK:- Login
         
