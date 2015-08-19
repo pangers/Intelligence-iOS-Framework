@@ -19,16 +19,16 @@ internal extension Phoenix {
     internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
         
         private let configuration: Configuration
-        private let installation: PhoenixInstallationStorageProtocol
-        private let version: PhoenixApplicationVersionProtocol
+        private let installationStorage: PhoenixInstallationStorageProtocol
+        private let applicationVersion: PhoenixApplicationVersionProtocol
         private let network: Network
         private var eventQueue: PhoenixEventQueue?
         
         init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
             self.network = network
             self.configuration = configuration
-            self.installation = installationStorage
-            self.version = applicationVersion
+            self.installationStorage = installationStorage
+            self.applicationVersion = applicationVersion
         }
         
         internal func startup() {
@@ -59,8 +59,8 @@ internal extension Phoenix {
             dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
             
             // Set optional values (may fail for whatever reason).
-            dictionary <-? (Event.ApplicationVersionKey, version.phx_applicationVersionString)
-            dictionary <-? (Event.InstallationIdKey, installation.phx_installationID)
+            dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
+            dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
             
             // TODO: UserId
             

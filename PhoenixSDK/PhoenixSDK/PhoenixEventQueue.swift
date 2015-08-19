@@ -23,9 +23,6 @@ internal class PhoenixEventQueue {
     /// Callback used for propogating events up for another class to manage sending them.
     private let callback: PhoenixEventQueueCallback
     
-    /// Queue to execute callback on.
-    private let dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-    
     /// Maximum number of events to send in a single callback.
     internal let maxEvents = 100
     
@@ -35,12 +32,18 @@ internal class PhoenixEventQueue {
     /// True if we are sending items.
     private var isSending = false
     
+    private var timer: NSTimer?
+    
     /// Create new Event queue, loading any items on disk.
     /// - parameter callback: Callback used for propogating events back for sending.
     /// - returns: Instance of Event Queue.
     init(withCallback callback: PhoenixEventQueueCallback) {
         self.callback = callback
         loadEvents()
+    }
+    
+    deinit {
+        timer?.invalidate()
     }
     
     // MARK:- Read/Write
@@ -88,7 +91,7 @@ internal class PhoenixEventQueue {
         objc_sync_enter(self)
         if !isPaused { return }
         isPaused = false
-        runTimer()
+        timer = NSTimer.scheduledTimerWithTimeInterval(eventInterval, target: self, selector: Selector("runTimer"), userInfo: nil, repeats: true)
         objc_sync_exit(self)
     }
     
@@ -97,7 +100,14 @@ internal class PhoenixEventQueue {
         objc_sync_enter(self)
         if isPaused { return }
         isPaused = true
+        timer?.invalidate()
+        timer = nil
         objc_sync_exit(self)
+    }
+    
+    /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
+    @objc private func runTimer() {
+        fire(withCompletion: nil)
     }
     
     /// Add the JSON representation of an Event to the queue.
@@ -110,22 +120,8 @@ internal class PhoenixEventQueue {
         objc_sync_exit(self)
     }
     
-    /// Wait `eventInterval` before executing `fire()` method.
-    private func runTimer() {
-        // Dispatch the fire method after `eventInterval`
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(eventInterval * Double(NSEC_PER_SEC)))
-        // Store current queue, so we aren't blocked by events on the `dispatchQueue`.
-        let currQueue = NSOperationQueue.currentQueue()
-        dispatch_after(dispatchTime, dispatchQueue, { [weak self] in
-            self?.fire(withCompletion: nil)
-            currQueue?.addOperationWithBlock({ [weak self] () -> Void in
-                self?.runTimer()
-            })
-        })
-    }
-    
     /// Attempt sending events to `callback` if possible.
-    /// Might fail if queue is paused, already sending, or there are no events to send.
+    /// Won't execute if queue is paused, already sending, or there are no events to send.
     internal func fire(withCompletion completion: ((error: NSError?) -> ())?) {
         objc_sync_enter(self)
         // Ensure we aren't already sending, paused, and have events to send.
