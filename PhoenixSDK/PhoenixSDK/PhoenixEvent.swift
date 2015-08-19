@@ -53,7 +53,7 @@ public extension Phoenix {
                 metadata = [String: AnyObject]()
             }
             // Add timestamp
-            metadata?[Event.MetadataTimestampKey] = NSDate().timeIntervalSinceReferenceDate
+            metadata?[Event.MetadataTimestampKey] = IRFC3339DateFormatter.stringFromDate(NSDate())
             dictionary <-? (Event.MetadataKey, metadata)
 
             return dictionary

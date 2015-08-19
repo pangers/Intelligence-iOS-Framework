@@ -35,19 +35,6 @@ internal enum GeofenceKey: String {
 
 internal extension Geofence {
     
-    /// - Returns: Date formatter capable of parsing dates formatted like: '2015-07-08T08:04:48.403'
-    private class var dateFormatter: NSDateFormatter {
-        struct Static {
-            static var instance : NSDateFormatter? = nil
-            static var token : dispatch_once_t = 0
-        }
-        dispatch_once(&Static.token) {
-            Static.instance = NSDateFormatter()
-            Static.instance?.dateFormat = "yyyy-MM-dd’T’HH:mm:ss.SSS"
-        }
-        return Static.instance!
-    }
-    
     // For some reason this isn't working as a Dictionary extension with a where clause,
     // Apple may have broken that functionality in the current beta.
     /// - Returns: Value for a specific GeofenceKey in our JSONDictionary or throws a GeofenceError.
@@ -110,8 +97,8 @@ internal extension Geofence {
             let geofence = Geofence()
             geofence.latitude = try geoValue(forKey: .LatitudeKey, dictionary: geolocation)
             geofence.longitude = try geoValue(forKey: .LongitudeKey, dictionary: geolocation)
-            geofence.createDate = dateFormatter.dateFromString(createDate)?.timeIntervalSinceReferenceDate ?? 0
-            geofence.modifyDate = dateFormatter.dateFromString(modifyDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.createDate = IRFC3339DateFormatter.dateFromString(createDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.modifyDate = IRFC3339DateFormatter.dateFromString(modifyDate)?.timeIntervalSinceReferenceDate ?? 0
             geofence.radius = try geoValue(forKey: .RadiusKey, dictionary: json)
             geofence.id = try geoValue(forKey: .IdKey, dictionary: json)
             geofence.projectId = try geoValue(forKey: .ProjectIdKey, dictionary: json)

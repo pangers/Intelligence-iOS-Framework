@@ -39,6 +39,7 @@
 		FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */; };
+		FE18F92B1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */; };
 		FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */; };
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
@@ -148,6 +149,7 @@
 		FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSBundleInstallation.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOpenApplicationEvent.swift; sourceTree = "<group>"; };
+		FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateFormatterIRFC3339.swift; sourceTree = "<group>"; };
 		FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixRegion.swift; sourceTree = "<group>"; };
 		FE22F88B1B5FF71600711EBF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixTestCase.swift; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 			isa = PBXGroup;
 			children = (
 				FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */,
+				FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */,
 				FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */,
 				FEF7EF741B6671C700066AA3 /* NSJSONSerializationHelpers.swift */,
 				BBE209DD1B67C149000202B6 /* NSURLRequest.swift */,
@@ -648,6 +651,7 @@
 				FEF7EF751B6671C700066AA3 /* NSJSONSerializationHelpers.swift in Sources */,
 				FE65772E1B832C8400E02B03 /* PhoenixAnalytics.swift in Sources */,
 				BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */,
+				FE18F92B1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift in Sources */,
 				FE366D451B84760F00D4D6D2 /* PhoenixModuleProtocol.swift in Sources */,
 				FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */,
 				BBC46D5B1B6F78D000C8E418 /* PhoenixIdentity.swift in Sources */,
