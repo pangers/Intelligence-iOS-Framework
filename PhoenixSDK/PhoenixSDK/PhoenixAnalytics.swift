@@ -29,6 +29,7 @@ internal extension Phoenix {
             self.configuration = configuration
             self.installationStorage = installationStorage
             self.applicationVersion = applicationVersion
+            LocationManager.sharedInstance.analytics = self
         }
         
         internal func startup() {

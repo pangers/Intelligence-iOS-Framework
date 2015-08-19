@@ -44,14 +44,14 @@ public extension Phoenix {
             self.value = value
             self.targetId = targetId
             self.metadata = metadata
-            self.geolocation = Phoenix.Location.lastKnownLocation()
+            self.geolocation = LocationManager.sharedInstance.userLocation
         }
         
         internal func toJSON() -> JSONDictionary {
             
             // Set geolocation if we were not able to last time.
             if geolocation == nil {
-                geolocation = Phoenix.Location.lastKnownLocation()
+                geolocation = LocationManager.sharedInstance.userLocation
             }
             
             var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value]
