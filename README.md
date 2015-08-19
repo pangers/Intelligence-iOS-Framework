@@ -269,6 +269,35 @@ The Phoenix platform is composed of a series of modules that can be used as requ
 
 In this section, each modules are described, including its functions and sample code on how to use them.
 
+### Analytics Module ###
+
+The analytics module allows developers to effortlessly track several predefined events or their own custom events which can be used to determine user engagement and behavioural insights.
+
+Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
+
+How to track a custom Event:
+
+**Objective-C:**
+```
+#!objc
+
+PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+
+[[PHXPhoenixManager sharedManager].phoenix.analytics track:myTestEvent];
+
+```
+
+**Swift:**
+Note: there are some optional fields in Swift that default to zero/nil if missing.
+
+```
+#!swift
+
+let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
+
+```
+
 ### Identity Module ###
 
 The identity module is responsible to perform user management within the Phoenix platform, allowing to create, retrieve and update users.
@@ -375,7 +404,7 @@ The following code snippets illustrate how to request a user's information in Ob
 #!objc
 
 // Get the user via it's id
-[phoenix getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
     // Get the user and treat the error
 }];
 
@@ -389,7 +418,7 @@ The following code snippets illustrate how to request a user's information in Ob
 #!swift
 
 // Get the user via it's id
-phoenix.identity.getUser(userId) { (user, error) -> Void in
+PhoenixManager.manager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
     // Get the user and treat the error
 }
 
