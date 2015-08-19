@@ -69,28 +69,3 @@ public extension Phoenix {
         }
     }
 }
-
-/*
-
-[
-{
-"EventType": "Phoenix.Syndicate.Article.Viewed",
-"EventValue": 1,
-"TargetId": "21", /* relates to the event, so in this case it's the article Id */
-"PhoenixIdentity_UserId":85215,
-"Geolocation": {
-"Latitude": 37.332331,
-"Longitude": -122.031219
-},
-"Metadata": {
-"param 1": "value 1",
-"param 2": "value 2"
-}, /* metadata is optional */
-"IpAddress": "220.233.135.192",
-"PhoenixIdentity_InstallationId":"38B8296C-6B2E-4CEB-B9E0-CC2330158075",
-"PhoenixIdentity_ApplicationId":12,
-"ApplicationVersion":"0.1",
-"DeviceType":"Nexus 7",
-"OperatingSystem":"Android 5.0.2"
-}
-]*/

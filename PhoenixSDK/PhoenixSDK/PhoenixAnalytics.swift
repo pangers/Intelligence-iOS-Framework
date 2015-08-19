@@ -76,6 +76,8 @@ internal extension Phoenix {
             // TODO: Create network URLRequest, etc
             // TODO: Call completion on success/failure
             
+            
+            
             print("Send events: \(events)")
             
             completion(success: false)

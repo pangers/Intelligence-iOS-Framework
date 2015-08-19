@@ -10,6 +10,7 @@ import Foundation
 
 private let phoenixIdentityAPIVersion = "identity/v1"
 private let phoenixLocationAPIVersion = "location/v1"
+private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
@@ -208,7 +209,7 @@ internal extension NSURLRequest {
         }
         assertionFailure("Couldn't create the download geofences URL.")
         return NSURLRequest()
-        }
+    }
         
     /// Creates the NSURLRequest to get the user id.
     /// - Parameters:
@@ -220,6 +221,24 @@ internal extension NSURLRequest {
             return NSURLRequest(URL: url)
         }
         assertionFailure("Couldn't create the users/me URL.")
+        return NSURLRequest()
+    }
+    
+    // MARK:- Analytics Module
+    
+    class func phx_httpURLRequestForAnalytics(configuration:Phoenix.Configuration, json: JSONDictionaryArray) -> NSURLRequest {
+        // Configure url
+        let path = "\(phoenixAnalyticsAPIVersion.appendProjects(configuration.projectID))/events"
+        if let url = NSURL(string: path, relativeToURL: configuration.baseURL) {
+            let request = NSMutableURLRequest(URL: url)
+            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
+            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+            request.HTTPBody = json.phx_toJSONData()
+            if let finalRequest = request.copy() as? NSURLRequest {
+                return finalRequest
+            }
+        }
+        assertionFailure("Couldn't create the analytics URL.")
         return NSURLRequest()
     }
     
@@ -253,10 +272,12 @@ internal extension NSURLRequest {
 }
 
 private extension String {
+    /// Append applications path.
+    /// - parameter applicationId: ID to include in path.
+    /// - returns: Returns new string containing applications path components.
     func appendApplications(applicationId: String) -> String {
         return self + "/applications/\(applicationId)"
     }
-    
     /// - Returns: New string with 'users(/userId)' appended to existing string.
     /// - Parameter userId: Optional string value to cater for id or 'me'.
     func appendUsers(userId: String?) -> String {
