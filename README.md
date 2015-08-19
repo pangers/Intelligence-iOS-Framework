@@ -281,8 +281,10 @@ How to track a custom Event:
 ```
 #!objc
 
+// Create custom Event
 PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
 
+// Send event to Analytics module
 [[PHXPhoenixManager sharedManager].phoenix.analytics track:myTestEvent];
 
 ```
@@ -293,7 +295,10 @@ Note: there are some optional fields in Swift that default to zero/nil if missin
 ```
 #!swift
 
+// Create custom Event
 let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+
+// Send event to Analytics module
 PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
 
 ```
