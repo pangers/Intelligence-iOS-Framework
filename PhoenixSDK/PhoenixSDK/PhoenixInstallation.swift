@@ -35,7 +35,7 @@ extension Phoenix {
         private var modelReference: String { return UIDevice.currentDevice().model }
         private var deviceTypeId: String { return "Smartphone" }
         private var installationId: String { return storage.phx_installationID }
-        private var installedVersion: String { return storage.phx_applicationVersion ?? version.phx_applicationVersionString ?? "" }
+        private var installedVersion: String { return version.phx_applicationVersionString ?? "" }
         private var applicationId: Int { return configuration.applicationID }
         private var projectId: Int { return configuration.projectID }
         private var requestId: Int? { return storage.phx_installationRequestID }
