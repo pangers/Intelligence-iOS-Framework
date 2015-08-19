@@ -45,6 +45,9 @@
     [self.phoenix startup:^(NSError * _Nonnull error) {
         NSLog(@"Fundamental error occurred: %@", error);
     }];
+    // Track test event.
+    PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+    [self.phoenix.analytics track:myTestEvent];
 }
 
 

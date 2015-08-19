@@ -39,7 +39,7 @@ public extension Phoenix {
         /// Geolocation stored on initialization or toJSON.
         private var geolocation: CLLocationCoordinate2D?
         
-        init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
+        @objc public init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId

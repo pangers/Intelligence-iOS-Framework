@@ -34,8 +34,6 @@ internal extension Phoenix {
         internal func startup() {
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
-        
-            track(Event(withType: "Phoenix.Test.Event.Type"))
         }
         
         /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.

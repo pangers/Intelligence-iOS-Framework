@@ -42,5 +42,8 @@ class PhoenixManager {
         PhoenixManager.manager.phoenix?.startup({ (error) -> () in
             print("Fundamental error occurred \(error)")
         })
+        // Track test event.
+        let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+        PhoenixManager.manager.phoenix?.analytics.track(testEvent)
     }
 }
