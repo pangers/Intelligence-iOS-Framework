@@ -32,6 +32,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(json[Phoenix.Event.ApplicationIdKey] as! Int == configuration!.applicationID, "Expected application ID to match configuration")
         XCTAssert(json[Phoenix.Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
         XCTAssert(json[Phoenix.Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
+        XCTAssert((json[Phoenix.Event.MetadataKey] as! [String: AnyObject])[Phoenix.Event.MetadataTimestampKey] as! NSTimeInterval > 0, "Expected time interval")
     }
     
     // MARK:- Analytics Requests
@@ -204,12 +205,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         queue.enqueueEvent(eventJSON)
-        queue.loadEvents()
         queue.isPaused = false
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
             XCTAssertNil(error, "Expected nil error")
             XCTAssert(queue.eventArray.count == 0, "Expected empty array")
+            queue.loadEvents()
+            XCTAssert(queue.eventArray.count == 0, "Expected empty file")
         }
     }
     
@@ -224,7 +226,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         queue.enqueueEvent(eventJSON)
-        queue.loadEvents()
         queue.isPaused = false
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
@@ -232,6 +233,37 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request failed error code")
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in array")
+            queue.loadEvents()
+            XCTAssert(queue.eventArray.count == 1, "Expected event to stay in file")
+        }
+    }
+    
+    /// Test that having over 100 events in the queue will fire two calls.
+    func test101EventsInQueueRequiresTwoCalls() {
+        var remaining: Int = 0
+        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+            XCTAssert(events.count == remaining)
+            completion(error: nil)
+        }
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        queue.clearEvents() // Empty file first
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        (0...100).map({ n -> Void in queue.enqueueEvent(eventJSON) })
+        remaining = queue.eventArray.count
+        XCTAssert(queue.eventArray.count == 101, "Expected 101 events to be saved")
+        queue.isPaused = false
+        queue.fire { (error) -> () in
+            XCTAssertNil(error, "Expected nil error")
+            XCTAssert(queue.eventArray.count == 1, "Expected empty array")
+            remaining = queue.eventArray.count
+        }
+        XCTAssert(remaining == 1, "Expected one left")
+        queue.fire { (error) -> () in
+            XCTAssertNil(error, "Expected nil error")
+            XCTAssert(queue.eventArray.count == 0, "Expected empty array")
+            queue.loadEvents()
+            XCTAssert(queue.eventArray.count == 0, "Expected empty file")
         }
     }
     

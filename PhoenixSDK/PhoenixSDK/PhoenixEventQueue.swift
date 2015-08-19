@@ -27,7 +27,7 @@ internal class PhoenixEventQueue {
     private let dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
     
     /// Maximum number of events to send in a single callback.
-    private let maxEvents = 100
+    internal let maxEvents = 100
     
     /// True if queue has been stopped (defaults to True).
     internal var isPaused = true

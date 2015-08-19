@@ -26,6 +26,7 @@ public extension Phoenix {
         internal static let ApplicationVersionKey = "ApplicationVersion"
         internal static let DeviceTypeKey = "DeviceType"
         internal static let OperationSystemVersionKey = "OperatingSystemVersion"
+        internal static let MetadataTimestampKey = "Timestamp"
         
         /// Type of Event we are trying to log.
         var eventType: String
@@ -34,11 +35,11 @@ public extension Phoenix {
         /// Optional identifier related to this EventType.
         var targetId: Int?
         /// Optional metadata values associated to this EventType.
-        var metadata: NSDictionary?
+        var metadata: [String: AnyObject]?
         /// Geolocation stored on initialization or toJSON.
         private var geolocation: CLLocationCoordinate2D?
         
-        init(withType type: String, value: Double = 0.0, targetId: Int? = nil, metadata: NSDictionary? = nil) {
+        init(withType type: String, value: Double = 0.0, targetId: Int? = nil, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId
@@ -57,6 +58,11 @@ public extension Phoenix {
             
             // Set keys with optional values.
             dictionary <-? (Event.TargetIdKey, targetId)
+            if metadata == nil {
+                metadata = [String: AnyObject]()
+            }
+            // Add timestamp
+            metadata?[Event.MetadataTimestampKey] = NSDate().timeIntervalSinceReferenceDate
             dictionary <-? (Event.MetadataKey, metadata)
             
             // Add geolocation
