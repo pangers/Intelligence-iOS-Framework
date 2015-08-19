@@ -49,10 +49,22 @@ internal extension Phoenix {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
         
-        /// Track application open event.
+        /// Track application open event (internally managed event).
         internal func trackApplicationOpened() {
             // TODO: Revise fields once we get a response about what is required.
             eventQueue?.enqueueEvent(prepareEvent(Phoenix.OpenApplicationEvent()))
+        }
+        
+        /// Track geofence entered event (internally managed event).
+        internal func trackGeofenceEnteredEvent(geofence: Geofence) {
+            // stub
+            // TODO: Implement
+        }
+        
+        /// Track geofence exited event (internally managed event).
+        internal func trackGeofenceExitedEvent(geofence: Geofence) {
+            // stub
+            // TODO: Implement
         }
         
         /// Add automatically populated fields to dictionary.
