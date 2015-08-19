@@ -10,12 +10,12 @@ import Foundation
 
 /// Callback used for propogating events up for another class to manage sending them. 
 /// Takes a JSONDictionaryArray and relies on callee returning success/failure on response from server.
-typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, (error: NSError?) -> ()) -> ()
+typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, completion: (error: NSError?) -> ()) -> ()
 
 internal class PhoenixEventQueue {
     
     /// Current events we have to send, stored to disk when changed and loaded on hard launch.
-    private lazy var eventArray = JSONDictionaryArray()
+    internal lazy var eventArray = JSONDictionaryArray()
     
     /// How often we should attempt to send events.
     private let eventInterval: NSTimeInterval = 10
@@ -30,7 +30,7 @@ internal class PhoenixEventQueue {
     private let maxEvents = 100
     
     /// True if queue has been stopped (defaults to True).
-    private var isPaused = true
+    internal var isPaused = true
     
     /// True if we are sending items.
     private var isSending = false
@@ -51,8 +51,18 @@ internal class PhoenixEventQueue {
         return "\(path)/Events.json"
     }
     
+    /// Clear contents of file at `jsonPath()` (only used for testing).
+    internal func clearEvents() {
+        objc_sync_enter(self)
+        if let path = jsonPath() {
+            do { try NSFileManager.defaultManager().removeItemAtPath(path) }
+            catch { }
+        }
+        objc_sync_exit(self)
+    }
+    
     /// Load events present in file at `jsonPath()`.
-    private func loadEvents() {
+    internal func loadEvents() {
         objc_sync_enter(self)
         if let path = jsonPath(), data = NSData(contentsOfFile: path)?.phx_jsonDictionaryArray {
             eventArray = data
@@ -107,7 +117,7 @@ internal class PhoenixEventQueue {
         // Store current queue, so we aren't blocked by events on the `dispatchQueue`.
         let currQueue = NSOperationQueue.currentQueue()
         dispatch_after(dispatchTime, dispatchQueue, { [weak self] in
-            self?.fire()
+            self?.fire(withCompletion: nil)
             currQueue?.addOperationWithBlock({ [weak self] () -> Void in
                 self?.runTimer()
             })
@@ -116,7 +126,7 @@ internal class PhoenixEventQueue {
     
     /// Attempt sending events to `callback` if possible.
     /// Might fail if queue is paused, already sending, or there are no events to send.
-    private func fire() {
+    internal func fire(withCompletion completion: ((error: NSError?) -> ())?) {
         objc_sync_enter(self)
         // Ensure we aren't already sending, paused, and have events to send.
         if isSending || isPaused || eventArray.count == 0 { return }
@@ -137,6 +147,7 @@ internal class PhoenixEventQueue {
                 // Store remaining items.
                 this.storeEvents()
             }
+            completion?(error: error)
             // No longer sending items.
             this.isSending = false
             objc_sync_exit(this)

@@ -12,6 +12,14 @@ import XCTest
 
 class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
+    override func tearDown() {
+        super.tearDown()
+        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+            
+        }
+        queue.clearEvents()
+    }
+    
     func genericEvent() -> Phoenix.Event {
         let event = Phoenix.Event(withType: "Phoenix.Test.Event")
         XCTAssert(event.targetId == nil)
@@ -26,6 +34,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(json[Phoenix.Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
     }
     
+    // MARK:- Analytics Requests
     
     /// Test a valid response is parsed correctly
     func testAnalyticsSuccess() {
@@ -88,6 +97,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         analytics.sendEvents(eventsJSON) { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
         
@@ -123,6 +133,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         analytics.sendEvents(eventsJSON) { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
         
@@ -156,11 +167,71 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         analytics.sendEvents(eventsJSON) { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request error")
+            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    
+    // MARK:- Event Queue
+    
+    /// Test events queue saving/loading
+    func testEventsQueueLoad() {
+        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+            
+        }
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        queue.clearEvents() // Empty file first
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        queue.enqueueEvent(eventJSON)
+        queue.loadEvents()
+        XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
+    }
+    
+    /// Test events queue sending
+    func testEventsQueueFire() {
+        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+            XCTAssert(events.count == 1)
+            completion(error: nil)
+        }
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        queue.clearEvents() // Empty file first
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        queue.enqueueEvent(eventJSON)
+        queue.loadEvents()
+        queue.isPaused = false
+        XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
+        queue.fire { (error) -> () in
+            XCTAssertNil(error, "Expected nil error")
+            XCTAssert(queue.eventArray.count == 0, "Expected empty array")
+        }
+    }
+    
+    /// Test events queue sending failure
+    func testEventsQueueFireFailed() {
+        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+            XCTAssert(events.count == 1)
+            completion(error: NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil))
+        }
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let eventJSON = analytics.prepareEvent(genericEvent())
+        queue.clearEvents() // Empty file first
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        queue.enqueueEvent(eventJSON)
+        queue.loadEvents()
+        queue.isPaused = false
+        XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
+        queue.fire { (error) -> () in
+            XCTAssertNotNil(error, "Expected error")
+            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request failed error code")
+            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
+            XCTAssert(queue.eventArray.count == 1, "Expected event to stay in array")
         }
     }
     
