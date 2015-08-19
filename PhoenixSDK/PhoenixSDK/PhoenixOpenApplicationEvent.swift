@@ -10,6 +10,7 @@ import Foundation
 
 internal extension Phoenix {
     
+    /// Event that gets fired on `startup()` of SDK.
     internal class OpenApplicationEvent: Event {
         
         init() {
