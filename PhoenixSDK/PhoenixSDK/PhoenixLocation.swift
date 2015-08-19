@@ -41,6 +41,7 @@ internal extension Phoenix {
             if self.configuration.useGeofences {
                 do {
                     self.geofences = try Geofence.geofencesFromCache()
+                    LocationManager.sharedInstance.startMonitoringGeofences()
                 } catch {
                     // Ignore error...
                 }
