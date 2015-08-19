@@ -73,14 +73,10 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         private func sendEvents(events: JSONDictionaryArray, completion: (success: Bool) -> ()) {
-            // TODO: Create network URLRequest, etc
-            // TODO: Call completion on success/failure
-            
-            
-            
-            print("Send events: \(events)")
-            
-            completion(success: false)
+            let operation = AnalyticsRequestOperation(withNetwork: network, configuration: configuration, eventsJSON: events) { (success) -> Void in
+                completion(success: success)
+            }
+            network.executeNetworkOperation(operation)
         }
     }
 }
