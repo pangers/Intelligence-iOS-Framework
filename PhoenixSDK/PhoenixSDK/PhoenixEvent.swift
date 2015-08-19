@@ -33,13 +33,13 @@ public extension Phoenix {
         /// Optional value related to this EventType.
         var value: Double
         /// Optional identifier related to this EventType.
-        var targetId: Int?
+        var targetId: Int
         /// Optional metadata values associated to this EventType.
         var metadata: [String: AnyObject]?
         /// Geolocation stored on initialization or toJSON.
         private var geolocation: CLLocationCoordinate2D?
         
-        init(withType type: String, value: Double = 0.0, targetId: Int? = nil, metadata: [String: AnyObject]? = nil) {
+        init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId

@@ -22,7 +22,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     func genericEvent() -> Phoenix.Event {
         let event = Phoenix.Event(withType: "Phoenix.Test.Event")
-        XCTAssert(event.targetId == nil)
+        XCTAssert(event.targetId == 0)
         XCTAssert(event.value == 0)
         XCTAssert(event.eventType == "Phoenix.Test.Event")
         return event
