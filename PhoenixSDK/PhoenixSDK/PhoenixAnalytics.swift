@@ -34,6 +34,8 @@ internal extension Phoenix {
         internal func startup() {
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
+            // Track application opened.
+            trackApplicationOpened()
         }
         
         /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.
@@ -45,6 +47,12 @@ internal extension Phoenix {
         /// - parameter event: Event containing information to track.
         @objc func track(event: Phoenix.Event) {
             eventQueue?.enqueueEvent(prepareEvent(event))
+        }
+        
+        /// Track application open event.
+        internal func trackApplicationOpened() {
+            // TODO: Revise fields once we get a response about what is required.
+            eventQueue?.enqueueEvent(prepareEvent(Phoenix.OpenApplicationEvent()))
         }
         
         /// Add automatically populated fields to dictionary.

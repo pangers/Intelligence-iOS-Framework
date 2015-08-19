@@ -35,6 +35,47 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert((json[Phoenix.Event.MetadataKey] as! [String: AnyObject])[Phoenix.Event.MetadataTimestampKey] as! NSTimeInterval > 0, "Expected time interval")
     }
     
+    // MARK:- Open Application
+    
+    /// Test a valid response is parsed correctly
+    func testOpenApplicationSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let event = Phoenix.OpenApplicationEvent()
+        XCTAssert(event.eventType == "Phoenix.Identity.Application.Opened")
+        XCTAssert(event.targetId == 0)
+        XCTAssert(event.value == 0)
+        
+        let eventJSON = analytics.prepareEvent(event)
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNil(error, "Expected success")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+
     // MARK:- Analytics Requests
     
     /// Test a valid response is parsed correctly
