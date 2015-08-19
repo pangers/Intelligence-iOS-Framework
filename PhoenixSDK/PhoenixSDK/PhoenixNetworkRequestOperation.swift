@@ -87,11 +87,18 @@ internal class PhoenixNetworkRequestOperation : TSDOperation<NSURLRequest, (data
 
     // MARK:- Helpers
     
+    /// Returns all dictionaries in the 'Data' array of the output.
+    func getDataArray() -> JSONDictionaryArray? {
+        guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray else {
+            return nil
+        }
+        return dataArray
+    }
+    
     /// Most API methods can use this helper to extract the first dictionary in the 'Data' array of output.
     func getFirstDataDictionary() -> JSONDictionary? {
-        guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONArray,
-            dataDictionary = dataArray.first as? JSONDictionary else {
-                return nil
+        guard let dataDictionary = getDataArray()?.first else {
+            return nil
         }
         return dataDictionary
     }

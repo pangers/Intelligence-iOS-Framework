@@ -56,7 +56,7 @@ public enum IdentityError: Int, ErrorType {
 
 }
 
-/// Enumeration to list the errors that can occur in the identity module.
+/// Enumeration to list the errors that can occur in the location module.
 public enum LocationError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
