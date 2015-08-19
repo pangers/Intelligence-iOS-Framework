@@ -76,10 +76,10 @@ extension Phoenix {
         ///     - configuration: Configuration instance that will be used for configuring requests.
         ///     - version: Version class will be used for interrogating app to get the current version.
         ///     - storage: Storage class will be used for storing information about the installation.
-        init(withNetwork network:Network, configuration:Phoenix.Configuration, version: PhoenixApplicationVersionProtocol, storage: PhoenixInstallationStorageProtocol) {
+        init(withNetwork network:Network, configuration:Phoenix.Configuration, applicationVersion: PhoenixApplicationVersionProtocol, installationStorage: PhoenixInstallationStorageProtocol) {
             self.network = network
             self.configuration = configuration
-            self.installation = Phoenix.Installation(configuration: configuration, version: version, storage: storage)
+            self.installation = Phoenix.Installation(configuration: configuration, applicationVersion: applicationVersion, installationStorage: installationStorage)
         }
         
         func startup() {

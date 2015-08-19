@@ -36,24 +36,15 @@ public extension Phoenix {
         var targetId: Int
         /// Optional metadata values associated to this EventType.
         var metadata: [String: AnyObject]?
-        /// Geolocation stored on initialization or toJSON.
-        private var geolocation: CLLocationCoordinate2D?
         
         @objc public init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId
             self.metadata = metadata
-            self.geolocation = LocationManager.sharedInstance.userLocation
         }
         
         internal func toJSON() -> JSONDictionary {
-            
-            // Set geolocation if we were not able to last time.
-            if geolocation == nil {
-                geolocation = LocationManager.sharedInstance.userLocation
-            }
-            
             var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value]
             
             // Set keys with optional values.
@@ -64,12 +55,6 @@ public extension Phoenix {
             // Add timestamp
             metadata?[Event.MetadataTimestampKey] = NSDate().timeIntervalSinceReferenceDate
             dictionary <-? (Event.MetadataKey, metadata)
-            
-            // Add geolocation
-            var geoDict = JSONDictionary()
-            geoDict <-? (Event.GeolocationLatitudeKey, geolocation?.latitude)
-            geoDict <-? (Event.GeolocationLongitudeKey, geolocation?.longitude)
-            dictionary <-? (Event.GeolocationKey, geoDict.keys.count == 2 ? geoDict : nil)
 
             return dictionary
         }

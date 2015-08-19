@@ -23,13 +23,13 @@ internal extension Phoenix {
         private let applicationVersion: PhoenixApplicationVersionProtocol
         private let network: Network
         private var eventQueue: PhoenixEventQueue?
+        internal var location: Location?
         
         init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
             self.network = network
             self.configuration = configuration
             self.installationStorage = installationStorage
             self.applicationVersion = applicationVersion
-            LocationManager.sharedInstance.analytics = self
         }
         
         internal func startup() {
@@ -50,20 +50,31 @@ internal extension Phoenix {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
         
-        /// Track application open event (internally managed event).
+        /// Track application open event (internally managed).
         internal func trackApplicationOpened() {
             // TODO: Revise fields once we get a response about what is required.
             eventQueue?.enqueueEvent(prepareEvent(Phoenix.OpenApplicationEvent()))
         }
         
-        /// Track geofence entered event (internally managed event).
-        internal func trackGeofenceEnteredEvent(geofence: Geofence) {
+        /// Track geofence events (internally managed).
+        /// - parameter geofence: Geofence to track.
+        /// - parameter entered:  Whether we entered or exited.
+        internal func trackGeofence(geofence: Geofence, entered: Bool) {
+            if entered {
+                trackGeofenceEnteredEvent(geofence)
+            } else {
+                trackGeofenceExitedEvent(geofence)
+            }
+        }
+        
+        /// Track geofence entered event (internally managed).
+        private func trackGeofenceEnteredEvent(geofence: Geofence) {
             // stub
             // TODO: Implement
         }
         
-        /// Track geofence exited event (internally managed event).
-        internal func trackGeofenceExitedEvent(geofence: Geofence) {
+        /// Track geofence exited event (internally managed).
+        private func trackGeofenceExitedEvent(geofence: Geofence) {
             // stub
             // TODO: Implement
         }
@@ -82,6 +93,13 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
+            
+            // Add geolocation
+            let geolocation = location?.userLocation
+            var geoDict = JSONDictionary()
+            geoDict <-? (Event.GeolocationLatitudeKey, geolocation?.latitude)
+            geoDict <-? (Event.GeolocationLongitudeKey, geolocation?.longitude)
+            dictionary <-? (Event.GeolocationKey, geoDict.keys.count == 2 ? geoDict : nil)
             
             // TODO: UserId
             

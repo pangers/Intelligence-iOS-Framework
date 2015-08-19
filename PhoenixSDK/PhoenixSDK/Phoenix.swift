@@ -44,10 +44,12 @@ public final class Phoenix: NSObject {
         let myConfiguration = phoenixConfiguration.clone()
         self.network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
         // Modules
-        let userDefaults = NSUserDefaults()
-        self.identity = Identity(withNetwork: network, configuration: myConfiguration, version: NSBundle.mainBundle(), storage: userDefaults)
-        self.location = Location(withNetwork: network, configuration: myConfiguration)
-        self.analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: userDefaults, applicationVersion: NSBundle.mainBundle())
+        let installationStorage = NSUserDefaults()
+        self.identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
+        let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
+        self.location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
+        analytics.location = self.location
+        self.analytics = analytics
         
         super.init()
         
@@ -94,7 +96,7 @@ public final class Phoenix: NSObject {
     /// The identity module, used to manage users in the Phoenix backend.
     @objc public internal(set) var identity: PhoenixIdentity
     
-    // TODO: Documentation
+    /// Analytics instance that we will use for posting events.
     @objc public internal(set) var analytics: PhoenixAnalytics
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
