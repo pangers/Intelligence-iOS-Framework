@@ -43,8 +43,8 @@ public extension Phoenix {
             self.eventType = type
             self.value = value
             self.targetId = targetId
+            self.eventDate = RFC3339DateFormatter.stringFromDate(NSDate())
             self.metadata = metadata
-            self.eventDate = IRFC3339DateFormatter.stringFromDate(NSDate())
         }
         
         internal func toJSON() -> JSONDictionary {

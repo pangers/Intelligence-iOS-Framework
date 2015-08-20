@@ -97,8 +97,8 @@ internal extension Geofence {
             let geofence = Geofence()
             geofence.latitude = try geoValue(forKey: .LatitudeKey, dictionary: geolocation)
             geofence.longitude = try geoValue(forKey: .LongitudeKey, dictionary: geolocation)
-            geofence.createDate = IRFC3339DateFormatter.dateFromString(createDate)?.timeIntervalSinceReferenceDate ?? 0
-            geofence.modifyDate = IRFC3339DateFormatter.dateFromString(modifyDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.createDate = RFC3339DateFormatter.dateFromString(createDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.modifyDate = RFC3339DateFormatter.dateFromString(modifyDate)?.timeIntervalSinceReferenceDate ?? 0
             geofence.radius = try geoValue(forKey: .RadiusKey, dictionary: json)
             geofence.id = try geoValue(forKey: .IdKey, dictionary: json)
             geofence.projectId = try geoValue(forKey: .ProjectIdKey, dictionary: json)
