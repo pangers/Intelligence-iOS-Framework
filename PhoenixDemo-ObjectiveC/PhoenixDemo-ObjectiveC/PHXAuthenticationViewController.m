@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 @interface PHXAuthenticationViewController()
 {
     PHXLoginMessage currentStatus;
-    PHXPhoenixUser *loggedInUser;
+    PHXUser *loggedInUser;
 }
 @end
 
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
             }];
             return;
         }
-        [self.phoenix.identity loginWithUsername:username password:password callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+        [self.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
             currentStatus = self.loggedIn ? PHXLoggedIn : PHXLoginFailed;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];

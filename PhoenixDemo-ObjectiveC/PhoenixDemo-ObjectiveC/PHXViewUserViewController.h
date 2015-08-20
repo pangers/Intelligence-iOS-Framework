@@ -12,6 +12,6 @@
 
 @interface PHXViewUserViewController : UIViewController
 
-@property (strong, nonatomic) PHXPhoenixUser* user;
+@property (strong, nonatomic) PHXUser* user;
 
 @end

@@ -236,7 +236,7 @@ print("Logged in as: \(user)")
 #!objc
 
 // Optionally, login to a user's account...
-[phoenix.identity loginWithUsername:username password:password callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+[phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
 NSLog(@"Logged in as: %@", user);
 }];
 
@@ -321,10 +321,10 @@ The code to create a user for each language is as follows:
 ```
 #!objc
 
-    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password
+    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
         firstName:firstname lastName:lastname avatarURL:avatarURL];
 
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
         // Treat the user and error appropriately. Notice that the callback might be performed
         // In a background thread. Use dispatch_async to handle it in the main thread.
     }];
@@ -363,10 +363,10 @@ The code to update a user for each language is as follows:
 ```
 #!objc
 
-PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithUserId:userID companyId:companyID username:username password:password
+PHXUser* user = [[PHXUser alloc] initWithUserId:userID companyId:companyID username:username password:password
 firstName:firstname lastName:lastname avatarURL:avatarURL];
 
-[[PHXPhoenixManager sharedManager].phoenix.identity updateUser:user callback:^(id<PHXPhoenixUser> _Nullable user, NSError * _Nullable error) {
+[[PHXPhoenixManager sharedManager].phoenix.identity updateUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
 // Treat the user and error appropriately. Notice that the callback might be performed
 // In a background thread. Use dispatch_async to handle it in the main thread.
 }];
@@ -409,7 +409,7 @@ The following code snippets illustrate how to request a user's information in Ob
 #!objc
 
 // Get the user via it's id
-[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
     // Get the user and treat the error
 }];
 

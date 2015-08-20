@@ -49,7 +49,7 @@ private enum UserType : String {
 public extension Phoenix {
 
     /// The user class implementation
-    @objc(PHXPhoenixUser) public final class User : NSObject {
+    @objc(PHXUser) public final class User : NSObject {
         
         /// The user Id as a let
         @objc public let userId:Int

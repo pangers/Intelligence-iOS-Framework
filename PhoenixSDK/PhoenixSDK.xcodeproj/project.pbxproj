@@ -399,6 +399,15 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		FE18F9371B85CA2400DCF2EF /* Event Types */ = {
+			isa = PBXGroup;
+			children = (
+				FE6577301B832EB000E02B03 /* PhoenixEvent.swift */,
+				FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */,
+			);
+			name = "Event Types";
+			sourceTree = "<group>";
+		};
 		FE2D5EE81B74C287008A590E /* Location */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,10 +435,9 @@
 		FE6577271B832C7100E02B03 /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
+				FE18F9371B85CA2400DCF2EF /* Event Types */,
 				FE366D461B84811500D4D6D2 /* Requests */,
 				FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */,
-				FE6577301B832EB000E02B03 /* PhoenixEvent.swift */,
-				FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */,
 				FE366D3D1B8397AD00D4D6D2 /* PhoenixEventQueue.swift */,
 			);
 			name = Analytics;
