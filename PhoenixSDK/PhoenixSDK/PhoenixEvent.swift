@@ -14,6 +14,7 @@ public extension Phoenix {
     public class Event: NSObject {
         internal static let EventTypeKey = "EventType"
         internal static let EventValueKey = "EventValue"
+        internal static let EventDateKey = "EventDate"
         internal static let TargetIdKey = "TargetId"
         internal static let UserIdKey = "PhoenixIdentity_UserId"
         internal static let GeolocationKey = "Geolocation"
@@ -35,16 +36,19 @@ public extension Phoenix {
         var targetId: Int
         /// Optional metadata values associated to this EventType.
         var metadata: [String: AnyObject]?
+        /// Prepopulated date.
+        var eventDate: String
         
         @objc public init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId
             self.metadata = metadata
+            self.eventDate = IRFC3339DateFormatter.stringFromDate(NSDate())
         }
         
         internal func toJSON() -> JSONDictionary {
-            var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value]
+            var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value, Event.EventDateKey: eventDate]
             
             // Set keys with optional values.
             dictionary <-? (Event.TargetIdKey, targetId)
@@ -52,7 +56,6 @@ public extension Phoenix {
                 metadata = [String: AnyObject]()
             }
             // Add timestamp
-            metadata?[Event.MetadataTimestampKey] = IRFC3339DateFormatter.stringFromDate(NSDate())
             dictionary <-? (Event.MetadataKey, metadata)
 
             return dictionary
