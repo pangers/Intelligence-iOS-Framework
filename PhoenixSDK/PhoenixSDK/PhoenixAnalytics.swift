@@ -62,6 +62,7 @@ internal extension Phoenix {
         /// - parameter geofence: Geofence to track.
         /// - parameter entered:  Whether we entered or exited.
         internal func trackGeofence(geofence: Geofence, entered: Bool) {
+            print("\(entered) geofence: \(geofence.id) radius: \(geofence.radius)")
             if entered {
                 trackGeofenceEnteredEvent(geofence)
             } else {
