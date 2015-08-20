@@ -205,6 +205,7 @@ internal extension Phoenix {
         /// - Parameter callback: Contains data, response, and error information from request.
         /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
         private func createAuthenticationOperation() {
+            if authenticationOperation != nil { return }
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).
