@@ -123,7 +123,7 @@ As an example, your configuration file will look like:
     "project_id": 20,
     "region": "EU",
     "company_id" : 10,
-    "use_geofences" : 10
+    "use_geofences" : "true"
 }
 
 ```
