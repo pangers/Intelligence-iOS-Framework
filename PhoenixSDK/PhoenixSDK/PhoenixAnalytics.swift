@@ -10,6 +10,8 @@ import Foundation
 
 @objc public protocol PhoenixAnalytics {
     
+    /// Track user engagement and behavioral insight.
+    /// - parameter event: Event containing information to track.
     func track(event:Phoenix.Event)
     
 }
@@ -34,6 +36,8 @@ internal extension Phoenix {
             self.authentication = authentication
         }
         
+        // MARK:- PhoenixModuleProtocol
+        
         internal func startup() {
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
@@ -41,16 +45,15 @@ internal extension Phoenix {
             trackApplicationOpened()
         }
         
-        /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.
         internal func shutdown() {
             eventQueue?.stopQueue()
         }
         
-        /// Track user engagement and behavioral insight.
-        /// - parameter event: Event containing information to track.
         @objc func track(event: Phoenix.Event) {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
+        
+        // MARK: Internal
         
         /// Track application open event (internally managed).
         internal func trackApplicationOpened() {
@@ -74,8 +77,7 @@ internal extension Phoenix {
         /// - returns: JSONDictionary representation of Event including populated fields.
         internal func prepareEvent(event: Event) -> JSONDictionary {
             var dictionary = event.toJSON()
-
-            // FIXME: Are these fields correct? Using postman example...
+            
             dictionary[Event.ApplicationIdKey] = configuration.applicationID
             dictionary[Event.DeviceTypeKey] = UIDevice.currentDevice().model
             dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion

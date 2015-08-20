@@ -25,7 +25,7 @@ public extension Phoenix {
         internal static let ApplicationIdKey = "PhoenixIdentity_ApplicationId"
         internal static let ApplicationVersionKey = "ApplicationVersion"
         internal static let DeviceTypeKey = "DeviceType"
-        internal static let OperationSystemVersionKey = "OperatingSystemVersion"
+        internal static let OperationSystemVersionKey = "OperatingSystem"
         internal static let MetadataTimestampKey = "Timestamp"
         
         /// Type of Event we are trying to log.
