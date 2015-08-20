@@ -59,7 +59,7 @@ public extension Phoenix {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Throws: A **ConfigurationError** if the configuration file is incorrectly formatted.
-        convenience init(fromFile file:String, inBundle bundle:NSBundle) throws {
+        public convenience init(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws {
             self.init()
             try self.readFromFile(file, inBundle: bundle)
         }
@@ -70,7 +70,7 @@ public extension Phoenix {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Returns: A configuration with the contents of the file.
-        class func configuration(fromFile file:String, inBundle bundle:NSBundle) throws -> Configuration {
+        public class func configuration(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws -> Configuration {
             let configuration = Configuration()
             try configuration.readFromFile(file, inBundle: bundle)
             return configuration

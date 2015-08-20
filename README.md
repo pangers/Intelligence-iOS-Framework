@@ -23,6 +23,30 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Phoeni
 
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
 
+### Initialising Phoenix ###
+
+First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
+
+Once you get a workspace with both projects coexisting in it, add the SDK in the list of Linked Frameworks and Libraries so that it is accessible from your own project:
+
+![Linked Frameworks and Libraries](https://bitbucket.org/repo/4z6Eb8/images/3275432151-Screen%20Shot%202015-07-22%20at%2017.55.51.png)
+
+Next, import the PhoenixSDK framework.
+
+**Swift:**
+```
+#!swift
+
+import PhoenixSDK
+
+```
+
+**Objective-C:**
+```
+#!objc
+@import PhoenixSDK;
+```
+
 ### Configuration ###
 
 The Phoenix SDK requires a few configuration properties in order to initialize itself. There are a few different ways of creating the configuration:
@@ -34,11 +58,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 #!swift
 
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: nil)
-            phoenix?.networkDelegate = self
-            phoenix?.startup(withCallback: { (authenticated) -> () in
-                // Perform requests inside this callback
-            }
+            phoenix = try Phoenix(withFile: "PhoenixConfiguration")
         }
         catch {
             // Treat the error with care!
@@ -46,21 +66,34 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
+**Objective-C:**
+
+```
+#!objc
+
+        // Attempt to instantiate Phoenix using a JSON file.
+        NSError *err;
+        Phoenix *phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        if (nil != err) {
+            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+            // and generally indicate that something has gone wrong and needs to be resolved.
+            NSLog(@"Error initialising Phoenix: %zd", err.code);
+        }
+        NSParameterAssert(err == nil && instance != nil);
+
+```
+
+
 2- Initialize a configuration object, read a file and pass it to Phoenix:
 
+**Swift:**
 
 ```
 #!swift
 
-        let bundle = NSBundle.mainBundle()
-        
         do {
-            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = Phoenix(withConfiguration: configuration)
-            phoenix?.networkDelegate = self
-            phoenix?.startup(withCallback: { (authenticated) -> () in
-                // Perform requests inside this callback
-            }
+            let configuration = try Phoenix.Configuration(fromFile: "PhoenixConfiguration")
+            phoenix = try Phoenix(withConfiguration: configuration)
         }
         catch {
             // Treat the error with care!
@@ -68,45 +101,108 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
+**Objective-C:**
+
+```
+#!objc
+
+        // Attempt to instantiate Phoenix using a JSON file.
+        NSError *err;
+        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
+        if (nil != err) {
+            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+            // and generally indicate that something has gone wrong and needs to be resolved.
+            NSLog(@"Error initialising Phoenix: %zd", err.code);
+        }
+        NSParameterAssert(err == nil && instance != nil);
+        
+```
+
 3- Programmatically set the required parameters in the configuration, and initialize Phoenix with it.
 
+**Swift:**
 
 ```
 #!swift
 
         let configuration = Phoenix.Configuration()
-        
         configuration.clientID = "YOUR_CLIENT_ID"
         configuration.clientSecret = "YOUR_CLIENT_SECRET"
         configuration.projectID = 123456789
         configuration.applicationID = 987654321
         configuration.region = Phoenix.Region.Europe
+        configuration.useGeofences = true
+
+```
+**Objective-C:***
+
+```
+#!objc
+
+        PHXConfiguration *configuration = [[PHXConfiguration alloc] init];
+        configuration.clientID = @"YOUR_CLIENT_ID";
+        configuration.clientSecret = @"YOUR_CLIENT_SECRET";
+        configuration.projectID = 123456789;
+        configuration.applicationID = 987654321;
+        configuration.region = RegionEurope;
+        configuration.useGeofences = YES;
+        
 
 ```
 
+
+
 4- Hybrid initialization of the configuration file, reading a file and customizing programmatically some of its properties:
 
+**Swift:**
 
 ```
 #!swift
 
-        let bundle = NSBundle.mainBundle()
-        
         do {
-            let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
+        	// Load from file
+            let configuration = try Phoenix.Configuration(fromFile: "config")
+            
+            // Change region programmatically
             configuration.region = Phoenix.Region.Europe
-
-            let phoenix = Phoenix(withConfiguration: configuration)
-            phoenix?.networkDelegate = self
-            phoenix?.startup(withCallback: { (authenticated) -> () in
-                // Perform requests inside this callback
-            }
+            
+            // Instantiate with hybrid configuration
+            phoenix = try Phoenix(withConfiguration: configuration)
         }
         catch {
             // Treat the error with care!
         }
 
 ```
+
+**Objective-C:**
+
+```
+#!objc
+
+        // Attempt to instantiate Phoenix using a JSON file.
+        NSError *err;
+        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        
+        // Change region programmatically
+        configuration.region = RegionEurope;
+        
+        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
+        if (nil != err) {
+            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+            // and generally indicate that something has gone wrong and needs to be resolved.
+            NSLog(@"Error initialising Phoenix: %zd", err.code);
+        }
+        NSParameterAssert(err == nil && instance != nil);
+        
+
+```
+
+
+Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
+
+Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
 ### Configuration file format ###
 
@@ -137,56 +233,18 @@ As an example, your configuration file will look like:
 
 ```
 
-### Initialising Phoenix ###
+### Startup ###
 
-First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
+Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. An error may occur at any time (usually due to networking) that cannot be handled by the SDK internally and will be surfaced through the error callback. These errors only really serve a purpose for developers to help with debugging.
 
-Once you get a workspace with both projects coexisting in it, add the SDK in the list of Linked Frameworks and Libraries so that it is accessible from your own project:
-
-![Linked Frameworks and Libraries](https://bitbucket.org/repo/4z6Eb8/images/3275432151-Screen%20Shot%202015-07-22%20at%2017.55.51.png)
-
-Next, import the PhoenixSDK framework.
-
-**Swift:**
-```
-#!swift
-
-import PhoenixSDK
-
-```
-
-**Objective-C:**
-```
-#!objc
-@import PhoenixSDK;
-```
-
-Finally, to initialise the SDK you'll have to add in the application didFinishLaunchingWithOptions: the following lines:
 
 **Swift:**
 ```
 #!swift
         
-        do {
-            phoenix = try Phoenix(withFile: "config")
-            phoenix.startup(withCallback: { (error) -> () in
-                // Handle critical/network error.
-            }
-        }
-        catch PhoenixSDK.ConfigurationError.FileNotFoundError {
-            // The file you specified does not exist!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidFileError {
-            // The file is invalid! Check that the JSON provided is correct.
-        }
-        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
-            // You missed a property!
-        }
-        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
-            // There is an invalid property!
-        }
-        catch {
-            // Treat the error with care!
+        // Startup all modules.
+        phoenix?.startup { (error) -> () in       
+            // Handle critical/network error.
         }
         
 ```
@@ -196,25 +254,13 @@ Finally, to initialise the SDK you'll have to add in the application didFinishLa
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        Phoenix *phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+        // Startup the SDK...
         [phoenix startupWithCallback:^(NSError *error) {        
             // Handle critical/network error.
         }];
+        
 ```
 
-The Phoenix.startup() method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time.
-
-Consider that the Phoenix.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
-
-Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
 ### Authentication ###
 
