@@ -116,7 +116,12 @@ public extension Phoenix {
             }
             
             // Fetch from the contents dictionary
-            self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
+            do {
+                self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
+            }
+            catch {
+                self.useGeofences = true
+            }
             self.clientID = try value(forKey: .ClientID, inContents:contents)
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
