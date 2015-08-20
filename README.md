@@ -33,7 +33,7 @@ Once you get a workspace with both projects coexisting in it, add the SDK in the
 
 Next, import the PhoenixSDK framework.
 
-**Swift:**
+*Swift:*
 ```
 #!swift
 
@@ -41,7 +41,7 @@ import PhoenixSDK
 
 ```
 
-**Objective-C:**
+*Objective-C:*
 ```
 #!objc
 @import PhoenixSDK;
@@ -66,7 +66,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -86,7 +86,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 2- Initialize a configuration object, read a file and pass it to Phoenix:
 
-**Swift:**
+*Swift:*
 
 ```
 #!swift
@@ -101,7 +101,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -121,7 +121,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 3- Programmatically set the required parameters in the configuration, and initialize Phoenix with it.
 
-**Swift:**
+*Swift:*
 
 ```
 #!swift
@@ -135,7 +135,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
         configuration.useGeofences = true
 
 ```
-**Objective-C:***
+*Objective-C:**
 
 ```
 #!objc
@@ -155,7 +155,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 4- Hybrid initialization of the configuration file, reading a file and customizing programmatically some of its properties:
 
-**Swift:**
+*Swift:*
 
 ```
 #!swift
@@ -176,7 +176,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 ```
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -238,7 +238,7 @@ As an example, your configuration file will look like:
 Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. An error may occur at any time (usually due to networking) that cannot be handled by the SDK internally and will be surfaced through the error callback. These errors only really serve a purpose for developers to help with debugging.
 
 
-**Swift:**
+*Swift:*
 ```
 #!swift
         
@@ -249,7 +249,7 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
         
 ```
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -266,7 +266,7 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
 
 If you have a registered account on the Phoenix Platform you will be able to login to that account using the login method (as seen below).
 
-**Swift:**
+*Swift:*
 ```
 #!swift
 
@@ -278,7 +278,7 @@ print("Logged in as: \(user)")
 ```
 
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -292,7 +292,7 @@ NSLog(@"Logged in as: %@", user);
 
 You will then be logged in to a user's account (if 'authenticated' is true). Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method (as seen below).
 
-**Swift:**
+*Swift:*
 ```
 #!swift
 
@@ -301,7 +301,7 @@ phoenix.identity.logout()
 ```
 
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 
@@ -325,7 +325,7 @@ Tracking an event is as simple as accessing the track method on the analytics mo
 
 How to track a custom Event:
 
-**Objective-C:**
+*Objective-C:*
 ```
 #!objc
 
@@ -337,7 +337,7 @@ PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type
 
 ```
 
-**Swift:**
+*Swift:*
 Note: there are some optional fields in Swift that default to zero/nil if missing.
 
 ```
@@ -364,7 +364,7 @@ Also, the input and output of this operation is not stored by the SDK, and the d
 
 The code to create a user for each language is as follows:
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -379,7 +379,7 @@ The code to create a user for each language is as follows:
 
 ```
 
-**Swift:**
+*Swift:*
 
 
 ```
@@ -406,7 +406,7 @@ Those errors will be wrapped within an NSError using as domain IdentityError.dom
 
 The code to update a user for each language is as follows:
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -421,7 +421,7 @@ firstName:firstname lastName:lastname avatarURL:avatarURL];
 
 ```
 
-**Swift:**
+*Swift:*
 
 
 ```
@@ -451,7 +451,7 @@ Request the user information for a particular userId.
 
 The following code snippets illustrate how to request a user's information in Objective-C and Swift.
 
-**Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
@@ -464,7 +464,7 @@ The following code snippets illustrate how to request a user's information in Ob
 
 ```
 
-**Swift:**
+*Swift:*
 
 
 ```
