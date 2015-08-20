@@ -54,8 +54,7 @@ internal extension Phoenix {
         
         /// Track application open event (internally managed).
         internal func trackApplicationOpened() {
-            // TODO: Revise fields once we get a response about what is required.
-            eventQueue?.enqueueEvent(prepareEvent(Phoenix.OpenApplicationEvent()))
+            track(Phoenix.OpenApplicationEvent())
         }
         
         /// Track geofence events (internally managed).
@@ -64,22 +63,10 @@ internal extension Phoenix {
         internal func trackGeofence(geofence: Geofence, entered: Bool) {
             print("\(entered) geofence: \(geofence.id) radius: \(geofence.radius)")
             if entered {
-                trackGeofenceEnteredEvent(geofence)
+                track(GeofenceEnterEvent(geofence: geofence))
             } else {
-                trackGeofenceExitedEvent(geofence)
+                track(GeofenceExitEvent(geofence: geofence))
             }
-        }
-        
-        /// Track geofence entered event (internally managed).
-        private func trackGeofenceEnteredEvent(geofence: Geofence) {
-            // stub
-            // TODO: Implement
-        }
-        
-        /// Track geofence exited event (internally managed).
-        private func trackGeofenceExitedEvent(geofence: Geofence) {
-            // stub
-            // TODO: Implement
         }
         
         /// Add automatically populated fields to dictionary.

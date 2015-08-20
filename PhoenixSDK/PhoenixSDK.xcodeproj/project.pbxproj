@@ -52,6 +52,9 @@
 		FE5BAC141B74F597000ACBC2 /* confignogeofences.json in Resources */ = {isa = PBXBuildFile; fileRef = FE5BAC131B74F597000ACBC2 /* confignogeofences.json */; };
 		FE65772E1B832C8400E02B03 /* PhoenixAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */; };
 		FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6577301B832EB000E02B03 /* PhoenixEvent.swift */; };
+		FE6999361B86196000EB7094 /* Tigerspike.gpx in Resources */ = {isa = PBXBuildFile; fileRef = FE6999351B86196000EB7094 /* Tigerspike.gpx */; };
+		FE69993D1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */; };
+		FE6999401B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */; };
 		FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */; };
 		FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */; };
 		FEAFBC9D1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAFBC9C1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift */; };
@@ -162,6 +165,9 @@
 		FE5BAC131B74F597000ACBC2 /* confignogeofences.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = confignogeofences.json; sourceTree = "<group>"; };
 		FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalytics.swift; sourceTree = "<group>"; };
 		FE6577301B832EB000E02B03 /* PhoenixEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEvent.swift; sourceTree = "<group>"; };
+		FE6999351B86196000EB7094 /* Tigerspike.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Tigerspike.gpx; path = ../../Tigerspike.gpx; sourceTree = "<group>"; };
+		FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixGeofenceEnterEvent.swift; sourceTree = "<group>"; };
+		FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixGeofenceExitEvent.swift; sourceTree = "<group>"; };
 		FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDKeychain.swift; sourceTree = "<group>"; };
 		FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixKeychain.swift; sourceTree = "<group>"; };
 		FEAFBC9C1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInstallationRequestOperation.swift; sourceTree = "<group>"; };
@@ -219,6 +225,7 @@
 		A07FACB21B5D0C4200482BB7 /* PhoenixSDK */ = {
 			isa = PBXGroup;
 			children = (
+				FE6999351B86196000EB7094 /* Tigerspike.gpx */,
 				A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */,
 				A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */,
 				BB7276681B5FB53200F098DA /* Phoenix.swift */,
@@ -403,6 +410,8 @@
 			isa = PBXGroup;
 			children = (
 				FE6577301B832EB000E02B03 /* PhoenixEvent.swift */,
+				FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */,
+				FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */,
 				FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */,
 			);
 			name = "Event Types";
@@ -629,6 +638,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE6999361B86196000EB7094 /* Tigerspike.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,6 +664,7 @@
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
 				FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */,
 				BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */,
+				FE6999401B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift in Sources */,
 				FE366D3E1B8397AD00D4D6D2 /* PhoenixEventQueue.swift in Sources */,
 				FEDE07711B73530A009BC6B6 /* PhoenixLocation.swift in Sources */,
 				FEF7EF751B6671C700066AA3 /* NSJSONSerializationHelpers.swift in Sources */,
@@ -687,6 +698,7 @@
 				FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */,
 				BBA573781B692B6900685EFB /* String.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
+				FE69993D1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
