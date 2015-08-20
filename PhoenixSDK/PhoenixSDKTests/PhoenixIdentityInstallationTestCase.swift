@@ -100,7 +100,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     // MARK:- Create Installation
     
     func prepareValidCreateInstallationObject() -> Phoenix.Installation {
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
+        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
         XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
@@ -161,7 +161,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     func testCreateInstallationFailure() {
         mockValidTokenStorage()
         
-        let installation = Phoenix.Installation(configuration: configuration!, version: VersionClass(), storage: InstallationStorage())
+        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
         
         let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
         
@@ -211,7 +211,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         // Mock installation request
         let storage = InstallationStorage()
         let version = VersionClass()
-        var installation = Phoenix.Installation(configuration: configuration!, version: version, storage: storage)
+        var installation = Phoenix.Installation(configuration: configuration!, applicationVersion: version, installationStorage: storage)
         
         let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
         let data = jsonData.first!
@@ -238,8 +238,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         installation.updateWithJSON(jsonData)
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
-        (installation.version as? VersionClass)?.fakeVersion = "1.0.2"
-        installation = Phoenix.Installation(configuration: configuration!, version: installation.version, storage: installation.storage)
+        (installation.applicationVersion as? VersionClass)?.fakeVersion = "1.0.2"
+        installation = Phoenix.Installation(configuration: configuration!, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
         XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] != nil, "Create date must be set")
         XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] != nil, "Request ID must be set")
