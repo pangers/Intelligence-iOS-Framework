@@ -108,7 +108,7 @@ The configuration file is a JSON file with the following keys:
 3. "application_id" with an Integer value
 4. "project_id" with an Integer value
 5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
-6. "use_geofences" a String value which needs to be "true" or "false" - this is an optional configuration, if not specified, the default value is true. Setting this value to false means the SDK will not attempt to download existing geofence data and use it to monitor geofences.
+6. "use_geofences" a Boolean value which needs to be true or false - this is an optional configuration, if not specified, the default value is true. Setting this value to false means the SDK will not attempt to download existing geofence data and use it to monitor geofences.
 
 As an example, your configuration file will look like:
 
@@ -123,7 +123,7 @@ As an example, your configuration file will look like:
     "project_id": 20,
     "region": "EU",
     "company_id" : 10,
-    "use_geofences" : "true"
+    "use_geofences" : true
 }
 
 ```
