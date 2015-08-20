@@ -313,6 +313,7 @@ In addition to the errors specified by each individual method, you may also get 
 * RequestError.RequestFailedError: Unable to receive a response from the server, could be due to local connection or server issues.
 * RequestError.ParseError: Unable to parse the response of the call.
 
+These errors will be wrapped within an NSError using as domain RequestError.domain.
 
 
 
@@ -329,13 +330,13 @@ The code to create a user for each language is as follows:
 
 ```
 #!swift
-        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
-                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+    let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
+        firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
         
-        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
-            // Treat the user and error appropriately. Notice that the callback might be performed
-            // In a background thread. Use dispatch_async to handle it in the main thread.
-        })
+    PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
+        // Treat the user and error appropriately. Notice that the callback might be performed
+        // In a background thread. Use dispatch_async to handle it in the main thread.
+    })
 ```
 
 *Objective-C:*
@@ -433,6 +434,9 @@ NSLog(@"Logged in as: %@", user);
 The 'login' method can return the following additional errors:
 
 * RequestError.AuthenticationFailedError: There was an issue that occurred during login, could be due to incorrect credentials.
+
+This error will be wrapped within an NSError using as domain RequestError.domain.
+
 
 
 #### Logout ####
