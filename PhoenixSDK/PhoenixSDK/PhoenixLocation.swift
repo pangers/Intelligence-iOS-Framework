@@ -26,9 +26,8 @@ internal extension Phoenix {
         private let configuration: Phoenix.Configuration
         /// Callback for enter/exit geofences.
         internal let geofenceCallback: PhoenixGeofenceEnteredExitedCallback
-        
+        /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
         internal lazy var enteredGeofences = [Geofence]()
-        
         
         /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
         internal var geofences: [Geofence]? {
@@ -60,7 +59,7 @@ internal extension Phoenix {
             startMonitoringGeofences()
         }
         
-        @objc func startup() {
+        func startup() {
             // TODO: Setup location monitoring, etc..
             do {
                 try downloadGeofences { [weak self] (geofences, error) -> Void in
@@ -153,38 +152,24 @@ internal extension Phoenix {
         
         // MARK:- CLLocationManagerDelegate
         
-        private func geofenceForRegion(region: CLRegion) -> Geofence? {
-            guard let geofence = geofences?.filter({ $0.id.description == region.identifier }).first else {
-                assert(false, "Entered region we don't know about?")
-                return nil
-            }
-            return geofence
-        }
-        
-        private func entered(region: CLRegion) {
-            guard let geofence = geofenceForRegion(region) else { return }
-            if !enteredGeofences.contains(geofence) {
-                enteredGeofences.append(geofence)
-                geofenceCallback(geofence: geofence, entered: true)
-            }
-        }
-        
-        private func exited(region: CLRegion) {
-            guard let geofence = geofenceForRegion(region) else { return }
-            if enteredGeofences.contains(geofence) {
-                enteredGeofences = enteredGeofences.filter({$0 == geofence})
-                geofenceCallback(geofence: geofence, entered: true)
-            }
-        }
-        
+        /// Called when authorization status changes, refresh our geofences states.
+        /// - parameter manager: CLLocationManager instance.
+        /// - parameter status:  In response to user enabling/disabling location services.
         func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
             privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
         }
         
+        /// Called when a region is added.
+        /// - parameter manager: CLLocationManager instance.
+        /// - parameter region:  Region we started monitoring.
         func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
             privateLocationManager?.requestStateForRegion(region)
         }
         
+        /// Called to determine state of a region by didStartMonitoringForRegion.
+        /// - parameter manager: Current location manager.
+        /// - parameter state:   Inside or Outside.
+        /// - parameter region:  CLRegion we just entered/exited.
         func locationManager(manager: CLLocationManager, didDetermineState state: CLRegionState, forRegion region: CLRegion) {
             switch state {
             case .Inside: entered(region)
@@ -226,6 +211,37 @@ internal extension Phoenix {
         func stopMonitoringGeofences() {
             // Stop monitoring any regions we may be currently monitoring (such as old geofences).
             locationManager?.monitoredRegions.map({ self.locationManager?.stopMonitoringForRegion($0) })
+        }
+        
+        /// Returns relevant geofence for a region or nil.
+        /// - parameter region: Region to compare id with geofence array.
+        /// - returns: Geofence from geofences array.
+        private func geofenceForRegion(region: CLRegion) -> Geofence? {
+            guard let geofence = geofences?.filter({ $0.id.description == region.identifier }).first else {
+                assert(false, "Entered region we don't know about?")
+                return nil
+            }
+            return geofence
+        }
+        
+        /// Called when a region is entered.
+        /// - parameter region: CLRegion we just entered.
+        private func entered(region: CLRegion) {
+            guard let geofence = geofenceForRegion(region) else { return }
+            if !enteredGeofences.contains(geofence) {
+                enteredGeofences.append(geofence)
+                geofenceCallback(geofence: geofence, entered: true)
+            }
+        }
+        
+        /// Called when a region is exited.
+        /// - parameter region: CLRegion we just exited.
+        private func exited(region: CLRegion) {
+            guard let geofence = geofenceForRegion(region) else { return }
+            if enteredGeofences.contains(geofence) {
+                geofenceCallback(geofence: geofence, entered: false)
+                enteredGeofences = enteredGeofences.filter({$0 != geofence})
+            }
         }
     }
     

@@ -27,6 +27,5 @@ class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         // Handle authorization changes in app if necessary...
-        print("LocationManager - Changed authorization status: \(status)")
     }
 }
