@@ -102,22 +102,14 @@ public final class Phoenix: NSObject {
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
     internal(set) var location: Phoenix.Location
     
-    // TODO: Need to define how this works, since it can fail...
-    // Strange flow, startup method actually makes a network call, so it's
-    // a little odd that the user has to have internet access and the
-    // platform is available for the app to start, need to rethink this.
-    // Starts up modules.
-    // Anonymously logins into the SDK then:
-    // - Cannot request anything on behalf of the user.
-    // - Calls Application Installed/Updated.
-    // - Ask for user location. (Developer does this, then notifies module (or automated)).
-    // - Initialises Geofence load/download.
-    // - Startup Events module, send stored events.
-    // - Register for Push notifications. (Developer does this, then passes to module).
     /// Starts up the Phoenix SDK modules.
     /// - Parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
     public func startup(callback: PhoenixErrorCallback) {
-        // Login as Application User.
+        // Anonymously logins into the SDK then:
+        // - Cannot request anything on behalf of the user.
+        // - Calls Application Installed/Updated/Opened.
+        // - Initialises Geofence load/download.
+        // - Startup Events module, send stored events.
         self.errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
         modules.map({ $0?.startup() })
