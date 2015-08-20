@@ -12,6 +12,28 @@ import XCTest
 
 class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
+    let fakeGeofenceString = "{" +
+        "\"TotalRecords\": 1," +
+        "\"Data\": [{" +
+        "\"Geolocation\": {" +
+        "\"Latitude\": 51.5201906," +
+        "\"Longitude\": -0.1341973" +
+        "}," +
+        "\"Id\": 2005," +
+        "\"ProjectId\": 2030," +
+        "\"Name\": \"DeskChriss\"," +
+        "\"CreateDate\": \"2015-08-04T08:13:02.8004593Z\"," +
+        "\"ModifyDate\": \"2015-08-04T08:13:02.8004593Z\"," +
+        "\"Address\": \"65 Tottenham Court Road, Fitzrovia, London W1T 2EU, UK\"," +
+        "\"Radius\": 3.09" +
+        "}]" +
+    "}"
+    
+    func fakeGeofence() -> Geofence {
+        let data = fakeGeofenceString.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary
+        return try! Geofence.geofences(withJSON: data).first!
+    }
+    
     override func tearDown() {
         super.tearDown()
         let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
@@ -32,7 +54,89 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(json[Phoenix.Event.ApplicationIdKey] as! Int == configuration!.applicationID, "Expected application ID to match configuration")
         XCTAssert(json[Phoenix.Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
         XCTAssert(json[Phoenix.Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
-        XCTAssert((json[Phoenix.Event.MetadataKey] as! [String: AnyObject])[Phoenix.Event.MetadataTimestampKey] as! NSTimeInterval > 0, "Expected time interval")
+        XCTAssert(json[Phoenix.Event.EventDateKey] as? String != nil, "Expected time interval")
+    }
+    
+    // MARK:- Geofences
+    
+    /// Test if event type is correct and id matches.
+    func testGeofenceEnterSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let geofence = fakeGeofence()
+        let event = Phoenix.GeofenceEnterEvent(geofence: geofence)
+        XCTAssert(event.eventType == "Phoenix.Location.Geofence.Enter")
+        XCTAssert(event.targetId == geofence.id)
+        XCTAssert(event.value == 0)
+        
+        let eventJSON = analytics.prepareEvent(event)
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNil(error, "Expected success")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    /// Test if event type is correct and id matches.
+    func testGeofenceExitSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        
+        // Create event, avoiding queueing/storage system.
+        let geofence = fakeGeofence()
+        let event = Phoenix.GeofenceExitEvent(geofence: geofence)
+        XCTAssert(event.eventType == "Phoenix.Location.Geofence.Exit")
+        XCTAssert(event.targetId == geofence.id)
+        XCTAssert(event.value == 0)
+        
+        let eventJSON = analytics.prepareEvent(event)
+        ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+        let eventsJSON: JSONDictionaryArray = [eventJSON]
+        let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
+        let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        
+        // Create request
+        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        
+        // Mock 200 on auth
+        mockValidTokenStorage()
+        
+        // Mock
+        mockResponseForURL(request,
+            method: "POST",
+            response: (data: successfulResponse, statusCode:200, headers:nil))
+        
+        // Avoid using the EventQueue so we are certain that we are only sending one request here.
+        analytics.sendEvents(eventsJSON) { (error) -> () in
+            XCTAssertNil(error, "Expected success")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+            // Wait for calls to be made and the callback to be notified
+        }
     }
     
     // MARK:- Open Application

@@ -28,6 +28,8 @@ internal extension Phoenix {
         internal let geofenceCallback: PhoenixGeofenceEnteredExitedCallback
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
         internal lazy var enteredGeofences = [Geofence]()
+        /// Flag used for testing to disable CLLocationManager.
+        internal var testLocation: Bool = false
         
         /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
         internal var geofences: [Geofence]? {
@@ -56,7 +58,6 @@ internal extension Phoenix {
                 print("Geofences: \(geofences)")
             }
             super.init()
-            startMonitoringGeofences()
         }
         
         func startup() {
@@ -67,6 +68,7 @@ internal extension Phoenix {
                         self?.geofences = geofences
                     }
                 }
+                startMonitoringGeofences()
             }
             catch {
                 // Flag Disabled.
@@ -75,6 +77,7 @@ internal extension Phoenix {
         
         func shutdown() {
             // Clear geofences.
+            stopMonitoringGeofences()
             geofences = nil
         }
         
@@ -146,6 +149,7 @@ internal extension Phoenix {
         
         /// Returns current location if available.
         internal var userLocation: CLLocationCoordinate2D? {
+            if testLocation { return nil }
             return locationManager?.location?.coordinate
         }
         
