@@ -46,7 +46,7 @@ public final class Phoenix: NSObject {
         // Modules
         let installationStorage = NSUserDefaults()
         self.identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
-        let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
+        let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle(), authentication: network.authentication)
         self.location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
         analytics.location = self.location
         self.analytics = analytics

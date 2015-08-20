@@ -24,12 +24,14 @@ internal extension Phoenix {
         private let network: Network
         private var eventQueue: PhoenixEventQueue?
         internal var location: Location?
+        private let authentication: Authentication
         
-        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
+        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol, authentication: Authentication) {
             self.network = network
             self.configuration = configuration
             self.installationStorage = installationStorage
             self.applicationVersion = applicationVersion
+            self.authentication = authentication
         }
         
         internal func startup() {
@@ -93,6 +95,7 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
+            dictionary <-? (Event.UserIdKey, authentication.userId)
             
             // Add geolocation
             let geolocation = location?.userLocation
@@ -100,8 +103,6 @@ internal extension Phoenix {
             geoDict <-? (Event.GeolocationLatitudeKey, geolocation?.latitude)
             geoDict <-? (Event.GeolocationLongitudeKey, geolocation?.longitude)
             dictionary <-? (Event.GeolocationKey, geoDict.keys.count == 2 ? geoDict : nil)
-            
-            // TODO: UserId
             
             return dictionary
         }

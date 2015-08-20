@@ -12,7 +12,6 @@ import CoreLocation
 public extension Phoenix {
     @objc(PHXEvent)
     public class Event: NSObject {
-        // TODO: Ensure these keys are correct.
         internal static let EventTypeKey = "EventType"
         internal static let EventValueKey = "EventValue"
         internal static let TargetIdKey = "TargetId"
