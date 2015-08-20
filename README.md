@@ -53,6 +53,7 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 
 1- Initialize Phoenix with a configuration file:
 
+*Swift:*
 
 ```
 #!swift
@@ -262,35 +263,181 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
 ```
 
 
-### Authentication ###
+# Phoenix Modules #
 
-If you have a registered account on the Phoenix Platform you will be able to login to that account using the login method (as seen below).
+The Phoenix SDK is composed of several modules which can be used as necessary by developers to perform specific functions. Each module is described below with sample code where necessary.
+
+
+## Analytics Module ##
+
+The analytics module allows developers to effortlessly track several predefined events or their own custom events which can be used to determine user engagement and behavioural insights.
+
+Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
+
+How to track an Event:
 
 *Swift:*
+Note: there are some optional fields in Swift that default to zero/nil if missing.
+
 ```
 #!swift
 
-// Optionally, login to a user's account...
-phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-print("Logged in as: \(user)")
-})
+// Create custom Event
+let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+
+// Send event to Analytics module
+PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
 
 ```
 
+*Objective-C:*
+```
+#!objc
+
+// Create custom Event
+PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+
+// Send event to Analytics module
+[[PHXPhoenixManager sharedManager].phoenix.analytics track:myTestEvent];
+
+```
+
+## Identity Module ##
+
+This module provides methods for user management within the Phoenix platform. Allowing users to register, login, update, and retrieve information.
+
+*NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
+
+In addition to the errors specified by each individual method, you may also get one of the following errors if the request fails:
+
+* RequestError.RequestFailedError: Unable to receive a response from the server, could be due to local connection or server issues.
+* RequestError.ParseError: Unable to parse the response of the call.
+
+
+
+
+#### Create User ####
+
+Register a user on the Phoenix platform.
+
+Calling this method does not also perform a login, it is a two-step process, developers must call the 'login' method afterward if they want to streamline their app experience.
+
+The code to create a user for each language is as follows:
+
+*Swift:*
+
+
+```
+#!swift
+        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
+                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+        
+        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
+            // Treat the user and error appropriately. Notice that the callback might be performed
+            // In a background thread. Use dispatch_async to handle it in the main thread.
+        })
+```
 
 *Objective-C:*
 
 ```
 #!objc
 
-// Optionally, login to a user's account...
+    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
+        firstName:firstname lastName:lastname avatarURL:avatarURL];
+
+    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
+        // Treat the user and error appropriately. Notice that the callback might be performed
+        // In a background thread. Use dispatch_async to handle it in the main thread.
+    }];
+
+```
+
+The 'createUser' method can return the following additional errors:
+
+* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
+* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
+* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
+
+These errors will be wrapped within an NSError using as domain IdentityError.domain.
+
+
+
+#### Get User ####
+
+Request the user information for a particular userId.
+
+The following code snippets illustrate how to request a user's information in Objective-C and Swift.
+
+*Swift:*
+
+
+```
+#!swift
+
+// Get the user via it's id
+PhoenixManager.manager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
+    // Get the user and treat the error
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+// Get the user via it's id
+[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+    // Get the user and treat the error
+}];
+
+
+```
+
+The 'getUser' method can return the following additional errors:
+
+* IdentityError.InvalidUserError : When the request can't be created with the provided user data (i.e. wrong userId, or authentication tokens).
+* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
+
+These errors will be wrapped within an NSError using as domain IdentityError.domain.
+
+
+
+#### Login ####
+
+If you have a registered account on the Phoenix platform you will be able to login to that account using the 'login' method:
+
+*Swift:*
+```
+#!swift
+
+phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+print("Logged in as: \(user)")
+})
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
 [phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
 NSLog(@"Logged in as: %@", user);
 }];
 
 ```
 
-You will then be logged in to a user's account (if 'authenticated' is true). Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method (as seen below).
+The 'login' method can return the following additional errors:
+
+* RequestError.AuthenticationFailedError: There was an issue that occurred during login, could be due to incorrect credentials.
+
+
+#### Logout ####
+
+Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method:
 
 *Swift:*
 ```
@@ -311,100 +458,23 @@ phoenix.identity.logout()
 
 
 
-## Phoenix Modules ##
-
-The Phoenix platform is composed of a series of modules that can be used as required by the developer.
-
-In this section, each modules are described, including its functions and sample code on how to use them.
-
-### Analytics Module ###
-
-The analytics module allows developers to effortlessly track several predefined events or their own custom events which can be used to determine user engagement and behavioural insights.
-
-Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
-
-How to track a custom Event:
-
-*Objective-C:*
-```
-#!objc
-
-// Create custom Event
-PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
-
-// Send event to Analytics module
-[[PHXPhoenixManager sharedManager].phoenix.analytics track:myTestEvent];
-
-```
-
-*Swift:*
-Note: there are some optional fields in Swift that default to zero/nil if missing.
-
-```
-#!swift
-
-// Create custom Event
-let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
-
-// Send event to Analytics module
-PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
-
-```
-
-### Identity Module ###
-
-The identity module is responsible to perform user management within the Phoenix platform, allowing to create, retrieve and update users.
-
-Notice that calling this methods **won't** start using the user's credentials. 
-You'll need to perform an authentication with the new user's credentials in order to do so.
-
-Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.
-
-#### Create user ####
-
-The code to create a user for each language is as follows:
-
-*Objective-C:*
-
-```
-#!objc
-
-    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
-        firstName:firstname lastName:lastname avatarURL:avatarURL];
-
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
-        // Treat the user and error appropriately. Notice that the callback might be performed
-        // In a background thread. Use dispatch_async to handle it in the main thread.
-    }];
-
-```
-
-*Swift:*
-
-
-```
-#!swift
-        let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
-                    firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-        
-        PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
-            // Treat the user and error appropriately. Notice that the callback might be performed
-            // In a background thread. Use dispatch_async to handle it in the main thread.
-        })
-```
-
-Notice that the createUser method can return the following errors:
-
-* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
-* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-
-Those errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-#### Update user ####
+#### Update User ####
 
 The code to update a user for each language is as follows:
+
+*Swift:*
+
+
+```
+#!swift
+let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
+firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
+
+PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+// Treat the user and error appropriately. Notice that the callback might be performed
+// In a background thread. Use dispatch_async to handle it in the main thread.
+})
+```
 
 *Objective-C:*
 
@@ -421,71 +491,14 @@ firstName:firstname lastName:lastname avatarURL:avatarURL];
 
 ```
 
-*Swift:*
-
-
-```
-#!swift
-let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
-firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-
-PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// In a background thread. Use dispatch_async to handle it in the main thread.
-})
-```
-
-Notice that the createUser method can return the following errors:
+The 'updateUser' method can return the following additional errors:
 
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
+These errors will be wrapped within an NSError using as domain IdentityError.domain.
 
-Those errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
-#### Get User ####
-
-Request the user information for a particular userId.
-
-The following code snippets illustrate how to request a user's information in Objective-C and Swift.
-
-*Objective-C:*
-
-```
-#!objc
-
-// Get the user via it's id
-[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-    // Get the user and treat the error
-}];
-
-
-```
-
-*Swift:*
-
-
-```
-#!swift
-
-// Get the user via it's id
-PhoenixManager.manager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
-    // Get the user and treat the error
-}
-
-
-```
-
-Notice that the get user methods can return the following errors:
-
-* IdentityError.InvalidUserError : When the request can't be created with the provided user data (i.e. wrong userId, or authentication tokens).
-* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
-
-Those errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-Also, the input and output of this operation is not stored by the SDK, and the developer is responsible to do so if required in its app.
 
 
 ### Location Module ###
