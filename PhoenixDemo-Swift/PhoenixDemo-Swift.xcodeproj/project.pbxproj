@@ -19,6 +19,7 @@
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
+		FE18F93E1B8601FE00DCF2EF /* PhoenixLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F93D1B8601FE00DCF2EF /* PhoenixLocationManager.swift */; };
 		FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; };
 		FEF4A7561B7A28F800CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
+		FE18F93D1B8601FE00DCF2EF /* PhoenixLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocationManager.swift; sourceTree = "<group>"; };
 		FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				BB3534861B6FAB5800C67500 /* PhoenixManager.swift */,
+				FE18F93D1B8601FE00DCF2EF /* PhoenixLocationManager.swift */,
 			);
 			name = Phoenix;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 				FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
 				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
+				FE18F93E1B8601FE00DCF2EF /* PhoenixLocationManager.swift in Sources */,
 				BB3534851B6FAACA00C67500 /* CreateUserViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

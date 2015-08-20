@@ -7,10 +7,12 @@
 //
 
 #import "PHXPhoenixManager.h"
+#import "PHXPhoenixLocationManager.h"
 
 @interface PHXPhoenixManager()
 
-@property(nonatomic,readwrite,strong) Phoenix* phoenix;
+@property (nonatomic) Phoenix* phoenix;
+@property (nonatomic) PHXPhoenixLocationManager *locationManager;
 
 @end
 
@@ -26,6 +28,7 @@
         NSError *err;
         instance = [[PHXPhoenixManager alloc] init];
         instance.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        instance.locationManager = [[PHXPhoenixLocationManager alloc] init];
         
         if (err != nil) {
             // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
@@ -45,6 +48,8 @@
     [self.phoenix startup:^(NSError * _Nonnull error) {
         NSLog(@"Fundamental error occurred: %@", error);
     }];
+    [self.locationManager requestAuthorization];
+    
     // Track test event.
     PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
     [self.phoenix.analytics track:myTestEvent];

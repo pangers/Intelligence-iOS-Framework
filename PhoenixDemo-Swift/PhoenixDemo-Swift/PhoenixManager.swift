@@ -6,20 +6,19 @@
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-import Foundation
-
 import PhoenixSDK
-
 
 class PhoenixManager {
     
-    static var manager:PhoenixManager = PhoenixManager()
+    static let manager: PhoenixManager = PhoenixManager()
     
-    private(set) var phoenix:Phoenix?
+    private let locationManager: PhoenixLocationManager
+    internal var phoenix: Phoenix?
     
     init(){
+        locationManager = PhoenixLocationManager()
         do {
-            self.phoenix = try Phoenix(withFile: "PhoenixConfiguration")
+            phoenix = try Phoenix(withFile: "PhoenixConfiguration")
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -38,12 +37,14 @@ class PhoenixManager {
         }
     }
     
-    static func startup() {
-        PhoenixManager.manager.phoenix?.startup({ (error) -> () in
+    func startup() {
+        // Startup all modules.
+        phoenix?.startup { (error) -> () in
             print("Fundamental error occurred \(error)")
-        })
-        // Track test event.
+        }
+        locationManager.requestAuthorization()
+        // Register test event.
         let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
-        PhoenixManager.manager.phoenix?.analytics.track(testEvent)
+        phoenix?.analytics.track(testEvent)
     }
 }
