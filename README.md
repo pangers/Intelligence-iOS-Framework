@@ -446,4 +446,4 @@ Also, the input and output of this operation is not stored by the SDK, and the d
 
 The location module is responsible for managing a user's location and handling events for entering/exiting geofences. This module will request user location when enabled and currently manages all logic internally.
 
-Developers can disable geofence downloading and checking by setting 'use_geofences' to false in the Configuration file.
+Developers can disable geofences by setting 'use_geofences' to false in the Configuration file.
