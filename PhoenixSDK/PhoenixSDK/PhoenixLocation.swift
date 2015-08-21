@@ -9,11 +9,11 @@
 import Foundation
 import CoreLocation
 
-/// A generic PhoenixGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
-internal typealias PhoenixGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
+/// A generic PhoenixDownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
+internal typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
 /// Called when a geofence is entered or exited.
-internal typealias PhoenixGeofenceEnteredExitedCallback = (geofence: Geofence, entered: Bool) -> Void
+internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool) -> Void
 
 internal extension Phoenix {
     
@@ -25,7 +25,7 @@ internal extension Phoenix {
         /// Configuration instance used for NSURLRequests.
         private let configuration: Phoenix.Configuration
         /// Callback for enter/exit geofences.
-        internal let geofenceCallback: PhoenixGeofenceEnteredExitedCallback
+        internal let geofenceCallback: PhoenixGeofenceCallback
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
         internal lazy var enteredGeofences = [Geofence]()
         /// Flag used for testing to disable CLLocationManager.
@@ -49,7 +49,7 @@ internal extension Phoenix {
         /// - parameter configuration:    Configuration used to configure requests.
         /// - parameter geofenceCallback: Called on enter/exit of geofence.
         /// - returns: Returns a Location object.
-        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, geofenceCallback: PhoenixGeofenceEnteredExitedCallback) {
+        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, geofenceCallback: PhoenixGeofenceCallback) {
             self.network = network
             self.configuration = configuration
             self.geofenceCallback = geofenceCallback
@@ -86,7 +86,7 @@ internal extension Phoenix {
         
         /// Download a list of geofences.
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
-        internal func downloadGeofences(callback: PhoenixGeofencesCallback?) throws {
+        internal func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) throws {
             if configuration.useGeofences {
                 let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
                 
