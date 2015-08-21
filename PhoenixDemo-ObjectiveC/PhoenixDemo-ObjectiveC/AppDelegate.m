@@ -15,9 +15,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
     
-    // startup the manager
-    [[PHXPhoenixManager sharedManager] startup];
-    
+    // Initialize the manager responsible for Phoenix and Location Manager, calling 'startup' method.
+    [PHXPhoenixManager phoenix];
 	return YES;
 }
 

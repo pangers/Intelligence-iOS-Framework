@@ -40,7 +40,7 @@
     NSString* lastname = self.lastName.text;
     NSString* avatarURL = self.avatarURL.text;
     
-    PHXConfiguration *configuration = [[PHXPhoenixManager sharedManager].phoenix configuration];
+    PHXConfiguration *configuration = [PHXPhoenixManager.phoenix configuration];
     NSInteger companyID = configuration.companyId;
     
     PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password firstName:firstname lastName:lastname avatarURL:avatarURL];
@@ -49,7 +49,7 @@
     
     __weak typeof(self) weakSelf = self;
     
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(PHXUser* _Nullable user, NSError * _Nullable error) {
+    [PHXPhoenixManager.phoenix.identity createUser:user callback:^(PHXUser* _Nullable user, NSError * _Nullable error) {
         [weakSelf showProgress:NO];
 
         if ( error != nil ) {

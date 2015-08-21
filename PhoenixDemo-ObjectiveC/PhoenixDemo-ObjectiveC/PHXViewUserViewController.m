@@ -30,14 +30,6 @@
     [self showUser];
 }
 
--(Phoenix*) phoenix {
-    return [PHXPhoenixManager sharedManager].phoenix;
-}
-
--(id<PhoenixIdentity>) phoenixIdentity {
-    return [self phoenix].identity;
-}
-
 -(void)setUser:(PHXUser*)user
 {
     _user = user;
@@ -75,6 +67,10 @@
             self.infoLabel.text = info;
         }
     });
+}
+
+-(id<PhoenixIdentity>) phoenixIdentity {
+    return PHXPhoenixManager.phoenix.identity;
 }
 
 -(void)searchBarSearchButtonClicked:(nonnull UISearchBar *)searchBar

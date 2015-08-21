@@ -75,12 +75,8 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     }
 }
 
-- (Phoenix*)phoenix {
-    return [[PHXPhoenixManager sharedManager] phoenix];
-}
-
 - (BOOL)loggedIn {
-    return [[[self phoenix] identity] isLoggedIn];
+    return [PHXPhoenixManager.phoenix.identity isLoggedIn];
 }
 
 - (void)viewDidLoad {
@@ -145,7 +141,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
             }];
             return;
         }
-        [self.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+        [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
             currentStatus = self.loggedIn ? PHXLoggedIn : PHXLoginFailed;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
@@ -161,7 +157,7 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 
 - (void)logout {
     currentStatus = PHXLogin;
-    [self.phoenix.identity logout];
+    [PHXPhoenixManager.phoenix.identity logout];
     [self.tableView reloadData];
 }
 
