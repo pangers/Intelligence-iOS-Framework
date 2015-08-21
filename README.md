@@ -501,8 +501,37 @@ These errors will be wrapped within an NSError using as domain IdentityError.dom
 
 
 
-### Location Module ###
+## Location Module ##
 
-The location module is responsible for managing a user's location and handling events for entering/exiting geofences. This module will request user location when enabled and currently manages all logic internally.
+The location module is responsible for managing a user's location in order to track entering/exiting geofences and add this information to analytics events. 
 
-Developers can disable geofences by setting 'use_geofences' to false in the Configuration file.
+Developers can disable geofences by setting 'use_geofences' to false in the Configuration file, however if they still want to include user's location in analytics they will still need to request permission for the users location.
+
+Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
+
+Furthermore, you will need to manage the request for permissions by implementing the following code:
+
+*Swift:*
+
+```
+#!swift
+
+    // Request location access.
+    if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
+        locationManager.requestAlwaysAuthorization()
+    }
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
+        [self.locationManager requestAlwaysAuthorization];
+    }
+
+```
+
+
