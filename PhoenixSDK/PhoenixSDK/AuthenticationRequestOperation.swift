@@ -63,8 +63,8 @@ internal extension Phoenix {
             } else {
                 request = NSURLRequest.phx_requestForAuthenticationWithClientCredentials(configuration)
             }
-            let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
             
+            let preparedRequest = request.phx_preparePhoenixRequest(withAuthentication: authentication)
             self.input = preparedRequest
             
             self.completionBlock = { [weak self] in
@@ -75,7 +75,7 @@ internal extension Phoenix {
         /// Performs a request oeration
         override func main() {
             guard let request = input else {
-                assert(false, "No input")
+                assert(false, "Expected input, some one has reset the 'input' variable after the class was initialized.")
                 return
             }
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
