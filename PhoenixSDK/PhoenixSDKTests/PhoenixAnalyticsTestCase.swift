@@ -57,6 +57,22 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(json[Phoenix.Event.EventDateKey] as? String != nil, "Expected time interval")
     }
     
+    func testEventQueue() {
+        let myQueue = PhoenixEventQueue { (events, completion) -> () in
+            
+        }
+        XCTAssert(myQueue.maxEvents == 100, "Expected 100 max")
+        XCTAssert(myQueue.isPaused, "Expected to start paused")
+        myQueue.runTimer()
+        myQueue.fire(withCompletion: nil)
+        myQueue.startQueue()
+        myQueue.fire(withCompletion: nil)
+        XCTAssertFalse(myQueue.isPaused, "Expected to be paused after start")
+        myQueue.stopQueue()
+        myQueue.fire(withCompletion: nil)
+        XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
+    }
+    
     // MARK:- Geofences
     
     /// Test if event type is correct and id matches.

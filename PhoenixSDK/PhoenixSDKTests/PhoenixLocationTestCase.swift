@@ -174,6 +174,19 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         }
     }
     
+    func testLoadGeofencesMissingJSON() {
+        do {
+            try Geofence.geofences(withJSON: nil)
+            XCTAssert(false, "Cannot load with nil")
+        }
+        catch let err as RequestError {
+            XCTAssert(err == RequestError.ParseError, "Expected parse error")
+        }
+        catch {
+            XCTAssert(false, "Unexpected")
+        }
+    }
+    
     /// Test valid read
     func testStoreGeofences() {
         do {

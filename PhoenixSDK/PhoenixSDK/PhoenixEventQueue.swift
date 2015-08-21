@@ -106,7 +106,7 @@ internal class PhoenixEventQueue {
     }
     
     /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
-    @objc private func runTimer() {
+    @objc internal func runTimer() {
         fire(withCompletion: nil)
     }
     

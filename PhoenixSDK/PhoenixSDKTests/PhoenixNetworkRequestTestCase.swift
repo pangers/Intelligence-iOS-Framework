@@ -30,6 +30,9 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         
         phoenix?.network.enqueueAuthenticationOperationIfRequired()
         
+        // Test it's only called once.
+        phoenix?.network.enqueueAuthenticationOperationIfRequired()
+        
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
             XCTAssert(!self.checkAuthenticated, "Phoenix is not authenticated after a successful response")

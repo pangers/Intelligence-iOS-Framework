@@ -243,6 +243,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] != nil, "Create date must be set")
         XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] != nil, "Request ID must be set")
+        XCTAssert(installation.isValidToUpdate)
         return installation
     }
     
