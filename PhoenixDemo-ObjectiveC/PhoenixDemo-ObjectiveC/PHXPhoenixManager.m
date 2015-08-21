@@ -7,16 +7,18 @@
 //
 
 #import "PHXPhoenixManager.h"
+#import "PHXPhoenixLocationManager.h"
 
 @interface PHXPhoenixManager()
 
-@property(nonatomic,readwrite,strong) Phoenix* phoenix;
+@property (nonatomic) Phoenix* phoenix;
+@property (nonatomic) PHXPhoenixLocationManager *locationManager;
 
 @end
 
 @implementation PHXPhoenixManager
 
-+(instancetype) sharedManager {
++ (instancetype)sharedInstance {
     static PHXPhoenixManager* instance;
     
     static dispatch_once_t onceToken;
@@ -34,18 +36,27 @@
         }
         
         NSParameterAssert(err == nil && instance.phoenix != nil);
+        
+        instance.locationManager = [[PHXPhoenixLocationManager alloc] init];
+        
+        // Start phoenix, will throw a network error if something is configured incorrectly.
+        [instance.phoenix startup:^(NSError * _Nonnull error) {
+            NSLog(@"Fundamental error occurred: %@", error);
+        }];
+        
+        // Ask user to enable location services.
+        [instance.locationManager requestAuthorization];
+        
+        // Track test event.
+        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+        [instance.phoenix.analytics track:myTestEvent];
     });
     
     return instance;
 }
 
--(void) startup
-{
-    // Start phoenix, will throw a network error if something is configured incorrectly.
-    [self.phoenix startup:^(NSError * _Nonnull error) {
-        NSLog(@"Fundamental error occurred: %@", error);
-    }];
++ (Phoenix*)phoenix {
+    return [[self sharedInstance] phoenix];
 }
-
 
 @end

@@ -59,7 +59,7 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
 extension Phoenix {
     
     /// The PhoenixIdentity implementation.
-    final class Identity : PhoenixIdentity {
+    final class Identity : PhoenixIdentity, PhoenixModuleProtocol {
 
         /// A reference to the network manager
         private let network:Network
@@ -76,17 +76,20 @@ extension Phoenix {
         ///     - configuration: Configuration instance that will be used for configuring requests.
         ///     - version: Version class will be used for interrogating app to get the current version.
         ///     - storage: Storage class will be used for storing information about the installation.
-        init(withNetwork network:Network, configuration:Phoenix.Configuration, version: PhoenixApplicationVersionProtocol, storage: PhoenixInstallationStorageProtocol) {
+        init(withNetwork network:Network, configuration:Phoenix.Configuration, applicationVersion: PhoenixApplicationVersionProtocol, installationStorage: PhoenixInstallationStorageProtocol) {
             self.network = network
             self.configuration = configuration
-            self.installation = Phoenix.Installation(configuration: configuration, version: version, storage: storage)
+            self.installation = Phoenix.Installation(configuration: configuration, applicationVersion: applicationVersion, installationStorage: installationStorage)
         }
         
-        internal func startup() {
+        func startup() {
             createInstallation(callback: nil)
             updateInstallation(callback: nil)
         }
         
+        func shutdown() {
+            // Nothing to do currently.
+        }
         
         // MARK:- Login
         
@@ -175,14 +178,24 @@ extension Phoenix {
             // Execute the network operation
             network.executeNetworkOperation(operation)
         }
-
-        // MARK:- Installation
         
-        /// - Returns: An installation object to use in place of self.installation object.
-        /// - Parameter installation: Optional installation object to use instead of self.installation.
-        internal func getInstallation(installation obj: Installation? = nil) -> Installation {
-            return obj != nil ? obj! : self.installation
+        // MARK: Private
+        
+        /// Gets a user data from the current user credentials.
+        /// - Parameters:
+        ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
+        ///     - callback: The user callback to pass. Will be called with either an error or a user.
+        private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
+            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration, callback: callback)
+            
+            // This operation will use a temporary access token obtained from login request.
+            operation.disposableLoginToken = disposableLoginToken
+            
+            // Execute the network operation
+            network.executeNetworkOperation(operation)
         }
+        
+        // MARK:- Installation
         
         /// Schedules a create installation request if first install.
         /// - Parameters:
@@ -213,22 +226,12 @@ extension Phoenix {
                 callback?(installation: install, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyUpdated.rawValue, userInfo: nil))
             }
         }
-
-
-        // MARK:- Private
-
-        /// Gets a user data from the current user credentials.
-        /// - Parameters:
-        ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
-        ///     - callback: The user callback to pass. Will be called with either an error or a user.
-        private func getMe(disposableLoginToken: String, callback:PhoenixUserCallback) {
-            let operation = GetUserMeRequestOperation(session: network.sessionManager, authentication: network.authentication, configuration: configuration, callback: callback)
-            
-            // This operation will use a temporary access token obtained from login request.
-            operation.disposableLoginToken = disposableLoginToken
-            
-            // Execute the network operation
-            network.executeNetworkOperation(operation)
+        
+        // MARK: Helpers
+        /// - Returns: An installation object to use in place of self.installation object.
+        /// - Parameter installation: Optional installation object to use instead of self.installation.
+        internal func getInstallation(installation obj: Installation? = nil) -> Installation {
+            return obj != nil ? obj! : self.installation
         }
     }
 }

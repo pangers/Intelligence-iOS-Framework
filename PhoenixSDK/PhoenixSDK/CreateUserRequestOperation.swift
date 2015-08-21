@@ -8,19 +8,24 @@
 
 import Foundation
 
-/// Operation to wrap the create user request.
+/// Operation for Create User API.
 internal final class CreateUserRequestOperation : PhoenixNetworkRequestOperation {
     
-    /// The output user created, as provided by the backend
+    /// The output user created, as provided by the backend.
     var user: Phoenix.User?
     
     /// The configuration used through Phoenix.
     let configuration: Phoenix.Configuration
 
-    /// Default initializer with all required parameters
+    /// Create new operation for Create User API.
+    /// - parameter session:        NSURLSession to use.
+    /// - parameter user:           User object containing details we want to create.
+    /// - parameter authentication: Authentication class required for super class.
+    /// - parameter configuration:  Configuration class used for configuring request.
+    /// - returns: A new CreateUserRequestOperation instance.
     init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration)
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }

@@ -45,7 +45,7 @@ internal enum HTTPRequestMethod : String {
 
 internal extension Phoenix {
     
-    /// Acts as a Network manager for the Phoenix SDK, encapsulating authenticationg requests within it.
+    /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
     internal final class Network {
         
         // MARK: Instance variables
@@ -67,7 +67,7 @@ internal extension Phoenix {
         private let configuration: Phoenix.Configuration
         
         /// The current phoenix authentication.
-        internal var authentication: Authentication
+        internal let authentication: Authentication
         
         /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
         private var authenticationOperation:AuthenticationRequestOperation?
@@ -205,6 +205,7 @@ internal extension Phoenix {
         /// - Parameter callback: Contains data, response, and error information from request.
         /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
         private func createAuthenticationOperation() {
+            if authenticationOperation != nil { return }
             // If the request cannot be build we should exit.
             // This may need to raise some sort of warning to the developer (currently
             // only due to misconfigured properties - which should be enforced by Phoenix initializer).

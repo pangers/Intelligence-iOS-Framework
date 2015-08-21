@@ -98,6 +98,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             XCTAssert(self.configuration?.useGeofences == true)
             XCTAssert(self.configurationDisabled?.useGeofences == false)
         }
+            
         catch{
             XCTAssert(false, "Must provide valid config")
         }
@@ -112,7 +113,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -154,7 +155,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -171,6 +172,19 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
+        }
+    }
+    
+    func testLoadGeofencesMissingJSON() {
+        do {
+            try Geofence.geofences(withJSON: nil)
+            XCTAssert(false, "Cannot load with nil")
+        }
+        catch let err as RequestError {
+            XCTAssert(err == RequestError.ParseError, "Expected parse error")
+        }
+        catch {
+            XCTAssert(false, "Unexpected")
         }
     }
     
@@ -236,6 +250,4 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             XCTAssert(false)
         }
     }
-    
-    // TODO: Performance tests around loading hundreds of Geofence objects. Max 200 in new API.
 }

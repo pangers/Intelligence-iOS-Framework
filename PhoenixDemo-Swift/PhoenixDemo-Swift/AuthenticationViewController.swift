@@ -41,10 +41,7 @@ class AuthenticationViewController: UITableViewController {
         }
     }
     private var loggedIn: Bool {
-        return phoenix?.identity.isLoggedIn == true
-    }
-    private var phoenix: Phoenix? {
-        return PhoenixManager.manager.phoenix
+        return PhoenixManager.phoenix?.identity.isLoggedIn == true
     }
     
     override func viewDidLoad() {
@@ -125,7 +122,7 @@ class AuthenticationViewController: UITableViewController {
                 reloadUI(.Login)
                 return
             }
-            self?.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
                 reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
                 if self?.loginMessage == .LoggedIn {
                     self?.loggedInUser = user
@@ -140,7 +137,7 @@ class AuthenticationViewController: UITableViewController {
     
     func logout() {
         loginMessage = .Login
-        phoenix?.identity.logout()
+        PhoenixManager.phoenix?.identity.logout()
         tableView.reloadData()
     }
 }

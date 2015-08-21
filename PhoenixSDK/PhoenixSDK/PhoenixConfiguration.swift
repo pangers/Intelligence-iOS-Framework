@@ -24,7 +24,6 @@ public extension Phoenix {
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
-    // TODO: Make final so Developers cannot override this!
     @objc(PHXConfiguration) public class Configuration: NSObject {
         
         /// Flag specifying whether or not to download geofences on launch.
@@ -59,7 +58,7 @@ public extension Phoenix {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Throws: A **ConfigurationError** if the configuration file is incorrectly formatted.
-        convenience init(fromFile file:String, inBundle bundle:NSBundle) throws {
+        public convenience init(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws {
             self.init()
             try self.readFromFile(file, inBundle: bundle)
         }
@@ -70,7 +69,7 @@ public extension Phoenix {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Returns: A configuration with the contents of the file.
-        class func configuration(fromFile file:String, inBundle bundle:NSBundle) throws -> Configuration {
+        public class func configuration(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws -> Configuration {
             let configuration = Configuration()
             try configuration.readFromFile(file, inBundle: bundle)
             return configuration
@@ -116,7 +115,12 @@ public extension Phoenix {
             }
             
             // Fetch from the contents dictionary
-            self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
+            do {
+                self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
+            }
+            catch {
+                self.useGeofences = true
+            }
             self.clientID = try value(forKey: .ClientID, inContents:contents)
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)

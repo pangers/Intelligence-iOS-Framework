@@ -30,15 +30,7 @@
     [self showUser];
 }
 
--(Phoenix*) phoenix {
-    return [PHXPhoenixManager sharedManager].phoenix;
-}
-
--(id<PhoenixIdentity>) phoenixIdentity {
-    return [self phoenix].identity;
-}
-
--(void)setUser:(PHXPhoenixUser*)user
+-(void)setUser:(PHXUser*)user
 {
     _user = user;
     
@@ -77,12 +69,16 @@
     });
 }
 
+-(id<PhoenixIdentity>) phoenixIdentity {
+    return PHXPhoenixManager.phoenix.identity;
+}
+
 -(void)searchBarSearchButtonClicked:(nonnull UISearchBar *)searchBar
 {
     NSInteger userId = [[[NSNumberFormatter alloc] init] numberFromString:searchBar.text].integerValue;
     [searchBar resignFirstResponder];
     
-    [[self phoenixIdentity] getUser:userId callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+    [[self phoenixIdentity] getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;
@@ -102,7 +98,7 @@
     self.user.lastName = self.lastname.text;
     self.user.avatarURL = self.avatarURL.text;
     
-    [[self phoenixIdentity] updateUser:self.user callback:^(PHXPhoenixUser * _Nullable user, NSError * _Nullable error) {
+    [[self phoenixIdentity] updateUser:self.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;

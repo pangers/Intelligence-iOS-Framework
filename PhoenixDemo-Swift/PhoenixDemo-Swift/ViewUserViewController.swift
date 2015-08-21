@@ -27,10 +27,6 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         }
     }
     
-    var phoenix: Phoenix? {
-        return PhoenixManager.manager.phoenix
-    }
-    
     override func viewDidLoad() {
         displayUser()
     }
@@ -72,7 +68,7 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
-        self.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+        PhoenixManager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
             if let user = user {
                 self.user = user
                 self.showInformation(" ")
@@ -103,7 +99,7 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         searchBar.resignFirstResponder()
         
         // gets the user by its id and treats it in the callback.
-        phoenix?.identity.getUser(userId) { (user, error) -> Void in
+        PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
             if user != nil {
                 self.user = user
             }

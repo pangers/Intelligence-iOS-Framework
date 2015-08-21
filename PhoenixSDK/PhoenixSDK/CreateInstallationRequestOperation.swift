@@ -8,18 +8,25 @@
 
 import Foundation
 
-/// Operation to wrap the create user request.
+/// Operation for Create Installation API.
 internal final class CreateInstallationRequestOperation : PhoenixNetworkRequestOperation {
-
+    
+    /// Installation object to retrieve information from.
     let installation: Phoenix.Installation
     
+    /// Callback to trigger when operation completes.
     let callback: PhoenixInstallationCallback?
     
-    /// Default initializer with all required parameters
-    init(session:NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication, callback: PhoenixInstallationCallback?) {
+    /// Create new operation for Create Installation API.
+    /// - parameter session:        NSURLSession to use.
+    /// - parameter installation:   Installation object to retrieve information from.
+    /// - parameter authentication: Authentication class required for super class.
+    /// - parameter callback:       Callback to trigger when operation completes.
+    /// - returns: A new CreateInstallationRequestOperation instance.
+    init(session: NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication, callback: PhoenixInstallationCallback?) {
         self.installation = installation
         self.callback = callback
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation)
+        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation)
         super.init(withSession: session, request: request, authentication: authentication)
     }
     

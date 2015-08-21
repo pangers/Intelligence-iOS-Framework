@@ -19,17 +19,16 @@ internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOpe
     ///     - network: The network that will be used.
     ///     - configuration: The configuration class to use.
     init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
-        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration)
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration)
         geofences = []
         super.init(withNetwork: network, request: request)
     }
     
     override func main() {
         super.main()
-        defer {
-            if geofences?.count == 0 || error != nil {
-                error = NSError(domain: LocationError.domain, code: LocationError.RequestFailedError.rawValue, userInfo: nil)
-            }
+        if error != nil {
+            error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+            return
         }
         do {
             if let dictionary = output?.data?.phx_jsonDictionary {
@@ -37,6 +36,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOpe
             }
         } catch _ { // Suppress default 'error' let, so we can use our instance variable.
             error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            return
         }
     }
     

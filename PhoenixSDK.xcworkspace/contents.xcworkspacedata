@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Tigerspike.gpx">
+   </FileRef>
+   <FileRef
       location = "group:PhoenixSDK/PhoenixSDK.xcodeproj">
    </FileRef>
    <FileRef

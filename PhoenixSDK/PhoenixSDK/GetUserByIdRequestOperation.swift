@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// Operation used to retrieve a user data based on its id.
+/// Operation for Get User API.
 internal final class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation {
 
     /// The user that was loaded during the request. Can be nil if the request failed or didn't yet occur.
@@ -17,10 +17,15 @@ internal final class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation
     /// The configuration that is in use in Phoenix.
     let configuration: Phoenix.Configuration
     
-    /// Default initializer with all required parameters
+    /// Create new operation for Get User API.
+    /// - parameter session:        NSURLSession to use.
+    /// - parameter userId:         ID of user to retrieve.
+    /// - parameter authentication: Authentication class required for super class.
+    /// - parameter configuration:  Configuration class used for configuring request.
+    /// - returns: A new GetUserByIdRequestOperation instance.
     init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForGetUserById(userId,withConfiguration:configuration)
+        let request = NSURLRequest.phx_URLRequestForGetUserById(userId,withConfiguration:configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }

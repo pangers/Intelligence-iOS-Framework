@@ -26,20 +26,21 @@ extension Phoenix {
         /// Configuration to use for configuring the installation request.
         let configuration: Configuration
         /// Bundle of application used to get version and build number.
-        let version: PhoenixApplicationVersionProtocol
+        let applicationVersion: PhoenixApplicationVersionProtocol
         /// User defaults to store response data for update installation request.
-        let storage: PhoenixInstallationStorageProtocol
+        let installationStorage: PhoenixInstallationStorageProtocol
         
         // MARK:- Parameters used in requests
+        private let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
         private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
         private var modelReference: String { return UIDevice.currentDevice().model }
         private var deviceTypeId: String { return "Smartphone" }
-        private var installationId: String { return storage.phx_installationID }
-        private var installedVersion: String { return version.phx_applicationVersionString ?? "" }
+        private var installationId: String { return installationStorage.phx_installationID ?? phoenixInstallationDefaultCreateID }
+        private var installedVersion: String { return applicationVersion.phx_applicationVersionString ?? "" }
         private var applicationId: Int { return configuration.applicationID }
         private var projectId: Int { return configuration.projectID }
-        private var requestId: Int? { return storage.phx_installationRequestID }
-        private var createDate: String? { return storage.phx_installationCreateDateString }
+        private var requestId: Int? { return installationStorage.phx_installationRequestID }
+        private var createDate: String? { return installationStorage.phx_installationCreateDateString }
         
         /// - Returns: True if valid to send an update with this object.
         var isValidToUpdate: Bool {
@@ -48,12 +49,12 @@ extension Phoenix {
         
         /// - Returns: True if app is a fresh install or request has not made it to Phoenix yet.
         var isNewInstallation: Bool {
-            return storage.phx_isNewInstallation
+            return installationStorage.phx_isNewInstallation
         }
         
         /// - Returns: True if app is updated or request has not made it to Phoenix yet.
         var isUpdatedInstallation: Bool {
-            return storage.phx_isInstallationUpdated(version.phx_applicationVersionString)
+            return installationStorage.phx_isInstallationUpdated(applicationVersion.phx_applicationVersionString)
         }
         
         /// - Returns: JSON Dictionary representation used in Installation requests.
@@ -84,10 +85,10 @@ extension Phoenix {
                 id = json[Installation.RequestId] as? Int,
                 installedVersion = json[Installation.InstalledVersion] as? String,
                 createDate = json[Installation.CreateDate] as? String {
-                    storage.phx_storeInstallationID(installation)
-                    storage.phx_storeInstallationCreateDate(createDate)
-                    storage.phx_storeInstallationRequestID(id)
-                    storage.phx_storeApplicationVersion(installedVersion)
+                    installationStorage.phx_storeInstallationID(installation)
+                    installationStorage.phx_storeInstallationCreateDate(createDate)
+                    installationStorage.phx_storeInstallationRequestID(id)
+                    installationStorage.phx_storeApplicationVersion(installedVersion)
                     return true
             }
             return false

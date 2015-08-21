@@ -8,8 +8,12 @@
 
 import Foundation
 
+func == (lhs: Geofence, rhs: Geofence) -> Bool {
+    return lhs.id == rhs.id
+}
+
 /// An instance of a geofence with a latitude/longitude/radius combination.
-internal final class Geofence {
+internal final class Geofence: Equatable {
     /// Longitude of the geofence.
     var longitude: Double = 0.0
     /// Latitude of the geofence.

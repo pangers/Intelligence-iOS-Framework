@@ -49,7 +49,7 @@ private enum UserType : String {
 public extension Phoenix {
 
     /// The user class implementation
-    @objc(PHXPhoenixUser) public final class User : NSObject {
+    @objc(PHXUser) public final class User : NSObject {
         
         /// The user Id as a let
         @objc public let userId:Int
@@ -72,7 +72,15 @@ public extension Phoenix {
         /// The avatar URL
         @objc public var avatarURL:String?
         
-        /// Default initializer receiveing all parameters required.
+        /// Initializer a new User object.
+        /// - parameter userId:    Id for this user, required for Update User call.
+        /// - parameter companyId: Id of company this user belongs to.
+        /// - parameter username:  Username for this user, must be included.
+        /// - parameter password:  Password for this user, must be included.
+        /// - parameter firstName: First name for this user.
+        /// - parameter lastName:  Last name of this user.
+        /// - parameter avatarURL: URL pointing at the users avatar.
+        /// - returns: A new User object.
         public init(userId:Int, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.userId = userId
             self.companyId = companyId
@@ -137,35 +145,26 @@ public extension Phoenix {
         /// - Returns: Provides a JSONDictionary with the user data.
         func toJSON() -> JSONDictionary {
             var dictionary:JSONDictionary = [
-                companyIdKey: self.companyId,
-                usernameKey: self.username,
-                firstNameKey: self.firstName,
-                lockingCountKey: self.lockingCount,
-                referenceKey: self.reference,
-                isActiveKey: self.isActive,
-                metadataKey: self.metadata,
-                userTypeKey: self.userTypeId,
+                companyIdKey: companyId,
+                usernameKey: username,
+                firstNameKey: firstName,
+                lockingCountKey: lockingCount,
+                referenceKey: reference,
+                isActiveKey: isActive,
+                metadataKey: metadata,
+                userTypeKey: userTypeId,
             ]
-            
-            /// Optioanlly set a key if there is a valid value
-            func optionallySet(key: String, value: AnyObject?) {
-                // Check if value exists
-                if let value = value {
-                    // Set value for key
-                    dictionary[key] = value
-                } else {
-                    // Otherwise do not set key
-                }
-            }
-            // Optionally add a bunch of key-values to the dictionary...
-            optionallySet(lastNameKey, value: lastName)
-            optionallySet(passwordKey, value: password)
-            optionallySet(avatarURLKey, value: avatarURL)
             
             // If we have the user Id add it.
             if userId != invalidUserId {
                 dictionary[idKey] = userId
             }
+            
+            // Optionally add a bunch of key-values to the dictionary...
+            dictionary <-? (lastNameKey, lastName)
+            dictionary <-? (passwordKey, password)
+            dictionary <-? (avatarURLKey, avatarURL)
+            
             return dictionary
         }
         

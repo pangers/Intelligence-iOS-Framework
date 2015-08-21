@@ -8,19 +8,24 @@
 
 import UIKit
 
-/// Wraps the update user request within an operation.
+/// Operation for Update User API.
 class UpdateUserRequestOperation: PhoenixNetworkRequestOperation {
 
-    /// The output user created, as provided by the backend
+    /// The output user created, as provided by the backend.
     var user: Phoenix.User?
     
     /// The configuration used through Phoenix.
     let configuration: Phoenix.Configuration
     
-    /// Default initializer with all required parameters
+    /// Create new operation for User User API.
+    /// - parameter session:        NSURLSession to use.
+    /// - parameter user:           User object containing details we want to update (requires userId).
+    /// - parameter authentication: Authentication class required for super class.
+    /// - parameter configuration:  Configuration class used for configuring request.
+    /// - returns: A new UpdateUserRequestOperation instance.
     init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration)
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }

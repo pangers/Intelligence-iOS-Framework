@@ -21,7 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
-@property (strong, nonatomic) PHXPhoenixUser* lastCreatedUser;
+@property (strong, nonatomic) PHXUser* lastCreatedUser;
 
 @end
 
@@ -40,16 +40,16 @@
     NSString* lastname = self.lastName.text;
     NSString* avatarURL = self.avatarURL.text;
     
-    PHXConfiguration *configuration = [[PHXPhoenixManager sharedManager].phoenix configuration];
+    PHXConfiguration *configuration = [PHXPhoenixManager.phoenix configuration];
     NSInteger companyID = configuration.companyId;
     
-    PHXPhoenixUser* user = [[PHXPhoenixUser alloc] initWithCompanyId:companyID username:username password:password firstName:firstname lastName:lastname avatarURL:avatarURL];
+    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password firstName:firstname lastName:lastname avatarURL:avatarURL];
     
     [self showProgress:YES];
     
     __weak typeof(self) weakSelf = self;
     
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(PHXPhoenixUser* _Nullable user, NSError * _Nullable error) {
+    [PHXPhoenixManager.phoenix.identity createUser:user callback:^(PHXUser* _Nullable user, NSError * _Nullable error) {
         [weakSelf showProgress:NO];
 
         if ( error != nil ) {
@@ -104,7 +104,7 @@
     });
 }
 
-- (UIAlertAction*) createActionShowUser:(PHXPhoenixUser*)user
+- (UIAlertAction*) createActionShowUser:(PHXUser*)user
 {
     __weak typeof(self) weakSelf = self;
     return [UIAlertAction actionWithTitle:@"View user" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

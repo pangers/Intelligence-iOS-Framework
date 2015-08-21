@@ -17,6 +17,25 @@ internal typealias JSONDictionaryArray = [JSONDictionary]
 /// Alias for a dictionary loaded from a JSON object.
 internal typealias JSONDictionary = [String: AnyObject]
 
+/// Optionally set a value for a specific key and dictionary.
+/// - parameter key:        Key to set.
+/// - parameter value:      Value to set, optionally.
+/// - parameter dictionary: JSONDictionary to use.
+internal func setOptionalValue(value: AnyObject?, forKey key: String, inout inDictionary dictionary: [String: AnyObject]) {
+    guard let value = value else { return }
+    dictionary[key] = value
+}
+
+infix operator <-? { associativity right precedence 60 }
+
+/// Optionally set a value for a specific key in a dictionary. 
+/// Operator for setOptionalValue method.
+/// - parameter lhs: JSONDictionary to use.
+/// - parameter rhs: Key, Value? tuple.
+internal func <-? (inout lhs: JSONDictionary, rhs: (String, AnyObject?)) {
+    setOptionalValue(rhs.1, forKey: rhs.0, inDictionary: &lhs)
+}
+
 internal extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData
@@ -49,7 +68,6 @@ internal extension NSData {
 }
 
 internal extension Dictionary {
-    
     /// Converts a JSON Dictionary to NSData. Accepts any Dictionary type, not just the JSONDictionary we defined.
     /// - Returns: nil or NSData representation of JSON Object.
     func phx_toJSONData() -> NSData? {
