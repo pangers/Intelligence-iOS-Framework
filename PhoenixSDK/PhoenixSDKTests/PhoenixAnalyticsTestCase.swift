@@ -67,7 +67,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
         myQueue.fire(withCompletion: nil)
-        XCTAssertFalse(myQueue.isPaused, "Expected to be paused after start")
+        XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
         myQueue.stopQueue()
         myQueue.fire(withCompletion: nil)
         XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
@@ -401,25 +401,29 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test that having over 100 events in the queue will fire two calls.
     func test101EventsInQueueRequiresTwoCalls() {
-        var remaining: Int = 0
+        var comparisonCount: Int = 0
         let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
-            XCTAssert(events.count == remaining)
+            XCTAssert(events.count == comparisonCount)
             completion(error: nil)
         }
+        var remaining: Int = 0
         let analytics = (phoenix?.analytics as! Phoenix.Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        (0...100).map({ n -> Void in queue.enqueueEvent(eventJSON) })
+        (0...queue.maxEvents).map({ n -> Void in queue.enqueueEvent(eventJSON) })
         remaining = queue.eventArray.count
         XCTAssert(queue.eventArray.count == 101, "Expected 101 events to be saved")
         queue.isPaused = false
+        comparisonCount = remaining > queue.maxEvents ? queue.maxEvents : remaining
         queue.fire { (error) -> () in
             XCTAssertNil(error, "Expected nil error")
             XCTAssert(queue.eventArray.count == 1, "Expected empty array")
             remaining = queue.eventArray.count
         }
         XCTAssert(remaining == 1, "Expected one left")
+        comparisonCount = remaining > queue.maxEvents ? queue.maxEvents : remaining
+        XCTAssert(comparisonCount == 1, "Expected one")
         queue.fire { (error) -> () in
             XCTAssertNil(error, "Expected nil error")
             XCTAssert(queue.eventArray.count == 0, "Expected empty array")
