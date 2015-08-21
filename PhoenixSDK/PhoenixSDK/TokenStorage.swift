@@ -16,7 +16,7 @@ internal let accessTokenKey = "access_token"
 internal let expiresInKey = "expires_in"
 
 /// The protocol to implement in order to become a simple storage.
-@objc public protocol TokenStorage {
+@objc internal protocol TokenStorage {
     
     // Basic subscript implementation
     subscript(index: String) -> AnyObject? {get set}
@@ -25,7 +25,7 @@ internal let expiresInKey = "expires_in"
 
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
-extension TokenStorage {
+internal extension TokenStorage {
     var userId: Int? {
         get {
             return self[userIdKey] as? Int
