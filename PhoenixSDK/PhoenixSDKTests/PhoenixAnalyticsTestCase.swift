@@ -78,7 +78,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -118,7 +118,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -159,7 +159,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -195,7 +195,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -229,7 +229,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -265,7 +265,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -299,7 +299,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let eventsJSON: JSONDictionaryArray = [eventJSON]
         
         // Create request
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()

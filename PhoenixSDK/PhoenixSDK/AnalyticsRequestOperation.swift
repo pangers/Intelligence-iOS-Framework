@@ -29,7 +29,7 @@ internal final class AnalyticsRequestOperation: PhoenixNetworkRequestOperation {
         assert(eventsJSON.count > 0)
         self.callback = callback
         eventCount = eventsJSON.count
-        let request = NSURLRequest.phx_httpURLRequestForAnalytics(configuration, json: eventsJSON)
+        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration, json: eventsJSON)
         super.init(withNetwork: network, request: request)
     }
     

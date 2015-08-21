@@ -89,7 +89,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
         mockAuthenticationResponses(responses)
         
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration!).URL!
         mockResponseForURL(request,
             method: "GET",
             response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
@@ -133,7 +133,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
         mockAuthenticationResponses(responses)
         
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration!).URL!
         mockResponseForURL(request,
             method: "GET",
             response: (data: nil, statusCode:400, headers:nil))
@@ -204,7 +204,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     // Assures that when the user is not valid to create, an error is returned.
     func testCreateUserErrorOnUserCondition() {
         let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
         
         assertURLNotCalled(request)
         
@@ -219,7 +219,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserSuccess() {
         let user = fakeUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
 
         // Mock auth
         mockValidTokenStorage()
@@ -243,7 +243,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserFailure() {
         let user = fakeUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
 
         // Mock auth
         mockValidTokenStorage()
@@ -291,7 +291,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserFailureDueToPasswordSecurity() {
         let user = userWeakPassword
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(request)
@@ -314,7 +314,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserSuccess() {
         let user = fakeUpdateUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
         
         // Mock auth
         mockValidTokenStorage()
@@ -338,7 +338,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserFailure() {
         let user = fakeUpdateUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
         
         // Mock auth
         mockValidTokenStorage()
@@ -376,7 +376,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserFailureDueToPasswordSecurity() {
         let user = updateUserWeakPassword
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(request, method: HTTPRequestMethod.PUT.rawValue)
@@ -398,7 +398,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     func testGetUserByIdSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
         mockValidTokenStorage()
@@ -421,7 +421,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     func testGetUserByIdFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
         mockValidTokenStorage()
@@ -465,7 +465,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
     func testGetUserByIdNoUsersBack() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
         mockValidTokenStorage()

@@ -19,7 +19,7 @@ internal final class UpdateInstallationRequestOperation : PhoenixNetworkRequestO
     init(session:NSURLSession, installation: Phoenix.Installation, authentication:Phoenix.Authentication, callback: PhoenixInstallationCallback?) {
         self.installation = installation
         self.callback = callback
-        let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation)
+        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation)
         super.init(withSession: session, request: request, authentication: authentication)
     }
     

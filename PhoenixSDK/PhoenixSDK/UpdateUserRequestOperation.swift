@@ -20,7 +20,7 @@ class UpdateUserRequestOperation: PhoenixNetworkRequestOperation {
     /// Default initializer with all required parameters
     init(session:NSURLSession, user:Phoenix.User, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForUpdateUser(user, configuration: configuration)
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }

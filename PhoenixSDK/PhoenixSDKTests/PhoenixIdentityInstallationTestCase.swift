@@ -121,7 +121,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = prepareValidCreateInstallationObject()
         
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
         
         mockResponseForURL(request,
             method: "POST",
@@ -163,7 +163,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
         
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
         
         mockResponseForURL(request,
             method: "POST",
@@ -187,7 +187,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = prepareValidCreateInstallationObject()
         
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
         
         mockResponseForURL(request,
             method: "POST",
@@ -219,7 +219,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
-        let request = NSURLRequest.phx_httpURLRequestForCreateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
         assertURLNotCalled(request)
         
         identity?.createInstallation(installation) { (installation, error) -> Void in
@@ -252,7 +252,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = prepareValidUpdateInstallationObject()
         
-        mockResponseForURL(NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!,
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!,
             method: "PUT",
             response: (data: successfulInstallationUpdateResponse, statusCode:200, headers:nil))
         
@@ -293,7 +293,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = prepareValidUpdateInstallationObject()
         
-        let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
         
         mockResponseForURL(request,
             method: "PUT",
@@ -316,7 +316,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         
         let installation = prepareValidUpdateInstallationObject()
         
-        let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
         
         mockResponseForURL(request,
             method: "PUT",
@@ -342,7 +342,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         installation.updateWithJSON(jsonData)
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated version")
         
-        let request = NSURLRequest.phx_httpURLRequestForUpdateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
         assertURLNotCalled(request)
         
         identity?.updateInstallation(installation) { (installation, error) -> Void in

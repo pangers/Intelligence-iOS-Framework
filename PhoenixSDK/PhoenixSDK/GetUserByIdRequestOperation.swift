@@ -20,7 +20,7 @@ internal final class GetUserByIdRequestOperation: PhoenixNetworkRequestOperation
     /// Default initializer with all required parameters
     init(session:NSURLSession, userId:Int, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForGetUserById(userId,withConfiguration:configuration)
+        let request = NSURLRequest.phx_URLRequestForGetUserById(userId,withConfiguration:configuration)
         
         super.init(withSession: session, request: request, authentication: authentication)
     }

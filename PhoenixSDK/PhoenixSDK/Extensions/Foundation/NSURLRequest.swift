@@ -64,7 +64,7 @@ internal extension NSURLRequest {
             return NSURLRequest()
         }
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=client_credentials"
-        return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
+        return phx_URLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
     /// - Parameters:
@@ -78,14 +78,14 @@ internal extension NSURLRequest {
             return NSURLRequest()
         }
         let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=password&username=\(username)&password=\(password)"
-        return phx_httpURLRequestForAuthentication(configuration, postQuery:postQuery)
+        return phx_URLRequestForAuthentication(configuration, postQuery:postQuery)
     }
     
     /// - Parameters:
     ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
     ///     - postQuery: The query to be used in the given OAuth request
     /// - Returns: An authentication NSURLRequest built using the passed configuration and postQuery.
-    private class func phx_httpURLRequestForAuthentication(configuration: Phoenix.Configuration, postQuery:String) -> NSURLRequest {
+    private class func phx_URLRequestForAuthentication(configuration: Phoenix.Configuration, postQuery:String) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_oauthTokenURLPath(), relativeToURL: configuration.baseURL) {
             // Create URL encoded POST with query string
@@ -111,7 +111,7 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - user: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
             // Create URL encoded POST with query string
@@ -132,7 +132,7 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - withUser: The user to create.
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForUpdateUser(user: Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForUpdateUser(user: Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID, userId: user.userId), relativeToURL: configuration.baseURL) {
             
@@ -153,7 +153,7 @@ internal extension NSURLRequest {
     /// - Returns: An NSURLRequest to get the user with the used credentials.
     /// - Parameters:
     ///     - configuration: The configuration to use.
-    class func phx_httpURLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
@@ -164,7 +164,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create a given installation.
     /// - Parameter installation: Installation object used to configure this request.
-    class func phx_httpURLRequestForCreateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
+    class func phx_URLRequestForCreateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
             // Create URL encoded POST with query string
@@ -182,7 +182,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to update a given installation.
     /// - Parameter installation: Installation object used to configure this request.
-    class func phx_httpURLRequestForUpdateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
+    class func phx_URLRequestForUpdateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
             // Create URL encoded PUT with query string
@@ -202,7 +202,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to download geofences.
     /// - Parameter configuration: Configuration object used to configure this request.
-    class func phx_httpURLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID), relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
@@ -215,7 +215,7 @@ internal extension NSURLRequest {
     /// - Parameters:
     ///     - userId: The Id of the user that we want to get.
     ///     - withConfiguration: The configuration that is being currently used.
-    class func phx_httpURLRequestForGetUserById(userId:Int, withConfiguration configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForGetUserById(userId:Int, withConfiguration configuration:Phoenix.Configuration) -> NSURLRequest {
         // Configure url
         if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(userId)", relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
@@ -226,7 +226,7 @@ internal extension NSURLRequest {
     
     // MARK:- Analytics Module
     
-    class func phx_httpURLRequestForAnalytics(configuration:Phoenix.Configuration, json: JSONDictionaryArray) -> NSURLRequest {
+    class func phx_URLRequestForAnalytics(configuration:Phoenix.Configuration, json: JSONDictionaryArray) -> NSURLRequest {
         // Configure url
         let path = "\(phoenixAnalyticsAPIVersion.appendProjects(configuration.projectID))/events"
         if let url = NSURL(string: path, relativeToURL: configuration.baseURL) {

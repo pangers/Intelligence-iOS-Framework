@@ -21,7 +21,7 @@ internal final class GetUserMeRequestOperation : PhoenixNetworkRequestOperation 
     /// Default initializer with all required parameters
     init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration, callback: PhoenixUserCallback) {
         self.configuration = configuration
-        let request = NSURLRequest.phx_httpURLRequestForGetUserMe(configuration)
+        let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration)
         self.callback = callback
         super.init(withSession: session, request: request, authentication: authentication)
     }

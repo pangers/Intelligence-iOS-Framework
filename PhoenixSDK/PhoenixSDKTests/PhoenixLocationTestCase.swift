@@ -112,7 +112,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -154,7 +154,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_httpURLRequestForDownloadGeofences(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
