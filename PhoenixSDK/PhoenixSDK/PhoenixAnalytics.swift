@@ -20,27 +20,35 @@ import Foundation
 internal extension Phoenix {
     internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
         
+        /// Instance of the Configuration class, used for configuring requests.
         private let configuration: Configuration
+        
+        /// Interrogated for 'InstallationId' to include in requests (if available).
         private let installationStorage: PhoenixInstallationStorageProtocol
+        
+        /// Interrogated for 'ApplicationVersion' to include in requests.
         private let applicationVersion: PhoenixApplicationVersionProtocol
+        
+        /// Instance of the Network class, used for sending analytical events.
         private let network: Network
+        
+        /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
+        
+        /// Instance of location class, used for configuring requests and managing geofences.
         internal var location: Location?
-        private let authentication: Authentication
         
         /// Initializes Analytics module.
         /// - parameter network:             Instance of the Network class, used for sending analytical events.
         /// - parameter configuration:       Instance of the Configuration class, used for configuring requests.
         /// - parameter installationStorage: Interrogated for 'InstallationId' to include in requests (if available).
         /// - parameter applicationVersion:  Interrogated for 'ApplicationVersion' to include in requests.
-        /// - parameter authentication:      Interrogated for 'UserId' to include in requests. Will be set after a successful login.
         /// - returns: Returns an Analytics object.
-        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol, authentication: Authentication) {
+        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
             self.network = network
             self.configuration = configuration
             self.installationStorage = installationStorage
             self.applicationVersion = applicationVersion
-            self.authentication = authentication
         }
         
         // MARK:- PhoenixModuleProtocol
@@ -89,7 +97,7 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
-            dictionary <-? (Event.UserIdKey, authentication.userId)
+            dictionary <-? (Event.UserIdKey, network.authentication.userId)
             
             // Add geolocation
             let geolocation = location?.userLocation
