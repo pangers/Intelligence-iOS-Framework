@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// An operation to wrap the get user me request.
+/// Operation for Get Me API.
 internal final class GetUserMeRequestOperation : PhoenixNetworkRequestOperation {
     
     /// The user obtained
@@ -17,8 +17,12 @@ internal final class GetUserMeRequestOperation : PhoenixNetworkRequestOperation 
     /// The configuration used throughout Phoenix.
     let configuration: Phoenix.Configuration
     let callback: PhoenixUserCallback
-
-    /// Default initializer with all required parameters
+    
+    /// Create new operation for Get Me API.
+    /// - parameter session:        NSURLSession to use.
+    /// - parameter authentication: Authentication class required for super class.
+    /// - parameter configuration:  Configuration class used for configuring request.
+    /// - returns: A new GetUserMeRequestOperation instance.
     init(session:NSURLSession, authentication:Phoenix.Authentication, configuration:Phoenix.Configuration, callback: PhoenixUserCallback) {
         self.configuration = configuration
         let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration)
