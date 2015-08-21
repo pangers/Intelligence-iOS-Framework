@@ -40,8 +40,7 @@ class PhoenixBaseTestCase : XCTestCase {
         do {
             try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
             self.configuration!.region = .Europe
-            try self.phoenix = Phoenix(withConfiguration: configuration!, tokenStorage:storage)
-            self.phoenix?.location.testLocation = true
+            try self.phoenix = Phoenix(withConfiguration: configuration!, tokenStorage:storage, disableLocation: true)
         }
         catch {
         }

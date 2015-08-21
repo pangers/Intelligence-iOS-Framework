@@ -36,7 +36,7 @@ internal extension Phoenix {
         private var eventQueue: PhoenixEventQueue?
         
         /// Instance of location class, used for configuring requests and managing geofences.
-        internal var location: Location?
+        internal weak var location: Location?
         
         /// Initializes Analytics module.
         /// - parameter network:             Instance of the Network class, used for sending analytical events.

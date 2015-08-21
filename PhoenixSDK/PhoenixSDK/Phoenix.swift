@@ -35,9 +35,10 @@ public final class Phoenix: NSObject {
     /// Initializes the Phoenix entry point with a configuration object.
     /// - parameter withConfiguration: Instance of the Configuration class, object will be copied to avoid mutability.
     /// - parameter tokenStorage:      The object responsible for storing OAuth tokens.
+    /// - parameter disableLocation:  Boolean used for test purposes, CLLocationManager causes an infinite loop otherwise.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
-    internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
+    internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
         configuration = phoenixConfiguration.clone()
         let myConfiguration = phoenixConfiguration.clone()
         network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
@@ -46,6 +47,7 @@ public final class Phoenix: NSObject {
         identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
         let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
         location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
+        location.testLocation = disableLocation!
         analytics.location = location
         self.analytics = analytics
         
@@ -63,10 +65,11 @@ public final class Phoenix: NSObject {
     /// - parameter withFile:         The JSON file name (no extension) of the configuration.
     /// - parameter inBundle:         The NSBundle to use. Defaults to the main bundle.
     /// - parameter withTokenStorage: The object responsible for storing OAuth tokens.
+    /// - parameter disableLocation:  Boolean used for test purposes, CLLocationManager causes an infinite loop otherwise.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Phoenix SDK base class.
-    convenience internal init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
-        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
+    convenience internal init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage, disableLocation: disableLocation)
     }
     
     /// Initializes the Phoenix entry point with a configuration object.

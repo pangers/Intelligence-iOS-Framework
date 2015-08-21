@@ -13,7 +13,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     
     func testPhoenixInitializer() {
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
+            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage, disableLocation: true)
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -26,7 +26,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = try Phoenix(withConfiguration: configuration, tokenStorage:storage)
+            let phoenix = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -39,7 +39,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         do {
             let config = MockConfiguration()
             config.mockInvalid = true
-            let _ = try Phoenix(withConfiguration: config, tokenStorage:storage)
+            let _ = try Phoenix(withConfiguration: config, tokenStorage:storage, disableLocation: true)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
@@ -53,7 +53,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     // Mock configuration fakes an invalid configuration
     func testPhoenixGetterSetterWorks() {
         do {
-            _ = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage)
+            _ = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage, disableLocation: true)
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing phoenix.")

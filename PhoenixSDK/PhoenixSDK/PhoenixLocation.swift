@@ -111,6 +111,7 @@ internal extension Phoenix {
         private var privateLocationManager: CLLocationManager?
         /// Returns a CLLocationManager if we are allowed to instantiate one.
         internal var locationManager: CLLocationManager? {
+            if testLocation { return nil }
             if hasLocationServicesEnabled && hasSignificantLocationChangesEnabled {
                 if privateLocationManager == nil {
                     // Create location manager if we are allowed to monitor.
@@ -204,6 +205,7 @@ internal extension Phoenix {
         
         /// Start monitoring geofences.
         func startMonitoringGeofences() {
+            if testLocation { return }
             stopMonitoringGeofences()
             if locationManager != nil && hasRegionMonitoringEnabled {
                 // Start monitoring our new geofences array.
@@ -216,6 +218,7 @@ internal extension Phoenix {
         
         /// Stop monitoring geofences.
         func stopMonitoringGeofences() {
+            if testLocation { return }
             // Stop monitoring any regions we may be currently monitoring (such as old geofences).
             locationManager?.monitoredRegions.map({ self.locationManager?.stopMonitoringForRegion($0) })
         }
