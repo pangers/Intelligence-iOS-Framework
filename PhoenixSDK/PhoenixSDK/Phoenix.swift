@@ -15,7 +15,7 @@ public typealias PhoenixErrorCallback = (NSError) -> ()
 public final class Phoenix: NSObject {
     
     /// - Returns: A **copy** of the configuration.
-    public var configuration: Phoenix.Configuration
+    public let configuration: Phoenix.Configuration
     
     /// Called by Phoenix when the SDK does not know how to deal with the current error it has encountered.
     internal var errorCallback: PhoenixErrorCallback?
@@ -38,15 +38,15 @@ public final class Phoenix: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
-        self.configuration = phoenixConfiguration.clone()
+        configuration = phoenixConfiguration.clone()
         let myConfiguration = phoenixConfiguration.clone()
-        self.network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
+        network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
         // Modules
         let installationStorage = NSUserDefaults()
-        self.identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
+        identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
         let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
-        self.location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
-        analytics.location = self.location
+        location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
+        analytics.location = location
         self.analytics = analytics
         
         super.init()
@@ -69,7 +69,7 @@ public final class Phoenix: NSObject {
         try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
     }
     
-    /// Initializes the Phoenix entry point with a configuration object. Will use the PhoenixKeychain token storage.
+    /// Initializes the Phoenix entry point with a configuration object.
     /// - parameter withConfiguration: Instance of the Configuration class, object will be copied to avoid mutability.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
@@ -105,7 +105,7 @@ public final class Phoenix: NSObject {
         // - Calls Application Installed/Updated/Opened.
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
-        self.errorCallback = callback
+        errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
         modules.map({ $0?.startup() })
     }
