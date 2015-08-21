@@ -286,7 +286,7 @@ Note: there are some optional fields in Swift that default to zero/nil if missin
 let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
 
 // Send event to Analytics module
-PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
+PhoenixManager.phoenix?.analytics.track(myTestEvent)
 
 ```
 
@@ -298,7 +298,7 @@ PhoenixManager.manager.phoenix?.analytics.track(myTestEvent)
 PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
 
 // Send event to Analytics module
-[[PHXPhoenixManager sharedManager].phoenix.analytics track:myTestEvent];
+[PHXPhoenixManager.phoenix.analytics track:myTestEvent];
 
 ```
 
@@ -333,7 +333,7 @@ The code to create a user for each language is as follows:
     let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
         firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
         
-    PhoenixManager.manager.phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
+    phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
         // Treat the user and error appropriately. Notice that the callback might be performed
         // In a background thread. Use dispatch_async to handle it in the main thread.
     })
@@ -347,7 +347,7 @@ The code to create a user for each language is as follows:
     PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
         firstName:firstname lastName:lastname avatarURL:avatarURL];
 
-    [[PHXPhoenixManager sharedManager].phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
+    [phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
         // Treat the user and error appropriately. Notice that the callback might be performed
         // In a background thread. Use dispatch_async to handle it in the main thread.
     }];
@@ -377,7 +377,7 @@ The following code snippets illustrate how to request a user's information in Ob
 #!swift
 
 // Get the user via it's id
-PhoenixManager.manager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
+PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
     // Get the user and treat the error
 }
 
@@ -390,7 +390,7 @@ PhoenixManager.manager.phoenix?.identity.getUser(userId) { (user, error) -> Void
 #!objc
 
 // Get the user via it's id
-[[[PHXPhoenixManager sharedManager].phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+[PHXPhoenixManager.phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
     // Get the user and treat the error
 }];
 
@@ -474,7 +474,7 @@ The code to update a user for each language is as follows:
 let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
 firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
 
-PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
 // Treat the user and error appropriately. Notice that the callback might be performed
 // In a background thread. Use dispatch_async to handle it in the main thread.
 })
@@ -488,7 +488,7 @@ PhoenixManager.manager.phoenix?.identity.updateUser(user, callback: { (user, err
 PHXUser* user = [[PHXUser alloc] initWithUserId:userID companyId:companyID username:username password:password
 firstName:firstname lastName:lastname avatarURL:avatarURL];
 
-[[PHXPhoenixManager sharedManager].phoenix.identity updateUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
+[phoenix.identity updateUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
 // Treat the user and error appropriately. Notice that the callback might be performed
 // In a background thread. Use dispatch_async to handle it in the main thread.
 }];
