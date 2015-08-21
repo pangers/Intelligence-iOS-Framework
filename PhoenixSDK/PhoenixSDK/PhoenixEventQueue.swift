@@ -53,6 +53,8 @@ internal class PhoenixEventQueue {
     }
     
     deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
         timer?.invalidate()
     }
     
