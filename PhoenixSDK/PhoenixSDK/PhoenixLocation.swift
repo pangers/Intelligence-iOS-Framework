@@ -65,7 +65,6 @@ internal extension Phoenix {
         }
         
         func startup() {
-            // TODO: Setup location monitoring, etc..
             do {
                 try downloadGeofences { [weak self] (geofences, error) -> Void in
                     if let geofences = geofences {

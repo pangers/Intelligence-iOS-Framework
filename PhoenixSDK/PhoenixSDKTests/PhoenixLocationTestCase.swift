@@ -236,6 +236,4 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             XCTAssert(false)
         }
     }
-    
-    // TODO: Performance tests around loading hundreds of Geofence objects. Max 200 in new API.
 }
