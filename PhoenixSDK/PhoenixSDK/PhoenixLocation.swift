@@ -176,14 +176,16 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter status:  In response to user enabling/disabling location services.
         func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-            privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
+            return // TODO: Re-enable this once it has been tested
+            //privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
         }
         
         /// Called when a region is added.
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  Region we started monitoring.
         func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
-            privateLocationManager?.requestStateForRegion(region)
+            return // TODO: Re-enable this once it has been tested
+            //privateLocationManager?.requestStateForRegion(region)
         }
         
         /// Called to determine state of a region by didStartMonitoringForRegion.
@@ -191,6 +193,7 @@ internal extension Phoenix {
         /// - parameter state:   Inside or Outside.
         /// - parameter region:  CLRegion we just entered/exited.
         func locationManager(manager: CLLocationManager, didDetermineState state: CLRegionState, forRegion region: CLRegion) {
+            return // TODO: Re-enable this once it has been tested
             switch state {
             case .Inside: entered(region)
             case .Outside: exited(region)
@@ -202,6 +205,7 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  CLRegion we just entered.
         func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
+            return // TODO: Re-enable this once it has been tested
             entered(region)
         }
         
@@ -209,6 +213,7 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  CLRegion we just exited.
         func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
+            return // TODO: Re-enable this once it has been tested
             exited(region)
         }
         
@@ -217,6 +222,7 @@ internal extension Phoenix {
         
         /// Start monitoring geofences.
         func startMonitoringGeofences() {
+            return // TODO: Re-enable this once it has been tested
             if testLocation { return }
             if configuration.useGeofences == false { return }
             stopMonitoringGeofences()
@@ -231,6 +237,7 @@ internal extension Phoenix {
         
         /// Stop monitoring geofences.
         func stopMonitoringGeofences() {
+            return // TODO: Re-enable this once it has been tested
             if testLocation { return }
             if configuration.useGeofences == false { return }
             // Stop monitoring any regions we may be currently monitoring (such as old geofences).
@@ -251,6 +258,7 @@ internal extension Phoenix {
         /// Called when a region is entered.
         /// - parameter region: CLRegion we just entered.
         private func entered(region: CLRegion) {
+            return // TODO: Re-enable this once it has been tested
             if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
             objc_sync_enter(self)
@@ -264,6 +272,7 @@ internal extension Phoenix {
         /// Called when a region is exited.
         /// - parameter region: CLRegion we just exited.
         private func exited(region: CLRegion) {
+            return // TODO: Re-enable this once it has been tested
             if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
             objc_sync_enter(self)

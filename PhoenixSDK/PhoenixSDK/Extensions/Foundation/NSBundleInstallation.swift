@@ -17,7 +17,7 @@ extension NSBundle: PhoenixApplicationVersionProtocol {
     
     var phx_applicationVersionString: String? {
         guard let version = infoDictionary?["CFBundleShortVersionString"] as? String, build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
-        return "\(version).\(build)"
+        return "\(version) (\(build))"
     }
     
 }

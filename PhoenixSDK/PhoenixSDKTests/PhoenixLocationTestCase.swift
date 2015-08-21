@@ -98,6 +98,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             XCTAssert(self.configuration?.useGeofences == true)
             XCTAssert(self.configurationDisabled?.useGeofences == false)
         }
+            
         catch{
             XCTAssert(false, "Must provide valid config")
         }
