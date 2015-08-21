@@ -33,6 +33,17 @@
     [self showProgress:NO];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedScreen:)]];
+}
+
+- (void)tappedScreen:(UITapGestureRecognizer*)tap {
+    for (UITextField *field in @[_username, _password, _firstName, _lastName, _avatarURL]) {
+        if ([field isFirstResponder]) { [field resignFirstResponder]; }
+    }
+}
+
 - (IBAction)didTapCreateUser:(id)sender {
     NSString* username = self.username.text;
     NSString* password = self.password.text;

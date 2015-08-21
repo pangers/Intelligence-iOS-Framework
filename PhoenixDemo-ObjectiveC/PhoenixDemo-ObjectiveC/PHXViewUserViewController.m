@@ -28,7 +28,15 @@
     [super viewDidLoad];
     
     [self showUser];
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedScreen:)]];
 }
+
+- (void)tappedScreen:(UITapGestureRecognizer*)tap {
+    for (UITextField *field in @[_username, _password, _firstname, _lastname, _avatarURL]) {
+        if ([field isFirstResponder]) { [field resignFirstResponder]; }
+    }
+}
+
 
 -(void)setUser:(PHXUser*)user
 {

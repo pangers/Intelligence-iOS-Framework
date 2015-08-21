@@ -27,6 +27,16 @@ class CreateUserViewController : UIViewController {
         spinner.hidden = true
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "tappedScreen:"))
+    }
+    
+    @objc func tappedScreen(tap: UITapGestureRecognizer) {
+        let fields = [username, password, firstName, lastName, avatarURL]
+        fields.map({ if $0.isFirstResponder() { $0.resignFirstResponder() } })
+    }
+    
     @IBAction func didTapCreateUser(sender: AnyObject) {
         guard let usernameText = username.text,
             let passwordText = password.text,

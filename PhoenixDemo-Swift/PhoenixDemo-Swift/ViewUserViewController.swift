@@ -28,7 +28,14 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         displayUser()
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "tappedScreen:"))
+    }
+    
+    @objc func tappedScreen(tap: UITapGestureRecognizer) {
+        let fields = [username, password, firstname, lastname, avatarURL]
+        fields.map({ if $0.isFirstResponder() { $0.resignFirstResponder() } })
     }
     
     func displayMe(user: Phoenix.User?, error: NSError?) {
