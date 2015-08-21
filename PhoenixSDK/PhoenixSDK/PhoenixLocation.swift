@@ -206,6 +206,7 @@ internal extension Phoenix {
         /// Start monitoring geofences.
         func startMonitoringGeofences() {
             if testLocation { return }
+            if configuration.useGeofences == false { return }
             stopMonitoringGeofences()
             if locationManager != nil && hasRegionMonitoringEnabled {
                 // Start monitoring our new geofences array.
@@ -219,6 +220,7 @@ internal extension Phoenix {
         /// Stop monitoring geofences.
         func stopMonitoringGeofences() {
             if testLocation { return }
+            if configuration.useGeofences == false { return }
             // Stop monitoring any regions we may be currently monitoring (such as old geofences).
             locationManager?.monitoredRegions.map({ self.locationManager?.stopMonitoringForRegion($0) })
         }
@@ -237,6 +239,7 @@ internal extension Phoenix {
         /// Called when a region is entered.
         /// - parameter region: CLRegion we just entered.
         private func entered(region: CLRegion) {
+            if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
             if !enteredGeofences.contains(geofence) {
                 enteredGeofences.append(geofence)
@@ -247,6 +250,7 @@ internal extension Phoenix {
         /// Called when a region is exited.
         /// - parameter region: CLRegion we just exited.
         private func exited(region: CLRegion) {
+            if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
             if enteredGeofences.contains(geofence) {
                 geofenceCallback(geofence: geofence, entered: false)
