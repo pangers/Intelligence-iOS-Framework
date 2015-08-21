@@ -74,7 +74,10 @@ internal extension Phoenix {
         
         /// Performs a request oeration
         override func main() {
-            let request = input!
+            guard let request = input else {
+                assert(false, "No input")
+                return
+            }
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
             
             // Possible improvement...
