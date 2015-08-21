@@ -112,17 +112,17 @@ internal extension Phoenix {
         /// Returns a CLLocationManager if we are allowed to instantiate one.
         internal var locationManager: CLLocationManager? {
             if testLocation { return nil }
-            if hasLocationServicesEnabled && hasSignificantLocationChangesEnabled {
+            if hasLocationServicesEnabled {
                 if privateLocationManager == nil {
                     // Create location manager if we are allowed to monitor.
                     privateLocationManager = CLLocationManager()
                     privateLocationManager?.delegate = self
-                    privateLocationManager?.startMonitoringSignificantLocationChanges()
+                    privateLocationManager?.startUpdatingLocation()
                     startMonitoringGeofences()
                 }
             } else {
                 // Clear location manager if we aren't allowed to monitor...
-                privateLocationManager?.stopMonitoringSignificantLocationChanges()
+                privateLocationManager?.stopUpdatingLocation()
                 privateLocationManager?.delegate = nil
                 stopMonitoringGeofences()
                 privateLocationManager = nil
@@ -131,19 +131,16 @@ internal extension Phoenix {
         }
         
         deinit {
-            privateLocationManager?.stopMonitoringSignificantLocationChanges()
+            privateLocationManager?.stopUpdatingLocation()
             stopMonitoringGeofences()
             privateLocationManager = nil
         }
         
         /// Determines if user has allowed us access.
         var hasLocationServicesEnabled: Bool {
-            return CLLocationManager.authorizationStatus() != .Restricted && CLLocationManager.authorizationStatus() != .Denied
-        }
-        
-        /// Determines if developer has requested the significant changes event and user has accepted.
-        var hasSignificantLocationChangesEnabled: Bool {
-            return CLLocationManager.significantLocationChangeMonitoringAvailable()
+            // Note: We should consider using significant location changes in certain circumstances.
+            return CLLocationManager.authorizationStatus() != .Restricted && CLLocationManager.authorizationStatus() != .Denied &&
+                CLLocationManager.locationServicesEnabled()
         }
         
         /// Determines if developer has requested the region monitoring permission and user has accepted.
