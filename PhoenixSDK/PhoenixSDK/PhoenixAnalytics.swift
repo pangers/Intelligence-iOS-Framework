@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// The Phoenix Analytics Module defines the methods available for tracking events.
 @objc public protocol PhoenixAnalytics {
     
     /// Track user engagement and behavioral insight.
@@ -18,6 +19,8 @@ import Foundation
 
 
 internal extension Phoenix {
+    
+    /// The Phoenix Analytics Module defines the methods available for tracking events.
     internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
         
         /// Instance of the Configuration class, used for configuring requests.

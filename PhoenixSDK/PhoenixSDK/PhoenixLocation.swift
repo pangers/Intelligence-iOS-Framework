@@ -62,6 +62,26 @@ internal extension Phoenix {
                 }
             }
             super.init()
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredBackground:"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredForeground:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        }
+        
+        @objc func enteredBackground(notification: NSNotification) {
+            // Reduce accuracy on background
+            privateLocationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        }
+        
+        @objc func enteredForeground(notification: NSNotification) {
+            // Restore accuracy on foreground
+            privateLocationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        }
+        
+        deinit {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+            privateLocationManager?.stopUpdatingLocation()
+            stopMonitoringGeofences()
+            privateLocationManager = nil
         }
         
         func startup() {
@@ -117,6 +137,7 @@ internal extension Phoenix {
                     // Create location manager if we are allowed to monitor.
                     privateLocationManager = CLLocationManager()
                     privateLocationManager?.delegate = self
+                    privateLocationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
                     privateLocationManager?.startUpdatingLocation()
                     startMonitoringGeofences()
                 }
@@ -128,12 +149,6 @@ internal extension Phoenix {
                 privateLocationManager = nil
             }
             return privateLocationManager
-        }
-        
-        deinit {
-            privateLocationManager?.stopUpdatingLocation()
-            stopMonitoringGeofences()
-            privateLocationManager = nil
         }
         
         /// Determines if user has allowed us access.
@@ -238,10 +253,12 @@ internal extension Phoenix {
         private func entered(region: CLRegion) {
             if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
+            objc_sync_enter(self)
             if !enteredGeofences.contains(geofence) {
                 enteredGeofences.append(geofence)
                 geofenceCallback(geofence: geofence, entered: true)
             }
+            objc_sync_exit(self)
         }
         
         /// Called when a region is exited.
@@ -249,10 +266,12 @@ internal extension Phoenix {
         private func exited(region: CLRegion) {
             if configuration.useGeofences == false { return }
             guard let geofence = geofenceForRegion(region) else { return }
+            objc_sync_enter(self)
             if enteredGeofences.contains(geofence) {
                 geofenceCallback(geofence: geofence, entered: false)
                 enteredGeofences = enteredGeofences.filter({$0 != geofence})
             }
+            objc_sync_exit(self)
         }
     }
     
