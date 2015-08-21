@@ -82,26 +82,15 @@ internal extension Phoenix {
             
             let (data, response, error) = urlSession.phx_executeSynchronousDataTaskWithRequest(request)
             
-            // TODO: Remove Logging
+            // Possible improvement...
             // Once we know exactly what we are getting back from the server
-            // and can handle it appropriately, currently things are a bit ambiguous
-            // so exposing the data we have received will help us define action plans
-            // for how to deal with the response.
+            // and can handle it appropriately, currently things are a bit ambiguous.
             //
             // Such as:
             // "This account is locked due to an excess of invalid authentication attempts"
             // on a login request, we should stop trying to login since this is unrecoverable
             // until resolved on the back-end.
-            //
-            if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, path = request.URL?.lastPathComponent {
-                print("Status: \(statusCode) - \(path)")
-                if (statusCode != 200) {
-                    if let json = data?.phx_jsonDictionary {
-                        print("Data: \(json)")
-                    }
-                }
-            }
-            
+
             self.error = error
             self.output = (data:data, response:response as? NSHTTPURLResponse)
             

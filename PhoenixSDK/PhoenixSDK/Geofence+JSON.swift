@@ -87,8 +87,8 @@ internal extension Geofence {
         return data.map({ geofence(withJSON: $0) }).filter({ $0 != nil }).map({ $0! })
     }
     
-    /// - Returns: A Geofence object or throws a GeofenceError.
-    /// - Parameter json: Optional JSONDictionary object.
+    /// Initializes a Geofence object or throws a GeofenceError.
+    /// - parameter json: Optional JSONDictionary object.
     internal class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
             let createDate: String = try geoValue(forKey: .CreateDateKey, dictionary: json)

@@ -72,7 +72,15 @@ public extension Phoenix {
         /// The avatar URL
         @objc public var avatarURL:String?
         
-        /// Default initializer receiveing all parameters required.
+        /// Initializer a new User object.
+        /// - parameter userId:    Id for this user, required for Update User call.
+        /// - parameter companyId: Id of company this user belongs to.
+        /// - parameter username:  Username for this user, must be included.
+        /// - parameter password:  Password for this user, must be included.
+        /// - parameter firstName: First name for this user.
+        /// - parameter lastName:  Last name of this user.
+        /// - parameter avatarURL: URL pointing at the users avatar.
+        /// - returns: A new User object.
         public init(userId:Int, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.userId = userId
             self.companyId = companyId

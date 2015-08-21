@@ -20,7 +20,7 @@ internal extension Phoenix {
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location: NSObject, PhoenixModuleProtocol, CLLocationManagerDelegate {
         
-        /// A reference to the network manager
+        /// A reference to the Network manager.
         private let network: Network
         /// Configuration instance used for NSURLRequests.
         private let configuration: Phoenix.Configuration
@@ -34,7 +34,6 @@ internal extension Phoenix {
         /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
         internal var geofences: [Geofence]? {
             didSet {
-                print("New Geofences: \(geofences)")
                 // Attempt to start monitoring these new geofences.
                 startMonitoringGeofences()
             }
@@ -44,6 +43,12 @@ internal extension Phoenix {
         /// - Parameters: 
         ///     - withNetwork: The network that will be used.
         ///     - configuration: The configuration class to use.
+        
+        /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
+        /// - parameter network:          Instance of Network class to use.
+        /// - parameter configuration:    Configuration used to configure requests.
+        /// - parameter geofenceCallback: Called on enter/exit of geofence.
+        /// - returns: Returns a Location object.
         internal init(withNetwork network:Network, configuration: Phoenix.Configuration, geofenceCallback: PhoenixGeofenceEnteredExitedCallback) {
             self.network = network
             self.configuration = configuration
@@ -55,7 +60,6 @@ internal extension Phoenix {
                 } catch {
                     // Ignore error...
                 }
-                print("Geofences: \(geofences)")
             }
             super.init()
         }

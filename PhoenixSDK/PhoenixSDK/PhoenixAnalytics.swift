@@ -28,6 +28,13 @@ internal extension Phoenix {
         internal var location: Location?
         private let authentication: Authentication
         
+        /// Initializes Analytics module.
+        /// - parameter network:             Instance of the Network class, used for sending analytical events.
+        /// - parameter configuration:       Instance of the Configuration class, used for configuring requests.
+        /// - parameter installationStorage: Interrogated for 'InstallationId' to include in requests (if available).
+        /// - parameter applicationVersion:  Interrogated for 'ApplicationVersion' to include in requests.
+        /// - parameter authentication:      Interrogated for 'UserId' to include in requests. Will be set after a successful login.
+        /// - returns: Returns an Analytics object.
         init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol, authentication: Authentication) {
             self.network = network
             self.configuration = configuration
@@ -64,12 +71,9 @@ internal extension Phoenix {
         /// - parameter geofence: Geofence to track.
         /// - parameter entered:  Whether we entered or exited.
         internal func trackGeofence(geofence: Geofence, entered: Bool) {
-            print("\(entered) geofence: \(geofence.id) radius: \(geofence.radius)")
-            if entered {
-                track(GeofenceEnterEvent(geofence: geofence))
-            } else {
-                track(GeofenceExitEvent(geofence: geofence))
-            }
+            track(entered ?
+                GeofenceEnterEvent(geofence: geofence) :
+                GeofenceExitEvent(geofence: geofence))
         }
         
         /// Add automatically populated fields to dictionary.

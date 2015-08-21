@@ -29,16 +29,23 @@ public extension Phoenix {
         internal static let MetadataTimestampKey = "Timestamp"
         
         /// Type of Event we are trying to log.
-        var eventType: String
-        /// Optional value related to this EventType.
-        var value: Double
-        /// Optional identifier related to this EventType.
-        var targetId: Int
+        internal var eventType: String
+        /// Value related to this EventType. Defaults to zero.
+        internal var value: Double
+        /// Optional identifier related to this EventType. Defaults to 0.0.
+        internal var targetId: Int
         /// Optional metadata values associated to this EventType.
-        var metadata: [String: AnyObject]?
+        internal var metadata: [String: AnyObject]?
         /// Prepopulated date.
-        var eventDate: String
+        internal var eventDate: String
         
+        /// Initializer for Event class.
+        /// - parameter type:     Type of Event we are trying to track.
+        /// - parameter value:    Value associated with Event. Defaults to 0.0.
+        /// - parameter targetId: Optional identifier relevant to this event. Defaults to 0.
+        /// - parameter metadata: Optional metadata field.
+        /// - returns: Returns an Event object.
+        /// - seealso: Analytics module `track(event:)` method.
         @objc public init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
@@ -47,6 +54,8 @@ public extension Phoenix {
             self.metadata = metadata
         }
         
+        /// Convert Event object to JSON representation.
+        /// - returns: JSON Dictionary representation of this Event.
         internal func toJSON() -> JSONDictionary {
             var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value, Event.EventDateKey: eventDate]
             

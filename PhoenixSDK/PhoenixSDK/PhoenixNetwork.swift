@@ -45,7 +45,7 @@ internal enum HTTPRequestMethod : String {
 
 internal extension Phoenix {
     
-    /// Acts as a Network manager for the Phoenix SDK, encapsulating authenticationg requests within it.
+    /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
     internal final class Network {
         
         // MARK: Instance variables
