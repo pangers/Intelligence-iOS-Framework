@@ -40,6 +40,16 @@ internal class PhoenixEventQueue {
     init(withCallback callback: PhoenixEventQueueCallback) {
         self.callback = callback
         loadEvents()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredBackground:"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredForeground:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    @objc func enteredBackground(notification: NSNotification) {
+        stopQueue()
+    }
+    
+    @objc func enteredForeground(notification: NSNotification) {
+        startQueue()
     }
     
     deinit {
@@ -135,7 +145,8 @@ internal class PhoenixEventQueue {
         // Set sending to true.
         isSending = true
         // Send events to function.
-        callback(events: eventArray) { [weak self] (error) in
+        let eventsToSend = Array(eventArray.prefixUpTo(endIndex))
+        callback(events: eventsToSend) { [weak self] (error) in
             guard let this = self else { return }
             objc_sync_enter(this)
             // If successful, remove this range.
