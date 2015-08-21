@@ -286,7 +286,7 @@ Note: there are some optional fields in Swift that default to zero/nil if missin
 let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
 
 // Send event to Analytics module
-PhoenixManager.phoenix?.analytics.track(myTestEvent)
+phoenix?.analytics.track(myTestEvent)
 
 ```
 
@@ -298,7 +298,7 @@ PhoenixManager.phoenix?.analytics.track(myTestEvent)
 PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
 
 // Send event to Analytics module
-[PHXPhoenixManager.phoenix.analytics track:myTestEvent];
+[phoenix.analytics track:myTestEvent];
 
 ```
 
@@ -377,7 +377,7 @@ The following code snippets illustrate how to request a user's information in Ob
 #!swift
 
 // Get the user via it's id
-PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
+phoenix?.identity.getUser(userId) { (user, error) -> Void in
     // Get the user and treat the error
 }
 
@@ -390,7 +390,7 @@ PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
 #!objc
 
 // Get the user via it's id
-[PHXPhoenixManager.phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+[phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
     // Get the user and treat the error
 }];
 
