@@ -410,7 +410,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        (0...queue.maxEvents).map({ n -> Void in queue.enqueueEvent(eventJSON) })
+        (0...queue.maxEvents).forEach({ n -> Void in queue.enqueueEvent(eventJSON) })
         var remaining = queue.eventArray.count
         XCTAssert(remaining == 101, "Expected 101 events to be saved")
         queue.isPaused = false

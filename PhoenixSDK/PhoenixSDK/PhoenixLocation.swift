@@ -179,7 +179,7 @@ internal extension Phoenix {
             return // TODO: Re-enable this once it has been tested
             //privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
         }
-        
+
         /// Called when a region is added.
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  Region we started monitoring.
@@ -187,7 +187,7 @@ internal extension Phoenix {
             return // TODO: Re-enable this once it has been tested
             //privateLocationManager?.requestStateForRegion(region)
         }
-        
+
         /// Called to determine state of a region by didStartMonitoringForRegion.
         /// - parameter manager: Current location manager.
         /// - parameter state:   Inside or Outside.
@@ -200,7 +200,7 @@ internal extension Phoenix {
             default: break
             }
         }
-        
+
         /// Called when a geofence is entered.
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  CLRegion we just entered.
@@ -228,7 +228,7 @@ internal extension Phoenix {
             stopMonitoringGeofences()
             if locationManager != nil && hasRegionMonitoringEnabled {
                 // Start monitoring our new geofences array.
-                geofences?.map({ locationManager?.startMonitoringForRegion(CLCircularRegion(
+                geofences?.forEach({ locationManager?.startMonitoringForRegion(CLCircularRegion(
                     center: CLLocationCoordinate2DMake($0.latitude, $0.longitude),
                     radius: $0.radius,
                     identifier: $0.id.description)) })
@@ -241,7 +241,7 @@ internal extension Phoenix {
             if testLocation { return }
             if configuration.useGeofences == false { return }
             // Stop monitoring any regions we may be currently monitoring (such as old geofences).
-            locationManager?.monitoredRegions.map({ self.locationManager?.stopMonitoringForRegion($0) })
+            locationManager?.monitoredRegions.forEach({ self.locationManager?.stopMonitoringForRegion($0) })
         }
         
         /// Returns relevant geofence for a region or nil.

@@ -110,11 +110,11 @@ public final class Phoenix: NSObject {
         // - Startup Events module, send stored events.
         errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
-        modules.map({ $0?.startup() })
+        modules.forEach({ $0?.startup() })
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        modules.map({ $0?.shutdown() })
+        modules.forEach({ $0?.shutdown() })
     }
 }
