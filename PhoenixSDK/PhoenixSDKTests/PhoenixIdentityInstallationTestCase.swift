@@ -211,7 +211,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         // Mock installation request
         let storage = InstallationStorage()
         let version = VersionClass()
-        var installation = Phoenix.Installation(configuration: configuration!, applicationVersion: version, installationStorage: storage)
+        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: version, installationStorage: storage)
         
         let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
         let data = jsonData.first!
