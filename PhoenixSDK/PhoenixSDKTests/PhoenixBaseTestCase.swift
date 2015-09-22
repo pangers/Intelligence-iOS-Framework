@@ -71,7 +71,7 @@ class PhoenixBaseTestCase : XCTestCase {
                 if let method = method where method != request.HTTPMethod {
                     return false
                 }
-                return ObjCBool(request.URL! == url)
+                return request.URL! == url
             },
             withStubResponse: { _ in
                 let (callback, response, expectation) = runs.first!
