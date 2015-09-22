@@ -141,9 +141,9 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
                 OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
-                    OSVer == "9.0" &&
+                    OSVer == UIDevice.currentDevice().systemVersion &&
                     installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == "iPhone" &&
+                    modelRef == UIDevice.currentDevice().model &&
                     installed == "1.0.1" &&
                     id == 1054 &&
                     createDate == "2015-08-14T10:06:13.3850765Z" {
