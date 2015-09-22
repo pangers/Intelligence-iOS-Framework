@@ -82,10 +82,10 @@ internal extension Phoenix {
         /// - parameter geofence: Geofence to track.
         /// - parameter entered:  Whether we entered or exited.
         internal func trackGeofence(geofence: Geofence, entered: Bool) {
-            return // TODO: Re-implement once testing is completed.
-            track(entered ?
-                GeofenceEnterEvent(geofence: geofence) :
-                GeofenceExitEvent(geofence: geofence))
+            // TODO: Re-implement once testing is completed.
+//            track(entered ?
+//                GeofenceEnterEvent(geofence: geofence) :
+//                GeofenceExitEvent(geofence: geofence))
         }
         
         /// Add automatically populated fields to dictionary.

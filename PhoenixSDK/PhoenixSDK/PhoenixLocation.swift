@@ -176,7 +176,7 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter status:  In response to user enabling/disabling location services.
         func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-            return // TODO: Re-enable this once it has been tested
+            // TODO: Re-enable this once it has been tested
             //privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
         }
 
@@ -184,7 +184,7 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  Region we started monitoring.
         func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
+            // TODO: Re-enable this once it has been tested
             //privateLocationManager?.requestStateForRegion(region)
         }
 
@@ -193,11 +193,13 @@ internal extension Phoenix {
         /// - parameter state:   Inside or Outside.
         /// - parameter region:  CLRegion we just entered/exited.
         func locationManager(manager: CLLocationManager, didDetermineState state: CLRegionState, forRegion region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
             switch state {
-            case .Inside: entered(region)
-            case .Outside: exited(region)
-            default: break
+            case .Inside:
+                entered(region)
+            case .Outside:
+                exited(region)
+            default:
+                break
             }
         }
 
@@ -205,7 +207,6 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  CLRegion we just entered.
         func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
             entered(region)
         }
         
@@ -213,7 +214,6 @@ internal extension Phoenix {
         /// - parameter manager: CLLocationManager instance.
         /// - parameter region:  CLRegion we just exited.
         func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
             exited(region)
         }
         
@@ -222,26 +222,40 @@ internal extension Phoenix {
         
         /// Start monitoring geofences.
         func startMonitoringGeofences() {
-            return // TODO: Re-enable this once it has been tested
-            if testLocation { return }
-            if configuration.useGeofences == false { return }
-            stopMonitoringGeofences()
-            if locationManager != nil && hasRegionMonitoringEnabled {
-                // Start monitoring our new geofences array.
-                geofences?.forEach({ locationManager?.startMonitoringForRegion(CLCircularRegion(
-                    center: CLLocationCoordinate2DMake($0.latitude, $0.longitude),
-                    radius: $0.radius,
-                    identifier: $0.id.description)) })
-            }
+            // TODO: Re-enable this once it has been tested
+//            if testLocation || configuration.useGeofences == false {
+//                return
+//            }
+//            
+//            stopMonitoringGeofences()
+//            
+//            if locationManager != nil && hasRegionMonitoringEnabled {
+//                // Start monitoring our new geofences array.
+//                geofences?.forEach({
+//                    let region = CLCircularRegion(
+//                        center: CLLocationCoordinate2DMake($0.latitude, $0.longitude),
+//                        radius: $0.radius,
+//                        identifier: $0.id.description)
+//                    locationManager?.startMonitoringForRegion(region)
+//                })
+//            }
         }
         
         /// Stop monitoring geofences.
         func stopMonitoringGeofences() {
-            return // TODO: Re-enable this once it has been tested
-            if testLocation { return }
-            if configuration.useGeofences == false { return }
-            // Stop monitoring any regions we may be currently monitoring (such as old geofences).
-            locationManager?.monitoredRegions.forEach({ self.locationManager?.stopMonitoringForRegion($0) })
+            // TODO: Re-enable this once it has been tested
+//            if testLocation {
+//                return
+//            }
+//            
+//            if configuration.useGeofences == false {
+//                return
+//            }
+//            
+//            // Stop monitoring any regions we may be currently monitoring (such as old geofences).
+//            locationManager?.monitoredRegions.forEach({
+//                self.locationManager?.stopMonitoringForRegion($0)
+//            })
         }
         
         /// Returns relevant geofence for a region or nil.
@@ -258,29 +272,35 @@ internal extension Phoenix {
         /// Called when a region is entered.
         /// - parameter region: CLRegion we just entered.
         private func entered(region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
-            if configuration.useGeofences == false { return }
-            guard let geofence = geofenceForRegion(region) else { return }
-            objc_sync_enter(self)
-            if !enteredGeofences.contains(geofence) {
-                enteredGeofences.append(geofence)
-                geofenceCallback(geofence: geofence, entered: true)
-            }
-            objc_sync_exit(self)
+            // TODO: Re-enable this once it has been tested
+//            if configuration.useGeofences == false {
+//                return
+//            }
+//            
+//            guard let geofence = geofenceForRegion(region) else {
+//                return
+//            }
+//            
+//            objc_sync_enter(self)
+//            if !enteredGeofences.contains(geofence) {
+//                enteredGeofences.append(geofence)
+//                geofenceCallback(geofence: geofence, entered: true)
+//            }
+//            objc_sync_exit(self)
         }
         
         /// Called when a region is exited.
         /// - parameter region: CLRegion we just exited.
         private func exited(region: CLRegion) {
-            return // TODO: Re-enable this once it has been tested
-            if configuration.useGeofences == false { return }
-            guard let geofence = geofenceForRegion(region) else { return }
-            objc_sync_enter(self)
-            if enteredGeofences.contains(geofence) {
-                geofenceCallback(geofence: geofence, entered: false)
-                enteredGeofences = enteredGeofences.filter({$0 != geofence})
-            }
-            objc_sync_exit(self)
+            // TODO: Re-enable this once it has been tested
+//            if configuration.useGeofences == false { return }
+//            guard let geofence = geofenceForRegion(region) else { return }
+//            objc_sync_enter(self)
+//            if enteredGeofences.contains(geofence) {
+//                geofenceCallback(geofence: geofence, entered: false)
+//                enteredGeofences = enteredGeofences.filter({$0 != geofence})
+//            }
+//            objc_sync_exit(self)
         }
     }
     
