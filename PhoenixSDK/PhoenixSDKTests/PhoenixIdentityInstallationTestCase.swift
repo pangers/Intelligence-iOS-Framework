@@ -260,6 +260,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation(installation) { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
+            
             let json = installation.toJSON()
             if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
                 appID = json[Phoenix.Installation.ApplicationId] as? Int,
@@ -271,9 +272,9 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
                 OSVer = json[Phoenix.Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
-                    OSVer == "9.0" &&
+                    OSVer == UIDevice.currentDevice().systemVersion &&
                     installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == "iPhone" &&
+                    modelRef == UIDevice.currentDevice().model &&
                     installed == "1.0.2" &&
                     id == 1054 &&
                     createDate == "2015-08-14T10:06:13.3850765Z" {
@@ -281,6 +282,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             } else {
                 XCTAssert(false)
             }
+            
             XCTAssert(installation.isUpdatedInstallation == false)
             expectation.fulfill()
         }
