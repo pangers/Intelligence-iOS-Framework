@@ -110,8 +110,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
         XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
         XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == "9.0", "OS must be 9.0")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == "iPhone", "Device type must be iPhone")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
         return installation
     }
     
