@@ -202,9 +202,9 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to download geofences.
     /// - Parameter configuration: Configuration object used to configure this request.
-    class func phx_URLRequestForDownloadGeofences(configuration:Phoenix.Configuration) -> NSURLRequest {
+    class func phx_URLRequestForDownloadGeofences(configuration:Phoenix.Configuration, queryDetails: GeofenceQuery) -> NSURLRequest {
         // Configure url
-        if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID), relativeToURL: configuration.baseURL) {
+        if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID, queryDetails: queryDetails), relativeToURL: configuration.baseURL) {
             return NSURLRequest(URL: url)
         }
         assertionFailure("Couldn't create the download geofences URL.")
@@ -260,8 +260,8 @@ internal extension NSURLRequest {
     }
     
     /// - Returns: The path to get a list of geofences.
-    private class func phx_geofencesPath(withProjectId projectId: Int) -> String {
-        return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences"
+    private class func phx_geofencesPath(withProjectId projectId: Int, queryDetails: GeofenceQuery) -> String {
+        return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences" + queryDetails.getURLQueryString()
     }
     
     /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.

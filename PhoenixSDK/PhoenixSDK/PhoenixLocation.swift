@@ -86,11 +86,15 @@ internal extension Phoenix {
         
         func startup() {
             do {
-                try downloadGeofences { [weak self] (geofences, error) -> Void in
+                //TODO: this is temporary setting. Remove it in future regarding requirements for automatic/manual download of geofences
+                let geoQuery: GeofenceQuery = GeofenceQuery.init(location: userLocation!)
+                geoQuery.setDefaultValues()
+                
+                try downloadGeofences(geoQuery, callback: { [weak self] (geofences, error) -> Void in
                     if let geofences = geofences {
                         self?.geofences = geofences
                     }
-                }
+                })
                 startMonitoringGeofences()
             }
             catch {
@@ -106,9 +110,9 @@ internal extension Phoenix {
         
         /// Download a list of geofences.
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
-        internal func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) throws {
+        internal func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) throws {
             if configuration.useGeofences {
-                let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
+                let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration, queryDetails: queryDetails)
                 
                 // set the completion block to notify the caller
                 operation.completionBlock = {

@@ -18,8 +18,8 @@ internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOpe
     /// - Parameters:
     ///     - network: The network that will be used.
     ///     - configuration: The configuration class to use.
-    init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration)
+    init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration, queryDetails: GeofenceQuery) {
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration, queryDetails: queryDetails)
         geofences = []
         super.init(withNetwork: network, request: request)
     }
