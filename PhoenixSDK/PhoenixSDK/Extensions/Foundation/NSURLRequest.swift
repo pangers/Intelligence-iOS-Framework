@@ -272,6 +272,13 @@ internal extension NSURLRequest {
 }
 
 private extension String {
+    
+    //TODO: I would consider changing the method from below ones to single:
+//    /// - Return: New string with added path component in format 'componentName/componentValue'
+//    mutating func appendUrlPathComponent(componentName: String, componentValue: AnyObject) -> String {
+//        return self += "/\(componentName)/\(componentValue)";
+//    }
+    
     /// Append applications path.
     /// - parameter applicationId: ID to include in path.
     /// - returns: Returns new string containing applications path components.

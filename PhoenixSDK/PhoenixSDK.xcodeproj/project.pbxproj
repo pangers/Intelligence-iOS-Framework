@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A04DDC5B1BBAC6DD00831600 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04DDC5A1BBAC6DD00831600 /* GeofenceQuery.swift */; settings = {ASSET_TAGS = (); }; };
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
 		BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0A238B1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift */; };
@@ -116,6 +117,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A04DDC5A1BBAC6DD00831600 /* GeofenceQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceQuery.swift; sourceTree = "<group>"; };
 		A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhoenixSDK.h; sourceTree = "<group>"; };
 		A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDK-Info.plist"; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				FEDE07701B73530A009BC6B6 /* PhoenixLocation.swift */,
 				FEDE07991B7398FE009BC6B6 /* Geofence.swift */,
 				FEDE079D1B73A797009BC6B6 /* Geofence+JSON.swift */,
+				A04DDC5A1BBAC6DD00831600 /* GeofenceQuery.swift */,
 			);
 			name = Location;
 			sourceTree = "<group>";
@@ -687,6 +690,7 @@
 				BBF417361B74B7A500AF2BFA /* UpdateUserRequestOperation.swift in Sources */,
 				FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */,
 				BB7116921B739DC5004536A5 /* GetUserByIdRequestOperation.swift in Sources */,
+				A04DDC5B1BBAC6DD00831600 /* GeofenceQuery.swift in Sources */,
 				BB0F0ED21B68DA03008679C9 /* NSURLSession.swift in Sources */,
 				BBC46D591B6F71DF00C8E418 /* PhoenixUser.swift in Sources */,
 				FEDE079E1B73A797009BC6B6 /* Geofence+JSON.swift in Sources */,
