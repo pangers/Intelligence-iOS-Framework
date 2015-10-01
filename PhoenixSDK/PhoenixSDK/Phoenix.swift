@@ -24,10 +24,8 @@ public final class Phoenix: NSObject {
     internal let network: Network
     
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules: [PhoenixModuleProtocol?] {
-        return [location,
-            (identity as? PhoenixModuleProtocol),
-            (analytics as? PhoenixModuleProtocol)]
+    internal var modules: [PhoenixModuleProtocol] {
+        return [location, identity as! PhoenixModuleProtocol, analytics as! PhoenixModuleProtocol]
     }
     
     // MARK: Initializers
@@ -110,11 +108,16 @@ public final class Phoenix: NSObject {
         // - Startup Events module, send stored events.
         errorCallback = callback
         network.enqueueAuthenticationOperationIfRequired()
-        modules.forEach({ $0?.startup() })
+        
+        modules.forEach {
+            $0.startup()
+        }
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        modules.forEach({ $0?.shutdown() })
+        modules.forEach {
+            $0.shutdown()
+        }
     }
 }
