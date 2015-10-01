@@ -65,7 +65,7 @@ internal extension Phoenix {
         internal var geofences: [Geofence]? {
             didSet {
                 guard let geofences = geofences where geofences.count > 0 else {
-                    self.locationManager.stopMonitoringLocation()
+                    self.locationManager.stopMonitoringGeofences()
                     return
                 }
                 
@@ -94,7 +94,7 @@ internal extension Phoenix {
         }
         
         deinit {
-            locationManager.stopMonitoringLocation()
+            locationManager.stopUpdatingLocation()
             locationManager.stopMonitoringGeofences()
         }
         
@@ -122,7 +122,7 @@ internal extension Phoenix {
         */
         override func shutdown() {
             // Clear geofences.
-            locationManager.stopMonitoringLocation()
+            locationManager.stopUpdatingLocation()
             locationManager.stopMonitoringGeofences()
             geofences = nil
             

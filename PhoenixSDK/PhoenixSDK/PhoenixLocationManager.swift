@@ -74,7 +74,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     
     /// Determines if developer has requested the region monitoring permission and user has accepted.
     var hasRegionMonitoringEnabled: Bool {
-        return CLLocationManager.isMonitoringAvailableForClass(CLCircularRegion.self)
+        return CLLocationManager.isMonitoringAvailableForClass(CLCircularRegion.self) && hasLocationServicesEnabled
     }
     
     /// Returns current location if available.
@@ -95,7 +95,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     */
     func startMonitoringGeofences(geofences:[Geofence]) {
         stopMonitoringGeofences()
-
+        geofencesMonitored = geofences
         if hasRegionMonitoringEnabled {
             // Start monitoring our new geofences array.
             geofences.forEach({
@@ -117,6 +117,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.monitoredRegions.forEach({
             self.locationManager.stopMonitoringForRegion($0)
         })
+        geofencesMonitored = nil
     }
     
     // MARK:- CLLocationManagerDelegate
@@ -125,18 +126,13 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     /// - parameter manager: CLLocationManager instance.
     /// - parameter status:  In response to user enabling/disabling location services.
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        // TODO: Re-enable this once it has been tested
-        //privateLocationManager?.monitoredRegions.map({ self.privateLocationManager?.requestStateForRegion($0) })
+        guard let geofences = geofencesMonitored where hasRegionMonitoringEnabled else {
+            stopMonitoringGeofences()
+            return
+        }
+        startMonitoringGeofences(geofences)
     }
-    
-    /// Called when a region is added.
-    /// - parameter manager: CLLocationManager instance.
-    /// - parameter region:  Region we started monitoring.
-    func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
-        // TODO: Re-enable this once it has been tested
-        //privateLocationManager?.requestStateForRegion(region)
-    }
-    
+        
     /// Called to determine state of a region by didStartMonitoringForRegion.
     /// - parameter manager: Current location manager.
     /// - parameter state:   Inside or Outside.
