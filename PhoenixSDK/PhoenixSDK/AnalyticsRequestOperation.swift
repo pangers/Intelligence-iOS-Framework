@@ -25,8 +25,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
         
         let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, phoenix: phoenix!)
         output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
-        if output?.error != nil || self.outputErrorCode() != nil {
-            output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil)
+        if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
             return
         }
         if outputArray()?.count != eventsJSON.count {

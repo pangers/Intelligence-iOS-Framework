@@ -24,10 +24,10 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     
     /// Parse.
     func parse(withErrorCode errorCode: Int) {
-        if output?.error != nil || self.outputErrorCode() != nil {
-            output?.error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
+        if handleError(IdentityError.domain, code: errorCode) {
             return
         }
+        
         guard let receivedUser = Phoenix.User(withJSON: self.outputDictionary(), configuration: phoenix!.configuration) else {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return

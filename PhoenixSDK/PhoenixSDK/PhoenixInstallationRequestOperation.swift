@@ -17,8 +17,7 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation {
     }
     
     func parse(withErrorCode errorCode: Int) {
-        if output?.error != nil || self.outputErrorCode() != nil {
-            output?.error = NSError(domain: InstallationError.domain, code: errorCode, userInfo: nil)
+        if handleError(InstallationError.domain, code: errorCode) {
             return
         }
         

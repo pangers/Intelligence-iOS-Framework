@@ -10,6 +10,8 @@ import Foundation
 
 typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
 
+private let AccessDeniedErrorCode = "access_denied"
+
 internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
     var shouldBreak: Bool = false
     
@@ -22,11 +24,28 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     
     // MARK: Output Helpers
     
+    func handleError(domain: String, code: Int) -> Bool {
+        if let error = outputErrorCode() {
+            if error == AccessDeniedErrorCode {
+                output?.error = NSError(domain: RequestError.domain, code: RequestError.AccessDeniedError.rawValue, userInfo: nil)
+                return true
+            }
+            output?.error = NSError(domain: domain, code: code, userInfo: nil)
+            return true
+        }
+        if output?.error != nil {
+            output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil)
+            return true
+        }
+        return false
+    }
+    
     /// Returns error code if response contains some sort of server error but request was 200.
     func outputErrorCode() -> String? {
         guard let error = self.output?.data?.phx_jsonDictionary?["error"] as? String else {
             return nil
         }
+        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?["error_description"] ?? "")
         return error
     }
     
