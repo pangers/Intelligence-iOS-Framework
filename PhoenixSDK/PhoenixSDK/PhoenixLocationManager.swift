@@ -54,14 +54,14 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     /**
     Starts monitoring the location of the user
     */
-    func startMonitoringLocation() {
+    func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
     
     /**
     Stops monitoring the user location.
     */
-    func stopMonitoringLocation() {
+    func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
     }
     
