@@ -76,12 +76,14 @@ extension Phoenix {
         }
         
         override func startup() {
+            super.startup()
             createInstallation(callback: nil)
             updateInstallation(callback: nil)
         }
         
         override func shutdown() {
             // Nothing to do currently.
+            super.shutdown()
         }
         
         // MARK:- Login

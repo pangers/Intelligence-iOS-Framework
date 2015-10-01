@@ -44,7 +44,7 @@ func == (lhs: Geofence, rhs: Geofence) -> Bool {
     
     // Equatable
     override public func isEqual(object: AnyObject?) -> Bool {
-        guard let object = object else {
+        guard let object = object as? Geofence else {
             return false
         }
         return self.id == object.id

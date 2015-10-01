@@ -50,6 +50,7 @@ internal extension Phoenix {
         // MARK:- PhoenixModuleProtocol
         
         override func startup() {
+            super.startup()
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
             // Track application opened.
@@ -58,6 +59,7 @@ internal extension Phoenix {
         
         override func shutdown() {
             eventQueue?.stopQueue()
+            super.shutdown()
         }
         
         @objc func track(event: Phoenix.Event) {

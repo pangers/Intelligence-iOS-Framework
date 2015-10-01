@@ -15,7 +15,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 /// Called when a geofence is entered or exited.
 internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool) -> Void
 
-/// Phoenix coordinate object. CLLocationCoordinate2D can't be
+/// Phoenix coordinate object. CLLocationCoordinate2D can't be used as an optional.
 @objc public class PhoenixCoordinate : NSObject {
     
     let longitude:Double
@@ -81,11 +81,6 @@ internal extension Phoenix {
             return locationManager.userLocation
         }
         
-        /// Default initializer. Requires a network and configuration class.
-        /// - Parameters: 
-        ///     - withNetwork: The network that will be used.
-        ///     - configuration: The configuration class to use.
-        
         /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
         /// - parameter network:          Instance of Network class to use.
         /// - parameter configuration:    Configuration used to configure requests.
@@ -109,6 +104,8 @@ internal extension Phoenix {
         Will download the geofences and put them in the monitored regions if required.
         */
         override func startup() {
+            super.startup()
+            
             if configuration.useGeofences {
                 guard let location = self.userLocation else {
                     return
@@ -120,11 +117,16 @@ internal extension Phoenix {
             }
         }
         
+        /**
+        Stops monitoring and nils the geofences.
+        */
         override func shutdown() {
             // Clear geofences.
             locationManager.stopMonitoringLocation()
             locationManager.stopMonitoringGeofences()
             geofences = nil
+            
+            super.shutdown()
         }
         
         /// Download a list of geofences.
@@ -134,7 +136,7 @@ internal extension Phoenix {
             do {
                 self.geofences = try Geofence.geofencesFromCache()
             } catch {
-                // TODO Handle error
+                // TODO: Warning: Handle the error
             }
 
             let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration, queryDetails: queryDetails)
