@@ -135,10 +135,10 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
             return;
         }
         [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(NSError * _Nullable error) {
-            weakSelf.isLoggedIn = error == nil;
-            weakSelf.currentStatus = weakSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
-            if (weakSelf.isLoggedIn) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                weakSelf.isLoggedIn = error == nil;
+                weakSelf.currentStatus = weakSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
+                if (weakSelf.isLoggedIn) {
                     [weakSelf.tableView reloadData];
                     [PHXPhoenixManager.phoenix.identity getMe:^(PHXUser * _Nullable user, NSError * _Nullable error) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -151,8 +151,8 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
                             }
                         }];
                     }];
-                }];
-            }
+                }
+            }];
         }];
     }]];
     [self presentViewController:alert animated:true completion:nil];

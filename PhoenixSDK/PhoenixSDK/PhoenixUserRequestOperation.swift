@@ -24,7 +24,7 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     
     /// Parse.
     func parse(withErrorCode errorCode: Int) {
-        if output?.error != nil {
+        if output?.error != nil || self.outputErrorCode() != nil {
             output?.error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
             return
         }

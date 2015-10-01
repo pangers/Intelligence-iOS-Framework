@@ -22,6 +22,14 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     
     // MARK: Output Helpers
     
+    /// Returns error code if response contains some sort of server error but request was 200.
+    func outputErrorCode() -> String? {
+        guard let error = self.output?.data?.phx_jsonDictionary?["error"] as? String else {
+            return nil
+        }
+        return error
+    }
+    
     /// Returns all dictionaries in the 'Data' array of the output.
     func outputArray() -> JSONDictionaryArray? {
         guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray else {
