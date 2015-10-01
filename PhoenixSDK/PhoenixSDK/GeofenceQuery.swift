@@ -19,7 +19,7 @@ public enum GeofenceSortCriteria: String {
 }
 
 ///An instance of object using to create query part of URL for Geofence API
-public class GeofenceQuery {
+@objc public class GeofenceQuery : NSObject {
     
     var sortingDirection: GeofenceSortDirection?
     
@@ -38,7 +38,7 @@ public class GeofenceQuery {
     ///Default initializer. Requires location coordinates to query for list of geofences.
     /// - Parameters:
     ///     - location: location coordinates to look for geofences related to.
-    init(location: CLLocationCoordinate2D) {
+    init(location: PhoenixCoordinate) {
         longitude = location.longitude
         latitude = location.latitude
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-@objc public protocol PhoenixAnalytics {
+@objc public protocol PhoenixAnalytics : PhoenixModuleProtocol {
     
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
@@ -21,10 +21,7 @@ import Foundation
 internal extension Phoenix {
     
     /// The Phoenix Analytics Module defines the methods available for tracking events.
-    internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
-        
-        /// Instance of the Configuration class, used for configuring requests.
-        private let configuration: Configuration
+    internal final class Analytics: PhoenixModule, PhoenixAnalytics {
         
         /// Interrogated for 'InstallationId' to include in requests (if available).
         private let installationStorage: PhoenixInstallationStorageProtocol
@@ -32,14 +29,11 @@ internal extension Phoenix {
         /// Interrogated for 'ApplicationVersion' to include in requests.
         private let applicationVersion: PhoenixApplicationVersionProtocol
         
-        /// Instance of the Network class, used for sending analytical events.
-        private let network: Network
-        
         /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
         
         /// Instance of location class, used for configuring requests and managing geofences.
-        internal weak var location: Location?
+        internal weak var location: PhoenixLocation?
         
         /// Initializes Analytics module.
         /// - parameter network:             Instance of the Network class, used for sending analytical events.
@@ -48,22 +42,21 @@ internal extension Phoenix {
         /// - parameter applicationVersion:  Interrogated for 'ApplicationVersion' to include in requests.
         /// - returns: Returns an Analytics object.
         init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
-            self.network = network
-            self.configuration = configuration
             self.installationStorage = installationStorage
             self.applicationVersion = applicationVersion
+            super.init(withNetwork: network, configuration: configuration)
         }
         
         // MARK:- PhoenixModuleProtocol
         
-        internal func startup() {
+        override func startup() {
             eventQueue = PhoenixEventQueue(withCallback: sendEvents)
             eventQueue?.startQueue()
             // Track application opened.
             trackApplicationOpened()
         }
         
-        internal func shutdown() {
+        override func shutdown() {
             eventQueue?.stopQueue()
         }
         

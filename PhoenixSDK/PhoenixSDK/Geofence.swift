@@ -13,23 +13,40 @@ func == (lhs: Geofence, rhs: Geofence) -> Bool {
 }
 
 /// An instance of a geofence with a latitude/longitude/radius combination.
-internal final class Geofence: Equatable {
+@objc public final class Geofence: NSObject {
+    
     /// Longitude of the geofence.
-    var longitude: Double = 0.0
+    internal(set) var longitude: Double = 0.0
+    
     /// Latitude of the geofence.
-    var latitude: Double = 0.0
+    internal(set) var latitude: Double = 0.0
+    
     /// Radius around the longitude + latitude to include.
-    var radius: Double = 0.0
+    internal(set) var radius: Double = 0.0
+    
     /// Identifier of this geofence.
-    var id = 0
+    internal(set) var id = 0
+    
     /// Project ID for this geofence.
-    var projectId = 0
+    internal(set) var projectId = 0
+    
     /// Name of this geofence.
-    var name = ""
+    internal(set) var name = ""
+    
     /// Address associated with this geofence.
-    var address = ""
+    internal(set) var address = ""
+    
     /// Date this geofence was modified last on the server. (Unused)
-    var modifyDate: NSTimeInterval = 0.0
+    internal(set) var modifyDate: NSTimeInterval = 0.0
+    
     /// Date this geofence was created on the server. (Unused)
-    var createDate: NSTimeInterval = 0.0
+    internal(set) var createDate: NSTimeInterval = 0.0
+    
+    // Equatable
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let object = object else {
+            return false
+        }
+        return self.id == object.id
+    }
 }

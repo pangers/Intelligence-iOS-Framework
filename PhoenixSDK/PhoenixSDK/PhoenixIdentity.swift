@@ -16,7 +16,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installation, error: NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-@objc public protocol PhoenixIdentity {
+@objc public protocol PhoenixIdentity : PhoenixModuleProtocol {
     
     /// - Returns: True if user has logged in with username and password.
     var isLoggedIn: Bool { get }
@@ -59,13 +59,7 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
 extension Phoenix {
     
     /// The PhoenixIdentity implementation.
-    final class Identity : PhoenixIdentity, PhoenixModuleProtocol {
-
-        /// A reference to the network manager
-        private let network:Network
-        
-        /// The configuration of the Phoenix SDK
-        private let configuration:Phoenix.Configuration
+    final class Identity : PhoenixModule, PhoenixIdentity {
         
         /// Installation object used for Create/Update Installation requests.
         private let installation: Phoenix.Installation
@@ -77,17 +71,16 @@ extension Phoenix {
         ///     - version: Version class will be used for interrogating app to get the current version.
         ///     - storage: Storage class will be used for storing information about the installation.
         init(withNetwork network:Network, configuration:Phoenix.Configuration, applicationVersion: PhoenixApplicationVersionProtocol, installationStorage: PhoenixInstallationStorageProtocol) {
-            self.network = network
-            self.configuration = configuration
             self.installation = Phoenix.Installation(configuration: configuration, applicationVersion: applicationVersion, installationStorage: installationStorage)
+            super.init(withNetwork: network, configuration: configuration)
         }
         
-        func startup() {
+        override func startup() {
             createInstallation(callback: nil)
             updateInstallation(callback: nil)
         }
         
-        func shutdown() {
+        override func shutdown() {
             // Nothing to do currently.
         }
         
