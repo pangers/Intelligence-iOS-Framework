@@ -8,10 +8,6 @@
 
 import Foundation
 
-func == (lhs: Geofence, rhs: Geofence) -> Bool {
-    return lhs.id == rhs.id
-}
-
 /// An instance of a geofence with a latitude/longitude/radius combination.
 @objc public final class Geofence: NSObject {
     

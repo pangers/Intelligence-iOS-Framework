@@ -11,7 +11,7 @@ import XCTest
 @testable import PhoenixSDK
 
 class PhoenixLocationTestCase: PhoenixBaseTestCase {
-    var location:Phoenix.Location?
+    var location:PhoenixLocation?
     var configurationDisabled:Phoenix.Configuration?
     
     let geofencesResponse = "{" +
@@ -113,7 +113,9 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
+        let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
+        query.setDefaultValues()
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -123,7 +125,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             method: "GET",
             response: (data: geofencesResponse, statusCode:200, headers:nil))
         
-        try! location!.downloadGeofences { (geofences, error) -> Void in
+        location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
@@ -134,28 +136,13 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         }
     }
     
-    /// Download method should fail if flag is disabled.
-    func testDownloadGeofencesFailDisabledFlag() {
-        // Mock 200 on auth
-        mockValidTokenStorage()
-        
-        do {
-            try location!.downloadGeofences { (geofences, error) -> Void in
-            }
-        } catch let err as GeofenceError {
-            switch err {
-            case .CannotRequestGeofencesWhenDisabled: XCTAssert(true)
-            default: XCTAssert(false)
-            }
-        } catch {
-            XCTAssert(false)
-        }
-    }
-    
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
+        let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
+        query.setDefaultValues()
+
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
         
         // Mock 200 on auth
         mockValidTokenStorage()
@@ -165,7 +152,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             method: "GET",
             response: (data: geofencesResponse, statusCode:401, headers:nil))
         
-        try! location!.downloadGeofences { (geofences, error) -> Void in
+        location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
