@@ -42,12 +42,14 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
     /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
     /// The NSError domain is IdentityError.domain
     func createUser(user:Phoenix.User, callback:PhoenixUserCallback?)
-
+    
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
+    
+    func getMe(callback:PhoenixUserCallback)
 }
 
 extension Phoenix {
@@ -87,11 +89,13 @@ extension Phoenix {
             let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
             oauth.updateCredentials(username, password: password)
             
+            phoenix?.developerLoggedIn = false
             let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, phoenix: phoenix)
-            pipeline.completionBlock = { [weak pipeline] in
+            pipeline.completionBlock = { [weak pipeline, weak phoenix] in
                 if pipeline?.output?.error != nil {
                     callback(error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
+                    phoenix?.developerLoggedIn = true
                     callback(error: nil)
                 }
             }
@@ -100,6 +104,7 @@ extension Phoenix {
         }
         
         @objc func logout() {
+            phoenix?.developerLoggedIn = false
             PhoenixOAuth.reset(.LoggedInUser)
         }
         

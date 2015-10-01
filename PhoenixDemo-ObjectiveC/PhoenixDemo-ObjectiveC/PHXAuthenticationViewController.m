@@ -22,11 +22,9 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 };
 
 @interface PHXAuthenticationViewController()
-{
-    PHXLoginMessage currentStatus;
-    PHXUser *loggedInUser;
-    BOOL isLoggedIn;
-}
+@property (nonatomic, strong) PHXUser *loggedInUser;
+@property (nonatomic) PHXLoginMessage currentStatus;
+@property (nonatomic) BOOL isLoggedIn;
 @end
 
 
@@ -35,16 +33,16 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:ViewUserSegue]) {
         PHXViewUserViewController *viewUser = segue.destinationViewController;
-        viewUser.user = loggedInUser;
-        loggedInUser = nil;
+        viewUser.user = self.loggedInUser;
+        self.loggedInUser = nil;
     }
 }
 
 - (PHXLoginMessage)status {
-    if ([self loggedIn]) {
+    if (self.isLoggedIn) {
         return PHXLoggedIn;
     } else {
-        return currentStatus;
+        return self.currentStatus;
     }
 }
 
@@ -76,10 +74,6 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     }
 }
 
-- (BOOL)loggedIn {
-    return false;// [PHXPhoenixManager.phoenix.identity isLoggedIn];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setTitle:@"Login"];
@@ -99,11 +93,11 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     if (indexPath.row == 0) {
         cell.textLabel.text = [self messageForStatus];
         cell.textLabel.textColor = [self colorForStatus];
-        cell.userInteractionEnabled = !self.loggedIn;
+        cell.userInteractionEnabled = !self.isLoggedIn;
     } else {
         cell.textLabel.text = @"Logout";
-        cell.textLabel.textColor = !self.loggedIn ? [UIColor grayColor] : [UIColor blackColor];
-        cell.userInteractionEnabled = self.loggedIn;
+        cell.textLabel.textColor = !self.isLoggedIn ? [UIColor grayColor] : [UIColor blackColor];
+        cell.userInteractionEnabled = self.isLoggedIn;
     }
     return cell;
 }
@@ -118,10 +112,8 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 }
 
 - (void)login {
-    
-    if (self.loggedIn) { return; }
-    
-    currentStatus = PHXLoggingIn;
+    __weak typeof(self) weakSelf = self;
+    self.currentStatus = PHXLoggingIn;
     [self.tableView reloadData];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter Details" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -136,29 +128,38 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
         NSString *username = alert.textFields.firstObject.text;
         NSString *password = alert.textFields.lastObject.text;
         if (!(username.length != 0 && password.length != 0)) {
-            currentStatus = PHXLogin;
+            weakSelf.currentStatus = PHXLogin;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
             return;
         }
         [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(NSError * _Nullable error) {
-            currentStatus = self.loggedIn ? PHXLoggedIn : PHXLoginFailed;
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self.tableView reloadData];
-                if (currentStatus == PHXLoggedIn) {
-                    //loggedInUser = user;
-                    isLoggedIn = error == nil;
-                    [self performSegueWithIdentifier:ViewUserSegue sender:self];
-                }
-            }];
+            weakSelf.isLoggedIn = error == nil;
+            weakSelf.currentStatus = weakSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
+            if (weakSelf.isLoggedIn) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [weakSelf.tableView reloadData];
+                    [PHXPhoenixManager.phoenix.identity getMe:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            if (user) {
+                                __strong typeof(weakSelf) strongSelf = weakSelf;
+                                strongSelf.loggedInUser = user;
+                                [strongSelf performSegueWithIdentifier:ViewUserSegue sender:strongSelf];
+                            } else {
+                                NSLog(@"Error : %@", error);
+                            }
+                        }];
+                    }];
+                }];
+            }
         }];
     }]];
     [self presentViewController:alert animated:true completion:nil];
 }
 
 - (void)logout {
-    currentStatus = PHXLogin;
+    self.currentStatus = PHXLogin;
     [PHXPhoenixManager.phoenix.identity logout];
     [self.tableView reloadData];
 }

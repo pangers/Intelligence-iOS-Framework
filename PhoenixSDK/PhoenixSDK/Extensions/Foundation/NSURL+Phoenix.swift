@@ -15,71 +15,71 @@ private let phoenixAnalyticsAPIVersion = "analytics/v1"
 internal extension NSURL {
     
     func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
-        return NSURL(string: "/\(phoenixAnalyticsAPIVersion)", relativeToURL: self)
+        return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
     }
     
     func phx_URLByAppendingRootLocationPath() -> NSURL! {
-        return NSURL(string: "/\(phoenixLocationAPIVersion)", relativeToURL: self)
+        return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
     }
     
     func phx_URLByAppendingRootIdentityPath() -> NSURL! {
-        return NSURL(string: "/\(phoenixIdentityAPIVersion)", relativeToURL: self)
+        return URLByAppendingPathComponent("/\(phoenixIdentityAPIVersion)")
     }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return NSURL(string: "\(phoenixIdentityAPIVersion)/oauth/token", relativeToURL: self)
+        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return NSURL(string: "\(phoenixIdentityAPIVersion)/oauth/validate", relativeToURL: self)
+        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/validate")
     }
     
     /// - Returns: NSURL with appended applications path.
     func phx_URLByAppendingApplications(applicationID: Int? = nil) -> NSURL! {
         if let applicationID = applicationID {
-            return NSURL(string: "/applications/\(applicationID)", relativeToURL: self)
+            return URLByAppendingPathComponent("/applications/\(applicationID)")
         } else {
-            return NSURL(string: "/applications", relativeToURL: self)
+            return URLByAppendingPathComponent("/applications")
         }
     }
     
     /// - Returns: NSURL with append installations path.
     func phx_URLByAppendingInstallations() -> NSURL! {
-        return NSURL(string: "/installations", relativeToURL: self)
+        return URLByAppendingPathComponent("/installations")
     }
     
     /// - Returns: NSURL with append installations path.
     func phx_URLByAppendingEvents() -> NSURL! {
-        return NSURL(string: "/events", relativeToURL: self)
+        return URLByAppendingPathComponent("/events")
     }
     
     /// - Returns: NSURL with append geofences path.
     func phx_URLByAppendingGeofences() -> NSURL! {
-        return NSURL(string: "/geofences", relativeToURL: self)
+        return URLByAppendingPathComponent("/geofences")
     }
     
     /// - Returns: NSURL with appended projects path.
     func phx_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
         if let projectID = projectID {
-            return NSURL(string: "/projects/\(projectID)", relativeToURL: self)
+            return URLByAppendingPathComponent("/projects/\(projectID)")
         } else {
-            return NSURL(string: "/projects", relativeToURL: self)
+            return URLByAppendingPathComponent("/projects")
         }
     }
     
     /// - Returns: NSURL with appended users path.
     func phx_URLByAppendingUsers(userID: Int? = nil) -> NSURL! {
         if let userID = userID {
-            return NSURL(string: "/users/\(userID)", relativeToURL: self)
+            return URLByAppendingPathComponent("/users/\(userID)")
         } else {
-            return NSURL(string: "/users", relativeToURL: self)
+            return URLByAppendingPathComponent("/users")
         }
     }
     
     /// - Returns: NSURL with appended '/users/me' path.
     func phx_URLByAppendingUsersMe() -> NSURL! {
-        return NSURL(string: "/users/me", relativeToURL: self)
+        return URLByAppendingPathComponent("/users/me")
     }
 }

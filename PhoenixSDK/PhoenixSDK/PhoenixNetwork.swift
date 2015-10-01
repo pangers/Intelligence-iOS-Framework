@@ -79,11 +79,6 @@ internal extension Phoenix {
                     initialBlock?()
                 }
                 if let this = self, httpResponse = operation.output?.response as? NSHTTPURLResponse where httpResponse.statusCode == 401 {
-                    if operation.isMemberOfClass(PhoenixOAuthLoginOperation.self) || operation.isMemberOfClass(PhoenixOAuthRefreshOperation.self) || operation.isMemberOfClass(PhoenixOAuthValidateOperation.self) {
-                        // Nothing we can do...
-                        // TODO: Log error for developer
-                        return
-                    }
                     // No longer authenticated, try and authenticate
                     let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: operation.oauth, phoenix: this.phoenix)
                     this.enqueueOAuthPipeline(pipeline)
@@ -97,7 +92,7 @@ internal extension Phoenix {
             workerQueue.suspended = true
             let oldCompletionBlock = pipeline.completionBlock
             pipeline.completionBlock = { [weak self, weak pipeline] in
-                if pipeline != nil && pipeline?.operations.count == 0 {
+                if pipeline != nil && pipeline?.output?.error == nil {
                     // Login succeeeded
                     self?.workerQueue.suspended = false
                 }
