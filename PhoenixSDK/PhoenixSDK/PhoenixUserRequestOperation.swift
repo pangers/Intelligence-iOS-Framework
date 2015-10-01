@@ -2,37 +2,37 @@
 //  PhoenixUserRequestOperation.swift
 //  PhoenixSDK
 //
-//  Created by Chris Nevin on 04/08/2015.
+//  Created by Chris Nevin on 01/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import Foundation
 
-/// Base class for User request operations. Inherits from PhoenixNetworkRequestOperation.
-/// Handles most of the error handling and parsing.
-internal class PhoenixUserRequestOperation : PhoenixNetworkRequestOperation {
+class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     
-    /// User will be set if response is parsable.
+    /// Once successful, this will contain the user provided by the backend.
     var user: Phoenix.User?
-    /// Configuration is required, and will be set on init.
-    var configuration: Phoenix.Configuration?
-    /// Error will be populated using this error code, subclassses to set error code at appropriate times.
-    var errorCode: Int = 0
     
-    /// The operation will run synchronously the data task and store the error and output.
-    override func main() {
-        super.main()
-        if error != nil {
-            error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
-            return
-        }
-        guard let userData = (self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray)?.first, configuration = configuration else {
-            return
-        }
-        // If all conditions succeed, parse the user.
-        user = Phoenix.User(withJSON: userData, configuration: configuration)
-        if user == nil {
-            error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
-        }
+    let sentUser: Phoenix.User?
+    
+    /// Create new User request.
+    init(user: Phoenix.User? = nil, phoenix: Phoenix) {
+        self.sentUser = user
+        super.init()
+        self.phoenix = phoenix
     }
+    
+    /// Parse.
+    func parse(withErrorCode errorCode: Int) {
+        if output?.error != nil {
+            output?.error = NSError(domain: IdentityError.domain, code: errorCode, userInfo: nil)
+            return
+        }
+        guard let receivedUser = Phoenix.User(withJSON: self.outputDictionary(), configuration: phoenix!.configuration) else {
+            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            return
+        }
+        user = receivedUser
+    }
+
 }

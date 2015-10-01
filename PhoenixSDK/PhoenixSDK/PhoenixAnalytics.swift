@@ -23,36 +23,33 @@ internal extension Phoenix {
     /// The Phoenix Analytics Module defines the methods available for tracking events.
     internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
         
-        /// Instance of the Configuration class, used for configuring requests.
-        private let configuration: Configuration
-        
-        /// Interrogated for 'InstallationId' to include in requests (if available).
-        private let installationStorage: PhoenixInstallationStorageProtocol
-        
-        /// Interrogated for 'ApplicationVersion' to include in requests.
-        private let applicationVersion: PhoenixApplicationVersionProtocol
+        internal weak var phoenix: Phoenix!
         
         /// Instance of the Network class, used for sending analytical events.
-        private let network: Network
+        private var network: Network {
+            return phoenix.network
+        }
+        
+        /// Instance of the Configuration class, used for configuring requests.
+        private var configuration: Configuration {
+            return network.configuration
+        }
+    
+        /// Interrogated for 'InstallationId' to include in requests (if available).
+        private var installationStorage: PhoenixInstallationStorageProtocol {
+            return phoenix.installation.installationStorage
+        }
+        
+        /// Interrogated for 'ApplicationVersion' to include in requests.
+        private var applicationVersion: PhoenixApplicationVersionProtocol {
+            return phoenix.installation.applicationVersion
+        }
         
         /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
         
         /// Instance of location class, used for configuring requests and managing geofences.
         internal weak var location: Location?
-        
-        /// Initializes Analytics module.
-        /// - parameter network:             Instance of the Network class, used for sending analytical events.
-        /// - parameter configuration:       Instance of the Configuration class, used for configuring requests.
-        /// - parameter installationStorage: Interrogated for 'InstallationId' to include in requests (if available).
-        /// - parameter applicationVersion:  Interrogated for 'ApplicationVersion' to include in requests.
-        /// - returns: Returns an Analytics object.
-        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
-            self.network = network
-            self.configuration = configuration
-            self.installationStorage = installationStorage
-            self.applicationVersion = applicationVersion
-        }
         
         // MARK:- PhoenixModuleProtocol
         
@@ -101,7 +98,7 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
-            dictionary <-? (Event.UserIdKey, network.authentication.userId)
+            // TODO: Get User ID dictionary <-? (Event.UserIdKey, network.authentication.userId)
             
             // Add geolocation
             let geolocation = location?.userLocation
@@ -117,9 +114,11 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-            let operation = AnalyticsRequestOperation(withNetwork: network, configuration: configuration, eventsJSON: events) { (error) -> Void in
-                completion(error: error)
+            let operation = AnalyticsRequestOperation(json: events, oauth: phoenix.bestOAuth, phoenix: phoenix)
+            operation.completionBlock = { [weak operation] in
+                completion(error: operation?.output?.error)
             }
+            
             network.executeNetworkOperation(operation)
         }
     }

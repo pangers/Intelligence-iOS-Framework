@@ -20,10 +20,17 @@ internal extension Phoenix {
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location: NSObject, PhoenixModuleProtocol, CLLocationManagerDelegate {
         
+        internal weak var phoenix: Phoenix!
+        
         /// A reference to the Network manager.
-        private let network: Network
+        private var network: Network {
+            return phoenix.network
+        }
         /// Configuration instance used for NSURLRequests.
-        private let configuration: Phoenix.Configuration
+        private var configuration: Phoenix.Configuration {
+            return network.configuration
+        }
+        
         /// Callback for enter/exit geofences.
         internal let geofenceCallback: PhoenixGeofenceCallback
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
@@ -39,28 +46,8 @@ internal extension Phoenix {
             }
         }
         
-        /// Default initializer. Requires a network and configuration class.
-        /// - Parameters: 
-        ///     - withNetwork: The network that will be used.
-        ///     - configuration: The configuration class to use.
-        
-        /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
-        /// - parameter network:          Instance of Network class to use.
-        /// - parameter configuration:    Configuration used to configure requests.
-        /// - parameter geofenceCallback: Called on enter/exit of geofence.
-        /// - returns: Returns a Location object.
-        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, geofenceCallback: PhoenixGeofenceCallback) {
-            self.network = network
-            self.configuration = configuration
+        internal init(geofenceCallback: PhoenixGeofenceCallback) {
             self.geofenceCallback = geofenceCallback
-            // Initialise with cached geofences, startup may never succeed if networking/parsing error occurs.
-            if self.configuration.useGeofences {
-                do {
-                    self.geofences = try Geofence.geofencesFromCache()
-                } catch {
-                    // Ignore error...
-                }
-            }
             super.init()
             NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredBackground:"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
             NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredForeground:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
@@ -86,6 +73,7 @@ internal extension Phoenix {
         
         func startup() {
             do {
+                geofences = try Geofence.geofencesFromCache()
                 try downloadGeofences { [weak self] (geofences, error) -> Void in
                     if let geofences = geofences {
                         self?.geofences = geofences
@@ -108,14 +96,9 @@ internal extension Phoenix {
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
         internal func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) throws {
             if configuration.useGeofences {
-                let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration)
-                
-                // set the completion block to notify the caller
-                operation.completionBlock = {
-                    guard let callback = callback else {
-                        return
-                    }
-                    callback(geofences: operation.geofences, error: operation.error)
+                let operation = DownloadGeofencesRequestOperation(oauth: phoenix.bestOAuth, phoenix: phoenix)
+                operation.completionBlock = { [weak operation] in
+                    callback?(geofences: operation?.geofences, error: operation?.output?.error)
                 }
                 
                 // Execute the network operation

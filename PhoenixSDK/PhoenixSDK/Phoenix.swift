@@ -17,8 +17,21 @@ public final class Phoenix: NSObject {
     /// - Returns: A **copy** of the configuration.
     public let configuration: Phoenix.Configuration
     
+    internal var developerLoggedIn = false
+    
+    internal var bestOAuth: PhoenixOAuth {
+        if developerLoggedIn {
+            return PhoenixOAuth(tokenType: .LoggedInUser)
+        } else {
+            return PhoenixOAuth(tokenType: .SDKUser)
+        }
+    }
+    
+    
     /// Called by Phoenix when the SDK does not know how to deal with the current error it has encountered.
     internal var errorCallback: PhoenixErrorCallback?
+    
+    internal let installation: Phoenix.Installation
     
     /// Instance of the Network manager for the Phoenix SDK, encapsulates authentication requests.
     internal let network: Network
@@ -40,18 +53,30 @@ public final class Phoenix: NSObject {
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
         configuration = phoenixConfiguration.clone()
+        
         let myConfiguration = phoenixConfiguration.clone()
-        network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
+        network = Network(withConfiguration: myConfiguration)
+        installation = Phoenix.Installation(configuration: myConfiguration,
+            applicationVersion: NSBundle.mainBundle(),
+            installationStorage: NSUserDefaults())
+        
         // Modules
-        let installationStorage = NSUserDefaults()
-        identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
-        let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
-        location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence)
-        location.testLocation = disableLocation!
-        analytics.location = location
-        self.analytics = analytics
+        
+        identity = Identity()
+        analytics = Analytics()
+        location = Location(geofenceCallback: (analytics as! Analytics).trackGeofence)
         
         super.init()
+        
+        (identity as! Identity).phoenix = self
+        
+        network.phoenix = self
+        
+        location.phoenix = self
+        location.testLocation = disableLocation == true
+        
+        (analytics as! Analytics).location = location
+        (analytics as! Analytics).phoenix = self
         
         if (myConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError
@@ -109,7 +134,6 @@ public final class Phoenix: NSObject {
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
         errorCallback = callback
-        network.enqueueAuthenticationOperationIfRequired()
         modules.forEach({ $0?.startup() })
     }
     

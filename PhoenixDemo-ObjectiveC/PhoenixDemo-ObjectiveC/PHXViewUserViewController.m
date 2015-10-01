@@ -85,7 +85,7 @@
 {
     NSInteger userId = [[[NSNumberFormatter alloc] init] numberFromString:searchBar.text].integerValue;
     [searchBar resignFirstResponder];
-    
+    /*
     [[self phoenixIdentity] getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
@@ -96,7 +96,7 @@
         {
             [self showInformation:[NSString stringWithFormat:@"There was an error while getting the user: %@", error]];
         }
-    }];
+    }];*/
 }
 
 - (IBAction)didTapUpdateUser:(id)sender {

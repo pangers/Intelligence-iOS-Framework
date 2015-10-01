@@ -9,35 +9,28 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
-internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
+internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
     
-    /// Default initializer. Requires a network and configuration class.
-    /// - Parameters:
-    ///     - network: The network that will be used.
-    ///     - configuration: The configuration class to use.
-    init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration)
-        geofences = []
-        super.init(withNetwork: network, request: request)
+    init(oauth: PhoenixOAuth, phoenix: Phoenix) {
+        super.init()
+        self.oauth = oauth
+        self.phoenix = phoenix
     }
     
     override func main() {
-        super.main()
-        if error != nil {
-            error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, phoenix: phoenix!)
+        output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        if output?.error != nil {
+            output?.error = NSError(domain: LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue, userInfo: nil)
             return
         }
-        do {
-            if let dictionary = output?.data?.phx_jsonDictionary {
-                geofences = try Geofence.geofences(withJSON: dictionary)
-            }
-        } catch _ { // Suppress default 'error' let, so we can use our instance variable.
-            error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+        guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.phx_jsonDictionary) else {
+            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
+        geofences = downloaded
     }
-    
 }
