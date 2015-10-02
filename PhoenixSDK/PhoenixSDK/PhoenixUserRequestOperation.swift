@@ -16,10 +16,11 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     let sentUser: Phoenix.User?
     
     /// Create new User request.
-    init(user: Phoenix.User? = nil, phoenix: Phoenix) {
+    init(user: Phoenix.User? = nil, configuration: Phoenix.Configuration, network: Network) {
         self.sentUser = user
         super.init()
-        self.phoenix = phoenix
+        self.configuration = configuration
+        self.network = network
     }
     
     /// Parse.
@@ -28,7 +29,7 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
             return
         }
         
-        guard let receivedUser = Phoenix.User(withJSON: self.outputDictionary(), configuration: phoenix!.configuration) else {
+        guard let receivedUser = Phoenix.User(withJSON: self.outputDictionary(), configuration: configuration!) else {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

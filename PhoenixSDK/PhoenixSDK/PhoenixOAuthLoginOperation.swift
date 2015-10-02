@@ -11,8 +11,8 @@ import Foundation
 internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
     
     override func main() {
-        assert(oauth != nil && phoenix != nil)
-        let request = NSURLRequest.phx_URLRequestForLogin(oauth!, phoenix: phoenix!)
+        assert(oauth != nil && network != nil)
+        let request = NSURLRequest.phx_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
         // Assumption: 200 status code means our credentials are valid, otherwise invalid.

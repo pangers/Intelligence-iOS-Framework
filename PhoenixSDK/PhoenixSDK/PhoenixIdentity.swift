@@ -46,9 +46,11 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
-    ///     - callback: The user callback to pass. Will be called with either an error or a user.
+    ///     - callback: Will be called with either an error or a user.
     func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
     
+    /// Get details about logged in user.
+    /// - parameter callback: Will be called with either an error or a user.
     func getMe(callback:PhoenixUserCallback)
 }
 
@@ -57,33 +59,34 @@ extension Phoenix {
     /// The PhoenixIdentity implementation.
     final class Identity : PhoenixModule, PhoenixIdentity {
 
-        internal weak var phoenix: Phoenix!
-
         /// Installation object used for Create/Update Installation requests.
-        private var installation: Phoenix.Installation {
-            return phoenix.installation
-        }
+        private var installation: Phoenix.Installation!
         
-        override init(withNetwork network:Network, configuration:Configuration) {
+        init(
+            withNetwork network: Network,
+            configuration:Configuration,
+            installation: Installation)
+        {
             super.init(withNetwork: network, configuration: configuration)
+            self.installation = installation
         }
         
         override func startup() {
             super.startup()
-            phoenix.network.getPipeline(forTokenType: .Application) { [weak phoenix] (applicationPipeline) -> () in
-                guard let applicationPipeline = applicationPipeline else {
+            network.getPipeline(forTokenType: .Application, configuration: configuration) { [weak self] (applicationPipeline) -> () in
+                guard let applicationPipeline = applicationPipeline, identity = self else {
                     // Shouldn't happen.
                     assertionFailure("Startup shouldn't be called multiple times")
                     return
                 }
-                phoenix?.network.enqueueOperation(applicationPipeline)
-                phoenix?.network.getPipeline(forTokenType: .SDKUser, completion: { [weak phoenix, weak self] (sdkUserPipeline) -> () in
-                    guard let sdkUserPipeline = sdkUserPipeline else {
+                identity.network.enqueueOperation(applicationPipeline)
+                identity.network.getPipeline(forTokenType: .SDKUser, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
+                    guard let sdkUserPipeline = sdkUserPipeline, identity = self else {
                         // Create user needs to occur.
                         return
                     }
                     // TODO: Create user if their credentials are empty.
-                    phoenix?.network.enqueueOperation(sdkUserPipeline)
+                    identity.network.enqueueOperation(sdkUserPipeline)
                     sdkUserPipeline.completionBlock = { [weak self] in
                         self?.createInstallation(nil)
                         self?.updateInstallation(nil)
@@ -103,14 +106,19 @@ extension Phoenix {
             let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
             oauth.updateCredentials(username, password: password)
             
-            phoenix?.developerLoggedIn = false
-            let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, phoenix: phoenix)
+            network.developerLoggedIn = false
             
-            pipeline.completionBlock = { [weak pipeline, weak phoenix] in
+            let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
+            
+            pipeline.completionBlock = { [weak pipeline, weak self] in
                 if pipeline?.output?.error != nil {
                     callback(error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
-                    phoenix?.developerLoggedIn = true
+                    self?.network.developerLoggedIn = true
+                    // Clear password from memory.
+                    if (pipeline?.oauth?.tokenType == .LoggedInUser) {
+                        pipeline?.oauth?.password = nil
+                    }
                     callback(error: nil)
                 }
             }
@@ -119,7 +127,7 @@ extension Phoenix {
         }
         
         @objc func logout() {
-            phoenix?.developerLoggedIn = false
+            network.developerLoggedIn = false
             PhoenixOAuth.reset(.LoggedInUser)
         }
         
@@ -137,7 +145,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateUserRequestOperation(user: user, phoenix: phoenix)
+            let operation = CreateUserRequestOperation(user: user, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)
             }
@@ -157,7 +165,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = UpdateUserRequestOperation(user: user, phoenix: phoenix)
+            let operation = UpdateUserRequestOperation(user: user, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)
             }
@@ -173,7 +181,7 @@ extension Phoenix {
         ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
         ///     - callback: The user callback to pass. Will be called with either an error or a user.
         @objc func getMe(callback: PhoenixUserCallback) {
-            let operation = GetUserMeRequestOperation(phoenix: phoenix)
+            let operation = GetUserMeRequestOperation(configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback(user: operation?.user, error: operation?.output?.error)
             }
@@ -194,7 +202,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateInstallationRequestOperation(oauth: phoenix.bestSDKUserOAuth, phoenix: phoenix)
+            let operation = CreateInstallationRequestOperation(installation: installation, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
@@ -213,7 +221,7 @@ extension Phoenix {
             }
             
             // If this call fails, it will retry again the next time we open the app.
-            let operation = UpdateInstallationRequestOperation(oauth: phoenix.bestSDKUserOAuth, phoenix: phoenix)
+            let operation = UpdateInstallationRequestOperation(installation: installation, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }

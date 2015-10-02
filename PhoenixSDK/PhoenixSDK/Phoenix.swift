@@ -16,26 +16,9 @@ public final class Phoenix: NSObject {
     
     /// - Returns: A **copy** of the configuration.
     public let configuration: Phoenix.Configuration
-    internal let internalConfiguration: Phoenix.Configuration
-    
-    internal var developerLoggedIn = false
-    
-    internal var bestSDKUserOAuth: PhoenixOAuth {
-        if developerLoggedIn {
-            return PhoenixOAuth(tokenType: .LoggedInUser)
-        } else {
-            return PhoenixOAuth(tokenType: .SDKUser)
-        }
-    }
-    
     
     /// Called by Phoenix when the SDK does not know how to deal with the current error it has encountered.
     internal var errorCallback: PhoenixErrorCallback?
-    
-    internal let installation: Phoenix.Installation
-    
-    /// Instance of the Network manager for the Phoenix SDK, encapsulates authentication requests.
-    internal let network: Network
     
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [PhoenixModuleProtocol?] {
@@ -54,28 +37,26 @@ public final class Phoenix: NSObject {
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
         configuration = phoenixConfiguration.clone()            // Copy for developers
-        internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
-        
-        network = Network()
-        installation = Phoenix.Installation(configuration: internalConfiguration,
-            applicationVersion: NSBundle.mainBundle(),
-            installationStorage: NSUserDefaults())
         
         // Modules
         
-        identity = Identity(withNetwork: network, configuration: configuration)
-        analytics = Analytics(withNetwork: network, configuration: configuration)
-        location = Location(withNetwork: network, configuration: configuration, locationManager: PhoenixLocationManager())
-
-        
         super.init()
         
-        (identity as! Identity).phoenix = self
+        // Create shared objects for modules
+        let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
+        let network = Network()
+        let installation = Phoenix.Installation(configuration: internalConfiguration,
+            applicationVersion: NSBundle.mainBundle(),
+            installationStorage: NSUserDefaults())
+        let locationManager = PhoenixLocationManager()
         
-        network.phoenix = self
-        
+        // Modules
+        identity = Identity(withNetwork: network, configuration: internalConfiguration, installation: installation)
+        analytics = Analytics(withNetwork: network, configuration: internalConfiguration, installation: installation)
+        location = Location(withNetwork: network, configuration: internalConfiguration, locationManager: locationManager)
+
+        // TODO: Remove this?
         (analytics as! Analytics).location = location
-        (analytics as! Analytics).phoenix = self
         
         if (internalConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError
@@ -116,13 +97,13 @@ public final class Phoenix: NSObject {
     // MARK: Modules
     
     /// The identity module, enables user management in the Phoenix backend.
-    @objc public internal(set) var identity: PhoenixIdentity
+    @objc public internal(set) var identity: PhoenixIdentity!
     
     /// Analytics instance that can be used for posting Events.
-    @objc public internal(set) var analytics: PhoenixAnalytics
+    @objc public internal(set) var analytics: PhoenixAnalytics!
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    internal(set) var location: Phoenix.Location
+    internal(set) var location: Phoenix.Location!
     
     /// Starts up the Phoenix SDK modules.
     /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.

@@ -14,13 +14,15 @@ internal class PhoenixOAuthPipeline: PhoenixOAuthOperation {
     
     init(withOperations operations: [PhoenixOAuthOperation],
         oauth: PhoenixOAuth? = nil,
-        phoenix: Phoenix)
+        configuration: Phoenix.Configuration,
+        network: Network)
     {
         self.operations = operations
         super.init()
         self.input = operations.first!.input as PhoenixOAuthResponse!
         self.oauth = oauth
-        self.phoenix = phoenix
+        self.configuration = configuration
+        self.network = network
     }
     
     override func main() {
@@ -30,7 +32,8 @@ internal class PhoenixOAuthPipeline: PhoenixOAuthOperation {
                 operation.input = previousOutput
             }
             operation.oauth = oauth
-            operation.phoenix = phoenix
+            operation.network = network
+            operation.configuration = configuration
             operation.main()
             if operation.shouldBreak {
                 output = operation.output
