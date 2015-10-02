@@ -21,7 +21,7 @@ internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == 200 else {
+            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue else {
                 print("Validate Token Failed \(output?.error)")
             return
         }

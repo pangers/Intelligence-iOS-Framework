@@ -25,7 +25,7 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == 200 &&
+            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
                     print("Refresh Token Failed \(output?.error)")
             return

@@ -17,7 +17,7 @@ internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
         
         // Assumption: 200 status code means our credentials are valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == 200 &&
+            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
                     print("Login Failed \(output?.error)")
                     return
