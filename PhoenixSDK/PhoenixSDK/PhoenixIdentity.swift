@@ -71,27 +71,55 @@ extension Phoenix {
             self.installation = installation
         }
         
+        private func createSDKUserIfRequired(successBlock: () -> ()) {
+            let oauth = network.sdkUserOAuth
+            if oauth.username == nil || oauth.password == nil {
+                // Need to create user first.
+                let sdkUser = Phoenix.User(companyId: configuration.companyId)
+                createUser(sdkUser, callback: { [weak sdkUser] (serverUser, error) -> Void in
+                    guard let sdkUser = sdkUser else { return }
+                    
+                    // TODO: Assign role.
+                    if serverUser != nil {
+                        // Store credentials in keychain.
+                        oauth.updateCredentials(withUsername: sdkUser.username, password: sdkUser.password!)
+                        // If we have a user, need to call get pipeline again.
+                        successBlock()
+                    } else {
+                        // TODO: Pass error back to developer
+                    }
+                })
+            } else {
+                successBlock()
+            }
+        }
+        
         override func startup() {
             super.startup()
-            network.getPipeline(forTokenType: .Application, configuration: configuration) { [weak self] (applicationPipeline) -> () in
+            network.getPipeline(forOAuth: network.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
                 guard let applicationPipeline = applicationPipeline, identity = self else {
                     // Shouldn't happen.
                     assertionFailure("Startup shouldn't be called multiple times")
                     return
                 }
                 identity.network.enqueueOperation(applicationPipeline)
-                identity.network.getPipeline(forTokenType: .SDKUser, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
-                    guard let sdkUserPipeline = sdkUserPipeline, identity = self else {
-                        // Create user needs to occur.
-                        return
-                    }
+                applicationPipeline.completionBlock = {
                     // TODO: Create user if their credentials are empty.
-                    identity.network.enqueueOperation(sdkUserPipeline)
-                    sdkUserPipeline.completionBlock = { [weak self] in
-                        self?.createInstallation(nil)
-                        self?.updateInstallation(nil)
-                    }
-                })
+                    identity.createSDKUserIfRequired({ () -> () in
+                        identity.network.getPipeline(forOAuth: identity.network.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
+                            guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
+                                // Should not happen (user created above)
+                                return
+                            }
+                            
+                            identity.network.enqueueOperation(sdkUserPipeline)
+                            sdkUserPipeline.completionBlock = { [weak self] in
+                                self?.createInstallation(nil)
+                                self?.updateInstallation(nil)
+                            }
+                            })
+                    })
+                }
             }
         }
         
@@ -103,7 +131,7 @@ extension Phoenix {
         // MARK:- Login
         
         @objc func login(withUsername username: String, password: String, callback: PhoenixLoginCallback) {
-            let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
+            let oauth = network.loggedInUserOAuth
             oauth.updateCredentials(withUsername: username, password: password)
             
             network.developerLoggedIn = false
@@ -145,6 +173,7 @@ extension Phoenix {
                 return
             }
             
+            // TODO: Assign role
             let operation = CreateUserRequestOperation(user: user, oauth: network.applicationOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)

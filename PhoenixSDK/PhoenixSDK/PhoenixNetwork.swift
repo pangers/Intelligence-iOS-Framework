@@ -24,14 +24,13 @@ internal enum HTTPStatusCode: Int {
 internal final class Network {
     
     internal let applicationOAuth = PhoenixOAuth(tokenType: .Application)
-    internal var bestSDKUserOAuth: PhoenixOAuth {
-        if developerLoggedIn {
-            return PhoenixOAuth(tokenType: .LoggedInUser)
-        } else {
-            return PhoenixOAuth(tokenType: .SDKUser)
-        }
-    }
+    internal let sdkUserOAuth = PhoenixOAuth(tokenType: .SDKUser)
+    internal let loggedInUserOAuth = PhoenixOAuth(tokenType: .LoggedInUser)
+    
     internal var developerLoggedIn = false
+    internal var bestSDKUserOAuth: PhoenixOAuth {
+        return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
+    }
     
     /// NSURLSession with default session configuration.
     internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -65,16 +64,11 @@ internal final class Network {
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return PhoenixOAuthPipeline for given token type.
-    internal func getPipeline(forTokenType tokenType: PhoenixOAuthTokenType, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
-        let oauth = PhoenixOAuth(tokenType: tokenType)
-        
-        if (oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil)) {
-            // TODO: Create SDKUser if their credentials are empty here.
+    internal func getPipeline(forOAuth oauth: PhoenixOAuth, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
+        if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
+            assertionFailure("User should have been created in startup()")
             completion(nil)
             return
-            
-            // Once SDKUser is created, we can then return the pipeline.
-            // getPipeline(forTokenType: .SDKUser, completion: completion)
         }
         
         // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
@@ -127,7 +121,7 @@ internal final class Network {
             }
             
             // Attempt to get the pipeline for this OAuth token type.
-            self?.getPipeline(forTokenType: operation.oauth!.tokenType, configuration: operation.configuration!, completion: { (pipeline) -> () in
+            self?.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, completion: { (pipeline) -> () in
                 guard let pipeline = pipeline else {
                     // Already enqueued, return
                     return

@@ -91,6 +91,31 @@ public extension Phoenix {
             self.avatarURL = avatarURL
         }
         
+        /// Convenience initializer to create a user with random details, intended to be used for the SDK user account
+        convenience public init(companyId:Int) {
+            let username = NSUUID().UUIDString
+            
+            let uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
+            let numbers = "0123456789"
+            
+            var password = (0..<3).map {
+                _ in uppercaseLetters[Int(arc4random_uniform(UInt32(uppercaseLetters.characters.count)))]
+            }
+            
+            password += (0..<3).map {
+                _ in lowercaseLetters[Int(arc4random_uniform(UInt32(lowercaseLetters.characters.count)))]
+            }
+            
+            password += (0..<3).map {
+                _ in numbers[Int(arc4random_uniform(UInt32(numbers.characters.count)))]
+            }
+            
+            password.shuffle()
+            
+            self.init(userId:invalidUserId, companyId:companyId, username:username, password:String(password), firstName:"SDK", lastName:"User", avatarURL:"")
+        }
+        
         /// Convenience initializer with no user id.
         convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)

@@ -162,7 +162,7 @@ internal extension Phoenix {
             }
 
 //            TODO Sort out
-//            let operation = DownloadGeofencesRequestOperation(oauth: PhoenixOAuth(tokenType: .LoggedInUser)), phoenix: nil)
+//            let operation = DownloadGeofencesRequestOperation(oauth: network.loggedInUserOAuth), phoenix: nil)
 //
 //            // set the completion block to notify the caller
 //            operation.completionBlock = { [weak self] in

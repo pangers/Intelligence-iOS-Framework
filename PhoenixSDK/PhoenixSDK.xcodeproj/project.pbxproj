@@ -37,6 +37,7 @@
 		BBF417361B74B7A500AF2BFA /* UpdateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */; };
 		BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
 		FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */; };
+		FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */; settings = {ASSET_TAGS = (); }; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */; };
 		FE18F92B1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */; };
@@ -157,6 +158,7 @@
 		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
 		BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateUserRequestOperation.swift; sourceTree = "<group>"; };
 		FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSBundleInstallation.swift; sourceTree = "<group>"; };
+		FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableCollectionType.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOpenApplicationEvent.swift; sourceTree = "<group>"; };
 		FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateFormatterIRFC3339.swift; sourceTree = "<group>"; };
@@ -544,6 +546,7 @@
 				BBE209DD1B67C149000202B6 /* NSURLRequest.swift */,
 				BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */,
 				BBA573771B692B6900685EFB /* String.swift */,
+				FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -750,6 +753,7 @@
 				FEB471461BBD678C00640CD7 /* PhoenixUserRequestOperation.swift in Sources */,
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				FE69993D1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift in Sources */,
+				FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
