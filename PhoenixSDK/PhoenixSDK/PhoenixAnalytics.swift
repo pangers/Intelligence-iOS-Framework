@@ -17,6 +17,11 @@ import Foundation
     
 }
 
+internal protocol PhoenixLocationProvider:class {
+    
+    var userLocation:PhoenixCoordinate? { get }
+    
+}
 
 internal extension Phoenix {
     
@@ -25,7 +30,12 @@ internal extension Phoenix {
         // TODO Override PhoenixModule class.
         
         internal weak var phoenix: Phoenix!
+        
+        internal weak var locationProvider:PhoenixLocationProvider?
     
+        /// Event queue responsible for queuing and storing events to disk.
+        private var eventQueue: PhoenixEventQueue?
+        
         /// Interrogated for 'InstallationId' to include in requests (if available).
         private var installationStorage: PhoenixInstallationStorageProtocol {
             return phoenix.installation.installationStorage
@@ -35,12 +45,6 @@ internal extension Phoenix {
         private var applicationVersion: PhoenixApplicationVersionProtocol {
             return phoenix.installation.applicationVersion
         }
-        
-        /// Event queue responsible for queuing and storing events to disk.
-        private var eventQueue: PhoenixEventQueue?
-        
-        /// Instance of location class, used for configuring requests and managing geofences.
-        internal weak var location: Location?
         
         // MARK:- PhoenixModuleProtocol
         
@@ -69,16 +73,6 @@ internal extension Phoenix {
             track(Phoenix.OpenApplicationEvent())
         }
         
-        /// Track geofence events (internally managed).
-        /// - parameter geofence: Geofence to track.
-        /// - parameter entered:  Whether we entered or exited.
-        internal func trackGeofence(geofence: Geofence, entered: Bool) {
-            // TODO: Re-implement once testing is completed.
-//            track(entered ?
-//                GeofenceEnterEvent(geofence: geofence) :
-//                GeofenceExitEvent(geofence: geofence))
-        }
-        
         /// Add automatically populated fields to dictionary.
         /// - parameter event: Event to prepare for sending.
         /// - returns: JSONDictionary representation of Event including populated fields.
@@ -95,11 +89,12 @@ internal extension Phoenix {
             // TODO: Get User ID dictionary <-? (Event.UserIdKey, network.authentication.userId)
             
             // Add geolocation
-            let geolocation = location?.userLocation
-            var geoDict = JSONDictionary()
-            geoDict <-? (Event.GeolocationLatitudeKey, geolocation?.latitude)
-            geoDict <-? (Event.GeolocationLongitudeKey, geolocation?.longitude)
-            dictionary <-? (Event.GeolocationKey, geoDict.keys.count == 2 ? geoDict : nil)
+            if let coordinates = locationProvider?.userLocation {
+                dictionary[Event.GeolocationKey] = [
+                    Event.GeolocationLatitudeKey  : coordinates.latitude,
+                    Event.GeolocationLongitudeKey : coordinates.longitude
+                ]
+            }
             
             return dictionary
         }

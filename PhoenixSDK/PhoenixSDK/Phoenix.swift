@@ -62,20 +62,20 @@ public final class Phoenix: NSObject {
             installationStorage: NSUserDefaults())
         
         // Modules
-        
-        identity = Identity(withNetwork: network, configuration: configuration)
-        analytics = Analytics(withNetwork: network, configuration: configuration)
-        location = Location(withNetwork: network, configuration: configuration, locationManager: PhoenixLocationManager())
-
+        identity = Identity(withNetwork: network, configuration: internalConfiguration)
+        analytics = Analytics(withNetwork: network, configuration: internalConfiguration)
+        location = Location(withNetwork: network, configuration: internalConfiguration, locationManager: PhoenixLocationManager())
         
         super.init()
         
         (identity as! Identity).phoenix = self
         
         network.phoenix = self
+        location.analytics = analytics
         
-        (analytics as! Analytics).location = location
-        (analytics as! Analytics).phoenix = self
+        let internalAnalytics = analytics as! Analytics
+        internalAnalytics.locationProvider = location
+        internalAnalytics.phoenix = self
         
         if (internalConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError

@@ -54,7 +54,10 @@ internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool)
 internal extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
-    internal final class Location: PhoenixModule, PhoenixLocation, PhoenixLocationManagerDelegate {
+    internal final class Location: PhoenixModule, PhoenixLocation, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
+        
+        /// A reference to the analytics module so we can track the geofences entered/exited events
+        internal weak var analytics:PhoenixAnalytics?
         
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
         internal lazy var enteredGeofences = [Geofence]()
