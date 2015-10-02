@@ -25,10 +25,10 @@ internal enum HTTPRequestMethod : String {
     
     /// GET
     case GET = "GET"
-
+    
     /// POST
     case POST = "POST"
-
+    
     /// PUT
     case PUT = "PUT"
 }
@@ -47,7 +47,7 @@ internal extension Phoenix {
         
         /// NSURLSession with default session configuration.
         internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-
+        
         /// Configuration passed through from Network initializer (assumed to be valid).
         internal var configuration: Phoenix.Configuration {
             return phoenix.internalConfiguration
@@ -76,46 +76,50 @@ internal extension Phoenix {
             let initialBlock = operation.completionBlock
             operation.completionBlock = { [weak self] in
                 // Check if our request failed.
-                if let httpResponse = operation.output?.response as? NSHTTPURLResponse
-                    where httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue
+                guard let httpResponse = operation.output?.response as? NSHTTPURLResponse
+                    where httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue else
                 {
-                    guard let network = self else { return }
-                    
-                    // Token is no longer valid and cannot be refreshed without user input. 
-                    // Do not try again. Alert developer.
-                    if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
-                        // TODO: Alert developer
-                        return
-                    }
-                    
-                    // Token is no longer valid, lets try and refresh, if that fails login again.
-                    let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
-                        oauth: operation.oauth, phoenix: network.phoenix)
-                    
-                    
-                    // Iterate all queued OAuth operations (excluding pipeline operations).
-                    network.queuedOAuthOperations().forEach({ (oauthOp) -> () in
-                        // Make each operation dependant on this new pipeline if the token types match.
-                        if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == pipeline.oauth?.tokenType {
-                            oauthOp.addDependency(pipeline)
-                        }
-                    })
-                    
-                    // Add original operation again, should be called after pipeline succeeds.
-                    pipeline.queuePriority = .VeryHigh
-                    pipeline.completionBlock = { [weak pipeline, weak network] in
-                        if pipeline?.output?.error == nil {
-                            // Add original operation again, should be called after pipeline succeeds.
-                            network?.queue.addOperation(operation)
-                        } else {
-                            // Call completion block for original operation.
-                            initialBlock?()
-                        }
-                    }
-                    
-                    // Prevent looping by adding explicitly to queue here.
-                    network.queue.addOperation(pipeline)
+                    // Cannot be handled as an unauthorized error.
+                    // Call completion block for original operation.
+                    initialBlock?()
+                    return
                 }
+                guard let network = self else { return }
+                
+                // Token is no longer valid and cannot be refreshed without user input.
+                // Do not try again. Alert developer.
+                if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
+                    // TODO: Alert developer
+                    return
+                }
+                
+                // Token is no longer valid, lets try and refresh, if that fails login again.
+                let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
+                    oauth: operation.oauth, phoenix: network.phoenix)
+                
+                
+                // Iterate all queued OAuth operations (excluding pipeline operations).
+                network.queuedOAuthOperations().forEach({ (oauthOp) -> () in
+                    // Make each operation dependant on this new pipeline if the token types match.
+                    if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == pipeline.oauth?.tokenType {
+                        oauthOp.addDependency(pipeline)
+                    }
+                })
+                
+                // Add original operation again, should be called after pipeline succeeds.
+                pipeline.queuePriority = .VeryHigh
+                pipeline.completionBlock = { [weak pipeline, weak network] in
+                    if pipeline?.output?.error == nil {
+                        // Add original operation again, should be called after pipeline succeeds.
+                        network?.queue.addOperation(operation)
+                    } else {
+                        // Call completion block for original operation.
+                        initialBlock?()
+                    }
+                }
+                
+                // Prevent looping by adding explicitly to queue here.
+                network.queue.addOperation(pipeline)
             }
             
             // Enqueue original operation.

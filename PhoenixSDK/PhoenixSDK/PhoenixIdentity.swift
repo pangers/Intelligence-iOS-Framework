@@ -91,6 +91,7 @@ extension Phoenix {
             
             phoenix?.developerLoggedIn = false
             let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, phoenix: phoenix)
+            
             pipeline.completionBlock = { [weak pipeline, weak phoenix] in
                 if pipeline?.output?.error != nil {
                     callback(error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
