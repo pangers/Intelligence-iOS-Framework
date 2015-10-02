@@ -13,17 +13,17 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
     
     private let eventsJSON: JSONDictionaryArray
     
-    init(json: JSONDictionaryArray, configuration: Phoenix.Configuration, network: Network) {
+    init(json: JSONDictionaryArray, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
         self.eventsJSON = json
         super.init()
         self.configuration = configuration
+        self.oauth = oauth
         self.network = network
     }
     
     override func main() {
         assert(network != nil && configuration != nil)
-        
-        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, configuration: configuration!, network: network!)
+        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
             return

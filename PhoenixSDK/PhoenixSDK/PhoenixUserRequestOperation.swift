@@ -16,9 +16,10 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     let sentUser: Phoenix.User?
     
     /// Create new User request.
-    init(user: Phoenix.User? = nil, configuration: Phoenix.Configuration, network: Network) {
+    init(user: Phoenix.User? = nil, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
         self.sentUser = user
         super.init()
+        self.oauth = oauth
         self.configuration = configuration
         self.network = network
     }

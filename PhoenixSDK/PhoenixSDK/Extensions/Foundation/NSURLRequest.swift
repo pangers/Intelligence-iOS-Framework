@@ -108,8 +108,7 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to create the given user.
-    class func phx_URLRequestForUserCreation(user: Phoenix.User, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.applicationOAuth
+    class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -124,7 +123,7 @@ internal extension NSURLRequest {
     }
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
-    class func phx_URLRequestForUserMe(configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForUserMe(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let oauth = network.bestSDKUserOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -138,7 +137,7 @@ internal extension NSURLRequest {
     }
     
     /// - returns: An NSURLRequest to update the given user.
-    class func phx_URLRequestForUserUpdate(user: Phoenix.User, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let oauth = network.bestSDKUserOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -156,7 +155,7 @@ internal extension NSURLRequest {
     // MARK: Installation
     
     /// - Returns: An NSURLRequest to create a given installation.
-    class func phx_URLRequestForInstallationCreate(installation: Phoenix.Installation, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationCreate(installation: Phoenix.Installation, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let oauth = network.bestSDKUserOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -174,7 +173,7 @@ internal extension NSURLRequest {
     
 
     /// - returns: An NSURLRequest to update a given installation.
-    class func phx_URLRequestForInstallationUpdate(installation: Phoenix.Installation, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationUpdate(installation: Phoenix.Installation, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let oauth = network.bestSDKUserOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -197,8 +196,7 @@ internal extension NSURLRequest {
 // MARK:- Analytics Module
 internal extension NSURLRequest {
     
-    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootAnalyticsPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -221,8 +219,7 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to download geofences.
-    class func phx_URLRequestForDownloadGeofences(configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+    class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootLocationPath()
             .phx_URLByAppendingProjects(configuration.projectID)

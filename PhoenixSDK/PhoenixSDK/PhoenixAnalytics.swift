@@ -98,7 +98,7 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-            let operation = AnalyticsRequestOperation(json: events, configuration: configuration, network: network)
+            let operation = AnalyticsRequestOperation(json: events, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 completion(error: operation?.output?.error)
             }

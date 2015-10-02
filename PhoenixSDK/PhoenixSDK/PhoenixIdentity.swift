@@ -145,7 +145,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateUserRequestOperation(user: user, configuration: configuration, network: network)
+            let operation = CreateUserRequestOperation(user: user, oauth: network.applicationOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)
             }
@@ -165,7 +165,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = UpdateUserRequestOperation(user: user, configuration: configuration, network: network)
+            let operation = UpdateUserRequestOperation(user: user, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)
             }
@@ -181,7 +181,7 @@ extension Phoenix {
         ///     - disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
         ///     - callback: The user callback to pass. Will be called with either an error or a user.
         @objc func getMe(callback: PhoenixUserCallback) {
-            let operation = GetUserMeRequestOperation(configuration: configuration, network: network)
+            let operation = GetUserMeRequestOperation(oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback(user: operation?.user, error: operation?.output?.error)
             }
@@ -202,7 +202,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateInstallationRequestOperation(installation: installation, configuration: configuration, network: network)
+            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
@@ -221,7 +221,7 @@ extension Phoenix {
             }
             
             // If this call fails, it will retry again the next time we open the app.
-            let operation = UpdateInstallationRequestOperation(installation: installation, configuration: configuration, network: network)
+            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
