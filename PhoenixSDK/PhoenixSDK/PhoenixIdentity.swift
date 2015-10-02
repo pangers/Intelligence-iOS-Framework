@@ -104,7 +104,7 @@ extension Phoenix {
         
         @objc func login(withUsername username: String, password: String, callback: PhoenixLoginCallback) {
             let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
-            oauth.updateCredentials(username, password: password)
+            oauth.updateCredentials(withUsername: username, password: password)
             
             network.developerLoggedIn = false
             

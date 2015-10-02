@@ -58,7 +58,7 @@ internal class PhoenixOAuth {
         keychain.password = nil
     }
     
-    func updateCredentials(username: String, password: String) {
+    func updateCredentials(withUsername username: String, password: String) {
         assert(tokenType != .Application, "Invalid method for Application tokens")
         self.username = username
         self.password = password
