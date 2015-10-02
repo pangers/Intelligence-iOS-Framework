@@ -55,9 +55,6 @@ internal extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location: PhoenixModule, PhoenixLocation, PhoenixLocationManagerDelegate {
-                
-        /// Callback for enter/exit geofences.
-        internal let geofenceCallback: PhoenixGeofenceCallback
         
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
         internal lazy var enteredGeofences = [Geofence]()
@@ -89,8 +86,7 @@ internal extension Phoenix {
         /// - parameter configuration:    Configuration used to configure requests.
         /// - parameter geofenceCallback: Called on enter/exit of geofence.
         /// - returns: Returns a Location object.
-        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, geofenceCallback: PhoenixGeofenceCallback, locationManager:PhoenixLocationManager) {
-            self.geofenceCallback = geofenceCallback
+        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
             self.locationManager = locationManager
             super.init(withNetwork: network, configuration: configuration)
             self.locationManager.delegate = self
@@ -162,16 +158,17 @@ internal extension Phoenix {
                 // TODO: Warning: Handle the error
             }
 
-            let operation = DownloadGeofencesRequestOperation(withNetwork: network, configuration: self.configuration, queryDetails: queryDetails)
-
-            // set the completion block to notify the caller
-            operation.completionBlock = { [weak self] in
-                self?.geofences = operation.geofences
-                callback?(geofences: operation.geofences, error: operation.error)
-            }
-
-            // Execute the network operation
-            network.executeNetworkOperation(operation)
+//            TODO Sort out
+//            let operation = DownloadGeofencesRequestOperation(oauth: PhoenixOAuth(tokenType: .LoggedInUser)), phoenix: nil)
+//
+//            // set the completion block to notify the caller
+//            operation.completionBlock = { [weak self] in
+//                self?.geofences = operation.geofences
+//                callback?(geofences: operation.geofences, error: operation.error)
+//            }
+//
+//            // Execute the network operation
+//            network.executeNetworkOperation(operation)
         }
         
         // MARK:- PhoenixLocationManagerDelegate

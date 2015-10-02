@@ -53,6 +53,9 @@ public enum IdentityError: Int, ErrorType {
     
     /// The user update request was not finished successfully.
     case UserUpdateError = 2005
+    
+    /// Login failed.
+    case LoginFailed = 2006
 
 }
 
@@ -71,6 +74,9 @@ public enum RequestError: Int, ErrorType {
     
     /// Error to return when parsing JSON fails.
     case ParseError = 3003
+    
+    /// Error to return if user doesn't have access to a particular API.
+    case AccessDeniedError = 3004
 }
 
 /// Enumeration to list the errors that can occur in the installation module
@@ -78,11 +84,15 @@ internal enum InstallationError: Int, ErrorType {
     /// The domain passed to NSErrors.
     static let domain = "InstallationError"
     
+    case CreateInstallationError = 4001
+    
+    case UpdateInstallationError = 4002
+    
     /// Called 'create' method unnecessarily.
-    case AlreadyInstalled = 4001
+    case AlreadyInstalledError = 4003
     
     /// Called 'update' method unnecessarily.
-    case AlreadyUpdated = 4002
+    case AlreadyUpdatedError = 4004
 }
 
 /// These are internal errors thrown by the Geofence class. Hence the custom Enum type.
@@ -94,3 +104,16 @@ internal enum GeofenceError: ErrorType {
     /// Error, use_geofences in Configuration file is set to false.
     case CannotRequestGeofencesWhenDisabled
 }
+
+internal enum AnalyticsError: Int, ErrorType {
+    static let domain = "AnalyticsError"
+    
+    case SendAnalyticsError = 5001
+}
+
+internal enum LocationError: Int, ErrorType {
+    static let domain = "LocationError"
+    
+    case DownloadGeofencesError = 6001
+}
+

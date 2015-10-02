@@ -10,8 +10,8 @@ import Foundation
 
 internal final class PhoenixKeychain: TSDKeychain, TokenStorage {
     
-    init() {
-        super.init("PhoenixSDK", service: "com.tigerspike.PhoenixSDK")
+    init(account: String = "PhoenixSDK") {
+        super.init(account, service: "com.tigerspike.PhoenixSDK")
     }
     
     private func keyValues() -> NSMutableDictionary {

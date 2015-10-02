@@ -12,36 +12,14 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-/// Enumeration containing the possible status to use.
-internal enum HTTPStatus : Int {
-
-    /// Success code
+internal enum HTTPStatusCode: Int {
     case Success = 200
-
-    // TODO: Rename these variables, as 401 is not always a Token Expired response and 403 is not always Token Invalid
-    //       we need to interrogate the 'error' field in the JSON object that is returned to figure out what is actually the problem.
-
-    /// 401, token expired, among other issues.
-    case TokenExpired = 401
-
-    /// 403, token invalid, among other issues
-    case TokenInvalid = 403
+    case Unauthorized = 401
+    case Forbidden = 403
 }
 
 // MARK: HTTP Method constants
 
-/// An enumeration of the HTTP Methods available to use
-internal enum HTTPRequestMethod : String {
-    
-    /// GET
-    case GET = "GET"
-
-    /// POST
-    case POST = "POST"
-
-    /// PUT
-    case PUT = "PUT"
-}
 
 internal extension Phoenix {
     
@@ -50,216 +28,133 @@ internal extension Phoenix {
         
         // MARK: Instance variables
         
+        internal let queue: NSOperationQueue
+        
         /// A link to the owner of this Network class (Phoenix) used for propagating errors upwards.
-        weak internal var phoenix: Phoenix?
+        internal weak var phoenix: Phoenix!
         
         /// NSURLSession with default session configuration.
-        private(set) internal lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-
-        /// Contains concurrently executable operations for requests that rely on an authenticated session.
-        /// Will be suspended if the authentication queue needs to perform authentications.
-        internal lazy var workerQueue = NSOperationQueue()
+        internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         
-        /// An operation queue to perform authentications. Will only enqueue an operation at a time as enforced by 'authenticationOperation != nil'.
-        internal let authenticateQueue: NSOperationQueue
-
         /// Configuration passed through from Network initializer (assumed to be valid).
-        private let configuration: Phoenix.Configuration
-        
-        /// The current phoenix authentication.
-        internal let authentication: Authentication
-        
-        /// The authentication operation that is currently running or nil, if there are none in the queue at the moment.
-        private var authenticationOperation:AuthenticationRequestOperation?
-        
-        /// - Returns: true if the SDK is currently authenticated (anonymously or otherwise).
-        internal var isAuthenticated: Bool {
-            return !authentication.requiresAuthentication
+        internal var configuration: Phoenix.Configuration {
+            return phoenix.internalConfiguration
         }
         
         // MARK: Initializers
         
         /// Initialize new instance of Phoenix Networking class
-        /// - Parameters:
-        ///     - withConfiguration: The configuration object used.
-        ///     - tokenStorage: The token storage to use.
-        init(withConfiguration configuration: Phoenix.Configuration, tokenStorage:TokenStorage) {
-            self.authenticateQueue = NSOperationQueue()
-            self.authenticateQueue.maxConcurrentOperationCount = 1
-            self.authentication = Authentication(withTokenStorage: tokenStorage)
-            self.configuration = configuration
+        init() {
+            self.queue = NSOperationQueue()
+            self.queue.maxConcurrentOperationCount = 1
         }
+        
+        /// Return all queued OAuth operations (excluding pipeline operations).
+        private func queuedOAuthOperations() -> [PhoenixOAuthOperation] {
+            return queue.operations.filter({
+                $0.isMemberOfClass(PhoenixOAuthPipeline.self) == false &&
+                    $0.isKindOfClass(PhoenixOAuthOperation.self) == true })
+                .map({ $0 as! PhoenixOAuthOperation })
+        }
+        
+        /// Return all queued OAuth operations (excluding pipeline operations).
+        private func queuedOAuthPipelines() -> [PhoenixOAuthPipeline] {
+            return queue.operations.filter({
+                $0.isMemberOfClass(PhoenixOAuthPipeline.self) == true })
+                .map({ $0 as! PhoenixOAuthPipeline })
+        }
+        
+        
         
         // MARK: Interception of responses
         
-        /// Checks authentication responses from the API. If an error is located, the authentication
-        /// will be expired or invalidated.
-        ///
-        /// Currently intercepts:
-        ///   - 401: token_expired (EXPIRE token, need to refresh)
-        ///   - 403: invalid_token (INVALID access, cannot use this method)
-        ///
-        /// - Parameters:
-        ///     - data: The data that was obtained from the backend.
-        ///     - response: The NSURLResponse from the backend.
-        ///     - error: The NSError of the request.
-        /// - Returns: True if the call had an authentication
-        private func checkAuthenticationErrorInResponse(data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Bool {
-            guard let httpResponse = response else {
-                return false
-            }
+        /// Caller's responsibility to enqueue this operation.
+        /// - parameter tokenType:  Type of token we need.
+        /// - returns: Return PhoenixOAuthPipeline for given token type.
+        internal func getPipeline(forTokenType tokenType: PhoenixOAuthTokenType, completion: (PhoenixOAuthPipeline?) -> ()) {
+            let oauth = PhoenixOAuth(tokenType: tokenType)
             
-            switch httpResponse.statusCode {
+            if (oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil)) {
+                // TODO: Create SDKUser if their credentials are empty here.
+                completion(nil)
+                return
                 
-                // 'token_expired' in 'error' field of response
-            case HTTPStatus.TokenExpired.rawValue:
-                // TODO: It seems that the server can return 401 for any reason related to improper
-                // configuration or token expiry (we need to check 'error' field matches 'token_expired' to determine action.
-                authentication.clearAccessToken()
-
-                // 'invalid_token' in 'error' field of response
-            case HTTPStatus.TokenInvalid.rawValue:
-                fallthrough
-                
-            default:
-                return false
-            }
-
-            return true
-        }
-        
-        /// Execute a request on the worker queue and performs the interception of
-        /// it to handle authorization errors.
-        ///
-        /// - Parameters
-        ///     - request: NSURLRequest with a valid URL.
-        ///     - callback: Block/function to call once executed.
-        func executeRequest(request: NSURLRequest, callback: PhoenixNetworkingCallback) {
-            let operation = PhoenixNetworkRequestOperation(withSession: sessionManager, request: request, authentication: authentication)
-            
-            operation.completionBlock = {
-                // Other error code can fallthrough to caller who implements callback func to handle.
-                callback(data: operation.output?.data, response: operation.output?.response, error: operation.error)
+                // Once SDKUser is created, we can then return the pipeline.
+                // getPipeline(forTokenType: .SDKUser, completion: completion)
             }
             
-            executeNetworkOperation(operation)
-        }
-        
-        /// Execute a request on the worker queue and performs the interception of
-        /// it to handle authorization errors.
-        ///
-        /// - Parameters
-        ///     - operation: The PhoenixNetworkRequestOperation to run.
-        func executeNetworkOperation(operation: PhoenixNetworkRequestOperation) {
-            let initialBlock = operation.completionBlock
-            
-            operation.completionBlock = { [weak self] in
-                
-                defer {
-                    if let block = initialBlock {
-                        block()
-                    }
-                }
-                
-                guard let this = self else {
-                    return
-                }
-                
-                // Intercept the callback, handling 401 and 403
-                if this.checkAuthenticationErrorInResponse(operation.output?.data, response: operation.output?.response, error: operation.error) {
-                    // Token invalid, try to authenticate again
-                    this.enqueueAuthenticationOperationIfRequired()
-                }
-            }
-            
-            enqueueRequestOperation(operation)
-        }
-        
-        /// Enqueue operation in worker queue, will suspend worker queue if authentication is required.
-        /// - Parameter operation: Operation created using
-        private func enqueueRequestOperation(operation: PhoenixNetworkRequestOperation) {
-            // This method may suspend worker queue
-            enqueueAuthenticationOperationIfRequired()
-            // Enqueue operation
-            workerQueue.addOperation(operation)
-        }
-        
-        // MARK:- Authentication
-        
-        /// Enqueues an authentication operation if needed
-        /// - Returns: true if the operation was needed and has been enqueued.
-        internal func enqueueAuthenticationOperationIfRequired() -> Bool {
-            // If we already have an authentication operation we do not need to schedule another one.
-            if !authentication.requiresAuthentication {
-                return false
-            }
-            createAuthenticationOperation()
-            
-            // Suspend worker queue until authentication succeeds
-            workerQueue.suspended = true
-            
-            return true
-        }
-        
-        /// Attempt to authenticate, handles 200 internally (updating refresh_token, access_token and expires_in).
-        /// - Parameter callback: Contains data, response, and error information from request.
-        /// - Returns: `nil` or `Phoenix.AuthenticationRequestOperation` depending on if authentication is necessary (determined by `authentication` objects state).
-        private func createAuthenticationOperation() {
-            if authenticationOperation != nil { return }
-            // If the request cannot be build we should exit.
-            // This may need to raise some sort of warning to the developer (currently
-            // only due to misconfigured properties - which should be enforced by Phoenix initializer).
-            authenticationOperation = Phoenix.AuthenticationRequestOperation(network: self, configuration: configuration) { [weak self] (json) -> () in
-                self?.authentication.update(withJSON: json)
-                self?.didCompleteAuthenticationOperation()
-            }
-            authenticateQueue.addOperation(authenticationOperation!)
-        }
-        
-        /// Called once an authentication operation finishes, to handle its response.
-        /// - Parameter authenticationOperation: The operation that just finished.
-        private func didCompleteAuthenticationOperation() {
-            defer {
-                authenticationOperation = nil
-            }
-            guard let operation = authenticationOperation else {
+            // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
+            if self.queuedOAuthPipelines()
+                .filter({ $0.oauth != nil && $0.oauth?.tokenType != oauth.tokenType })
+                .count > 0
+            {
+                // Nothing we can do, we are already logging in with this token type.
+                completion(nil)
                 return
             }
-            let response = operation.output?.response
-            let data = operation.output?.data
-            var error = operation.error
             
-            defer {
-                // Continue worker queue if we have authentication object
-                workerQueue.suspended = !self.isAuthenticated
+            // Token is no longer valid, lets try and refresh, if that fails login again.
+            let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
+                oauth: oauth, phoenix: phoenix)
+            
+            // Iterate all queued OAuth operations (excluding pipeline operations).
+            queuedOAuthOperations().forEach({ (oauthOp) -> () in
+                // Make each operation dependant on this new pipeline if the token types match.
+                if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == oauth.tokenType {
+                    oauthOp.addDependency(pipeline)
+                }
+            })
+            
+            // Add original operation again, should be called after pipeline succeeds.
+            pipeline.queuePriority = .VeryHigh
+            
+            completion(pipeline)
+        }
+        
+        internal func enqueueOperation(operation: PhoenixOAuthOperation) {
+            let initialBlock = operation.completionBlock
+            operation.completionBlock = { [weak self] in
+                // Check if our request failed.
+                guard let httpResponse = operation.output?.response as? NSHTTPURLResponse
+                    where httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue else
+                {
+                    // Cannot be handled as an unauthorized error.
+                    // Call completion block for original operation.
+                    initialBlock?()
+                    return
+                }
+                guard let network = self else { return }
                 
-                // If the worker queue is suspended, cancel all its tasks
-                if workerQueue.suspended {
-                    for operation in workerQueue.operations {
-                        if let operation = operation as? PhoenixNetworkRequestOperation {
-                            operation.authenticationFailed()
+                // Token is no longer valid and cannot be refreshed without user input.
+                // Do not try again. Alert developer.
+                if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
+                    // TODO: Alert developer
+                    return
+                }
+                
+                // Attempt to get the pipeline for this OAuth token type.
+                self?.getPipeline(forTokenType: operation.oauth!.tokenType, completion: { (pipeline) -> () in
+                    guard let pipeline = pipeline else {
+                        // Already enqueued, return
+                        return
+                    }
+                    pipeline.completionBlock = { [weak pipeline, weak network] in
+                        if pipeline?.output?.error == nil {
+                            // Add original operation again, should be called after pipeline succeeds.
+                            network?.queue.addOperation(operation)
+                        } else {
+                            // Call completion block for original operation.
+                            initialBlock?()
                         }
                     }
-                }
-                
-                // Authentication object will be nil if we cannot parse the response.
-                if authentication.requiresAuthentication == true {
-                    // An exception is raised to the developer.
-                    if error == nil {
-                        error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
-                    }
-                    phoenix?.errorCallback?(error!)
-                }
+                    
+                    // Prevent looping by adding explicitly to queue here.
+                    network.queue.addOperation(pipeline)
+                })
             }
             
-            // Regardless of how we hit this method, we should update our authentication headers
-            guard let _ = data?.phx_jsonDictionary,
-                httpResponse = response
-                where httpResponse.statusCode == HTTPStatus.Success.rawValue else {
-                    // Clear tokens if response is unreadable or unsuccessful.
-                    authentication.reset()
-                    return
-            }
+            // Enqueue original operation.
+            self.queue.addOperation(operation)
         }
     }
 }

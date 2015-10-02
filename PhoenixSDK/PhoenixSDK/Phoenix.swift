@@ -16,16 +16,32 @@ public final class Phoenix: NSObject {
     
     /// - Returns: A **copy** of the configuration.
     public let configuration: Phoenix.Configuration
+    internal let internalConfiguration: Phoenix.Configuration
+    
+    internal var developerLoggedIn = false
+    
+    internal var bestSDKUserOAuth: PhoenixOAuth {
+        if developerLoggedIn {
+            return PhoenixOAuth(tokenType: .LoggedInUser)
+        } else {
+            return PhoenixOAuth(tokenType: .SDKUser)
+        }
+    }
+    
     
     /// Called by Phoenix when the SDK does not know how to deal with the current error it has encountered.
     internal var errorCallback: PhoenixErrorCallback?
+    
+    internal let installation: Phoenix.Installation
     
     /// Instance of the Network manager for the Phoenix SDK, encapsulates authentication requests.
     internal let network: Network
     
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules:[PhoenixModuleProtocol] {
-        return [location, identity, analytics]
+    internal var modules: [PhoenixModuleProtocol?] {
+        return [location,
+            (identity as? PhoenixModuleProtocol),
+            (analytics as? PhoenixModuleProtocol)]
     }
     
     // MARK: Initializers
@@ -33,26 +49,38 @@ public final class Phoenix: NSObject {
     /// Initializes the Phoenix entry point with a configuration object.
     /// - parameter withConfiguration: Instance of the Configuration class, object will be copied to avoid mutability.
     /// - parameter tokenStorage:      The object responsible for storing OAuth tokens.
+    /// - parameter disableLocation:  Boolean used for test purposes, CLLocationManager causes an infinite loop otherwise.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
-    internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
-        configuration = phoenixConfiguration.clone()
-        let myConfiguration = phoenixConfiguration.clone()
-        network = Network(withConfiguration: myConfiguration, tokenStorage: tokenStorage)
+    internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
+        configuration = phoenixConfiguration.clone()            // Copy for developers
+        internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
+        
+        network = Network()
+        installation = Phoenix.Installation(configuration: internalConfiguration,
+            applicationVersion: NSBundle.mainBundle(),
+            installationStorage: NSUserDefaults())
+        
         // Modules
-        let installationStorage = NSUserDefaults()
-        identity = Identity(withNetwork: network, configuration: myConfiguration, applicationVersion: NSBundle.mainBundle(), installationStorage: installationStorage)
-        let analytics = Analytics(withNetwork: network, configuration: myConfiguration, installationStorage: installationStorage, applicationVersion: NSBundle.mainBundle())
-        location = Location(withNetwork: network, configuration: configuration, geofenceCallback: analytics.trackGeofence, locationManager:PhoenixLocationManager())
-        analytics.location = location
-        self.analytics = analytics
+        
+        identity = Identity(withNetwork: network, configuration: configuration)
+        analytics = Analytics(withNetwork: network, configuration: configuration)
+        location = Location(withNetwork: network, configuration: configuration, locationManager: PhoenixLocationManager())
+
         
         super.init()
         
-        if (myConfiguration.hasMissingProperty) {
+        (identity as! Identity).phoenix = self
+        
+        network.phoenix = self
+        
+        (analytics as! Analytics).location = location
+        (analytics as! Analytics).phoenix = self
+        
+        if (internalConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError
         }
-        if (!myConfiguration.isValid) {
+        if (!internalConfiguration.isValid) {
             throw ConfigurationError.InvalidPropertyError
         }
     }
@@ -61,10 +89,11 @@ public final class Phoenix: NSObject {
     /// - parameter withFile:         The JSON file name (no extension) of the configuration.
     /// - parameter inBundle:         The NSBundle to use. Defaults to the main bundle.
     /// - parameter withTokenStorage: The object responsible for storing OAuth tokens.
+    /// - parameter disableLocation:  Boolean used for test purposes, CLLocationManager causes an infinite loop otherwise.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Phoenix SDK base class.
-    convenience internal init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage) throws {
-        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage)
+    convenience internal init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle(), withTokenStorage tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
+        try self.init(withConfiguration: Configuration.configuration(fromFile: withFile, inBundle: inBundle), tokenStorage: tokenStorage, disableLocation: disableLocation)
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -93,7 +122,7 @@ public final class Phoenix: NSObject {
     @objc public internal(set) var analytics: PhoenixAnalytics
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    @objc public internal(set) var location: PhoenixLocation
+    internal(set) var location: Phoenix.Location
     
     /// Starts up the Phoenix SDK modules.
     /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
@@ -104,17 +133,11 @@ public final class Phoenix: NSObject {
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
         errorCallback = callback
-        network.enqueueAuthenticationOperationIfRequired()
-        
-        modules.forEach {
-            $0.startup()
-        }
+        modules.forEach({ $0?.startup() })
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        modules.forEach {
-            $0.shutdown()
-        }
+        modules.forEach({ $0?.shutdown() })
     }
 }

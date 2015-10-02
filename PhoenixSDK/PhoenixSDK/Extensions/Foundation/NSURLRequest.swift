@@ -8,9 +8,15 @@
 
 import Foundation
 
-private let phoenixIdentityAPIVersion = "identity/v1"
-private let phoenixLocationAPIVersion = "location/v1"
-private let phoenixAnalyticsAPIVersion = "analytics/v1"
+/// An enumeration of the HTTP Methods available to use
+private enum HTTPRequestMethod : String {
+    /// HTTP GET
+    case GET = "GET"
+    /// HTTP POST
+    case POST = "POST"
+    /// HTTP PUT
+    case PUT = "PUT"
+}
 
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
@@ -18,281 +24,227 @@ private let HTTPHeaderContentTypeKey = "Content-Type"
 private let HTTPHeaderApplicationJson = "application/json"
 private let HTTPHeaderApplicationFormUrlEncoded = "application/x-www-form-urlencoded"
 
+private let HTTPBodyClientIDKey = "client_id"
+private let HTTPBodyClientSecretKey = "client_secret"
+private let HTTPBodyRefreshTokenKey = "refresh_token"
+private let HTTPBodyUsernameKey = "username"
+private let HTTPBodyPasswordKey = "password"
+
+private let HTTPBodyGrantTypeKey = "grant_type"
+private let HTTPBodyGrantTypeClientCredentials = "client_credentials"
+private let HTTPBodyGrantTypePassword = "password"
+private let HTTPBodyGrantTypeRefreshToken = "refresh_token"
+
+// MARK: - OAuth
+
 internal extension NSURLRequest {
+    private class func phx_HTTPHeaders(bearerOAuth: PhoenixOAuth? = nil) -> [String: String] {
+        var headers = [String: String]()
+        headers[HTTPHeaderContentTypeKey] = HTTPHeaderApplicationFormUrlEncoded
+        headers[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
+        if (bearerOAuth != nil && bearerOAuth?.accessToken != nil) {
+            headers[HTTPHeaderAuthorizationKey] = "Bearer \(bearerOAuth!.accessToken!)"
+        }
+        return headers
+    }
     
-    // MARK: Prepare request
+    private class func phx_HTTPBodyData(body: [String: String]) -> NSData {
+        return body.map({ "\($0.0)=\($0.1)" }).joinWithSeparator("&").dataUsingEncoding(NSUTF8StringEncoding)!
+    }
     
-    /// Add authentication headers to NSURLRequest.
-    /// - Parameter authentication: Instance of Phoenix.Authentication containing valid accessToken
-    /// - Parameter disposableLoginToken: Only used by 'getUserMe' and is the access_token we receive from the 'login' and is discarded immediately after this call.
-    /// - Returns: An NSURLRequest which is equal to this one, but adding the required headers to
-    /// authenticate it against the backend.
-    func phx_preparePhoenixRequest(withAuthentication authentication: PhoenixAuthenticationProtocol, disposableLoginToken: String? = nil) -> NSURLRequest {
-        // Somehow the NSURLRequest is immutable (perhaps if subclassed?)
-        guard let mutable = mutableCopy() as? NSMutableURLRequest else {
-            assertionFailure("The mutable copy of this \(self.dynamicType) should return an NSMutableURLRequest.")
-            return NSURLRequest()
+    class func phx_URLRequestForValidate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!.phx_URLByAppendingOAuthValidatePath()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.GET.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    class func phx_URLRequestForRefresh(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
+        assert(oauth.refreshToken != nil)
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!.phx_URLByAppendingOAuthTokenPath()
+        let request = NSMutableURLRequest(URL: url)
+        
+        var body = [String: String]()
+        body[HTTPBodyClientIDKey] = configuration.clientID
+        body[HTTPBodyClientSecretKey] = configuration.clientSecret
+        body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeRefreshToken
+        body[HTTPBodyRefreshTokenKey] = oauth.refreshToken
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = phx_HTTPBodyData(body)
+        return request.copy() as! NSURLRequest
+    }
+    
+    class func phx_URLRequestForLogin(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!.phx_URLByAppendingOAuthTokenPath()
+        let request = NSMutableURLRequest(URL: url)
+        
+        var body = [String: String]()
+        body[HTTPBodyClientIDKey] = configuration.clientID
+        body[HTTPBodyClientSecretKey] = configuration.clientSecret
+        if oauth.tokenType == .Application {
+            body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
+        } else {
+            body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
+            body[HTTPBodyUsernameKey] = oauth.username!
+            body[HTTPBodyPasswordKey] = oauth.password!
         }
         
-        // Get header fields from request or create new object
-        var headerFields = mutable.allHTTPHeaderFields ?? [String: String]()
-        
-        // Check if content type is set, otherwise set to `application/json` by default
-        headerFields[HTTPHeaderContentTypeKey] = headerFields[HTTPHeaderContentTypeKey] ?? HTTPHeaderApplicationJson
-        
-        // Set accept type to `application/json`
-        headerFields[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
-        
-        // If we have an access token append `Bearer` to header
-        if let token = disposableLoginToken ?? authentication.accessToken {
-            headerFields[HTTPHeaderAuthorizationKey] = "Bearer \(token)"
-        }
-        
-        mutable.allHTTPHeaderFields = headerFields
-        
-        return mutable
-    }
-    
-    // MARK:- Authentication Module
-    
-    /// - Parameters:
-    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
-    /// - Returns: An anonymous client credentials NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthenticationWithClientCredentials(configuration: Phoenix.Configuration) -> NSURLRequest {
-        if configuration.clientID.isEmpty || configuration.clientSecret.isEmpty {
-            assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
-            return NSURLRequest()
-        }
-        let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=client_credentials"
-        return phx_URLRequestForAuthentication(configuration, postQuery:postQuery)
-    }
-    
-    /// - Parameters:
-    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
-    ///     - username: Username to authenticate with.
-    ///     - password: Password to authenticate with.
-    /// - Returns: An user credentials authentication NSURLRequest that can be used to obtain an authentication token.
-    class func phx_requestForAuthenticationWithUserCredentials(configuration: Phoenix.Configuration, username: String, password: String) -> NSURLRequest {
-        if configuration.clientID.isEmpty || configuration.clientSecret.isEmpty {
-            assertionFailure("Client ID and client Secret must not be empty. We also require username and password.")
-            return NSURLRequest()
-        }
-        let postQuery = "client_id=\(configuration.clientID)&client_secret=\(configuration.clientSecret)&grant_type=password&username=\(username)&password=\(password)"
-        return phx_URLRequestForAuthentication(configuration, postQuery:postQuery)
-    }
-    
-    /// - Parameters:
-    ///     - configuration: Instance of Phoenix.Configuration with valid clientID, clientSecret, and region.
-    ///     - postQuery: The query to be used in the given OAuth request
-    /// - Returns: An authentication NSURLRequest built using the passed configuration and postQuery.
-    private class func phx_URLRequestForAuthentication(configuration: Phoenix.Configuration, postQuery:String) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_oauthTokenURLPath(), relativeToURL: configuration.baseURL) {
-            // Create URL encoded POST with query string
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = postQuery.dataUsingEncoding(NSUTF8StringEncoding)
-
-            guard let finalRequest = request.copy() as? NSURLRequest else {
-                assertionFailure("The copy method of the passed NSURLRequest should return an NSURLRequest instance")
-                return NSURLRequest()
-            }
-            return finalRequest
-        }
-
-        assertionFailure("Couldn't create the authentication URL.")
-        return NSURLRequest()
-    }
-    
-    // MARK:- Identity Module
-    
-    /// - Returns: An NSURLRequest to create the given user.
-    /// - Parameters:
-    ///     - user: The user to create.
-    ///     - configuration: The configuration to use.
-    class func phx_URLRequestForCreateUser(user:Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID), relativeToURL: configuration.baseURL) {
-            // Create URL encoded POST with query string
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = [user.toJSON()].phx_toJSONData()
-            
-            if let finalRequest = request.copy() as? NSURLRequest {
-                return finalRequest
-            }
-        }
-        assertionFailure("Couldn't create the users URL.")
-        return NSURLRequest()
-    }
-    
-    /// - Returns: An NSURLRequest to update the given user.
-    /// - Parameters:
-    ///     - withUser: The user to create.
-    ///     - configuration: The configuration to use.
-    class func phx_URLRequestForUpdateUser(user: Phoenix.User, configuration:Phoenix.Configuration) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID, userId: user.userId), relativeToURL: configuration.baseURL) {
-            
-            // Create URL encoded POST with query string
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
-            request.HTTPBody = [user.toJSON()].phx_toJSONData()
-            
-            if let finalRequest = request.copy() as? NSURLRequest {
-                return finalRequest
-            }
-        }
-        assertionFailure("Couldn't create the users URL.")
-        return NSURLRequest()
-    }
-    
-    /// - Returns: An NSURLRequest to get the user with the used credentials.
-    /// - Parameters:
-    ///     - configuration: The configuration to use.
-    class func phx_URLRequestForGetUserMe(configuration:Phoenix.Configuration) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_usersMeURLPath(), relativeToURL: configuration.baseURL) {
-            return NSURLRequest(URL: url)
-        }
-        assertionFailure("Couldn't create the users/me URL.")
-        return NSURLRequest()
-    }
-    
-    /// - Returns: An NSURLRequest to create a given installation.
-    /// - Parameter installation: Installation object used to configure this request.
-    class func phx_URLRequestForCreateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
-            // Create URL encoded POST with query string
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = [installation.toJSON()].phx_toJSONData()
-            if let finalRequest = request.copy() as? NSURLRequest {
-                return finalRequest
-            }
-        }
-        assertionFailure("Couldn't create the create installation URL.")
-        return NSURLRequest()
-    }
-    
-    /// - Returns: An NSURLRequest to update a given installation.
-    /// - Parameter installation: Installation object used to configure this request.
-    class func phx_URLRequestForUpdateInstallation(installation:Phoenix.Installation) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_installationPath(installation.configuration.applicationID, projectID: installation.configuration.projectID), relativeToURL: installation.configuration.baseURL) {
-            // Create URL encoded PUT with query string
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
-            request.HTTPBody = [installation.toJSON()].phx_toJSONData()
-            if let finalRequest = request.copy() as? NSURLRequest {
-                return finalRequest
-            }
-        }
-        assertionFailure("Couldn't create the update installation URL.")
-        return NSURLRequest()
-    }
-    
-    // MARK:- Location Module
-    
-    /// - Returns: An NSURLRequest to download geofences.
-    /// - Parameter configuration: Configuration object used to configure this request.
-    class func phx_URLRequestForDownloadGeofences(configuration:Phoenix.Configuration, queryDetails: GeofenceQuery) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_geofencesPath(withProjectId: configuration.projectID, queryDetails: queryDetails), relativeToURL: configuration.baseURL) {
-            return NSURLRequest(URL: url)
-        }
-        assertionFailure("Couldn't create the download geofences URL.")
-        return NSURLRequest()
-    }
-        
-    /// Creates the NSURLRequest to get the user id.
-    /// - Parameters:
-    ///     - userId: The Id of the user that we want to get.
-    ///     - withConfiguration: The configuration that is being currently used.
-    class func phx_URLRequestForGetUserById(userId:Int, withConfiguration configuration:Phoenix.Configuration) -> NSURLRequest {
-        // Configure url
-        if let url = NSURL(string: phx_usersURLPath(configuration.projectID) + "/\(userId)", relativeToURL: configuration.baseURL) {
-            return NSURLRequest(URL: url)
-        }
-        assertionFailure("Couldn't create the users/me URL.")
-        return NSURLRequest()
-    }
-    
-    // MARK:- Analytics Module
-    
-    class func phx_URLRequestForAnalytics(configuration:Phoenix.Configuration, json: JSONDictionaryArray) -> NSURLRequest {
-        // Configure url
-        let path = "\(phoenixAnalyticsAPIVersion.appendProjects(configuration.projectID))/events"
-        if let url = NSURL(string: path, relativeToURL: configuration.baseURL) {
-            let request = NSMutableURLRequest(URL: url)
-            request.allHTTPHeaderFields = [HTTPHeaderContentTypeKey: HTTPHeaderApplicationFormUrlEncoded]
-            request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-            request.HTTPBody = json.phx_toJSONData()
-            if let finalRequest = request.copy() as? NSURLRequest {
-                return finalRequest
-            }
-        }
-        assertionFailure("Couldn't create the analytics URL.")
-        return NSURLRequest()
-    }
-    
-    // MARK:- URL Paths
-    
-    /// - Returns: the path to the API endpoint to obtain an OAuth token.
-    private class func phx_oauthTokenURLPath() -> String {
-        return "\(phoenixIdentityAPIVersion)/oauth/token"
-    }
-    
-    /// - Returns: The path to get current user's information.
-    private class func phx_usersMeURLPath() -> String {
-        return phoenixIdentityAPIVersion.appendUsers("me")
-    }
-    
-    private class func phx_installationPath(applicationID: Int, projectID: Int) -> String {
-        let appID = "\(applicationID)"
-        return "\(phoenixIdentityAPIVersion.appendProjects(projectID).appendApplications(appID))/installations"
-    }
-    
-    /// - Returns: The path to get a list of geofences.
-    private class func phx_geofencesPath(withProjectId projectId: Int, queryDetails: GeofenceQuery) -> String {
-        return "\(phoenixLocationAPIVersion.appendProjects(projectId))/geofences" + queryDetails.getURLQueryString()
-    }
-    
-    /// - Parameter projectId: The project Id that identifies the app. Provided by configuration.
-    /// - Returns: The path for most requests related to a user.
-    private class func phx_usersURLPath(projectId:Int, userId: Int? = nil) -> String {
-        return phoenixIdentityAPIVersion.appendProjects(projectId).appendUsers(userId != nil ? "\(userId!)" : nil)
+        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = phx_HTTPBodyData(body)
+        return request.copy() as! NSURLRequest
     }
 }
 
-private extension String {
+
+
+// MARK:- Identity Module
+
+internal extension NSURLRequest {
     
-    //TODO: I would consider changing the method from below ones to single:
-//    /// - Return: New string with added path component in format 'componentName/componentValue'
-//    mutating func appendUrlPathComponent(componentName: String, componentValue: AnyObject) -> String {
-//        return self += "/\(componentName)/\(componentValue)";
-//    }
+    /// - returns: An NSURLRequest to create the given user.
+    class func phx_URLRequestForUserCreation(user: Phoenix.User, phoenix: Phoenix) -> NSURLRequest {
+        let configuration = phoenix.internalConfiguration
+        let oauth = PhoenixOAuth(tokenType: .Application)
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = [user.toJSON()].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
     
-    /// Append applications path.
-    /// - parameter applicationId: ID to include in path.
-    /// - returns: Returns new string containing applications path components.
-    func appendApplications(applicationId: String) -> String {
-        return self + "/applications/\(applicationId)"
+    /// - returns: An NSURLRequest to get the user with the used credentials.
+    class func phx_URLRequestForUserMe(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
+        let url = phoenix.internalConfiguration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingUsersMe()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.GET.rawValue
+        
+        return request.copy() as! NSURLRequest
     }
-    /// - Returns: New string with 'users(/userId)' appended to existing string.
-    /// - Parameter userId: Optional string value to cater for id or 'me'.
-    func appendUsers(userId: String?) -> String {
-        return self + "/users" + (userId != nil ? "/\(userId!)" : "")
+    
+    /// - returns: An NSURLRequest to update the given user.
+    class func phx_URLRequestForUserUpdate(user: Phoenix.User, phoenix: Phoenix) -> NSURLRequest {
+        let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(user.userId)
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+        request.HTTPBody = [user.toJSON()].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
     }
-    /// - Returns: New string with 'projects/projectId' appended to existing string.
-    /// - Parameter projectId: Required value specifying the project.
-    func appendProjects(projectId: Int) -> String {
-        return self + "/projects/\(projectId)"
+    
+    // MARK: Installation
+    
+    /// - Returns: An NSURLRequest to create a given installation.
+    class func phx_URLRequestForInstallationCreate(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
+        let installation = phoenix.installation
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingApplications(configuration.applicationID)
+            .phx_URLByAppendingInstallations()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+
+    /// - returns: An NSURLRequest to update a given installation.
+    class func phx_URLRequestForInstallationUpdate(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
+        let installation = phoenix.installation
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingApplications(configuration.applicationID)
+            .phx_URLByAppendingInstallations()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
+        request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+}
+
+
+
+// MARK:- Analytics Module
+internal extension NSURLRequest {
+    
+    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootAnalyticsPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingEvents()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = json.phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+}
+
+
+
+// MARK:- Location Module
+
+internal extension NSURLRequest {
+    
+    /// - returns: An NSURLRequest to download geofences.
+    class func phx_URLRequestForDownloadGeofences(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
+        let configuration = phoenix.internalConfiguration
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootLocationPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingGeofences()
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.GET.rawValue
+        
+        // TODO: Add filtering
+        
+        return request.copy() as! NSURLRequest
     }
 }
