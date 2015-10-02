@@ -20,18 +20,6 @@ internal enum HTTPStatusCode: Int {
 
 // MARK: HTTP Method constants
 
-/// An enumeration of the HTTP Methods available to use
-internal enum HTTPRequestMethod : String {
-    
-    /// GET
-    case GET = "GET"
-    
-    /// POST
-    case POST = "POST"
-    
-    /// PUT
-    case PUT = "PUT"
-}
 
 internal extension Phoenix {
     
@@ -69,10 +57,61 @@ internal extension Phoenix {
                 .map({ $0 as! PhoenixOAuthOperation })
         }
         
+        /// Return all queued OAuth operations (excluding pipeline operations).
+        private func queuedOAuthPipelines() -> [PhoenixOAuthPipeline] {
+            return queue.operations.filter({
+                $0.isMemberOfClass(PhoenixOAuthPipeline.self) == true })
+                .map({ $0 as! PhoenixOAuthPipeline })
+        }
+        
+        
         
         // MARK: Interception of responses
         
-        func enqueueOperation(operation: PhoenixOAuthOperation) {
+        /// Caller's responsibility to enqueue this operation.
+        /// - parameter tokenType:  Type of token we need.
+        /// - returns: Return PhoenixOAuthPipeline for given token type.
+        internal func getPipeline(forTokenType tokenType: PhoenixOAuthTokenType, completion: (PhoenixOAuthPipeline?) -> ()) {
+            let oauth = PhoenixOAuth(tokenType: tokenType)
+            
+            if (oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil)) {
+                // TODO: Create SDKUser if their credentials are empty here.
+                completion(nil)
+                return
+                
+                // Once SDKUser is created, we can then return the pipeline.
+                // getPipeline(forTokenType: .SDKUser, completion: completion)
+            }
+            
+            // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
+            if self.queuedOAuthPipelines()
+                .filter({ $0.oauth != nil && $0.oauth?.tokenType != oauth.tokenType })
+                .count > 0
+            {
+                // Nothing we can do, we are already logging in with this token type.
+                completion(nil)
+                return
+            }
+            
+            // Token is no longer valid, lets try and refresh, if that fails login again.
+            let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
+                oauth: oauth, phoenix: phoenix)
+            
+            // Iterate all queued OAuth operations (excluding pipeline operations).
+            queuedOAuthOperations().forEach({ (oauthOp) -> () in
+                // Make each operation dependant on this new pipeline if the token types match.
+                if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == oauth.tokenType {
+                    oauthOp.addDependency(pipeline)
+                }
+            })
+            
+            // Add original operation again, should be called after pipeline succeeds.
+            pipeline.queuePriority = .VeryHigh
+            
+            completion(pipeline)
+        }
+        
+        internal func enqueueOperation(operation: PhoenixOAuthOperation) {
             let initialBlock = operation.completionBlock
             operation.completionBlock = { [weak self] in
                 // Check if our request failed.
@@ -93,33 +132,25 @@ internal extension Phoenix {
                     return
                 }
                 
-                // Token is no longer valid, lets try and refresh, if that fails login again.
-                let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
-                    oauth: operation.oauth, phoenix: network.phoenix)
-                
-                
-                // Iterate all queued OAuth operations (excluding pipeline operations).
-                network.queuedOAuthOperations().forEach({ (oauthOp) -> () in
-                    // Make each operation dependant on this new pipeline if the token types match.
-                    if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == pipeline.oauth?.tokenType {
-                        oauthOp.addDependency(pipeline)
+                // Attempt to get the pipeline for this OAuth token type.
+                self?.getPipeline(forTokenType: operation.oauth!.tokenType, completion: { (pipeline) -> () in
+                    guard let pipeline = pipeline else {
+                        // Already enqueued, return
+                        return
                     }
+                    pipeline.completionBlock = { [weak pipeline, weak network] in
+                        if pipeline?.output?.error == nil {
+                            // Add original operation again, should be called after pipeline succeeds.
+                            network?.queue.addOperation(operation)
+                        } else {
+                            // Call completion block for original operation.
+                            initialBlock?()
+                        }
+                    }
+                    
+                    // Prevent looping by adding explicitly to queue here.
+                    network.queue.addOperation(pipeline)
                 })
-                
-                // Add original operation again, should be called after pipeline succeeds.
-                pipeline.queuePriority = .VeryHigh
-                pipeline.completionBlock = { [weak pipeline, weak network] in
-                    if pipeline?.output?.error == nil {
-                        // Add original operation again, should be called after pipeline succeeds.
-                        network?.queue.addOperation(operation)
-                    } else {
-                        // Call completion block for original operation.
-                        initialBlock?()
-                    }
-                }
-                
-                // Prevent looping by adding explicitly to queue here.
-                network.queue.addOperation(pipeline)
             }
             
             // Enqueue original operation.

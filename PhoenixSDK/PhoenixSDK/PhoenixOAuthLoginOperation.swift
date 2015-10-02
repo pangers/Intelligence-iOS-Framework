@@ -12,7 +12,6 @@ internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
     
     override func main() {
         assert(oauth != nil && phoenix != nil)
-        assert(oauth?.username != nil && oauth?.password != nil)
         let request = NSURLRequest.phx_URLRequestForLogin(oauth!, phoenix: phoenix!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         

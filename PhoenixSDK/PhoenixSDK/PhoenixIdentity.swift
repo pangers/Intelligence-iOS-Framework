@@ -75,8 +75,26 @@ extension Phoenix {
         }
         
         func startup() {
-            createInstallation(nil)
-            updateInstallation(nil)
+            phoenix.network.getPipeline(forTokenType: .Application) { [weak phoenix] (applicationPipeline) -> () in
+                guard let applicationPipeline = applicationPipeline else {
+                    // Shouldn't happen.
+                    assertionFailure("Startup shouldn't be called multiple times")
+                    return
+                }
+                phoenix?.network.enqueueOperation(applicationPipeline)
+                phoenix?.network.getPipeline(forTokenType: .SDKUser, completion: { [weak phoenix, weak self] (sdkUserPipeline) -> () in
+                    guard let sdkUserPipeline = sdkUserPipeline else {
+                        // Create user needs to occur.
+                        return
+                    }
+                    // TODO: Create user if their credentials are empty.
+                    phoenix?.network.enqueueOperation(sdkUserPipeline)
+                    sdkUserPipeline.completionBlock = { [weak self] in
+                        self?.createInstallation(nil)
+                        self?.updateInstallation(nil)
+                    }
+                })
+            }
         }
         
         func shutdown() {

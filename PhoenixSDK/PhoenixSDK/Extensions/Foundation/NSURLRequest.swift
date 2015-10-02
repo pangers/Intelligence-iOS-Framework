@@ -8,6 +8,16 @@
 
 import Foundation
 
+/// An enumeration of the HTTP Methods available to use
+private enum HTTPRequestMethod : String {
+    /// HTTP GET
+    case GET = "GET"
+    /// HTTP POST
+    case POST = "POST"
+    /// HTTP PUT
+    case PUT = "PUT"
+}
+
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
 private let HTTPHeaderContentTypeKey = "Content-Type"
