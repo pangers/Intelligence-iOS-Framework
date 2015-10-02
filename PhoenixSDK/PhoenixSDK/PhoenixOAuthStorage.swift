@@ -11,6 +11,7 @@ import Foundation
 // MARK:- Constants
 
 internal let OAuthUsernameKey = "username"
+internal let OAuthUserIdKey = "userId"
 internal let OAuthPasswordKey = "password"
 internal let OAuthAccessTokenKey = "access_token"
 internal let OAuthRefreshTokenKey = "refresh_token"
@@ -64,4 +65,14 @@ internal extension TokenStorage {
             self[OAuthRefreshTokenKey] = newValue
         }
     }
+    
+    var userId:Int? {
+        get {
+            return self[OAuthUserIdKey] as? Int
+        }
+        set {
+            self[OAuthUserIdKey] = newValue
+        }
+    }
+    
 }

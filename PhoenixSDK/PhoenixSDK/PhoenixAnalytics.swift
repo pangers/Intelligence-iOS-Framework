@@ -81,7 +81,7 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installation.installationStorage.phx_installationID)
-            // TODO: Get User ID dictionary <-? (Event.UserIdKey, network.authentication.userId)
+            dictionary <-? (Event.UserIdKey, network.bestSDKUserOAuth.userId)
             
             // Add geolocation
             if let coordinates = locationProvider?.userLocation {

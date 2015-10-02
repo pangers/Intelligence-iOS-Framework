@@ -21,6 +21,7 @@ internal class PhoenixOAuth {
     var accessToken: String?
     var refreshToken: String?
     var username: String?
+    var userId: Int?
     
     /// Password will be stored in Keychain for SDKUser
     /// And in memory only for LoggedInUser
@@ -32,9 +33,10 @@ internal class PhoenixOAuth {
         accessToken = keychain.accessToken
         // Application User only has 'accessToken' they don't care about refresh tokens.
         if tokenType != .Application {
-            // SDKUser and LoggedInUser have 'username'
+            // SDKUser and LoggedInUser have 'username', 'refreshToken' and optionally 'userId'
             refreshToken = keychain.refreshToken
             username = keychain.username
+            userId = keychain.userId
             if tokenType == .SDKUser {
                 // SDKUser also has a 'password'
                 password = keychain.password
@@ -56,12 +58,15 @@ internal class PhoenixOAuth {
         keychain.refreshToken = nil
         keychain.username = nil
         keychain.password = nil
+        keychain.userId = nil
     }
     
     func updateCredentials(withUsername username: String, password: String) {
         assert(tokenType != .Application, "Invalid method for Application tokens")
         self.username = username
         self.password = password
+        // Reset userId, could be a different server but same username
+        self.userId = nil
     }
     
     func updateWithResponse(response: JSONDictionary?) -> Bool {
@@ -89,6 +94,7 @@ internal class PhoenixOAuth {
             assert(refreshToken != nil && username != nil)
             keychain.refreshToken = refreshToken
             keychain.username = username
+            keychain.userId = userId
             if tokenType == .SDKUser {
                 // Only store SDKUser passwords.
                 assert(password != nil)

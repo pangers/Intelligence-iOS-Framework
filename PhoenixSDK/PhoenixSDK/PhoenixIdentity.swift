@@ -8,9 +8,6 @@
 
 import Foundation
 
-/// Valid login if error is nil.
-public typealias PhoenixLoginCallback = (error: NSError?) -> ()
-
 /// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
 public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
@@ -27,7 +24,7 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
     ///     - username: Username of account to attempt login with.
     ///     - password: Password associated with username.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func login(withUsername username: String, password: String, callback: PhoenixLoginCallback)
+    func login(withUsername username: String, password: String, callback: PhoenixUserCallback)
     
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
@@ -130,7 +127,7 @@ extension Phoenix {
         
         // MARK:- Login
         
-        @objc func login(withUsername username: String, password: String, callback: PhoenixLoginCallback) {
+        @objc func login(withUsername username: String, password: String, callback: PhoenixUserCallback) {
             let oauth = network.loggedInUserOAuth
             oauth.updateCredentials(withUsername: username, password: password)
             
@@ -140,14 +137,23 @@ extension Phoenix {
             
             pipeline.completionBlock = { [weak pipeline, weak self] in
                 if pipeline?.output?.error != nil {
-                    callback(error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
+                    // Failed, tell developer!
+                    callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
-                    self?.network.developerLoggedIn = true
                     // Clear password from memory.
                     if (pipeline?.oauth?.tokenType == .LoggedInUser) {
                         pipeline?.oauth?.password = nil
                     }
-                    callback(error: nil)
+                    
+                    // Get user me.
+                    self?.network.developerLoggedIn = true
+                    self?.getMe({ (user, error) -> Void in
+                        // Clear userid if get me fails, otherwise update user id.
+                        pipeline?.oauth?.userId = user?.userId
+                        
+                        // Notify developer
+                        callback(user: user, error: error)
+                    })
                 }
             }
             

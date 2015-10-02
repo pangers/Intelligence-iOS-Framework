@@ -134,23 +134,19 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
             }];
             return;
         }
-        [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(NSError * _Nullable error) {
+        [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                weakSelf.isLoggedIn = error == nil;
-                weakSelf.currentStatus = weakSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
-                if (weakSelf.isLoggedIn) {
-                    [weakSelf.tableView reloadData];
-                    [PHXPhoenixManager.phoenix.identity getMe:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            if (user) {
-                                __strong typeof(weakSelf) strongSelf = weakSelf;
-                                strongSelf.loggedInUser = user;
-                                [strongSelf performSegueWithIdentifier:ViewUserSegue sender:strongSelf];
-                            } else {
-                                NSLog(@"Error : %@", error);
-                            }
-                        }];
-                    }];
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf.isLoggedIn = error == nil;
+                strongSelf.currentStatus = strongSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
+                if (strongSelf.isLoggedIn) {
+                    [strongSelf.tableView reloadData];
+                    if (user) {
+                        strongSelf.loggedInUser = user;
+                        [strongSelf performSegueWithIdentifier:ViewUserSegue sender:strongSelf];
+                    } else {
+                        NSLog(@"Error : %@", error);
+                    }
                 }
             }];
         }];
