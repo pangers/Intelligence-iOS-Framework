@@ -12,7 +12,7 @@ import Foundation
 internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
-        assert(network!.developerLoggedIn, "GetMe can only be called explicitly by developers currently, and only on an account they have logged into.")
+        assert(oauth?.tokenType != .Application)
         let request = NSURLRequest.phx_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         parse(withErrorCode: IdentityError.UserUpdateError.rawValue)
