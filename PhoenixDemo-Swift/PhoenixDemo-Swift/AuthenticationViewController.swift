@@ -122,17 +122,15 @@ class AuthenticationViewController: UITableViewController {
                 reloadUI(.Login)
                 return
             }
-
-// This makes the compiler sad, and launching a segmentation fault :(
-//            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-//                reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
-//                if self?.loginMessage == .LoggedIn {
-//                    self?.loggedInUser = user
-//                    NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
-//                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
-//                    }
-//                }
-//            })
+            
+            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { [weak self] (error) -> () in
+                reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
+                if self?.loginMessage == .LoggedIn {
+                    NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
+                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
+                    }
+                }
+            })
         }))
         presentViewController(alert, animated: true) { }
     }
