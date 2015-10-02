@@ -9,7 +9,7 @@
 import Foundation
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-@objc public protocol PhoenixAnalytics {
+@objc public protocol PhoenixAnalytics : PhoenixModuleProtocol {
     
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.

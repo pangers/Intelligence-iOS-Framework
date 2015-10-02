@@ -38,10 +38,8 @@ public final class Phoenix: NSObject {
     internal let network: Network
     
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules: [PhoenixModuleProtocol?] {
-        return [location,
-            (identity as? PhoenixModuleProtocol),
-            (analytics as? PhoenixModuleProtocol)]
+    internal var modules: [PhoenixModuleProtocol] {
+        return [location, identity, analytics]
     }
     
     // MARK: Initializers
@@ -68,21 +66,24 @@ public final class Phoenix: NSObject {
         
         super.init()
         
-        (identity as! Identity).phoenix = self
-        
-        network.phoenix = self
-        location.analytics = analytics
-        
-        let internalAnalytics = analytics as! Analytics
-        internalAnalytics.locationProvider = location
-        internalAnalytics.phoenix = self
-        
-        if (internalConfiguration.hasMissingProperty) {
+        if phoenixConfiguration.hasMissingProperty {
             throw ConfigurationError.MissingPropertyError
         }
-        if (!internalConfiguration.isValid) {
+        
+        if !phoenixConfiguration.isValid {
             throw ConfigurationError.InvalidPropertyError
         }
+
+        network.phoenix = self
+        
+        let internalAnalytics = analytics as! Analytics
+        let internalIdentity = identity as! Identity
+        let internalLocation = location as! Location
+        
+        internalIdentity.phoenix = self
+        internalAnalytics.phoenix = self
+        internalAnalytics.locationProvider = (location as? PhoenixLocationProvider)
+        internalLocation.analytics = analytics
     }
     
     /// Provides a convenience initializer to load the configuration from a JSON file.
@@ -122,7 +123,7 @@ public final class Phoenix: NSObject {
     @objc public internal(set) var analytics: PhoenixAnalytics
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    internal(set) var location: Phoenix.Location
+    @objc public internal(set) var location: PhoenixLocation
     
     /// Starts up the Phoenix SDK modules.
     /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
@@ -133,11 +134,15 @@ public final class Phoenix: NSObject {
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
         errorCallback = callback
-        modules.forEach({ $0?.startup() })
+        modules.forEach {
+            $0.startup()
+        }
     }
     
     /// Shutdowns the Phoenix SDK modules.
     public func shutdown() {
-        modules.forEach({ $0?.shutdown() })
+        modules.forEach{
+            $0.shutdown()
+        }
     }
 }
