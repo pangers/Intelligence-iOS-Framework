@@ -110,14 +110,14 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         searchBar.resignFirstResponder()
         
         // gets the user by its id and treats it in the callback.
-        PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
+        /*PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
             if user != nil {
                 self.user = user
             }
             else {
                 self.showInformation("Error occured while loading user data: \(error)")
             }
-        }
+        }*/
     }
 
 }
