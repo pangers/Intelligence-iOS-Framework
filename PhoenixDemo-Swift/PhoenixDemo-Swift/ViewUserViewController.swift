@@ -10,7 +10,7 @@ import UIKit
 
 import PhoenixSDK
 
-class ViewUserViewController : UIViewController, UISearchBarDelegate {
+class ViewUserViewController : UIViewController {
     
     @IBOutlet weak var infoLabel: UILabel!
     
@@ -94,30 +94,6 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
         NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
             self.infoLabel.text = information ?? " "
         }))
-    }
-    
-    // MARK:- UISearchBarDelegate
-    
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        guard let userIdText = searchBar.text,
-            let userId = Int(userIdText) else {
-                showInformation("Couldn't get an integer from the user Id you typed")
-                return
-        }
-        
-        // clear info label
-        self.infoLabel.text = ""
-        searchBar.resignFirstResponder()
-        
-        // gets the user by its id and treats it in the callback.
-        /*PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
-            if user != nil {
-                self.user = user
-            }
-            else {
-                self.showInformation("Error occured while loading user data: \(error)")
-            }
-        }*/
     }
 
 }

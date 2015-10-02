@@ -106,16 +106,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gOY-xM-5g3">
-                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="iqd-ol-uBm"/>
-                                </constraints>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="ifj-Kc-6gy" id="YcR-lS-Qrq"/>
-                                </connections>
-                            </searchBar>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zS9-2p-RSC">
                                 <rect key="frame" x="30" y="118" width="540" height="30"/>
                                 <subviews>
@@ -249,40 +239,27 @@
                             <constraint firstAttribute="trailingMargin" secondItem="pci-X4-oUB" secondAttribute="trailing" constant="10" id="9Ip-aQ-sCr"/>
                             <constraint firstItem="mW9-OT-Mfh" firstAttribute="top" secondItem="VlA-8b-ZGj" secondAttribute="bottom" constant="10" id="Aej-X7-eXA"/>
                             <constraint firstItem="Qyo-iT-l39" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="D1e-FO-k6e"/>
-                            <constraint firstItem="gOY-xM-5g3" firstAttribute="top" secondItem="2zh-Xi-5gP" secondAttribute="bottom" id="E56-Ku-5tD"/>
-                            <constraint firstItem="zS9-2p-RSC" firstAttribute="top" secondItem="gOY-xM-5g3" secondAttribute="bottom" constant="10" id="HKM-Zy-C0B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="mW9-OT-Mfh" secondAttribute="trailing" constant="10" id="Ku1-rF-SwF"/>
-                            <constraint firstItem="gOY-xM-5g3" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leading" id="N3P-bK-EYR"/>
-                            <constraint firstItem="gOY-xM-5g3" firstAttribute="top" secondItem="zS9-2p-RSC" secondAttribute="bottom" constant="-80" id="Nac-CI-8mF"/>
                             <constraint firstItem="PwS-jh-2uJ" firstAttribute="top" secondItem="2zh-Xi-5gP" secondAttribute="bottom" constant="292" id="QPg-6v-uw0"/>
                             <constraint firstItem="PwS-jh-2uJ" firstAttribute="leading" secondItem="pci-X4-oUB" secondAttribute="leading" id="QWj-hg-262"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Qyo-iT-l39" secondAttribute="trailing" constant="10" id="UEp-vR-bgo"/>
-                            <constraint firstItem="gOY-xM-5g3" firstAttribute="top" secondItem="AIp-3F-45O" secondAttribute="bottom" constant="-84" id="aqf-sy-LAE"/>
                             <constraint firstItem="Qyo-iT-l39" firstAttribute="top" secondItem="mW9-OT-Mfh" secondAttribute="bottom" constant="10" id="ar8-dM-i8Y"/>
                             <constraint firstItem="PwS-jh-2uJ" firstAttribute="trailing" secondItem="pci-X4-oUB" secondAttribute="trailing" id="cWq-dP-7Mg"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zS9-2p-RSC" secondAttribute="trailing" constant="10" id="d7w-Ai-02f"/>
                             <constraint firstItem="62D-FB-ly9" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="dqv-va-4Px"/>
                             <constraint firstItem="VlA-8b-ZGj" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="fJe-0e-Ave"/>
-                            <constraint firstItem="zS9-2p-RSC" firstAttribute="top" secondItem="gOY-xM-5g3" secondAttribute="bottom" constant="10" id="fcA-YA-Dbj"/>
                             <constraint firstItem="PwS-jh-2uJ" firstAttribute="top" secondItem="pci-X4-oUB" secondAttribute="bottom" constant="10" id="g6C-7U-hFh"/>
-                            <constraint firstAttribute="trailing" secondItem="gOY-xM-5g3" secondAttribute="trailing" id="gLR-yJ-3tq"/>
                             <constraint firstItem="zS9-2p-RSC" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="hJF-hk-IGV"/>
                             <constraint firstItem="zS9-2p-RSC" firstAttribute="top" secondItem="2zh-Xi-5gP" secondAttribute="bottom" constant="54" id="hTa-Wg-yGQ"/>
                             <constraint firstItem="pci-X4-oUB" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="iN1-6u-1KJ"/>
                             <constraint firstItem="xXp-UA-iYv" firstAttribute="top" secondItem="PwS-jh-2uJ" secondAttribute="bottom" constant="18" id="jv5-gW-Ybn"/>
                             <constraint firstItem="VlA-8b-ZGj" firstAttribute="top" secondItem="62D-FB-ly9" secondAttribute="bottom" constant="10" id="nlO-vD-Cf0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="VlA-8b-ZGj" secondAttribute="trailing" constant="10" id="poX-tb-kFB"/>
-                            <constraint firstItem="gOY-xM-5g3" firstAttribute="top" secondItem="2zh-Xi-5gP" secondAttribute="bottom" id="sdb-Y1-tOn"/>
                             <constraint firstItem="62D-FB-ly9" firstAttribute="top" secondItem="zS9-2p-RSC" secondAttribute="bottom" constant="10" id="tsK-oo-UX9"/>
                             <constraint firstItem="mW9-OT-Mfh" firstAttribute="leading" secondItem="ilI-0q-npX" secondAttribute="leadingMargin" constant="10" id="yCa-Rz-LqO"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="Nac-CI-8mF"/>
-                                <exclude reference="aqf-sy-LAE"/>
-                                <exclude reference="sdb-Y1-tOn"/>
-                                <exclude reference="HKM-Zy-C0B"/>
-                                <exclude reference="fcA-YA-Dbj"/>
                                 <exclude reference="g6C-7U-hFh"/>
                             </mask>
                         </variation>
