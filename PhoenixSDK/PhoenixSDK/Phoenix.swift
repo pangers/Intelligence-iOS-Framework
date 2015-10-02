@@ -20,6 +20,17 @@ public final class Phoenix: NSObject {
     /// Called by Phoenix when the SDK does not know how to deal with the current error it has encountered.
     internal var errorCallback: PhoenixErrorCallback?
     
+    // MARK: Modules
+    
+    /// The identity module, enables user management in the Phoenix backend.
+    @objc public internal(set) var identity: PhoenixIdentity!
+    
+    /// Analytics instance that can be used for posting Events.
+    @objc public internal(set) var analytics: PhoenixAnalytics!
+    
+    /// The location module, used to internally manages geofences and user location. Hidden from developers.
+    @objc public internal(set) var location: PhoenixLocation!
+    
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [PhoenixModuleProtocol] {
         return [location, identity, analytics]
@@ -33,6 +44,8 @@ public final class Phoenix: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage) throws {
+        
+        // TODO: Is this even required?? What's the point? They have the plist...
         configuration = phoenixConfiguration.clone()            // Copy for developers
         
         super.init()
@@ -91,17 +104,6 @@ public final class Phoenix: NSObject {
     convenience public init(withFile: String, inBundle: NSBundle=NSBundle.mainBundle()) throws {
         try self.init(withFile:withFile, inBundle:inBundle, withTokenStorage: PhoenixKeychain())
     }
-    
-    // MARK: Modules
-    
-    /// The identity module, enables user management in the Phoenix backend.
-    @objc public internal(set) var identity: PhoenixIdentity!
-    
-    /// Analytics instance that can be used for posting Events.
-    @objc public internal(set) var analytics: PhoenixAnalytics!
-    
-    /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    @objc public internal(set) var location: PhoenixLocation!
     
     /// Starts up the Phoenix SDK modules.
     /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
