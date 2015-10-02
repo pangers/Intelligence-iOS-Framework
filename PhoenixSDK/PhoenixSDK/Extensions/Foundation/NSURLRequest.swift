@@ -43,7 +43,7 @@ internal extension NSURLRequest {
     }
     
     class func phx_URLRequestForValidate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!.phx_URLByAppendingOAuthValidatePath()
         let request = NSMutableURLRequest(URL: url)
         
@@ -55,7 +55,7 @@ internal extension NSURLRequest {
     
     class func phx_URLRequestForRefresh(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
         assert(oauth.refreshToken != nil)
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!.phx_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
@@ -72,7 +72,7 @@ internal extension NSURLRequest {
     }
     
     class func phx_URLRequestForLogin(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!.phx_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
@@ -102,7 +102,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, phoenix: Phoenix) -> NSURLRequest {
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let oauth = PhoenixOAuth(tokenType: .Application)
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -119,7 +119,9 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        let url = phoenix.network.configuration.baseURL!
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
+        
+        let url = phoenix.internalConfiguration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
@@ -132,9 +134,9 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType == .LoggedInUser, "Only LoggedIn users can call this request.")
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
         
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -152,10 +154,10 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create a given installation.
     class func phx_URLRequestForInstallationCreate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn users can send installation request.")
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
         
         let installation = phoenix.installation
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -173,10 +175,10 @@ internal extension NSURLRequest {
 
     /// - returns: An NSURLRequest to update a given installation.
     class func phx_URLRequestForInstallationUpdate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn users can send installation request.")
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
         
         let installation = phoenix.installation
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -199,9 +201,9 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this.")
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
         
-        let configuration = phoenix.network.configuration
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootAnalyticsPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -225,7 +227,9 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to download geofences.
     class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        let configuration = phoenix.network.configuration
+        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
+        
+        let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootLocationPath()
             .phx_URLByAppendingProjects(configuration.projectID)

@@ -66,7 +66,7 @@ extension Phoenix {
         
         /// The configuration of the Phoenix SDK
         private var configuration: Phoenix.Configuration {
-            return network.configuration
+            return phoenix.internalConfiguration
         }
         
         /// Installation object used for Create/Update Installation requests.
@@ -100,7 +100,7 @@ extension Phoenix {
                 }
             }
             
-            network.enqueueOAuthPipeline(pipeline)
+            network.enqueueOperation(pipeline)
         }
         
         @objc func logout() {
@@ -128,7 +128,7 @@ extension Phoenix {
             }
             
             // Execute the network operation
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
         
         @objc func updateUser(user: Phoenix.User, callback: PhoenixUserCallback? = nil) {
@@ -148,7 +148,7 @@ extension Phoenix {
             }
             
             // Execute the network operation
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
         
         // MARK: Private
@@ -164,7 +164,7 @@ extension Phoenix {
             }
             
             // Execute the network operation
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
         
         // MARK:- Installation
@@ -185,7 +185,7 @@ extension Phoenix {
             }
             
             // Execute the network operation
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
         
         /// Schedules an update installation request if version number changed.
@@ -204,7 +204,7 @@ extension Phoenix {
             }
             
             // Execute the network operation
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
     }
 }

@@ -28,7 +28,7 @@ internal extension Phoenix {
         }
         /// Configuration instance used for NSURLRequests.
         private var configuration: Phoenix.Configuration {
-            return network.configuration
+            return phoenix.internalConfiguration
         }
         
         /// Callback for enter/exit geofences.
@@ -102,7 +102,7 @@ internal extension Phoenix {
                 }
                 
                 // Execute the network operation
-                network.executeNetworkOperation(operation)
+                network.enqueueOperation(operation)
             } else {
                 throw GeofenceError.CannotRequestGeofencesWhenDisabled
             }

@@ -16,6 +16,7 @@ public final class Phoenix: NSObject {
     
     /// - Returns: A **copy** of the configuration.
     public let configuration: Phoenix.Configuration
+    internal let internalConfiguration: Phoenix.Configuration
     
     internal var developerLoggedIn = false
     
@@ -52,11 +53,11 @@ public final class Phoenix: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(withConfiguration phoenixConfiguration: Phoenix.Configuration, tokenStorage:TokenStorage, disableLocation: Bool? = false) throws {
-        configuration = phoenixConfiguration.clone()
+        configuration = phoenixConfiguration.clone()            // Copy for developers
+        internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
         
-        let myConfiguration = phoenixConfiguration.clone()
-        network = Network(withConfiguration: myConfiguration)
-        installation = Phoenix.Installation(configuration: myConfiguration,
+        network = Network()
+        installation = Phoenix.Installation(configuration: internalConfiguration,
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults())
         
@@ -78,10 +79,10 @@ public final class Phoenix: NSObject {
         (analytics as! Analytics).location = location
         (analytics as! Analytics).phoenix = self
         
-        if (myConfiguration.hasMissingProperty) {
+        if (internalConfiguration.hasMissingProperty) {
             throw ConfigurationError.MissingPropertyError
         }
-        if (!myConfiguration.isValid) {
+        if (!internalConfiguration.isValid) {
             throw ConfigurationError.InvalidPropertyError
         }
     }

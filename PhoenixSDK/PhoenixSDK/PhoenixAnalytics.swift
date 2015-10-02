@@ -32,7 +32,7 @@ internal extension Phoenix {
         
         /// Instance of the Configuration class, used for configuring requests.
         private var configuration: Configuration {
-            return network.configuration
+            return phoenix.internalConfiguration
         }
     
         /// Interrogated for 'InstallationId' to include in requests (if available).
@@ -119,7 +119,7 @@ internal extension Phoenix {
                 completion(error: operation?.output?.error)
             }
             
-            network.executeNetworkOperation(operation)
+            network.enqueueOperation(operation)
         }
     }
 }
