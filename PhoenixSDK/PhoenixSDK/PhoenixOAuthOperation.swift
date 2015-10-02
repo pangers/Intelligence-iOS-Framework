@@ -17,9 +17,10 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     
     // Contextually relevant information to pass between operations.
     var oauth: PhoenixOAuth?
-    var phoenix: Phoenix?
+    var configuration: Phoenix.Configuration?
+    var network: Network?
     var session: NSURLSession! {
-        return phoenix!.network.sessionManager
+        return network!.sessionManager
     }
     
     // MARK: Output Helpers

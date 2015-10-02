@@ -13,8 +13,8 @@ internal final class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
         assert(sentUser != nil)
-        let request = NSURLRequest.phx_URLRequestForUserCreation(sentUser!, phoenix: phoenix!)
-        output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.phx_URLRequestForUserCreation(sentUser!, configuration: configuration!, network: network!)
+        output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         parse(withErrorCode: IdentityError.UserCreationError.rawValue)
     }
     

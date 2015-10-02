@@ -15,12 +15,12 @@ import Foundation
 internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {
-        assert(oauth != nil && phoenix != nil)
+        assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
             print("Refresh Token Skipped")
             return
         }
-        let request = NSURLRequest.phx_URLRequestForRefresh(oauth!, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForRefresh(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.

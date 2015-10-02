@@ -12,9 +12,9 @@ import Foundation
 internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
-        assert(phoenix!.developerLoggedIn, "GetMe can only be called explicitly by developers currently, and only on an account they have logged into.")
-        let request = NSURLRequest.phx_URLRequestForUserMe(phoenix!)
-        output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        assert(network!.developerLoggedIn, "GetMe can only be called explicitly by developers currently, and only on an account they have logged into.")
+        let request = NSURLRequest.phx_URLRequestForUserMe(configuration!, network: network!)
+        output = session.phx_executeSynchronousDataTaskWithRequest(request)
         parse(withErrorCode: IdentityError.UserUpdateError.rawValue)
     }
 

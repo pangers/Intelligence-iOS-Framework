@@ -29,24 +29,19 @@ internal extension Phoenix {
     internal final class Analytics: PhoenixModule, PhoenixAnalytics {
         // TODO Override PhoenixModule class.
         
-        internal weak var phoenix: Phoenix!
-        
         internal weak var locationProvider:PhoenixLocationProvider?
     
         /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
-        
-        /// Interrogated for 'InstallationId' to include in requests (if available).
-        private var installationStorage: PhoenixInstallationStorageProtocol {
-            return phoenix.installation.installationStorage
-        }
-        
-        /// Interrogated for 'ApplicationVersion' to include in requests.
-        private var applicationVersion: PhoenixApplicationVersionProtocol {
-            return phoenix.installation.applicationVersion
-        }
+
+        internal var installation: Phoenix.Installation!
         
         // MARK:- PhoenixModuleProtocol
+        
+        init(withNetwork network: Network, configuration: Phoenix.Configuration, installation: Installation) {
+            super.init(withNetwork: network, configuration: configuration)
+            self.installation = installation
+        }
         
         override func startup() {
             super.startup()
@@ -84,8 +79,8 @@ internal extension Phoenix {
             dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
             
             // Set optional values (may fail for whatever reason).
-            dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
-            dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
+            dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.phx_applicationVersionString)
+            dictionary <-? (Event.InstallationIdKey, installation.installationStorage.phx_installationID)
             // TODO: Get User ID dictionary <-? (Event.UserIdKey, network.authentication.userId)
             
             // Add geolocation
@@ -103,7 +98,7 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-            let operation = AnalyticsRequestOperation(json: events, oauth: phoenix.bestSDKUserOAuth, phoenix: phoenix)
+            let operation = AnalyticsRequestOperation(json: events, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 completion(error: operation?.output?.error)
             }

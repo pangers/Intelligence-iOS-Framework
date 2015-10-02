@@ -11,12 +11,12 @@ import Foundation
 internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
     
     override func main() {
-        assert(oauth != nil && phoenix != nil)
+        assert(oauth != nil && network != nil && configuration != nil)
         if (oauth?.accessToken == nil) {
             print("Validate Token Skipped")
             return
         }
-        let request = NSURLRequest.phx_URLRequestForValidate(oauth!, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForValidate(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.

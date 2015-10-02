@@ -10,10 +10,13 @@ import Foundation
 
 class PhoenixInstallationRequestOperation : PhoenixOAuthOperation {
     
-    init(oauth: PhoenixOAuth, phoenix: Phoenix) {
+    var installation: Phoenix.Installation!
+    
+    init(installation: Phoenix.Installation, configuration: Phoenix.Configuration, network: Network) {
         super.init()
-        self.phoenix = phoenix
-        self.oauth = oauth
+        self.configuration = configuration
+        self.network = network
+        self.installation = installation
     }
     
     func parse(withErrorCode errorCode: Int) {
@@ -21,7 +24,7 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation {
             return
         }
         
-        if phoenix!.installation.updateWithJSON(outputDictionary()) == false {
+        if installation.updateWithJSON(outputDictionary()) == false {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

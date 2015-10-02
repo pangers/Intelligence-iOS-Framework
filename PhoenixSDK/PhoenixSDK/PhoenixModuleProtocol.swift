@@ -19,7 +19,7 @@ import Foundation
 internal class PhoenixModule : NSObject,PhoenixModuleProtocol {
     
     /// A reference to the Network manager.
-    internal let network: Phoenix.Network
+    internal let network: Network
     
     /// Configuration instance used for NSURLRequests.
     internal let configuration: Phoenix.Configuration
@@ -28,7 +28,7 @@ internal class PhoenixModule : NSObject,PhoenixModuleProtocol {
     /// - parameter network:          Instance of Network class to use.
     /// - parameter configuration:    Configuration used to configure requests.
     /// - returns: An initialized module.
-    internal init(withNetwork network:Phoenix.Network, configuration: Phoenix.Configuration) {
+    internal init(withNetwork network: Network, configuration: Phoenix.Configuration) {
         self.network = network
         self.configuration = configuration
         super.init()
