@@ -21,7 +21,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
     }
     
     override func main() {
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(phoenix!)
         output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         if handleError(LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue) {
             return

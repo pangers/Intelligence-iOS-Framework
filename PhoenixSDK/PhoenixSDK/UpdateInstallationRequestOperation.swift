@@ -13,7 +13,7 @@ internal final class UpdateInstallationRequestOperation : PhoenixInstallationReq
     
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
-        let request = NSURLRequest.phx_URLRequestForInstallationUpdate(oauth!, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForInstallationUpdate(phoenix!)
         output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         parse(withErrorCode: InstallationError.UpdateInstallationError.rawValue)
     }

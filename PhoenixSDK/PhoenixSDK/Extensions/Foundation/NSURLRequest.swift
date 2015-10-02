@@ -118,9 +118,8 @@ internal extension NSURLRequest {
     }
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
-    class func phx_URLRequestForUserMe(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForUserMe(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
         let url = phoenix.internalConfiguration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingUsersMe()
@@ -133,9 +132,8 @@ internal extension NSURLRequest {
     }
     
     /// - returns: An NSURLRequest to update the given user.
-    class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForUserUpdate(user: Phoenix.User, phoenix: Phoenix) -> NSURLRequest {
+        let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
         let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
@@ -153,9 +151,8 @@ internal extension NSURLRequest {
     // MARK: Installation
     
     /// - Returns: An NSURLRequest to create a given installation.
-    class func phx_URLRequestForInstallationCreate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForInstallationCreate(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
         let installation = phoenix.installation
         let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
@@ -174,9 +171,8 @@ internal extension NSURLRequest {
     
 
     /// - returns: An NSURLRequest to update a given installation.
-    class func phx_URLRequestForInstallationUpdate(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForInstallationUpdate(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
         let installation = phoenix.installation
         let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
@@ -200,9 +196,8 @@ internal extension NSURLRequest {
 // MARK:- Analytics Module
 internal extension NSURLRequest {
     
-    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
         let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootAnalyticsPath()
@@ -226,9 +221,8 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to download geofences.
-    class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuth, phoenix: Phoenix) -> NSURLRequest {
-        assert(oauth.tokenType != .Application, "Only SDK/LoggedIn Users can call this request.")
-        
+    class func phx_URLRequestForDownloadGeofences(phoenix: Phoenix) -> NSURLRequest {
+        let oauth = phoenix.bestSDKUserOAuth
         let configuration = phoenix.internalConfiguration
         let url = configuration.baseURL!
             .phx_URLByAppendingRootLocationPath()

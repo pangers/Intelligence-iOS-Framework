@@ -96,7 +96,7 @@ internal extension Phoenix {
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
         internal func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) throws {
             if configuration.useGeofences {
-                let operation = DownloadGeofencesRequestOperation(oauth: phoenix.bestOAuth, phoenix: phoenix)
+                let operation = DownloadGeofencesRequestOperation(oauth: phoenix.bestSDKUserOAuth, phoenix: phoenix)
                 operation.completionBlock = { [weak operation] in
                     callback?(geofences: operation?.geofences, error: operation?.output?.error)
                 }

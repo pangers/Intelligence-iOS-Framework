@@ -13,8 +13,7 @@ internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
         assert(phoenix!.developerLoggedIn, "GetMe can only be called explicitly by developers currently, and only on an account they have logged into.")
-        let oauth = PhoenixOAuth(tokenType: .LoggedInUser)
-        let request = NSURLRequest.phx_URLRequestForUserMe(oauth, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForUserMe(phoenix!)
         output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         parse(withErrorCode: IdentityError.UserUpdateError.rawValue)
     }

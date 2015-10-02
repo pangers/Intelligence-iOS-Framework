@@ -20,7 +20,7 @@ public final class Phoenix: NSObject {
     
     internal var developerLoggedIn = false
     
-    internal var bestOAuth: PhoenixOAuth {
+    internal var bestSDKUserOAuth: PhoenixOAuth {
         if developerLoggedIn {
             return PhoenixOAuth(tokenType: .LoggedInUser)
         } else {

@@ -23,7 +23,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
     override func main() {
         assert(phoenix != nil && oauth != nil)
         
-        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, phoenix: phoenix!)
+        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, phoenix: phoenix!)
         output = phoenix!.network.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
             return
