@@ -41,7 +41,7 @@ class AuthenticationViewController: UITableViewController {
         }
     }
     private var loggedIn: Bool {
-        return PhoenixManager.phoenix?.identity.isLoggedIn == true
+        return false // PhoenixManager.phoenix?.identity.isLoggedIn == true
     }
     
     override func viewDidLoad() {
@@ -122,15 +122,17 @@ class AuthenticationViewController: UITableViewController {
                 reloadUI(.Login)
                 return
             }
-            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-                reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
-                if self?.loginMessage == .LoggedIn {
-                    self?.loggedInUser = user
-                    NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
-                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
-                    }
-                }
-            })
+
+// This makes the compiler sad, and launching a segmentation fault :(
+//            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+//                reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
+//                if self?.loginMessage == .LoggedIn {
+//                    self?.loggedInUser = user
+//                    NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
+//                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
+//                    }
+//                }
+//            })
         }))
         presentViewController(alert, animated: true) { }
     }

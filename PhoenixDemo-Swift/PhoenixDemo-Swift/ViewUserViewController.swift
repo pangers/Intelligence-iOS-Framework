@@ -99,25 +99,25 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     // MARK:- UISearchBarDelegate
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        guard let userIdText = searchBar.text,
-            let userId = Int(userIdText) else {
-                showInformation("Couldn't get an integer from the user Id you typed")
-                return
-        }
-        
-        // clear info label
-        self.infoLabel.text = ""
-        searchBar.resignFirstResponder()
-        
-        // gets the user by its id and treats it in the callback.
-        PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
-            if user != nil {
-                self.user = user
-            }
-            else {
-                self.showInformation("Error occured while loading user data: \(error)")
-            }
-        }
+//        guard let userIdText = searchBar.text,
+//            let userId = Int(userIdText) else {
+//                showInformation("Couldn't get an integer from the user Id you typed")
+//                return
+//        }
+//        
+//        // clear info label
+//        self.infoLabel.text = ""
+//        searchBar.resignFirstResponder()
+//        
+//        // gets the user by its id and treats it in the callback.
+//        PhoenixManager.phoenix?.identity.getUser(userId) { (user, error) -> Void in
+//            if user != nil {
+//                self.user = user
+//            }
+//            else {
+//                self.showInformation("Error occured while loading user data: \(error)")
+//            }
+//        }
     }
 
 }
