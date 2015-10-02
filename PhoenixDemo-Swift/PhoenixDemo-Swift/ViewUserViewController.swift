@@ -35,7 +35,11 @@ class ViewUserViewController : UIViewController, UISearchBarDelegate {
     
     @objc func tappedScreen(tap: UITapGestureRecognizer) {
         let fields = [username, password, firstname, lastname, avatarURL]
-        fields.map({ if $0.isFirstResponder() { $0.resignFirstResponder() } })
+        fields.forEach {
+            if $0.isFirstResponder() {
+                $0.resignFirstResponder()
+            }
+        }
     }
     
     func displayMe(user: Phoenix.User?, error: NSError?) {

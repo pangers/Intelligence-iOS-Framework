@@ -14,6 +14,7 @@ protocol PhoenixLocationManagerDelegate {
     
     func didExitGeofence(geofence:Geofence, withUserCoordinate:PhoenixCoordinate?)
     
+    func didUpdateLocationWithCoordinate(coordinate:PhoenixCoordinate)
 }
 
 internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
@@ -131,6 +132,10 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         startMonitoringGeofences(geofences)
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
+        self.delegate?.didUpdateLocationWithCoordinate(PhoenixCoordinate(withLatitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude))
     }
         
     /// Called to determine state of a region by didStartMonitoringForRegion.

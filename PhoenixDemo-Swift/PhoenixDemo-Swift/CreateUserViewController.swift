@@ -34,7 +34,11 @@ class CreateUserViewController : UIViewController {
     
     @objc func tappedScreen(tap: UITapGestureRecognizer) {
         let fields = [username, password, firstName, lastName, avatarURL]
-        fields.map({ if $0.isFirstResponder() { $0.resignFirstResponder() } })
+        fields.forEach {
+            if $0.isFirstResponder() {
+                $0.resignFirstResponder()
+            }
+        }
     }
     
     @IBAction func didTapCreateUser(sender: AnyObject) {

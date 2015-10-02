@@ -46,6 +46,9 @@ internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool)
         get
     }
     
+    func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) -> Bool
+
+    func downloadGeofences(withCoordinates coordinates:PhoenixCoordinate, callback: PhoenixDownloadGeofencesCallback?)
 }
 
 internal extension Phoenix {
@@ -107,13 +110,7 @@ internal extension Phoenix {
             super.startup()
             
             if configuration.useGeofences {
-                guard let location = self.userLocation else {
-                    return
-                }
-
-                let geoQuery: GeofenceQuery = GeofenceQuery.init(location: location)
-                geoQuery.setDefaultValues()
-                downloadGeofences(geoQuery, callback:nil)
+                downloadGeofences(nil)
             }
         }
         
@@ -129,6 +126,32 @@ internal extension Phoenix {
             super.shutdown()
         }
         
+        /**
+        Convenience method to download the geofences from the default values.
+        
+        - parameter callback: The callback to be notified with the geofences and 
+        error if any.
+        
+        - returns: True if the download was enqueued
+        */
+        func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) -> Bool {
+            guard let location = self.userLocation else {
+                return false
+            }
+            
+            let geofenceQuery: GeofenceQuery = GeofenceQuery.init(location: location)
+            geofenceQuery.setDefaultValues()
+            downloadGeofences(geofenceQuery, callback: callback)
+            return true
+        }
+        
+        
+        func downloadGeofences(withCoordinates coordinates:PhoenixCoordinate, callback: PhoenixDownloadGeofencesCallback?) {
+            let geofenceQuery: GeofenceQuery = GeofenceQuery.init(location: coordinates)
+            geofenceQuery.setDefaultValues()
+            downloadGeofences(geofenceQuery, callback: callback)
+        }
+
         /// Download a list of geofences.
         /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
         func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) {
@@ -183,6 +206,11 @@ internal extension Phoenix {
 //            objc_sync_exit(self)
         }
 
+        func didUpdateLocationWithCoordinate(coordinate: PhoenixCoordinate) {
+            if configuration.useGeofences {
+                downloadGeofences(withCoordinates: coordinate, callback: nil)
+            }
+        }
     }
     
 }
