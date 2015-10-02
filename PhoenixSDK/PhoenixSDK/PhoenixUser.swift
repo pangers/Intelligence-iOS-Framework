@@ -99,21 +99,18 @@ public extension Phoenix {
             let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
             let numbers = "0123456789"
             
-            var password = (0..<3).map {
-                _ in uppercaseLetters[Int(arc4random_uniform(UInt32(uppercaseLetters.characters.count)))]
+            func selectRandomLetter(str: String) -> Character {
+                return str[Int(arc4random_uniform(UInt32(str.characters.count)))]
             }
             
-            password += (0..<3).map {
-                _ in lowercaseLetters[Int(arc4random_uniform(UInt32(lowercaseLetters.characters.count)))]
-            }
+            let range = (0..<3)
+            let password = String(Array([
+                range.map({ _ in selectRandomLetter(uppercaseLetters) }),
+                range.map({ _ in selectRandomLetter(lowercaseLetters) }),
+                range.map({ _ in selectRandomLetter(numbers) })
+                ].flatten()).shuffle())
             
-            password += (0..<3).map {
-                _ in numbers[Int(arc4random_uniform(UInt32(numbers.characters.count)))]
-            }
-            
-            password.shuffle()
-            
-            self.init(userId:invalidUserId, companyId:companyId, username:username, password:String(password), firstName:"SDK", lastName:"User", avatarURL:"")
+            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
         }
         
         /// Convenience initializer with no user id.

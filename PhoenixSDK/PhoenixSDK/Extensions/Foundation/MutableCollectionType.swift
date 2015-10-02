@@ -8,6 +8,16 @@
 
 import Foundation
 
+internal extension CollectionType where Index == Int {
+    
+    func shuffle() -> Self {
+        var copy = self
+        copy.shuffle()
+        return copy
+    }
+    
+}
+
 internal extension MutableCollectionType where Index == Int {
     mutating func shuffle() {
         if count < 2 {
