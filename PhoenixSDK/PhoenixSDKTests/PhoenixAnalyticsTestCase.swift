@@ -195,6 +195,49 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             // Wait for calls to be made and the callback to be notified
         }
     }
+	
+	// MARK:- Screen Viewed
+	
+	/// Test if event type is correct and id matches.
+	func testScreenViewedSuccess() {
+		let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+		let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+		
+		// Create event, avoiding queueing/storage system.
+		let screenName = "Unit Test Screen"
+		let viewingDuration = 42.0
+		let event = Phoenix.ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration)
+		XCTAssert(event.eventType == "Phoenix.Identity.Application.ScreenViewed")
+		XCTAssert(event.targetId == screenName)
+		XCTAssert(event.value == viewingDuration)
+		
+		let eventJSON = analytics.prepareEvent(event)
+		ensureJSONIncludesMandatoryPopulatedData(eventJSON)
+		let eventsJSON: JSONDictionaryArray = [eventJSON]
+		let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
+		let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+		
+		// Create request
+		let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
+		
+		// Mock 200 on auth
+		mockValidTokenStorage()
+		
+		// Mock
+		mockResponseForURL(request,
+			method: "POST",
+			response: (data: successfulResponse, statusCode:200, headers:nil))
+		
+		// Avoid using the EventQueue so we are certain that we are only sending one request here.
+		analytics.sendEvents(eventsJSON) { (error) -> () in
+			XCTAssertNil(error, "Expected success")
+			expectCallback.fulfill()
+		}
+		
+		waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+			// Wait for calls to be made and the callback to be notified
+		}
+	}
 
     // MARK:- Analytics Requests
     
