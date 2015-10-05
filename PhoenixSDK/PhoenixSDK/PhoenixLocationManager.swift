@@ -56,7 +56,9 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     Starts monitoring the location of the user
     */
     func startUpdatingLocation() {
-        locationManager.startUpdatingLocation()
+        if hasLocationServicesEnabled {
+            locationManager.startUpdatingLocation()
+        }
     }
     
     /**
