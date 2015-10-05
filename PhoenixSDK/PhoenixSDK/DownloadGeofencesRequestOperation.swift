@@ -14,23 +14,27 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
 
-    init(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
+    init(configuration: Phoenix.Configuration, network: Network) {
         super.init()
-        self.oauth = oauth
+        self.oauth = network.bestSDKUserOAuth
         self.configuration = configuration
         self.network = network
     }
     
     override func main() {
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!)
+        
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        
         if handleError(LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue) {
             return
         }
+        
         guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.phx_jsonDictionary) else {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
+        
         geofences = downloaded
     }
 }

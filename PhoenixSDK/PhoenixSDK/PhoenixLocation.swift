@@ -12,9 +12,6 @@ import CoreLocation
 /// A generic PhoenixDownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
 public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
-/// Called when a geofence is entered or exited.
-internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool) -> Void
-
 /// Phoenix coordinate object. CLLocationCoordinate2D can't be used as an optional.
 @objc public class PhoenixCoordinate : NSObject {
     
@@ -40,15 +37,21 @@ internal typealias PhoenixGeofenceCallback = (geofence: Geofence, entered: Bool)
 */
 @objc public protocol PhoenixLocation : PhoenixModuleProtocol {
     
+    /**
+    Downloads a list of geofences using the given query details
+    
+    - parameter queryDetails: The geofence query to retrieve.
+    - parameter callback:     The callback that will be notified upon success/error.
+    */
     func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?)
     
-    var userLocation:PhoenixCoordinate? {
-        get
-    }
-    
-    func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) -> Bool
+    /// Geofences array, loaded from Cache on startup but updated with data from server if network is available.
+    /// When updated it will set the location manager to monitor the given geofences if we have permissions.
+    /// If we don't have permissions it will do nothing, and if we don't receive any geofence, we will
+    /// stop monitoring the previous geofences.
+    /// As a result, this holds the list of geofences that are currently monitored if we have permissions.
+    var geofences: [Geofence]? { get }
 
-    func downloadGeofences(withCoordinates coordinates:PhoenixCoordinate, callback: PhoenixDownloadGeofencesCallback?)
 }
 
 internal extension Phoenix {
@@ -56,15 +59,15 @@ internal extension Phoenix {
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location: PhoenixModule, PhoenixLocation, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
         
+        /// The last coordinate we received.
+        private var lastLocation:PhoenixCoordinate?
+        
         /// A reference to the analytics module so we can track the geofences entered/exited events
         internal weak var analytics:PhoenixAnalytics?
         
         /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
-        internal lazy var enteredGeofences = [Geofence]()
+        internal lazy var enteredGeofences = [Int:Geofence]()
         
-        /// Geofences array, loaded from Cache on launch but updated with data from server if network is available.
-        /// When updated it will set the location manager to monitor the given geofences (or stop it if nil geofences
-        /// are set).
         internal var geofences: [Geofence]? {
             didSet {
                 guard let geofences = geofences where geofences.count > 0 else {
@@ -79,7 +82,6 @@ internal extension Phoenix {
         /// The location manager
         private let locationManager:PhoenixLocationManager
         
-        /// Helper property to get the userlocation, wrapping the location manager method.
         var userLocation:PhoenixCoordinate? {
             return locationManager.userLocation
         }
@@ -93,6 +95,9 @@ internal extension Phoenix {
             self.locationManager = locationManager
             super.init(withNetwork: network, configuration: configuration)
             self.locationManager.delegate = self
+            
+            // Initialize the last known location with the user's one.
+            lastLocation = userLocation
         }
         
         deinit {
@@ -109,7 +114,12 @@ internal extension Phoenix {
             super.startup()
             
             if configuration.useGeofences {
-                downloadGeofences(nil)
+                // Get the geofences from the cache if possible.
+                self.geofences = try? Geofence.geofencesFromCache()
+                
+                if !downloadGeofences(nil) {
+                    
+                }
             }
         }
         
@@ -125,16 +135,9 @@ internal extension Phoenix {
             super.shutdown()
         }
         
-        /**
-        Convenience method to download the geofences from the default values.
-        
-        - parameter callback: The callback to be notified with the geofences and 
-        error if any.
-        
-        - returns: True if the download was enqueued
-        */
         func downloadGeofences(callback: PhoenixDownloadGeofencesCallback?) -> Bool {
             guard let location = self.userLocation else {
+                // Start getting locations so we will obtain geofences later on.
                 return false
             }
             
@@ -151,63 +154,74 @@ internal extension Phoenix {
             downloadGeofences(geofenceQuery, callback: callback)
         }
 
-        /// Download a list of geofences.
-        /// - Parameter callback: Will be called with an array of PhoenixGeofence or an error.
         func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) {
-            // Initialise with cached geofences, startup may never succeed if networking/parsing error occurs.
-            do {
-                self.geofences = try Geofence.geofencesFromCache()
-            } catch {
-                // TODO: Warning: Handle the error
+            let operation = DownloadGeofencesRequestOperation(configuration: configuration, network: network)
+
+            // set the completion block to notify the caller
+            operation.completionBlock = { [weak self] in
+                let error = operation.output?.error
+                let geofences = operation.geofences
+                
+                if error == nil && geofences != nil {
+                    self?.geofences = operation.geofences
+                }
+                
+                callback?(geofences: operation.geofences, error: operation.output?.error)
             }
 
-//            TODO Sort out
-//            let operation = DownloadGeofencesRequestOperation(oauth: PhoenixOAuth(tokenType: .LoggedInUser)), phoenix: nil)
-//
-//            // set the completion block to notify the caller
-//            operation.completionBlock = { [weak self] in
-//                self?.geofences = operation.geofences
-//                callback?(geofences: operation.geofences, error: operation.error)
-//            }
-//
-//            // Execute the network operation
-//            network.executeNetworkOperation(operation)
+            // Execute the network operation
+            network.enqueueOperation(operation)
         }
         
+        func trackGeofenceEntered(geofence:Geofence) {
+            let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Enter")
+            geofenceEvent.targetId = geofence.id
+            analytics?.track(geofenceEvent)
+            
+            let viewController = UIAlertController(title: "Geofence event", message: geofenceEvent.eventType, preferredStyle: .Alert)
+            viewController.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { (action) -> Void in
+                viewController.dismissViewControllerAnimated(true, completion:nil)
+            }))
+            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(viewController, animated:true, completion: nil)
+        }
+
+        func trackGeofenceExited(geofence:Geofence) {
+            let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Exit")
+            geofenceEvent.targetId = geofence.id
+            analytics?.track(geofenceEvent)
+            
+            let viewController = UIAlertController(title: "Geofence event", message: geofenceEvent.eventType, preferredStyle: .Alert)
+            viewController.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { (action) -> Void in
+                viewController.dismissViewControllerAnimated(true, completion:nil)
+            }))
+            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(viewController, animated:true, completion: nil)
+        }
+
         // MARK:- PhoenixLocationManagerDelegate
-        
-        // TODO: Re-enable this once it has been tested
 
         func didEnterGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-//            if configuration.useGeofences == false {
-//                return
-//            }
-//
-//            guard let geofence = geofenceForRegion(region) else {
-//                return
-//            }
-//
-//            objc_sync_enter(self)
-//            if !enteredGeofences.contains(geofence) {
-//                enteredGeofences.append(geofence)
-//                geofenceCallback(geofence: geofence, entered: true)
-//            }
-//            objc_sync_exit(self)
+            if configuration.useGeofences == false {
+                locationManager.stopMonitoringGeofences()
+                return
+            }
+            
+            self.enteredGeofences[geofence.id] = geofence
+            self.trackGeofenceEntered(geofence)
         }
         
         func didExitGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-//            if configuration.useGeofences == false { return }
-//            guard let geofence = geofenceForRegion(region) else { return }
-//            objc_sync_enter(self)
-//            if enteredGeofences.contains(geofence) {
-//                geofenceCallback(geofence: geofence, entered: false)
-//                enteredGeofences = enteredGeofences.filter({$0 != geofence})
-//            }
-//            objc_sync_exit(self)
+            if configuration.useGeofences == false {
+                locationManager.stopMonitoringGeofences()
+                return
+            }
+            
+            self.enteredGeofences[geofence.id] = nil
+            self.trackGeofenceExited(geofence)
         }
 
         func didUpdateLocationWithCoordinate(coordinate: PhoenixCoordinate) {
-            if configuration.useGeofences {
+            if configuration.useGeofences && lastLocation != coordinate {
+                lastLocation = coordinate
                 downloadGeofences(withCoordinates: coordinate, callback: nil)
             }
         }
