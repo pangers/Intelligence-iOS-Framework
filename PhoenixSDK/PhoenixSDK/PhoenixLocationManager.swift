@@ -144,7 +144,11 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
         }
         startMonitoringGeofences(geofences)
     }
-        
+    
+    func setLocationAccuracy(accuracy:CLLocationAccuracy) {
+        self.locationManager.desiredAccuracy = accuracy
+    }
+    
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             return

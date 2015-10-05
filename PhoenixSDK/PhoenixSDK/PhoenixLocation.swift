@@ -34,9 +34,27 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     
     func isMonitoringGeofences() -> Bool
     
+     /**
+    Starts monitoring the given geofences.
+    
+    - parameter geofences: The geofences to monitor.
+    
+    - returns: True if the geofences were monitored. The location module won't trigger a location
+    permission request, and therefore can reject the request to start monitoring geofences.
+    */
     func startMonitoringGeofences(geofences:[Geofence]) -> Bool
     
+    /**
+    Stops monitoring the geofences, and flushes the ones the location module keeps.
+    */
     func stopMonitoringGeofences()
+    
+    /**
+    Sets the location accuracy to use when monitoring regions. Defaults to kCLLocationAccuracyHundredMeters.
+    
+    - parameter accuracy: The accuracy
+    */
+    func setLocationAccuracy(accuracy:CLLocationAccuracy)
     
     /// Geofences array, loaded from Cache on startup but updated with data from server if network is available.
     /// When updated it will set the location manager to monitor the given geofences if we have permissions.
@@ -172,6 +190,9 @@ internal extension Phoenix {
             self.locationManager.stopMonitoringGeofences()
         }
 
+        func setLocationAccuracy(accuracy:CLLocationAccuracy) {
+            self.locationManager.setLocationAccuracy(accuracy)
+        }
         
         func trackGeofenceEntered(geofence:Geofence) {
             let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Enter")
