@@ -170,7 +170,7 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
                     completion(success: false)
                     return
                 }
-                self?.identity.startup({ (success) -> () in
+                self?.location.startup({ (success) -> () in
                     completion(success: success)
                 })
             })

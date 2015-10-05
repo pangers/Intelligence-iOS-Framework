@@ -156,15 +156,15 @@ extension Phoenix {
             let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
             
             pipeline.completionBlock = { [weak pipeline, weak self] in
+                // Clear password from memory.
+                if (pipeline?.oauth?.tokenType == .LoggedInUser) {
+                    pipeline?.oauth?.password = nil
+                }
+                
                 if pipeline?.output?.error != nil {
                     // Failed, tell developer!
                     callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
-                    // Clear password from memory.
-                    if (pipeline?.oauth?.tokenType == .LoggedInUser) {
-                        pipeline?.oauth?.password = nil
-                    }
-                    
                     // Get user me.
                     self?.network.developerLoggedIn = true
                     self?.getMe({ (user, error) -> Void in
@@ -182,7 +182,7 @@ extension Phoenix {
         
         @objc func logout() {
             network.developerLoggedIn = false
-            PhoenixOAuth.reset(.LoggedInUser)
+            PhoenixOAuth.reset(PhoenixKeychain(account: PhoenixOAuthTokenType.LoggedInUser.rawValue))
         }
         
         

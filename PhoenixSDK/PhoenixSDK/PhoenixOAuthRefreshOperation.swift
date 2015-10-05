@@ -13,7 +13,7 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     override func main() {
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
-            print("Refresh Token Skipped")
+            print("\(oauth!.tokenType) Refresh Token Skipped")
             return
         }
         let request = NSURLRequest.phx_URLRequestForRefresh(oauth!, configuration: configuration!, network: network!)
@@ -23,11 +23,11 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
         guard let httpResponse = output?.response as? NSHTTPURLResponse
             where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
-                    print("Refresh Token Failed \(output?.error)")
+                    print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             return
         }
         self.shouldBreak = true
-        print("Refresh Token Passed")
+        print("\(oauth!.tokenType) Refresh Token Passed")
     }
     
 }

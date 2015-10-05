@@ -14,32 +14,44 @@ enum PhoenixOAuthTokenType: String {
     case LoggedInUser = "LoggedInUser"
 }
 
-/// This class supports the PhoenixOAuthPipeline
-internal class PhoenixOAuth {
+protocol PhoenixOAuthProtocol {
+    var storage: TokenStorage { get set }
+    var tokenType: PhoenixOAuthTokenType { get set }
+    var accessToken: String? { get set }
+    var refreshToken: String? { get set }
+    var username: String? { get set }
+    var userId: Int? { get set }
     
-    let tokenType: PhoenixOAuthTokenType
+    /// Password will be stored in Keychain for SDKUser and in memory only for LoggedInUser
+    /// for the duration of the login method (cleared afterwards).
+    var password: String? { get set }
+}
+
+
+/// This class supports the PhoenixOAuthPipeline
+internal class PhoenixOAuth: PhoenixOAuthProtocol {
+    
+    var storage: TokenStorage
+    var tokenType: PhoenixOAuthTokenType
     var accessToken: String?
     var refreshToken: String?
     var username: String?
     var userId: Int?
-    
-    /// Password will be stored in Keychain for SDKUser
-    /// And in memory only for LoggedInUser
     var password: String?
     
-    init(tokenType: PhoenixOAuthTokenType) {
+    init(tokenType: PhoenixOAuthTokenType, storage: TokenStorage? = nil) {
         self.tokenType = tokenType
-        let keychain = PhoenixKeychain(account: tokenType.rawValue)
-        accessToken = keychain.accessToken
+        self.storage = storage ?? PhoenixKeychain(account: tokenType.rawValue)
+        accessToken = self.storage.accessToken
         // Application User only has 'accessToken' they don't care about refresh tokens.
         if tokenType != .Application {
             // SDKUser and LoggedInUser have 'username', 'refreshToken' and optionally 'userId'
-            refreshToken = keychain.refreshToken
-            username = keychain.username
-            userId = keychain.userId
+            refreshToken = self.storage.refreshToken
+            username = self.storage.username
+            userId = self.storage.userId
             if tokenType == .SDKUser {
                 // SDKUser also has a 'password'
-                password = keychain.password
+                password = self.storage.password
             }
         }
     }
@@ -52,13 +64,12 @@ internal class PhoenixOAuth {
         return true
     }
     
-    class func reset(tokenType: PhoenixOAuthTokenType) {
-        let keychain = PhoenixKeychain(account: tokenType.rawValue)
-        keychain.accessToken = nil
-        keychain.refreshToken = nil
-        keychain.username = nil
-        keychain.password = nil
-        keychain.userId = nil
+    class func reset(storage: TokenStorage) {
+        storage.accessToken = nil
+        storage.refreshToken = nil
+        storage.username = nil
+        storage.password = nil
+        storage.userId = nil
     }
     
     func updateCredentials(withUsername username: String, password: String) {
@@ -86,19 +97,18 @@ internal class PhoenixOAuth {
     }
     
     private func store() {
-        let keychain = PhoenixKeychain(account: tokenType.rawValue)
         assert(accessToken != nil)
-        keychain.accessToken = accessToken
+        storage.accessToken = accessToken
         if tokenType != .Application {
             // Assert we have required information.
             assert(refreshToken != nil && username != nil)
-            keychain.refreshToken = refreshToken
-            keychain.username = username
-            keychain.userId = userId
+            storage.refreshToken = refreshToken
+            storage.username = username
+            storage.userId = userId
             if tokenType == .SDKUser {
                 // Only store SDKUser passwords.
                 assert(password != nil)
-                keychain.password = password
+                storage.password = password
             }
         }
     }

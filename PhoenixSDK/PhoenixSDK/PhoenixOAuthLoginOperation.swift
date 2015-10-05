@@ -19,10 +19,10 @@ internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
         guard let httpResponse = output?.response as? NSHTTPURLResponse
             where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
-                    print("Login Failed \(output?.error)")
+                    print("\(oauth!.tokenType) Login Failed \(output?.error)")
                     return
         }
-        print("Login Passed")
+        print("\(oauth!.tokenType) Login Passed")
     }
     
 }
