@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--Phoenix Location Module-->
+        <!--Phoenix Location Module View Controller-->
         <scene sceneID="peW-h1-N4f">
             <objects>
-                <viewController id="Xa0-3V-nqW" customClass="PhoenixLocationModule" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Xa0-3V-nqW" customClass="PhoenixLocationModuleViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Qgs-XQ-lMP"/>
                         <viewControllerLayoutGuide type="bottom" id="YXb-SR-eHc"/>

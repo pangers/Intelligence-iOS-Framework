@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import PhoenixSDK
 
-class PhoenixLocationModule : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate {
+class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate {
     
     private static let cellIdentifier = "cell"
     

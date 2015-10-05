@@ -19,7 +19,7 @@
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		BBBB63571BC27AE800802EF9 /* LocationModule.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBB63551BC27AE800802EF9 /* LocationModule.storyboard */; settings = {ASSET_TAGS = (); }; };
 		BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBBB63591BC27BF700802EF9 /* MapKit.framework */; };
-		BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModule.swift */; settings = {ASSET_TAGS = (); }; };
+		BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
 		FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; };
@@ -54,7 +54,7 @@
 		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		BBBB63561BC27AE800802EF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LocationModule.storyboard; sourceTree = "<group>"; };
 		BBBB63591BC27BF700802EF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocationModule.swift; sourceTree = "<group>"; };
+		BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocationModuleViewController.swift; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,7 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				BBBB63551BC27AE800802EF9 /* LocationModule.storyboard */,
-				BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModule.swift */,
+				BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift */,
 			);
 			name = Location;
 			sourceTree = "<group>";
@@ -212,7 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModule.swift in Sources */,
+				BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift in Sources */,
 				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
 				7FDAAADF1B5D35AE00DF2BE6 /* ViewController.swift in Sources */,
 				BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */,
