@@ -84,7 +84,13 @@ class PhoenixLocationModule : UIViewController, UITableViewDataSource, MKMapView
     
     func didReceiveGeofences(geofences: [Geofence]?, error:NSError?) {
         guard let geofences = geofences where error == nil else {
-            logEvent("No geofences fetched")
+            if error != nil {
+                logEvent("Error occured while downloading geofences")
+                logEvent("\(error)")
+            }
+            else {
+                logEvent("No geofences fetched")                
+            }
             return
         }
         
