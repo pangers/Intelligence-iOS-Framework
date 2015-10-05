@@ -117,7 +117,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
     func testCreateInstallationSuccess() {
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidCreateInstallationObject()
         
@@ -159,7 +159,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     }
     
     func testCreateInstallationFailure() {
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
         
@@ -183,7 +183,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
     func testCreateInstallationParseFailure() {
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidCreateInstallationObject()
         
@@ -206,7 +206,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     }
     
     func testCreateInstallationUnnecessary() {
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock installation request
         let storage = InstallationStorage()
@@ -249,7 +249,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
     func testUpdateInstallationSuccess() {
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidUpdateInstallationObject()
         
@@ -292,7 +292,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     }
     
     func testUpdateInstallationFailure() {
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidUpdateInstallationObject()
         
@@ -315,7 +315,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     }
     
     func testUpdateInstallationParseFailure() {
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidUpdateInstallationObject()
         
@@ -338,7 +338,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     }
     
     func testUpdateInstallationUnnecessary() {
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let installation = prepareValidUpdateInstallationObject()
         let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!

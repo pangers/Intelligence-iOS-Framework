@@ -67,13 +67,13 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
     /// (INTERNAL) Initializes the Phoenix entry point with a configuration object.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
-    /// - parameter tokenStorage:  Object responsible for storing OAuth information.
+    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(
         withDelegate delegate: PhoenixDelegate,
         configuration phoenixConfiguration: Phoenix.Configuration,
-        tokenStorage: TokenStorage) throws
+        oauthStorage: PhoenixOAuthStorage) throws
     {
         
         // TODO: Is this even required?? What's the point? They have the plist...
@@ -111,18 +111,18 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
     
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.
     /// - parameter delegate:      Object that responds to delegate events.
-    /// - parameter tokenStorage:  Object responsible for storing OAuth information.
+    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
     /// - parameter file:          The JSON file name (no extension) of the configuration.
     /// - parameter inBundle:      The NSBundle to use. Defaults to the main bundle.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Phoenix SDK base class.
     convenience internal init(
         withDelegate delegate: PhoenixDelegate,
-        tokenStorage:TokenStorage,
+        oauthStorage: PhoenixOAuthStorage,
         file: String,
         inBundle: NSBundle=NSBundle.mainBundle()) throws
     {
-        try self.init(withDelegate: delegate, configuration: Configuration.configuration(fromFile: file, inBundle: inBundle), tokenStorage: tokenStorage)
+        try self.init(withDelegate: delegate, configuration: Configuration.configuration(fromFile: file, inBundle: inBundle), oauthStorage: oauthStorage)
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -134,7 +134,7 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         withDelegate delegate: PhoenixDelegate,
         configuration phoenixConfiguration: Phoenix.Configuration) throws
     {
-        try self.init(withDelegate: delegate, configuration: phoenixConfiguration, tokenStorage:PhoenixKeychain())
+        try self.init(withDelegate: delegate, configuration: phoenixConfiguration, oauthStorage:PhoenixKeychain())
     }
     
     /// Initialize Phoenix with a configuration file.
@@ -148,7 +148,7 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         file: String,
         inBundle: NSBundle=NSBundle.mainBundle()) throws
     {
-        try self.init(withDelegate: delegate, tokenStorage: PhoenixKeychain(), file:file, inBundle:inBundle)
+        try self.init(withDelegate: delegate, oauthStorage: PhoenixKeychain(), file:file, inBundle:inBundle)
     }
     
     /// Starts up the Phoenix SDK modules.

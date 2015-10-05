@@ -10,7 +10,7 @@ import Foundation
 
 @testable import PhoenixSDK
 
-class MockSimpleStorage: PhoenixSDK.TokenStorage {
+class MockSimpleStorage: PhoenixSDK.PhoenixOAuthStorage {
     
     private var storage:[String:AnyObject] = [:]
     

@@ -97,7 +97,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -137,7 +137,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -178,7 +178,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -214,7 +214,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -248,7 +248,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -284,7 +284,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -318,7 +318,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,

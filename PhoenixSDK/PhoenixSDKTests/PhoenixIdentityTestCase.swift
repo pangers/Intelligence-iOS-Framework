@@ -83,7 +83,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         // Fake anonymous login
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Create expectation for login...
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
@@ -127,7 +127,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         // Fake anonymous login
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Create expectation for login...
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
@@ -163,7 +163,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
         
         // Fake anonymous login
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Create expectation for login...
         let responses = [MockResponse(nil, 400, nil)]
@@ -191,7 +191,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
     func testLogout() {
         // Mock that we have a token
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
         
         phoenix?.identity.logout()
@@ -222,7 +222,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
 
         // Mock auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -246,7 +246,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
 
         // Mock auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -317,7 +317,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
         
         // Mock auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -341,7 +341,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
         
         // Mock auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -401,7 +401,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -424,7 +424,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -448,7 +448,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
 
         identity!.getUser(-1) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -468,7 +468,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
         
         // Mock request being authorized
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,

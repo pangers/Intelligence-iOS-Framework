@@ -15,7 +15,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         let delegateTester = PhoenixDelegateTest(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         
         do {
-            let phoenix = try Phoenix(withDelegate: delegateTester, tokenStorage:storage, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            let phoenix = try Phoenix(withDelegate: delegateTester, oauthStorage:storage, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -29,7 +29,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = try Phoenix(withDelegate: delegateTester, configuration: configuration, tokenStorage:storage)
+            let phoenix = try Phoenix(withDelegate: delegateTester, configuration: configuration, oauthStorage:storage)
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -44,7 +44,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         do {
             let config = MockConfiguration()
             config.mockInvalid = true
-            let _ = try Phoenix(withDelegate:delegateTester, configuration: config, tokenStorage:storage)
+            let _ = try Phoenix(withDelegate:delegateTester, configuration: config, oauthStorage:storage)
             XCTAssert(false, "No exception thrown")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
@@ -60,7 +60,7 @@ class PhoenixTestCase: PhoenixBaseTestCase {
         let delegateTester = PhoenixDelegateTest(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         
         do {
-            _ = try Phoenix(withDelegate: delegateTester, tokenStorage:storage, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
+            _ = try Phoenix(withDelegate: delegateTester, oauthStorage:storage, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self))
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing phoenix.")

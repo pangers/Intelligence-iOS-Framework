@@ -42,7 +42,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Verify that there is a call executed when the token is available, but expired.
     func testTokenObtainedOnExpiredtoken() {
         // Mock that we have a token, but expired
-        mockExpiredTokenStorage()
+        mockExpiredPhoenixOAuthStorage()
         XCTAssert(!checkAuthenticated, "Phoenix is not authenticated before a response")
         
         mockResponseForAuthentication(200)
@@ -72,7 +72,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Mocks a 401 response in a request, and how the authentication is later scheduled
     func testEnqueueAuthorizationOn401Operation() {
         // Mock a valid authentication
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let url = NSURL(string: "http://www.google.com/")!
         
@@ -138,7 +138,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
     /// Mocks a 403 response in a request, and how the authentication is later scheduled
     func testEnqueueAuthorizationOn403Operation() {
         // Mock a valid authentication
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         let url = NSURL(string: "http://www.google.com/")!
         
@@ -161,7 +161,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         let stringData = "Hola"
         let expectation = expectationWithDescription("")
         let statusCode = Int32(200)
-        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), request: initialRequest, authentication: PhoenixSDK.Phoenix.Authentication(withTokenStorage: storage))
+        let op = PhoenixSDK.PhoenixNetworkRequestOperation(withSession: NSURLSession.sharedSession(), request: initialRequest, authentication: PhoenixSDK.Phoenix.Authentication(withPhoenixOAuthStorage: storage))
         op.completionBlock = {
             expectation.fulfill()
             let (data, response) = op.output!
@@ -192,7 +192,7 @@ class PhoenixNetworkRequestTestCase : PhoenixBaseTestCase {
         })
 
         // Force Invalidate tokens
-        mockExpiredTokenStorage()
+        mockExpiredPhoenixOAuthStorage()
         phoenix!.network.executeRequest(initialRequest) { (data, response, error) -> () in
             expectationOperation.fulfill()
         }

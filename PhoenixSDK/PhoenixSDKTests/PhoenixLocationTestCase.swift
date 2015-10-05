@@ -118,7 +118,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,
@@ -149,7 +149,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
         
         // Mock 200 on auth
-        mockValidTokenStorage()
+        mockValidPhoenixOAuthStorage()
         
         // Mock
         mockResponseForURL(request,

@@ -15,7 +15,7 @@ enum PhoenixOAuthTokenType: String {
 }
 
 protocol PhoenixOAuthProtocol {
-    var storage: TokenStorage { get set }
+    var storage: PhoenixOAuthStorage { get set }
     var tokenType: PhoenixOAuthTokenType { get set }
     var accessToken: String? { get set }
     var refreshToken: String? { get set }
@@ -31,7 +31,7 @@ protocol PhoenixOAuthProtocol {
 /// This class supports the PhoenixOAuthPipeline
 internal class PhoenixOAuth: PhoenixOAuthProtocol {
     
-    var storage: TokenStorage
+    var storage: PhoenixOAuthStorage
     var tokenType: PhoenixOAuthTokenType
     var accessToken: String?
     var refreshToken: String?
@@ -39,7 +39,7 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
     var userId: Int?
     var password: String?
     
-    init(tokenType: PhoenixOAuthTokenType, storage: TokenStorage? = nil) {
+    init(tokenType: PhoenixOAuthTokenType, storage: PhoenixOAuthStorage? = nil) {
         self.tokenType = tokenType
         self.storage = storage ?? PhoenixKeychain(account: tokenType.rawValue)
         accessToken = self.storage.accessToken
@@ -64,7 +64,7 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
         return true
     }
     
-    class func reset(storage: TokenStorage) {
+    class func reset(storage: PhoenixOAuthStorage) {
         storage.accessToken = nil
         storage.refreshToken = nil
         storage.username = nil

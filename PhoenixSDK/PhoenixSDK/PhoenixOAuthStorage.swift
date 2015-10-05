@@ -1,5 +1,5 @@
 //
-//  TokenStorage.swift
+//  PhoenixOAuthStorage.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 30/07/2015.
@@ -19,7 +19,7 @@ internal let OAuthRefreshTokenKey = "refresh_token"
 // TODO: Rename this class!
 
 /// The protocol to implement in order to become a simple storage.
-@objc internal protocol TokenStorage {
+@objc internal protocol PhoenixOAuthStorage {
     
     // Basic subscript implementation
     subscript(index: String) -> AnyObject? {get set}
@@ -28,7 +28,7 @@ internal let OAuthRefreshTokenKey = "refresh_token"
 
 /// A protocol extension to provide a wrapper over any class implementing
 /// simple storage that provides the required values used by the app.
-internal extension TokenStorage {
+internal extension PhoenixOAuthStorage {
     
     var username: String? {
         get {

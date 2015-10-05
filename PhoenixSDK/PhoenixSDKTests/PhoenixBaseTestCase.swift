@@ -65,7 +65,7 @@ class PhoenixBaseTestCase : XCTestCase {
             
             let tester = PhoenixDelegateTest(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
             
-            try self.phoenix = Phoenix(withDelegate: tester, configuration: configuration, tokenStorage: storage)
+            try self.phoenix = Phoenix(withDelegate: tester, configuration: configuration, oauthStorage: storage)
             
             let expectation = expectationWithDescription("Expectation")
             
