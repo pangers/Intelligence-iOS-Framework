@@ -219,16 +219,16 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to download geofences.
-    class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootLocationPath()
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingGeofences()
+            .phx_URLByAppendingQueryString(query.urlQueryString())
         let request = NSMutableURLRequest(URL: url)
-        
+
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
-        
         // TODO: Add filtering
         
         return request.copy() as! NSURLRequest

@@ -56,7 +56,7 @@ public enum GeofenceSortCriteria: String {
     ///And any of optional parameter if available.
     /// - Returns:
     ///     - query: String in form of URL query
-    func getURLQueryString () -> String {
+    func urlQueryString () -> String {
         var queryString : String = ""
             
         queryString.appendUrlQueryParameter("Longitude", parameterValue: longitude, isFirst: true)
@@ -72,6 +72,9 @@ public enum GeofenceSortCriteria: String {
         
         if let sortBy = sortingCriteria?.rawValue {
             queryString.appendUrlQueryParameter("sortBy", parameterValue: sortBy)
+        }
+        else {
+            queryString.appendUrlQueryParameter("sortBy", parameterValue: GeofenceSortCriteria.Distance.rawValue)
         }
         
         if let pagenum = pageNumber {
@@ -92,6 +95,6 @@ private extension String {
     /// '?parameterName=parameterValue' if this is first parameter or
     /// '&parameterName=parameterValue' if not first parameter.
     mutating func appendUrlQueryParameter(parameterName: String, parameterValue: AnyObject, isFirst: Bool = false) {
-        self += ((isFirst ? "?" : "&") + "\(parameterName)=\(parameterValue)")
+        self += ((isFirst ? "" : "&") + "\(parameterName)=\(parameterValue)")
     }
 }

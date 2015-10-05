@@ -82,4 +82,21 @@ internal extension NSURL {
     func phx_URLByAppendingUsersMe() -> NSURL! {
         return URLByAppendingPathComponent("/users/me")
     }
+    
+
+    func phx_URLByAppendingQueryString(queryString:String) -> NSURL! {
+
+        if (queryString.characters.count == 0 ) {
+            return self;
+        }
+        
+        var query = "&"
+        if self.query == nil || self.query!.characters.count == 0 {
+            query = "?"
+        }
+        
+        let URLString = "\(self.absoluteString)\(query)\(queryString)"
+        return NSURL(string: URLString)
+    }
+
 }

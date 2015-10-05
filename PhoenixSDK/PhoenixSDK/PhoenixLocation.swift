@@ -165,7 +165,7 @@ internal extension Phoenix {
         // MARK:- Download geofences
 
         func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) {
-            let operation = DownloadGeofencesRequestOperation(configuration: configuration, network: network)
+            let operation = DownloadGeofencesRequestOperation(configuration: configuration, network: network, query:queryDetails)
 
             // set the completion block to notify the caller
             operation.completionBlock = {
