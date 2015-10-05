@@ -27,7 +27,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     
     /// List of geofences monitored.
     private var geofencesMonitored:[Geofence]?
-    
+
     /**
     Initializes the location manager with the provided CLLocationManager
     
@@ -96,10 +96,12 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     
     - parameter geofences: The geofences to monitor.
     */
-    func startMonitoringGeofences(geofences:[Geofence]) {
+    func startMonitoringGeofences(geofences:[Geofence]) -> Bool {
         stopMonitoringGeofences()
         geofencesMonitored = geofences
         if hasRegionMonitoringEnabled {
+            locationManager.startUpdatingLocation()
+
             // Start monitoring our new geofences array.
             geofences.forEach({
                 let region = CLCircularRegion(
@@ -109,7 +111,10 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
                 
                 locationManager.startMonitoringForRegion(region)
             })
+            return true
         }
+        
+        return false
     }
     
     /**
@@ -121,6 +126,10 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
             self.locationManager.stopMonitoringForRegion($0)
         })
         geofencesMonitored = nil
+    }
+    
+    func isMonitoringGeofences() -> Bool {
+        return geofencesMonitored?.count > 0
     }
     
     // MARK:- CLLocationManagerDelegate
@@ -135,28 +144,14 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
         }
         startMonitoringGeofences(geofences)
     }
-    
-    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
-        self.delegate?.didUpdateLocationWithCoordinate(PhoenixCoordinate(withLatitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude))
-    }
         
-    /// Called to determine state of a region by didStartMonitoringForRegion.
-    /// - parameter manager: Current location manager.
-    /// - parameter state:   Inside or Outside.
-    /// - parameter region:  CLRegion we just entered/exited.
-    func locationManager(manager: CLLocationManager, didDetermineState state: CLRegionState, forRegion region: CLRegion) {
-        guard let geofence = geofenceFromRegion(region) else {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else {
             return
         }
         
-        switch state {
-        case .Inside:
-            self.delegate?.didEnterGeofence(geofence, withUserCoordinate: self.userLocation)
-        case .Outside:
-            self.delegate?.didExitGeofence(geofence, withUserCoordinate: self.userLocation)
-        default:
-            break
-        }
+        let coordinate = PhoenixCoordinate(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        self.delegate?.didUpdateLocationWithCoordinate(coordinate)
     }
     
     /// Called when a geofence is entered.
@@ -180,7 +175,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
 
         self.delegate?.didExitGeofence(geofence, withUserCoordinate: self.userLocation)
     }
-    
+        
     // MARK:- Helper methods
     
     /// Returns relevant geofence for a region or nil.

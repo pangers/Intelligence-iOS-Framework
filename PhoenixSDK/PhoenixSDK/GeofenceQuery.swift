@@ -21,30 +21,30 @@ public enum GeofenceSortCriteria: String {
 ///An instance of object using to create query part of URL for Geofence API
 @objc public class GeofenceQuery : NSObject {
     
-    var sortingDirection: GeofenceSortDirection?
+    public var sortingDirection: GeofenceSortDirection?
     
-    var sortingCriteria: GeofenceSortCriteria?
+    public var sortingCriteria: GeofenceSortCriteria?
     
-    var longitude: Double
+    public var longitude: Double
     
-    var latitude: Double
+    public var latitude: Double
     
-    var radius: Double?
+    public var radius: Double?
     
-    var pageSize: Int?
+    public var pageSize: Int?
     
-    var pageNumber: Int?
+    public var pageNumber: Int?
     
     ///Default initializer. Requires location coordinates to query for list of geofences.
     /// - Parameters:
     ///     - location: location coordinates to look for geofences related to.
-    init(location: PhoenixCoordinate) {
+    public init(location: PhoenixCoordinate) {
         longitude = location.longitude
         latitude = location.latitude
     }
     
     ///This method provides set of default values to perform GET list of Geofences call.
-    func setDefaultValues () {
+    public func setDefaultValues () {
         sortingCriteria = GeofenceSortCriteria.Distance
         sortingDirection = GeofenceSortDirection.Ascending
         radius = 40000000.0

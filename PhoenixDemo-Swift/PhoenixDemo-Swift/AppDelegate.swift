@@ -13,15 +13,9 @@ import PhoenixSDK
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    private let locationManager = PhoenixLocationManager()
-
 	var window: UIWindow?
     
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		// Override point for customization after application launch.
-        // Request location
-        locationManager.requestAuthorization()
-        
+	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {       
         do {
             let phoenix = try Phoenix(withFile: "PhoenixConfiguration")
             PhoenixManager.startupWithPhoenix(phoenix)

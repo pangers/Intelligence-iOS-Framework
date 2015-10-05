@@ -28,7 +28,7 @@ internal final class Network {
         if developerLoggedIn {
             return PhoenixOAuth(tokenType: .LoggedInUser)
         } else {
-            return PhoenixOAuth(tokenType: .SDKUser)
+            return PhoenixOAuth(tokenType: .Application)
         }
     }
     internal var developerLoggedIn = false
