@@ -11,6 +11,8 @@ import Foundation
 internal extension CollectionType where Index == Int {
     
     func shuffle() -> [Generator.Element] {
+        // Convert to Array so we can shuffle the elements.
+        // Other CollectionTypes (such as Set) are not shuffle-able.
         var copy = Array(self)
         copy.shuffle()
         return copy
