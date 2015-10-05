@@ -23,14 +23,18 @@ internal enum HTTPStatusCode: Int {
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
 internal final class Network {
     
+    /// grant_type 'client_credentials' OAuth type.
     internal let applicationOAuth = PhoenixOAuth(tokenType: .Application)
+    
+    /// grant_type 'password' OAuth types.
     internal let sdkUserOAuth = PhoenixOAuth(tokenType: .SDKUser)
     internal let loggedInUserOAuth = PhoenixOAuth(tokenType: .LoggedInUser)
     
-    internal var developerLoggedIn = false
-    internal var bestSDKUserOAuth: PhoenixOAuth {
+    /// Best OAuth we have for grant_type 'password'.
+    internal var bestPasswordGrantOAuth: PhoenixOAuth {
         return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
     }
+    internal var developerLoggedIn = false
     
     /// NSURLSession with default session configuration.
     internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())

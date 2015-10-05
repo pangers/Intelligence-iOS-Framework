@@ -241,7 +241,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
+            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.bestPasswordGrantOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
@@ -260,7 +260,7 @@ extension Phoenix {
             }
             
             // If this call fails, it will retry again the next time we open the app.
-            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
+            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.bestPasswordGrantOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }

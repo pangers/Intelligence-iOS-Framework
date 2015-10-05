@@ -124,7 +124,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+        let oauth = network.bestPasswordGrantOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingUsersMe()
@@ -138,7 +138,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+        let oauth = network.bestPasswordGrantOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -156,7 +156,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create a given installation.
     class func phx_URLRequestForInstallationCreate(installation: Phoenix.Installation, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+        let oauth = network.bestPasswordGrantOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -174,7 +174,7 @@ internal extension NSURLRequest {
 
     /// - returns: An NSURLRequest to update a given installation.
     class func phx_URLRequestForInstallationUpdate(installation: Phoenix.Installation, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let oauth = network.bestSDKUserOAuth
+        let oauth = network.bestPasswordGrantOAuth
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
