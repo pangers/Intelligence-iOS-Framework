@@ -12,15 +12,19 @@ import Foundation
 @objc(PHXPhoenixDelegate)
 public protocol PhoenixDelegate {
     /// Unable to create SDK user, this may occur if a user with the randomized
-    /// credentials already exists (highly unlikely) or the role you are trying
-    /// to assign does not exist or the backend is configured incorrectly for
-    /// the Application.
+    /// credentials already exists (highly unlikely) or your Application is
+    /// configured incorrectly and has the wrong permissions.
     func userCreationFailedForPhoenix(phoenix: Phoenix)
     
     /// User is required to login again, developer must implement this method
     /// you may present a 'Login Screen' or silently call identity.login with
     /// stored credentials.
     func userLoginRequiredForPhoenix(phoenix: Phoenix)
+    
+    /// Unable to assign provided sdk_user_role to your newly created user.
+    /// This may occur if the Application is configured incorrectly in the backend
+    /// and doesn't have the correct permissions or the role doesn't exist.
+    func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix)
 }
 
 /// Wrapping protocol used by modules to pass back errors to Phoenix.
@@ -29,6 +33,8 @@ internal protocol PhoenixInternalDelegate {
     func userCreationFailed()
     // Implementation will call PhoenixDelegate.userLoginRequiredForPhoenix
     func userLoginRequired()
+    // Implementation will call PhoenixDelegate.userRoleAssignmentFailedForPhoenix
+    func userRoleAssignmentFailed()
 }
 
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
@@ -186,5 +192,9 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
     
     internal func userLoginRequired() {
         delegate.userLoginRequiredForPhoenix(self)
+    }
+    
+    internal func userRoleAssignmentFailed() {
+        delegate.userRoleAssignmentFailedForPhoenix(self)
     }
 }

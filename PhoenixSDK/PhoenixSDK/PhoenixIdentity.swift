@@ -63,10 +63,10 @@ extension Phoenix {
             if oauth.username == nil || oauth.password == nil {
                 // Need to create user first.
                 let sdkUser = Phoenix.User(companyId: configuration.companyId)
-                createUser(sdkUser, callback: { [weak sdkUser] (serverUser, error) -> Void in
+                createUser(sdkUser, callback: { [weak sdkUser, weak self] (serverUser, error) -> Void in
+                    // Note: Assign role will call delegate method if it fails.
+                    // This callback will NOT be called if that happens.
                     guard let sdkUser = sdkUser else { return }
-                    
-                    // TODO: Assign role.
                     if serverUser != nil {
                         // Store credentials in keychain.
                         oauth.updateCredentials(withUsername: sdkUser.username, password: sdkUser.password!)
@@ -74,8 +74,10 @@ extension Phoenix {
                         // If we have a user, need to call get pipeline again.
                         successBlock()
                     } else {
-                        // TODO: Pass error back to developer
-                        
+                        // Pass error back to developer (special case, use delegate).
+                        // Probably means that user already exists, or perhaps Application is configured incorrectly
+                        // and cannot create users.
+                        self?.delegate?.userCreationFailed()
                     }
                 })
             } else {
@@ -129,9 +131,9 @@ extension Phoenix {
                                         // Update user id for SDKUser
                                         identity?.network.sdkUserOAuth.userId = user?.userId
                                         completion(success: error == nil)
-                                        })
+                                    })
                                 }
-                                })
+                            })
                         })
                     }
                 }
@@ -248,12 +250,16 @@ extension Phoenix {
                     // On successful operation, lets assign users role.
                     // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
                     let assignOperation = AssignUserRoleRequestOperation(user: operation!.user, oauth: operation!.oauth!, configuration: operation!.configuration!, network: operation!.network!)
-                    assignOperation.completionBlock = { [weak assignOperation] in
+                    assignOperation.completionBlock = { [weak assignOperation, weak self] in
                         // Execute original callback.
                         // If assign role fails, the user will exist but not have any access, there is nothing we can do
                         // if the developer is trying to assign a role that doesn't exist or the server changes in some
                         // unexpected way.
-                        callback?(user: assignOperation?.user, error: assignOperation?.output?.error)
+                        if assignOperation?.output?.error != nil {
+                            self?.delegate.userRoleAssignmentFailed()
+                        } else {
+                            callback?(user: assignOperation?.user, error: assignOperation?.output?.error)
+                        }
                     }
                     operation!.network!.enqueueOperation(assignOperation)
                 } else {
