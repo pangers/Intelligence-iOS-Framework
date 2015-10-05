@@ -96,6 +96,7 @@ public final class Phoenix: NSObject {
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(
         withDelegate delegate: PhoenixDelegate,
+        delegateWrapper: PhoenixDelegateWrapper,
         network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
         oauthStorage: PhoenixOAuthStorage,
@@ -106,7 +107,6 @@ public final class Phoenix: NSObject {
         self.configuration = phoenixConfiguration.clone()
         super.init()
         
-        delegateWrapper = PhoenixDelegateWrapper()
         delegateWrapper.delegate = delegate
         delegateWrapper.phoenix = self
         
@@ -148,6 +148,7 @@ public final class Phoenix: NSObject {
     {
         try self.init(
             withDelegate: delegate,
+            delegateWrapper: PhoenixDelegateWrapper(),
             network: nil,
             configuration: phoenixConfiguration,
             oauthStorage: oauthStorage,
