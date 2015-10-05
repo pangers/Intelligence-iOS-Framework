@@ -91,7 +91,7 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
 
         // Create shared objects for modules
         let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
-        let network = Network(delegate: self)
+        let network = Network(delegate: self, oauthProvider: PhoenixOAuthDefaultProvider())
         let installation = Phoenix.Installation(configuration: internalConfiguration,
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults())

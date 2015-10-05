@@ -18,26 +18,14 @@ internal enum HTTPStatusCode: Int {
     case Forbidden = 403
 }
 
-// MARK: HTTP Method constants
-
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
 internal final class Network {
     
     /// Delegate must be set before startup is called on modules.
     internal var delegate: PhoenixInternalDelegate!
     
-    /// grant_type 'client_credentials' OAuth type.
-    internal let applicationOAuth = PhoenixOAuth(tokenType: .Application)
-    
-    /// grant_type 'password' OAuth types.
-    internal let sdkUserOAuth = PhoenixOAuth(tokenType: .SDKUser)
-    internal let loggedInUserOAuth = PhoenixOAuth(tokenType: .LoggedInUser)
-    
-    /// Best OAuth we have for grant_type 'password'.
-    internal var bestPasswordGrantOAuth: PhoenixOAuth {
-        return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
-    }
-    internal var developerLoggedIn = false
+    /// Provider responsible for serving OAuth information.
+    internal var oauthProvider: PhoenixOAuthProvider!
     
     /// NSURLSession with default session configuration.
     internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -46,10 +34,11 @@ internal final class Network {
     // MARK: Initializers
     
     /// Initialize new instance of Phoenix Networking class
-    init(delegate: PhoenixInternalDelegate) {
+    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
+        self.oauthProvider = oauthProvider
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).

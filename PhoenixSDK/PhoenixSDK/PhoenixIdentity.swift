@@ -59,7 +59,7 @@ extension Phoenix {
         }
         
         private func createSDKUserIfRequired(successBlock: () -> ()) {
-            let oauth = network.sdkUserOAuth
+            let oauth = network.oauthProvider.sdkUserOAuth
             if oauth.username == nil || oauth.password == nil {
                 // Need to create user first.
                 let sdkUser = Phoenix.User(companyId: configuration.companyId)
@@ -97,7 +97,7 @@ extension Phoenix {
                 }
                 
                 // Get pipeline for grant_type 'client_credentials'.
-                network.getPipeline(forOAuth: network.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
+                network.getPipeline(forOAuth: network.oauthProvider.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
                     guard let applicationPipeline = applicationPipeline, identity = self else {
                         // Shouldn't happen.
                         assertionFailure("Startup shouldn't be called multiple times")
@@ -110,7 +110,7 @@ extension Phoenix {
                         // Create user if their credentials are empty.
                         identity.createSDKUserIfRequired({ () -> () in
                             // Get pipeline if created or existing.
-                            identity.network.getPipeline(forOAuth: identity.network.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
+                            identity.network.getPipeline(forOAuth: identity.network.oauthProvider.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
                                 guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
                                     // Should not happen (user created above)
                                     completion(success: false)
@@ -127,9 +127,9 @@ extension Phoenix {
                                     identity.createInstallation(nil)
                                     identity.updateInstallation(nil)
                                     // Grab our user ID.
-                                    identity.getMe(identity.network.sdkUserOAuth, callback: { [weak identity] (user, error) -> Void in
+                                    identity.getMe(identity.network.oauthProvider.sdkUserOAuth, callback: { [weak identity] (user, error) -> Void in
                                         // Update user id for SDKUser
-                                        identity?.network.sdkUserOAuth.userId = user?.userId
+                                        identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
                                         completion(success: error == nil)
                                     })
                                 }
@@ -148,10 +148,10 @@ extension Phoenix {
         // MARK:- Login
         
         @objc func login(withUsername username: String, password: String, callback: PhoenixUserCallback) {
-            let oauth = network.loggedInUserOAuth
+            let oauth = network.oauthProvider.loggedInUserOAuth
             oauth.updateCredentials(withUsername: username, password: password)
             
-            network.developerLoggedIn = false
+            network.oauthProvider.developerLoggedIn = false
             
             let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
             
@@ -166,7 +166,7 @@ extension Phoenix {
                     callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
                     // Get user me.
-                    self?.network.developerLoggedIn = true
+                    self?.network.oauthProvider.developerLoggedIn = true
                     self?.getMe({ (user, error) -> Void in
                         // Clear userid if get me fails, otherwise update user id.
                         pipeline?.oauth?.userId = user?.userId
@@ -181,7 +181,7 @@ extension Phoenix {
         }
         
         @objc func logout() {
-            network.developerLoggedIn = false
+            network.oauthProvider.developerLoggedIn = false
             PhoenixOAuth.reset(PhoenixKeychain(account: PhoenixOAuthTokenType.LoggedInUser.rawValue))
         }
         
@@ -199,7 +199,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = UpdateUserRequestOperation(user: user, oauth: network.loggedInUserOAuth, configuration: configuration, network: network)
+            let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback?(user: operation?.user, error: operation?.output?.error)
             }
@@ -219,7 +219,7 @@ extension Phoenix {
         }
         
         @objc func getMe(callback: PhoenixUserCallback) {
-            getMe(network.loggedInUserOAuth, callback: callback)
+            getMe(network.oauthProvider.loggedInUserOAuth, callback: callback)
         }
         
         // MARK: Internal
@@ -244,7 +244,7 @@ extension Phoenix {
             }
             
             // Create user operation.
-            let operation = CreateUserRequestOperation(user: user, oauth: network.applicationOAuth, configuration: configuration, network: network)
+            let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 if operation?.output?.error == nil && operation?.user != nil {
                     // On successful operation, lets assign users role.
@@ -284,7 +284,7 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.bestPasswordGrantOAuth, configuration: configuration, network: network)
+            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
@@ -303,7 +303,7 @@ extension Phoenix {
             }
             
             // If this call fails, it will retry again the next time we open the app.
-            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.bestPasswordGrantOAuth, configuration: configuration, network: network)
+            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation, weak self] in
                 callback?(installation: self?.installation, error: operation?.output?.error)
             }
