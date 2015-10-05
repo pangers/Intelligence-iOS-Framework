@@ -32,8 +32,8 @@ public extension Phoenix {
         internal var eventType: String
         /// Value related to this EventType. Defaults to zero.
         internal var value: Double
-        /// Optional identifier related to this EventType. Defaults to 0.0.
-        internal var targetId: Int
+        /// Optional identifier related to this EventType. Defaults to nil.
+        internal var targetId: String?
         /// Optional metadata values associated to this EventType.
         internal var metadata: [String: AnyObject]?
         /// Prepopulated date.
@@ -42,11 +42,11 @@ public extension Phoenix {
         /// Initializer for Event class.
         /// - parameter type:     Type of Event we are trying to track.
         /// - parameter value:    Value associated with Event. Defaults to 0.0.
-        /// - parameter targetId: Optional identifier relevant to this event. Defaults to 0.
+        /// - parameter targetId: Optional identifier relevant to this event. Defaults to nil.
         /// - parameter metadata: Optional metadata field.
         /// - returns: Returns an Event object.
         /// - seealso: Analytics module `track(event:)` method.
-        @objc public init(withType type: String, value: Double = 0.0, targetId: Int = 0, metadata: [String: AnyObject]? = nil) {
+        @objc public init(withType type: String, value: Double = 0.0, targetId: String? = nil, metadata: [String: AnyObject]? = nil) {
             self.eventType = type
             self.value = value
             self.targetId = targetId

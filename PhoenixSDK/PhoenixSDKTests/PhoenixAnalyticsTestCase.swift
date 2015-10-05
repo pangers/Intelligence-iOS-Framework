@@ -44,7 +44,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     func genericEvent() -> Phoenix.Event {
         let event = Phoenix.Event(withType: "Phoenix.Test.Event")
-        XCTAssert(event.targetId == 0)
+        XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
         XCTAssert(event.eventType == "Phoenix.Test.Event")
         return event
@@ -84,7 +84,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let geofence = fakeGeofence()
         let event = Phoenix.GeofenceEnterEvent(geofence: geofence)
         XCTAssert(event.eventType == "Phoenix.Location.Geofence.Enter")
-        XCTAssert(event.targetId == geofence.id)
+        XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
         let eventJSON = analytics.prepareEvent(event)
@@ -124,7 +124,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let geofence = fakeGeofence()
         let event = Phoenix.GeofenceExitEvent(geofence: geofence)
         XCTAssert(event.eventType == "Phoenix.Location.Geofence.Exit")
-        XCTAssert(event.targetId == geofence.id)
+        XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
         let eventJSON = analytics.prepareEvent(event)
@@ -165,7 +165,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create event, avoiding queueing/storage system.
         let event = Phoenix.OpenApplicationEvent()
         XCTAssert(event.eventType == "Phoenix.Identity.Application.Opened")
-        XCTAssert(event.targetId == 0)
+        XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
         
         let eventJSON = analytics.prepareEvent(event)
