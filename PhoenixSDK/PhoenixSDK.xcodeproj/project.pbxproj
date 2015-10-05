@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		455D85E81BC2B39F00A64B96 /* PhoenixScreenViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85E71BC2B39F00A64B96 /* PhoenixScreenViewedEvent.swift */; settings = {ASSET_TAGS = (); }; };
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
 		BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0A238B1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift */; };
@@ -116,6 +117,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		455D85E71BC2B39F00A64B96 /* PhoenixScreenViewedEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixScreenViewedEvent.swift; sourceTree = "<group>"; };
 		A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhoenixSDK.h; sourceTree = "<group>"; };
 		A07FACB51B5D0C4200482BB7 /* PhoenixSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhoenixSDK-Info.plist"; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 				FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */,
 				FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */,
 				FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */,
+				455D85E71BC2B39F00A64B96 /* PhoenixScreenViewedEvent.swift */,
 			);
 			name = "Event Types";
 			sourceTree = "<group>";
@@ -656,6 +659,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				455D85E81BC2B39F00A64B96 /* PhoenixScreenViewedEvent.swift in Sources */,
 				BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */,
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
 				FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */,
