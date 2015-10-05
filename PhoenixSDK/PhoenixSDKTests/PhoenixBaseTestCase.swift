@@ -11,7 +11,38 @@ import XCTest
 
 import OHHTTPStubs
 
+class PhoenixDelegateTest: PhoenixDelegate {
+    private var creation = false, login = false, role = false
+    init(
+        expectCreationFailed: Bool = false,
+        expectLoginFailed: Bool = false,
+        expectRoleFailed: Bool = false)
+    {
+        creation = expectCreationFailed
+        login = expectLoginFailed
+        role = expectRoleFailed
+    }
+    
+    
+    @objc func userCreationFailedForPhoenix(phoenix: Phoenix) {
+        XCTAssertTrue(creation)
+    }
+    
+    @objc func userLoginRequiredForPhoenix(phoenix: Phoenix) {
+        XCTAssertTrue(login)
+    }
+    
+    @objc func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
+        XCTAssertTrue(role)
+    }
+}
+
+
 class PhoenixBaseTestCase : XCTestCase {
+    
+    let mockClientCredentialsOAuth = PhoenixOAuth(tokenType: .Application, storage: MockSimpleStorage())
+    let mockPasswordOAuth = PhoenixOAuth(tokenType: .SDKUser, storage: MockSimpleStorage())
+    let mockLoginOAuth = PhoenixOAuth(tokenType: .LoggedInUser, storage: MockSimpleStorage())
     
     typealias MockCallback = (()->Void)
     typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
@@ -20,27 +51,37 @@ class PhoenixBaseTestCase : XCTestCase {
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     var storage = MockSimpleStorage()
-    var configuration:Phoenix.Configuration?
-    var phoenix:Phoenix?
+    var configuration: Phoenix.Configuration!
+    var phoenix: Phoenix!
     
-    /// Check if we have an unexpired access_token.
-    /// This all happens internally in the isAuthenticated property.
-    var checkAuthenticated: Bool {
-        return self.phoenix?.network.isAuthenticated ?? false
-    }
-    
-    /// Check if we have stored a username and password, have an unexpired access_token and a valid refresh_token.
-    /// This all happens internally in the isLoggedIn property.
-    var checkLoggedIn: Bool {
-        return self.phoenix?.identity.isLoggedIn ?? false
-    }
+    var isAuthenticated: Bool = false
+    var isLoggedIn: Bool = false
     
     override func setUp() {
         super.setUp()
         do {
             try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
             self.configuration!.region = .Europe
-            try self.phoenix = Phoenix(withConfiguration: configuration!, tokenStorage:storage)
+            
+            let tester = PhoenixDelegateTest(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+            
+            try self.phoenix = Phoenix(withDelegate: tester, configuration: configuration, tokenStorage: storage)
+            
+            let expectation = expectationWithDescription("Expectation")
+            
+            
+            
+            mockResponseForAuthentication(200, true)
+            mockResponseForAuthentication(200, false)
+            
+            
+            self.phoenix.startup({ (success) -> () in
+                if success {
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Startup failed!")
+                }
+            })
         }
         catch {
         }
@@ -119,15 +160,4 @@ class PhoenixBaseTestCase : XCTestCase {
                 return OHHTTPStubsResponse() // Never reached
         })
     }
-
-    func mockExpiredTokenStorage() {
-        storage.accessToken = "Somevalue"
-        storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: -10)
-    }
-    
-    func mockValidTokenStorage() {
-        storage.accessToken = "Somevalue"
-        storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
-    }
-
 }

@@ -142,6 +142,10 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         query.setDefaultValues()
 
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        NSURLRequest.phx_URLRequestForDownloadGeofences(<#T##oauth: PhoenixOAuth##PhoenixOAuth#>, configuration: <#T##Phoenix.Configuration#>, network: <#T##Network#>)
+        
+        
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
         
         // Mock 200 on auth
