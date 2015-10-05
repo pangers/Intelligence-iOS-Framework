@@ -81,6 +81,8 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
     }
     
     func updateWithResponse(response: JSONDictionary?) -> Bool {
+        // This method is only called by login and refreshToken
+        // Validate is not handled (refreshToken is optional for validate).
         guard let updatedAccessToken = response?[OAuthAccessTokenKey] as? String else {
             return false
         }
