@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import PhoenixSDK
 
-class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate {
+class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate, GeofenceQueryBuilderDelegate {
     
     private static let cellIdentifier = "cell"
     
@@ -69,19 +69,6 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
         return cell
     }
 
-    func loadGeofencesAtLocation(location:CLLocation) {
-        let location = PhoenixCoordinate(withLatitude:location.coordinate.latitude, longitude:location.coordinate.longitude)
-        let query = GeofenceQuery(location: location)
-        query.radius = 10_000__000
-        
-        PhoenixManager.phoenix!.location.downloadGeofences(query) { [weak self] (geofences, error) -> Void in
-            
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                self?.didReceiveGeofences(geofences,error:error)
-            })
-        }
-    }
-    
     func didReceiveGeofences(geofences: [Geofence]?, error:NSError?) {
         guard let geofences = geofences where error == nil else {
             if error != nil {
@@ -155,16 +142,6 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
         refreshGeofences()
     }
     
-    @IBAction func didTapDownloadGeofences(sender: AnyObject) {
-        if let location = locationManager.location {
-            self.loadGeofencesAtLocation(location)
-            logEvent("Downloading geofences...")
-        }
-        else {
-            logEvent("No location found")
-        }
-    }
-    
     func refreshGeofences(){
         if let geofences = lastDownloadedGeofences {
             displayGeofences(geofences)
@@ -177,4 +154,24 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
             self.tableView.reloadData()
         }
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        
+        if segue.identifier == "download" {
+            let geofenceBuilderViewController = segue.destinationViewController as! PhoenixLocationGeofenceQueryViewController
+            geofenceBuilderViewController.latitude = locationManager.location?.coordinate.latitude
+            geofenceBuilderViewController.longitude = locationManager.location?.coordinate.longitude
+            geofenceBuilderViewController.delegate = self
+        }
+    }
+    
+    func didSelectGeofenceQuery(geofenceQuery: GeofenceQuery) {
+        PhoenixManager.phoenix!.location.downloadGeofences(geofenceQuery) { [weak self] (geofences, error) -> Void in
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                self?.didReceiveGeofences(geofences,error:error)
+            })
+        }
+   }
 }

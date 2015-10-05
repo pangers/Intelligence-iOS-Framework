@@ -69,7 +69,7 @@
                                 <rect key="frame" x="15" y="555" width="570" height="30"/>
                                 <state key="normal" title="Download geofences"/>
                                 <connections>
-                                    <action selector="didTapDownloadGeofences:" destination="Xa0-3V-nqW" eventType="touchUpInside" id="qf1-Sq-6cL"/>
+                                    <segue destination="yEt-hT-k1r" kind="presentation" identifier="download" id="2De-Xf-vLB"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -104,7 +104,145 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tLc-ic-sRM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <barButtonItem title="Download" id="KV3-dp-HA8"/>
             </objects>
-            <point key="canvasLocation" x="1278" y="238"/>
+            <point key="canvasLocation" x="983" y="115"/>
+        </scene>
+        <!--Phoenix Location Geofence Query View Controller-->
+        <scene sceneID="RRN-aV-QjB">
+            <objects>
+                <viewController id="yEt-hT-k1r" customClass="PhoenixLocationGeofenceQueryViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zfm-6E-9a1"/>
+                        <viewControllerLayoutGuide type="bottom" id="TEX-At-kHP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4TP-wH-k6e">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HE6-ni-2Lb">
+                                <rect key="frame" x="15" y="20" width="570" height="475"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="lfZ-uD-ejZ">
+                                        <rect key="frame" x="0.0" y="139" width="285" height="198"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Latitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rtQ-Ul-ZGu">
+                                                <rect key="frame" x="0.0" y="0.0" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Longitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qHn-NW-SxN">
+                                                <rect key="frame" x="0.0" y="36" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Page size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jF8-fQ-yzA">
+                                                <rect key="frame" x="0.0" y="71" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Page" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORH-13-uAc">
+                                                <rect key="frame" x="0.0" y="107" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Radius" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WCX-Fi-5uO">
+                                                <rect key="frame" x="0.0" y="142" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sort direction" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zIa-GB-c4d">
+                                                <rect key="frame" x="0.0" y="178" width="285" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Ny1-JF-VqT">
+                                        <rect key="frame" x="285" y="139" width="285" height="198"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ygh-4E-z7W">
+                                                <rect key="frame" x="0.0" y="0.0" width="285" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6VN-Mo-qBd">
+                                                <rect key="frame" x="0.0" y="34" width="285" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f0a-K0-pmX">
+                                                <rect key="frame" x="0.0" y="68" width="285" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QXD-XC-6Um">
+                                                <rect key="frame" x="0.0" y="102" width="285" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9UA-Za-DLA">
+                                                <rect key="frame" x="0.0" y="136" width="285" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                            </textField>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="s8K-iF-4LE">
+                                                <rect key="frame" x="0.0" y="170" width="285" height="29"/>
+                                                <segments>
+                                                    <segment title="Ascending"/>
+                                                    <segment title="Descending"/>
+                                                </segments>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3tB-fV-Pau">
+                                <rect key="frame" x="15" y="510" width="570" height="30"/>
+                                <state key="normal" title="Download"/>
+                                <connections>
+                                    <action selector="didTapSave:" destination="yEt-hT-k1r" eventType="touchUpInside" id="7bM-wU-Rkk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ke9-fy-Jr4">
+                                <rect key="frame" x="15" y="555" width="570" height="30"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="didTapCancel:" destination="yEt-hT-k1r" eventType="touchUpInside" id="HdY-aN-beL"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="3tB-fV-Pau" secondAttribute="trailing" constant="15" id="2LR-AW-0jL"/>
+                            <constraint firstItem="3tB-fV-Pau" firstAttribute="leading" secondItem="4TP-wH-k6e" secondAttribute="leading" constant="15" id="HWA-4w-66q"/>
+                            <constraint firstItem="Ke9-fy-Jr4" firstAttribute="top" secondItem="3tB-fV-Pau" secondAttribute="bottom" constant="15" id="Mmo-hG-OWk"/>
+                            <constraint firstItem="3tB-fV-Pau" firstAttribute="top" secondItem="HE6-ni-2Lb" secondAttribute="bottom" constant="15" id="PRC-hH-0MX"/>
+                            <constraint firstItem="Ke9-fy-Jr4" firstAttribute="leading" secondItem="4TP-wH-k6e" secondAttribute="leading" constant="15" id="c4q-IF-w1T"/>
+                            <constraint firstAttribute="trailing" secondItem="HE6-ni-2Lb" secondAttribute="trailing" constant="15" id="dm5-XY-m5g"/>
+                            <constraint firstAttribute="trailing" secondItem="Ke9-fy-Jr4" secondAttribute="trailing" constant="15" id="eiP-gq-YHU"/>
+                            <constraint firstItem="HE6-ni-2Lb" firstAttribute="top" secondItem="zfm-6E-9a1" secondAttribute="bottom" id="kel-Pl-7M9"/>
+                            <constraint firstItem="HE6-ni-2Lb" firstAttribute="leading" secondItem="4TP-wH-k6e" secondAttribute="leading" constant="15" id="op7-cM-rpy"/>
+                            <constraint firstItem="TEX-At-kHP" firstAttribute="top" secondItem="Ke9-fy-Jr4" secondAttribute="bottom" constant="15" id="voH-mZ-e4J"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="latitudeText" destination="ygh-4E-z7W" id="RN8-ep-bIX"/>
+                        <outlet property="longitudeText" destination="6VN-Mo-qBd" id="iIZ-6d-kX9"/>
+                        <outlet property="pageSizeText" destination="f0a-K0-pmX" id="tMk-kS-Xe1"/>
+                        <outlet property="pageText" destination="QXD-XC-6Um" id="tKd-Zj-f83"/>
+                        <outlet property="radiusText" destination="9UA-Za-DLA" id="Ocd-XP-QnW"/>
+                        <outlet property="sortDirectionSegmentedControl" destination="s8K-iF-4LE" id="Mul-qZ-NV1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d1n-b3-F3p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1687" y="115"/>
         </scene>
     </scenes>
 </document>
