@@ -37,14 +37,35 @@ internal protocol PhoenixInternalDelegate {
     func userRoleAssignmentFailed()
 }
 
+internal class PhoenixDelegateWrapper: PhoenixInternalDelegate {
+    
+    var phoenix: Phoenix!
+    var delegate: PhoenixDelegate!
+    
+    // MARK:- PhoenixInternalDelegate
+    
+    internal func userCreationFailed() {
+        delegate.userCreationFailedForPhoenix(phoenix)
+    }
+    
+    internal func userLoginRequired() {
+        delegate.userLoginRequiredForPhoenix(phoenix)
+    }
+    
+    internal func userRoleAssignmentFailed() {
+        delegate.userRoleAssignmentFailedForPhoenix(phoenix)
+    }
+}
+
+
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
-public final class Phoenix: NSObject, PhoenixInternalDelegate {
+public final class Phoenix: NSObject {
     
     /// - Returns: A **copy** of the configuration.
     public let configuration: Phoenix.Configuration
     
     /// Responsible for propogating events back to App.
-    internal var delegate: PhoenixDelegate!
+    internal var delegateWrapper: PhoenixDelegateWrapper!
     
     // MARK: - Modules
     
@@ -64,23 +85,33 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
     
     // MARK: - Initializers
     
-    /// (INTERNAL) Initializes the Phoenix entry point with a configuration object.
+    /// (INTERNAL) Initializes the Phoenix entry point with all objects necessary.
     /// - parameter delegate:      Object that responds to delegate events.
+    /// - parameter network:       Network object, responsible for sending all OAuth requests.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
     /// - parameter oauthStorage:  Object responsible for storing OAuth information.
+    /// - parameter installation:  Object responsible for reading installation information.
+    /// - parameter locationManager: Location manager responsible for handling location updates.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal init(
         withDelegate delegate: PhoenixDelegate,
+        network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
-        oauthStorage: PhoenixOAuthStorage) throws
+        oauthStorage: PhoenixOAuthStorage,
+        installation: Phoenix.Installation,
+        locationManager: PhoenixLocationManager
+        ) throws
     {
-        
-        // TODO: Is this even required?? What's the point? They have the plist...
-        configuration = phoenixConfiguration.clone()            // Copy for developers
-        self.delegate = delegate
+        self.configuration = phoenixConfiguration.clone()
         super.init()
-
+        
+        delegateWrapper = PhoenixDelegateWrapper()
+        delegateWrapper.delegate = delegate
+        delegateWrapper.phoenix = self
+        
+        let network = network ?? Network(delegate: delegateWrapper, oauthProvider: PhoenixOAuthDefaultProvider())
+        
         if phoenixConfiguration.hasMissingProperty {
             throw ConfigurationError.MissingPropertyError
         }
@@ -88,25 +119,42 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         if !phoenixConfiguration.isValid {
             throw ConfigurationError.InvalidPropertyError
         }
-
+        
         // Create shared objects for modules
         let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
-        let network = Network(delegate: self, oauthProvider: PhoenixOAuthDefaultProvider())
-        let installation = Phoenix.Installation(configuration: internalConfiguration,
-            applicationVersion: NSBundle.mainBundle(),
-            installationStorage: NSUserDefaults())
-        let locationManager = PhoenixLocationManager()
         
         // Modules
-        identity = Identity(withDelegate: self, network: network, configuration: internalConfiguration, installation: installation)
-        analytics = Analytics(withDelegate: self, network: network, configuration: internalConfiguration, installation: installation)
-        location = Location(withDelegate: self, network: network, configuration: internalConfiguration, locationManager: locationManager)
-                
+        identity = Identity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        analytics = Analytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        location = Location(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
+        
         let internalAnalytics = analytics as! Analytics
         let internalLocation = location as! Location
         
         internalAnalytics.locationProvider = (location as? PhoenixLocationProvider)
         internalLocation.analytics = analytics
+    }
+    
+    /// (INTERNAL) Initializes the Phoenix entry point with a configuration object.
+    /// - parameter delegate:      Object that responds to delegate events.
+    /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
+    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
+    /// - throws: **ConfigurationError** if the configuration is invalid.
+    /// - returns: New instance of the Phoenix SDK base class.
+    internal convenience init(
+        withDelegate delegate: PhoenixDelegate,
+        configuration phoenixConfiguration: Phoenix.Configuration,
+        oauthStorage: PhoenixOAuthStorage) throws
+    {
+        try self.init(
+            withDelegate: delegate,
+            network: nil,
+            configuration: phoenixConfiguration,
+            oauthStorage: oauthStorage,
+            installation: Phoenix.Installation(configuration: phoenixConfiguration.clone(),
+            applicationVersion: NSBundle.mainBundle(),
+            installationStorage: NSUserDefaults()),
+            locationManager: PhoenixLocationManager())
     }
     
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.
@@ -122,7 +170,10 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         file: String,
         inBundle: NSBundle=NSBundle.mainBundle()) throws
     {
-        try self.init(withDelegate: delegate, configuration: Configuration.configuration(fromFile: file, inBundle: inBundle), oauthStorage: oauthStorage)
+        try self.init(
+            withDelegate: delegate,
+            configuration: Configuration.configuration(fromFile: file, inBundle: inBundle),
+            oauthStorage: oauthStorage)
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -134,7 +185,10 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         withDelegate delegate: PhoenixDelegate,
         configuration phoenixConfiguration: Phoenix.Configuration) throws
     {
-        try self.init(withDelegate: delegate, configuration: phoenixConfiguration, oauthStorage:PhoenixKeychain())
+        try self.init(
+            withDelegate: delegate,
+            configuration: phoenixConfiguration,
+            oauthStorage:PhoenixKeychain())
     }
     
     /// Initialize Phoenix with a configuration file.
@@ -148,7 +202,11 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         file: String,
         inBundle: NSBundle=NSBundle.mainBundle()) throws
     {
-        try self.init(withDelegate: delegate, oauthStorage: PhoenixKeychain(), file:file, inBundle:inBundle)
+        try self.init(
+            withDelegate: delegate,
+            oauthStorage: PhoenixKeychain(),
+            file:file,
+            inBundle:inBundle)
     }
     
     /// Starts up the Phoenix SDK modules.
@@ -182,19 +240,5 @@ public final class Phoenix: NSObject, PhoenixInternalDelegate {
         modules.forEach{
             $0.shutdown()
         }
-    }
-    
-    // MARK:- PhoenixInternalDelegate
-    
-    internal func userCreationFailed() {
-        delegate.userCreationFailedForPhoenix(self)
-    }
-    
-    internal func userLoginRequired() {
-        delegate.userLoginRequiredForPhoenix(self)
-    }
-    
-    internal func userRoleAssignmentFailed() {
-        delegate.userRoleAssignmentFailedForPhoenix(self)
     }
 }
