@@ -10,8 +10,8 @@ import Foundation
 
 internal extension CollectionType where Index == Int {
     
-    func shuffle() -> Self {
-        var copy = self
+    func shuffle() -> [Generator.Element] {
+        var copy = Array(self)
         copy.shuffle()
         return copy
     }

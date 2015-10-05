@@ -49,11 +49,12 @@ extension Phoenix {
         private var installation: Phoenix.Installation!
         
         init(
-            withNetwork network: Network,
+            withDelegate delegate: PhoenixInternalDelegate,
+            network: Network,
             configuration:Configuration,
             installation: Installation)
         {
-            super.init(withNetwork: network, configuration: configuration)
+            super.init(withDelegate: delegate, network: network, configuration: configuration)
             self.installation = installation
         }
         
@@ -74,6 +75,7 @@ extension Phoenix {
                         successBlock()
                     } else {
                         // TODO: Pass error back to developer
+                        
                     }
                 })
             } else {
@@ -81,36 +83,57 @@ extension Phoenix {
             }
         }
         
-        override func startup() {
-            super.startup()
-            network.getPipeline(forOAuth: network.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
-                guard let applicationPipeline = applicationPipeline, identity = self else {
-                    // Shouldn't happen.
-                    assertionFailure("Startup shouldn't be called multiple times")
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup { [weak network, weak configuration] (success) -> () in
+                if !success {
+                    completion(success: false)
                     return
                 }
-                identity.network.enqueueOperation(applicationPipeline)
-                applicationPipeline.completionBlock = {
-                    // Create user if their credentials are empty.
-                    identity.createSDKUserIfRequired({ () -> () in
-                        identity.network.getPipeline(forOAuth: identity.network.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
-                            guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
-                                // Should not happen (user created above)
-                                return
-                            }
-                            
-                            identity.network.enqueueOperation(sdkUserPipeline)
-                            sdkUserPipeline.completionBlock = { [weak self] in
-                                guard let identity = self else { return }
-                                identity.createInstallation(nil)
-                                identity.updateInstallation(nil)
-                                identity.getMe(identity.network.sdkUserOAuth, callback: { [weak identity] (user, error) -> Void in
-                                    // Update user id for SDKUser
-                                    identity?.network.sdkUserOAuth.userId = user?.userId
+                guard let network = network, configuration = configuration else {
+                    completion(success: false)
+                    return
+                }
+                
+                // Get pipeline for grant_type 'client_credentials'.
+                network.getPipeline(forOAuth: network.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
+                    guard let applicationPipeline = applicationPipeline, identity = self else {
+                        // Shouldn't happen.
+                        assertionFailure("Startup shouldn't be called multiple times")
+                        return
+                    }
+                    identity.network.enqueueOperation(applicationPipeline)
+                    
+                    // Once complete, lets login/create our SDK User.
+                    applicationPipeline.completionBlock = {
+                        // Create user if their credentials are empty.
+                        identity.createSDKUserIfRequired({ () -> () in
+                            // Get pipeline if created or existing.
+                            identity.network.getPipeline(forOAuth: identity.network.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
+                                guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
+                                    // Should not happen (user created above)
+                                    completion(success: false)
+                                    return
+                                }
+                                
+                                identity.network.enqueueOperation(sdkUserPipeline)
+                                sdkUserPipeline.completionBlock = { [weak self] in
+                                    guard let identity = self else {
+                                        completion(success: false)
+                                        return
+                                    }
+                                    // Installation can succeed without a user id
+                                    identity.createInstallation(nil)
+                                    identity.updateInstallation(nil)
+                                    // Grab our user ID.
+                                    identity.getMe(identity.network.sdkUserOAuth, callback: { [weak identity] (user, error) -> Void in
+                                        // Update user id for SDKUser
+                                        identity?.network.sdkUserOAuth.userId = user?.userId
+                                        completion(success: error == nil)
+                                        })
+                                }
                                 })
-                            }
                         })
-                    })
+                    }
                 }
             }
         }
@@ -203,8 +226,7 @@ extension Phoenix {
         /// - Parameters:
         ///     - user: Phoenix User instance containing information about the user we are trying to create.
         ///     - callback: The user callback to pass. Will be called with either an error or a user.
-        /// The queue on which the callback is called is not guaranteed. It might or might not be the main thread.
-        /// The developer is responsible to dispatch it to the main thread using dispatch_async to avoid deadlocks.
+        /// The developer is responsible to dispatch the callback to the main thread using dispatch_async if necessary.
         /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
         /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
         /// The NSError domain is IdentityError.domain
@@ -219,10 +241,25 @@ extension Phoenix {
                 return
             }
             
-            // TODO: Assign role
+            // Create user operation.
             let operation = CreateUserRequestOperation(user: user, oauth: network.applicationOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
-                callback?(user: operation?.user, error: operation?.output?.error)
+                if operation?.output?.error == nil && operation?.user != nil {
+                    // On successful operation, lets assign users role.
+                    // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
+                    let assignOperation = AssignUserRoleRequestOperation(user: operation!.user, oauth: operation!.oauth!, configuration: operation!.configuration!, network: operation!.network!)
+                    assignOperation.completionBlock = { [weak assignOperation] in
+                        // Execute original callback.
+                        // If assign role fails, the user will exist but not have any access, there is nothing we can do
+                        // if the developer is trying to assign a role that doesn't exist or the server changes in some
+                        // unexpected way.
+                        callback?(user: assignOperation?.user, error: assignOperation?.output?.error)
+                    }
+                    operation!.network!.enqueueOperation(assignOperation)
+                } else {
+                    // On failure, simply execute callback.
+                    callback?(user: operation?.user, error: operation?.output?.error)
+                }
             }
             
             // Execute the network operation

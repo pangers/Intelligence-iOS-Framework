@@ -57,6 +57,8 @@ public enum IdentityError: Int, ErrorType {
     /// Login failed.
     case LoginFailed = 2006
 
+    /// The user role assignment operation failed.
+    case UserRoleAssignmentError = 2007
 }
 
 /// Enumeration to list the errors that can occur in any request.

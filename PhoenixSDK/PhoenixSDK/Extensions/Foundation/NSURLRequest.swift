@@ -107,6 +107,22 @@ internal extension NSURLRequest {
 
 internal extension NSURLRequest {
     
+    /// - returns: An NSURLRequest to assign a role to a given user.
+    class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(user.userId)
+            .phx_URLByAppendingRoles()
+        let request = NSMutableURLRequest(URL: url)
+
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = [configuration.sdkUserRole].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!

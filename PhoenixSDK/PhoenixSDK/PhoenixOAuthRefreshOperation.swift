@@ -8,10 +8,6 @@
 
 import Foundation
 
-// Status Codes:
-// 401: token_expired (EXPIRE token, need to refresh)
-// 403: invalid_token (INVALID access, cannot use this method)
-
 internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {

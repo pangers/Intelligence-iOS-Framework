@@ -85,13 +85,14 @@ internal extension Phoenix {
         }
         
         /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
+        /// - parameter delegate:         Delegate used to notify developer of an event.
         /// - parameter network:          Instance of Network class to use.
         /// - parameter configuration:    Configuration used to configure requests.
         /// - parameter geofenceCallback: Called on enter/exit of geofence.
         /// - returns: Returns a Location object.
-        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
+        internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
             self.locationManager = locationManager
-            super.init(withNetwork: network, configuration: configuration)
+            super.init(withDelegate: delegate, network: network, configuration: configuration)
             self.locationManager.delegate = self
         }
         
@@ -105,12 +106,18 @@ internal extension Phoenix {
         /**
         Will download the geofences and put them in the monitored regions if required.
         */
-        override func startup() {
-            super.startup()
-            
-            if configuration.useGeofences {
-                downloadGeofences(nil)
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup { [weak self, weak configuration] (success) -> () in
+                if !success {
+                    completion(success: false)
+                    return
+                }
+                // TODO: Remove 'usegeofences' flag.
+                if configuration?.useGeofences == true {
+                    self?.downloadGeofences(nil)
+                }
             }
+            
         }
         
         /**

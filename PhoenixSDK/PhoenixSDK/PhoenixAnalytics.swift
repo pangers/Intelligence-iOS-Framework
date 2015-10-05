@@ -38,18 +38,26 @@ internal extension Phoenix {
         
         // MARK:- PhoenixModuleProtocol
         
-        init(withNetwork network: Network, configuration: Phoenix.Configuration, installation: Installation) {
-            super.init(withNetwork: network, configuration: configuration)
+        internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: Installation) {
+            super.init(withDelegate: delegate, network: network, configuration: configuration)
             self.installation = installation
         }
         
-        override func startup() {
-            super.startup()
-            
-            eventQueue = PhoenixEventQueue(withCallback: sendEvents)
-            eventQueue?.startQueue()
-            // Track application opened.
-            trackApplicationOpened()
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup { [weak self] (success) -> () in
+                if !success {
+                    completion(success: false)
+                    return
+                }
+                guard let this = self else {
+                    completion(success: false)
+                    return
+                }
+                this.eventQueue = PhoenixEventQueue(withCallback: this.sendEvents)
+                this.eventQueue?.startQueue()
+                this.trackApplicationOpened()
+                completion(success: true)
+            }
         }
         
         override func shutdown() {

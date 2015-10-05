@@ -9,7 +9,7 @@
 #import "PHXPhoenixManager.h"
 #import "PHXPhoenixLocationManager.h"
 
-@interface PHXPhoenixManager()
+@interface PHXPhoenixManager() <PHXPhoenixDelegate>
 
 @property (nonatomic) Phoenix* phoenix;
 @property (nonatomic) PHXPhoenixLocationManager *locationManager;
@@ -27,7 +27,7 @@
         // Attempt to instantiate Phoenix from file.
         NSError *err;
         instance = [[PHXPhoenixManager alloc] init];
-        instance.phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+        instance.phoenix = [[Phoenix alloc] initWithDelegate:instance file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
         
         if (err != nil) {
             // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
@@ -40,8 +40,11 @@
         instance.locationManager = [[PHXPhoenixLocationManager alloc] init];
         
         // Start phoenix, will throw a network error if something is configured incorrectly.
-        [instance.phoenix startup:^(NSError * _Nonnull error) {
-            NSLog(@"Fundamental error occurred: %@", error);
+        
+        [instance.phoenix startup:^(BOOL success) {
+            if (!success) {
+                NSAssert(false, @"Could not instantiate Phoenix");
+            }
         }];
         
         // Ask user to enable location services.
@@ -57,6 +60,14 @@
 
 + (Phoenix*)phoenix {
     return [[self sharedInstance] phoenix];
+}
+
+- (void)userCreationFailedForPhoenix:(Phoenix *)phoenix {
+    NSLog(@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.");
+}
+
+- (void)userLoginRequiredForPhoenix:(Phoenix *)phoenix {
+    NSLog(@"Present login screen or call identity.login with credentials stored in Keychain.");
 }
 
 @end
