@@ -28,6 +28,14 @@ class PhoenixLocationModule : UIViewController, UITableViewDataSource, MKMapView
     override func viewDidLoad() {
         super.viewDidLoad()
         PhoenixManager.phoenix!.location.delegate = self
+        
+        // Using the best kind of accuracy for demo purposes.
+        PhoenixManager.phoenix!.location.setLocationAccuracy(kCLLocationAccuracyBest)
+    }
+    
+    deinit {
+        // On leaving stop monitoring.
+        PhoenixManager.phoenix?.location.stopMonitoringGeofences()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -47,8 +55,6 @@ class PhoenixLocationModule : UIViewController, UITableViewDataSource, MKMapView
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        // On leaving stop monitoring.
-        PhoenixManager.phoenix?.location.stopMonitoringGeofences()
         timer?.invalidate()
         timer = nil
     }
@@ -165,5 +171,4 @@ class PhoenixLocationModule : UIViewController, UITableViewDataSource, MKMapView
             self.tableView.reloadData()
         }
     }
-    
 }
