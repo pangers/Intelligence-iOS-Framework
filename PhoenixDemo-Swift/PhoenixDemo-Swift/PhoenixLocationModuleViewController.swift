@@ -64,7 +64,7 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCellWithIdentifier(PhoenixLocationModule.cellIdentifier, forIndexPath: indexPath)
+        let cell = self.tableView.dequeueReusableCellWithIdentifier(PhoenixLocationModuleViewController.cellIdentifier, forIndexPath: indexPath)
         cell.textLabel?.text = eventsTitles[indexPath.row]
         return cell
     }
