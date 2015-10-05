@@ -36,6 +36,7 @@
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
 		BBF417361B74B7A500AF2BFA /* UpdateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */; };
 		BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
+		BBFC3E581BBECF0D00B20C2D /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */; settings = {ASSET_TAGS = (); }; };
 		FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */; };
@@ -156,6 +157,7 @@
 		BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTestCase.swift; sourceTree = "<group>"; };
 		BBE209DD1B67C149000202B6 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
 		BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateUserRequestOperation.swift; sourceTree = "<group>"; };
+		BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSBundleInstallation.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE18F91E1B84B23D00DCF2EF /* PhoenixOpenApplicationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOpenApplicationEvent.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
 				BB0F0ECA1B68C627008679C9 /* Pipeline */,
+				BBFC3E541BBECD1500B20C2D /* Helpers */,
 			);
 			path = PhoenixSDK;
 			sourceTree = "<group>";
@@ -406,6 +409,14 @@
 				BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		BBFC3E541BBECD1500B20C2D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		FE18F9371B85CA2400DCF2EF /* Event Types */ = {
@@ -706,6 +717,7 @@
 			files = (
 				BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */,
 				FE2F35351BBC3FE7003EDECA /* PhoenixOAuthPipeline.swift in Sources */,
+				BBFC3E581BBECF0D00B20C2D /* Synchronization.swift in Sources */,
 				FEB471481BBD69FF00640CD7 /* PhoenixOAuthOperation.swift in Sources */,
 				FE22F88A1B5FF4A700711EBF /* PhoenixRegion.swift in Sources */,
 				FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */,
