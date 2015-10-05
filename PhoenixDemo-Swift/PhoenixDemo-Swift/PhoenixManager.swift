@@ -10,7 +10,7 @@ import PhoenixSDK
 
 class PhoenixManager {
     
-    internal private(set) static var phoenix:Phoenix?
+    internal private(set) static var phoenix:Phoenix!
         
     static func startupWithPhoenix(phoenix:Phoenix) {
         PhoenixManager.phoenix = phoenix

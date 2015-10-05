@@ -120,7 +120,7 @@ class AuthenticationViewController: UITableViewController {
                 reloadUI(.Login)
                 return
             }
-            PhoenixManager.phoenix?.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+            PhoenixManager.phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
                 self?.loggedIn = error == nil
                 reloadUI(self?.loggedIn == true ? .LoggedIn : .LoginFailed)
                 if self?.loginMessage == .LoggedIn {
@@ -136,7 +136,7 @@ class AuthenticationViewController: UITableViewController {
     
     func logout() {
         loginMessage = .Login
-        PhoenixManager.phoenix?.identity.logout()
+        PhoenixManager.phoenix.identity.logout()
         tableView.reloadData()
     }
 }

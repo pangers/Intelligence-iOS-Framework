@@ -79,7 +79,7 @@ class ViewUserViewController : UIViewController {
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
-        PhoenixManager.phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
+        PhoenixManager.phoenix.identity.updateUser(user, callback: { (user, error) -> Void in
             if let user = user {
                 self.user = user
                 self.showInformation(" ")
