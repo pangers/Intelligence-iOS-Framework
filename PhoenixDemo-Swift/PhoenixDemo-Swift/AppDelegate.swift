@@ -11,7 +11,7 @@ import UIKit
 import PhoenixSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 
     private let locationManager = PhoenixLocationManager()
 
@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager.requestAuthorization()
         
         do {
-            let phoenix = try Phoenix(withFile: "PhoenixConfiguration")
+            let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
             PhoenixManager.startupWithPhoenix(phoenix)
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
@@ -43,8 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Startup all modules.
-        PhoenixManager.phoenix?.startup { (error) -> () in
-            print("Fundamental error occurred \(error)")
+        PhoenixManager.phoenix?.startup { (success) -> () in
+            assert(success, "Phoenix could not startup")
         }
 
         // Register test event.
@@ -67,8 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationWillEnterForeground(application: UIApplication) {
 		// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        PhoenixManager.phoenix?.startup({ (error) -> () in
-            print("Fundamental error occurred \(error)")
+        PhoenixManager.phoenix?.startup({ (success) -> () in
+            assert(success, "Phoenix could not startup")
         })
 	}
 
@@ -81,6 +81,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PhoenixManager.phoenix?.shutdown()
 	}
 
-
+    // MARK:- PhoenixDelegate
+    
+    func userCreationFailedForPhoenix(phoenix: Phoenix) {
+        print("Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
+    }
+    
+    func userLoginRequiredForPhoenix(phoenix: Phoenix) {
+        print("Present login screen or call identity.login with credentials stored in Keychain.")
+    }
+    
+    func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
+        assertionFailure("Cannot assign sdk_user_role provided in configuration file, permissions error or role doesn't exist.")
+    }
 }
 

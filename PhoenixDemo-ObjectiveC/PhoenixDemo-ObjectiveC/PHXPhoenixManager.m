@@ -71,7 +71,7 @@
 }
 
 - (void)userRoleAssignmentFailedForPhoenix:(Phoenix *)phoenix {
-    NSLog(@"Cannot assign sdk_user_role provided in configuration file, permissions error or role doesn't exist.");
+    NSAssert(false, @"Cannot assign sdk_user_role provided in configuration file, permissions error or role doesn't exist.");
 }
 
 @end
