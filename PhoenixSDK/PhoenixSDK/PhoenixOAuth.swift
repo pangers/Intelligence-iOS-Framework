@@ -26,10 +26,15 @@ internal class PhoenixOAuth {
     /// And in memory only for LoggedInUser
     var password: String?
     
-    init(tokenType: PhoenixOAuthTokenType) {
+    convenience init(tokenType: PhoenixOAuthTokenType) {
+        self.init(tokenType:tokenType, tokenStorage:PhoenixKeychain(account: tokenType.rawValue))
+    }
+    
+    init(tokenType:PhoenixOAuthTokenType, tokenStorage:TokenStorage) {
         self.tokenType = tokenType
-        let keychain = PhoenixKeychain(account: tokenType.rawValue)
+        let keychain = tokenStorage
         accessToken = keychain.accessToken
+        
         // Application User only has 'accessToken' they don't care about refresh tokens.
         if tokenType != .Application {
             // SDKUser and LoggedInUser have 'username'

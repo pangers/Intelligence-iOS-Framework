@@ -28,7 +28,7 @@ internal final class Network {
         if developerLoggedIn {
             return PhoenixOAuth(tokenType: .LoggedInUser)
         } else {
-            return PhoenixOAuth(tokenType: .Application)
+            return PhoenixOAuth(tokenType: .SDKUser)
         }
     }
     internal var developerLoggedIn = false
@@ -117,7 +117,9 @@ internal final class Network {
                 initialBlock?()
                 return
             }
-            guard let network = self else { return }
+            guard let network = self else {
+                return
+            }
             
             // Token is no longer valid and cannot be refreshed without user input.
             // Do not try again. Alert developer.
