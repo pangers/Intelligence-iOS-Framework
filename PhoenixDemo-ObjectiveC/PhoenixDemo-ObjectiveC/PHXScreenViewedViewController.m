@@ -32,12 +32,19 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	self.startDate = [NSDate date];
-	self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreTimeAndStartClock) name:UIApplicationDidBecomeActiveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopClockAndStoreTime) name:UIApplicationWillResignActiveNotification object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendAnalytics) name:UIApplicationWillTerminateNotification object:nil];
+	 
+	 [self clearTimeAndStartClock];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-	[PHXPhoenixManager.phoenix.analytics trackScreenViewed:self.title viewingDuration:-self.startDate.timeIntervalSinceNow];
+	[self stopClockAndStoreTime];
+	[self sendAnalytics];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super viewDidDisappear:animated];
 }
@@ -45,12 +52,63 @@
 #pragma mark - NSTimer
 
 - (void)timerFired:(NSTimer *)timer {
-	NSTimeInterval seconds = -self.startDate.timeIntervalSinceNow;
+	NSTimeInterval previousSeconds = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
+	
+	self.clockLabel.text = [self clockTimeFromSeconds:-self.startDate.timeIntervalSinceNow + previousSeconds];
+}
+
+#pragma mark - Internal
+
+- (void)restoreTimeAndStartClock {
+	NSTimeInterval previousSeconds = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
+	self.clockLabel.text = [self clockTimeFromSeconds:previousSeconds];
+	
+	[self startClock];
+}
+
+- (void)clearTimeAndStartClock {
+	[[NSUserDefaults standardUserDefaults] setDouble:0.0 forKey:self.title];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+	self.clockLabel.text = [self clockTimeFromSeconds:0.0];
+	
+	[self startClock];
+}
+
+- (void)startClock {
+	self.startDate = [NSDate date];
+	self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+}
+
+- (void)stopClock {
+	self.startDate = nil;
+	
+	[self.timer invalidate];
+	self.timer = nil;
+}
+
+- (void)stopClockAndStoreTime {
+	NSTimeInterval previousSeconds = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
+	NSTimeInterval viewingDuration = -self.startDate.timeIntervalSinceNow + previousSeconds;
+	
+	[self stopClock];
+	
+	[[NSUserDefaults standardUserDefaults] setDouble:viewingDuration forKey:self.title];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSString *)clockTimeFromSeconds:(NSTimeInterval)seconds {
 	double minutes = floor(seconds / 60.0);
 	
 	seconds -= minutes * 60;
 	
-	self.clockLabel.text = [NSString stringWithFormat:@"%02.0lf:%02.0lf", minutes, seconds];
+	return [NSString stringWithFormat:@"%02.0lf:%02.0lf", minutes, seconds];
+}
+
+- (void)sendAnalytics {
+	NSTimeInterval viewingDuration = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
+	
+	[PHXPhoenixManager.phoenix.analytics trackScreenViewed:self.title viewingDuration:viewingDuration];
 }
 
 @end
