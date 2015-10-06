@@ -61,7 +61,7 @@ internal final class Network {
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return PhoenixOAuthPipeline for given token type.
-    internal func getPipeline(forOAuth oauth: PhoenixOAuth, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
+    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
         if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
             assertionFailure("User should have been created in startup()")
             completion(nil)

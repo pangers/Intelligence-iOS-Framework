@@ -59,7 +59,7 @@ extension Phoenix {
         }
         
         private func createSDKUserIfRequired(successBlock: () -> ()) {
-            let oauth = network.oauthProvider.sdkUserOAuth
+            var oauth = network.oauthProvider.sdkUserOAuth
             if oauth.username == nil || oauth.password == nil {
                 // Need to create user first.
                 let sdkUser = Phoenix.User(companyId: configuration.companyId)
@@ -208,7 +208,7 @@ extension Phoenix {
             network.enqueueOperation(operation)
         }
         
-        internal func getMe(oauth: PhoenixOAuth, callback: PhoenixUserCallback) {
+        internal func getMe(oauth: PhoenixOAuthProtocol, callback: PhoenixUserCallback) {
             let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 callback(user: operation?.user, error: operation?.output?.error)

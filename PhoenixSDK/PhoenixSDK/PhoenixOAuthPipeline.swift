@@ -13,7 +13,7 @@ internal class PhoenixOAuthPipeline: PhoenixOAuthOperation {
     var operations: [PhoenixOAuthOperation]
     
     init(withOperations operations: [PhoenixOAuthOperation],
-        oauth: PhoenixOAuth? = nil,
+        oauth: PhoenixOAuthProtocol? = nil,
         configuration: Phoenix.Configuration,
         network: Network)
     {

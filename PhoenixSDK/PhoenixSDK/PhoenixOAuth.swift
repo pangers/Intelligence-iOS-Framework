@@ -25,6 +25,10 @@ protocol PhoenixOAuthProtocol {
     /// Password will be stored in Keychain for SDKUser and in memory only for LoggedInUser
     /// for the duration of the login method (cleared afterwards).
     var password: String? { get set }
+
+    func isAuthenticated() -> Bool
+    func updateCredentials(withUsername username: String, password: String)
+    func updateWithResponse(response: JSONDictionary?) -> Bool
 }
 
 

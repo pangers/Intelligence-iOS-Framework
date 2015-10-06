@@ -16,7 +16,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     var shouldBreak: Bool = false
     
     // Contextually relevant information to pass between operations.
-    var oauth: PhoenixOAuth?
+    var oauth: PhoenixOAuthProtocol?
     var configuration: Phoenix.Configuration?
     var network: Network?
     var session: NSURLSession! {

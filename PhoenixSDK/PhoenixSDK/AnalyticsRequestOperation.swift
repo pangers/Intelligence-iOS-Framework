@@ -13,7 +13,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
     
     private let eventsJSON: JSONDictionaryArray
     
-    init(json: JSONDictionaryArray, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
+    init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         self.eventsJSON = json
         super.init()
         self.configuration = configuration

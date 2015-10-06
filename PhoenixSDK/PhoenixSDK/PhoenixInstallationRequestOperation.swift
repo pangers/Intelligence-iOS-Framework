@@ -12,7 +12,7 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation {
     
     var installation: Phoenix.Installation!
     
-    init(installation: Phoenix.Installation, oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
+    init(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         super.init()
         self.configuration = configuration
         self.network = network

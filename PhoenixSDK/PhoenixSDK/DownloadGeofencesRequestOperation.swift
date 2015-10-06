@@ -14,7 +14,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
 
-    init(oauth: PhoenixOAuth, configuration: Phoenix.Configuration, network: Network) {
+    init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         super.init()
         self.oauth = oauth
         self.configuration = configuration

@@ -9,24 +9,24 @@
 import Foundation
 
 internal protocol PhoenixOAuthProvider {
-    var applicationOAuth: PhoenixOAuth { get set }
-    var sdkUserOAuth: PhoenixOAuth { get set }
-    var loggedInUserOAuth: PhoenixOAuth { get set }
-    var bestPasswordGrantOAuth: PhoenixOAuth { get }
+    var applicationOAuth: PhoenixOAuthProtocol { get set }
+    var sdkUserOAuth: PhoenixOAuthProtocol { get set }
+    var loggedInUserOAuth: PhoenixOAuthProtocol { get set }
+    var bestPasswordGrantOAuth: PhoenixOAuthProtocol { get }
     var developerLoggedIn: Bool { get set }
 }
 
 internal final class PhoenixOAuthDefaultProvider: PhoenixOAuthProvider {
     
     /// grant_type 'client_credentials' OAuth type.
-    internal var applicationOAuth = PhoenixOAuth(tokenType: .Application)
+    internal var applicationOAuth: PhoenixOAuthProtocol = PhoenixOAuth(tokenType: .Application)
     
     /// grant_type 'password' OAuth types.
-    internal var sdkUserOAuth = PhoenixOAuth(tokenType: .SDKUser)
-    internal var loggedInUserOAuth = PhoenixOAuth(tokenType: .LoggedInUser)
+    internal var sdkUserOAuth: PhoenixOAuthProtocol = PhoenixOAuth(tokenType: .SDKUser)
+    internal var loggedInUserOAuth: PhoenixOAuthProtocol = PhoenixOAuth(tokenType: .LoggedInUser)
     
     /// Best OAuth we have for grant_type 'password'.
-    internal var bestPasswordGrantOAuth: PhoenixOAuth {
+    internal var bestPasswordGrantOAuth: PhoenixOAuthProtocol {
         return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
     }
     internal var developerLoggedIn = false

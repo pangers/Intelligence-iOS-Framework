@@ -89,7 +89,7 @@ public final class Phoenix: NSObject {
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter network:       Network object, responsible for sending all OAuth requests.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
-    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
+    /// - parameter oauthProvider:  Object responsible for storing OAuth information.
     /// - parameter installation:  Object responsible for reading installation information.
     /// - parameter locationManager: Location manager responsible for handling location updates.
     /// - throws: **ConfigurationError** if the configuration is invalid.
@@ -99,7 +99,7 @@ public final class Phoenix: NSObject {
         delegateWrapper: PhoenixDelegateWrapper,
         network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
-        oauthStorage: PhoenixOAuthStorage,
+        oauthProvider: PhoenixOAuthProvider,
         installation: Phoenix.Installation,
         locationManager: PhoenixLocationManager
         ) throws
@@ -110,7 +110,7 @@ public final class Phoenix: NSObject {
         delegateWrapper.delegate = delegate
         delegateWrapper.phoenix = self
         
-        let network = network ?? Network(delegate: delegateWrapper, oauthProvider: PhoenixOAuthDefaultProvider())
+        let network = network ?? Network(delegate: delegateWrapper, oauthProvider: oauthProvider)
         
         if phoenixConfiguration.hasMissingProperty {
             throw ConfigurationError.MissingPropertyError
@@ -138,20 +138,19 @@ public final class Phoenix: NSObject {
     /// (INTERNAL) Initializes the Phoenix entry point with a configuration object.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
-    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal convenience init(
         withDelegate delegate: PhoenixDelegate,
         configuration phoenixConfiguration: Phoenix.Configuration,
-        oauthStorage: PhoenixOAuthStorage) throws
+        oauthProvider: PhoenixOAuthProvider) throws
     {
         try self.init(
             withDelegate: delegate,
             delegateWrapper: PhoenixDelegateWrapper(),
             network: nil,
             configuration: phoenixConfiguration,
-            oauthStorage: oauthStorage,
+            oauthProvider: oauthProvider,
             installation: Phoenix.Installation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults()),
@@ -167,14 +166,14 @@ public final class Phoenix: NSObject {
     /// - returns: New instance of the Phoenix SDK base class.
     convenience internal init(
         withDelegate delegate: PhoenixDelegate,
-        oauthStorage: PhoenixOAuthStorage,
         file: String,
-        inBundle: NSBundle=NSBundle.mainBundle()) throws
+        inBundle: NSBundle=NSBundle.mainBundle(),
+        oauthProvider: PhoenixOAuthProvider) throws
     {
         try self.init(
             withDelegate: delegate,
             configuration: Configuration.configuration(fromFile: file, inBundle: inBundle),
-            oauthStorage: oauthStorage)
+            oauthProvider: oauthProvider)
     }
     
     /// Initializes the Phoenix entry point with a configuration object.
@@ -189,7 +188,7 @@ public final class Phoenix: NSObject {
         try self.init(
             withDelegate: delegate,
             configuration: phoenixConfiguration,
-            oauthStorage:PhoenixKeychain())
+            oauthProvider: PhoenixOAuthDefaultProvider())
     }
     
     /// Initialize Phoenix with a configuration file.
@@ -205,9 +204,9 @@ public final class Phoenix: NSObject {
     {
         try self.init(
             withDelegate: delegate,
-            oauthStorage: PhoenixKeychain(),
             file:file,
-            inBundle:inBundle)
+            inBundle:inBundle,
+            oauthProvider: PhoenixOAuthDefaultProvider())
     }
     
     /// Starts up the Phoenix SDK modules.
