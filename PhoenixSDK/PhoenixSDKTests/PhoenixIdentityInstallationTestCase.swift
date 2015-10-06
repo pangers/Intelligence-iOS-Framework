@@ -108,8 +108,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let request = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork)
         
         mockResponseForURL(request.URL,
-            method: "POST",
-            response: (data: successfulInstallationResponse, statusCode:200, headers:nil))
+            method: .POST,
+            response: (data: successfulInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.createInstallation({ (installation, error) -> Void in
@@ -152,8 +152,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         mockResponseForURL(URL,
-            method: "POST",
-            response: (data: successfulInstallationResponse, statusCode:404, headers:nil))
+            method: .POST,
+            response: (data: successfulInstallationResponse, statusCode:.NotFound, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         
@@ -175,8 +175,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         mockResponseForURL(URL,
-            method: "POST",
-            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
+            method: .POST,
+            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.createInstallation() { (installation, error) -> Void in
@@ -257,8 +257,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
-            method: "PUT",
-            response: (data: successfulInstallationUpdateResponse, statusCode:200, headers:nil))
+            method: .PUT,
+            response: (data: successfulInstallationUpdateResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in
@@ -302,8 +302,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
-            method: "PUT",
-            response: (data: successfulInstallationUpdateResponse, statusCode:404, headers:nil))
+            method:.PUT,
+            response: (data: successfulInstallationUpdateResponse, statusCode:.NotFound, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in
@@ -324,8 +324,8 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
-            method: "PUT",
-            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
+            method: .PUT,
+            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in

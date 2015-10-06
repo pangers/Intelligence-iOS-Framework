@@ -16,7 +16,7 @@ class PhoenixBaseTestCase : XCTestCase {
     let expectationTimeout:NSTimeInterval = 2
     
     typealias MockCallback = (()->Void)
-    typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
+    typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
     
     var mockOAuthProvider: MockOAuthProvider!
     var mockDelegateWrapper: MockPhoenixDelegateWrapper!
@@ -28,9 +28,9 @@ class PhoenixBaseTestCase : XCTestCase {
     
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     
-    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
-    let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
-    let tokenMethod = "POST"
+    let anonymousTokenSuccessfulResponse = "{\"access_token\":\"\(applicationAccessToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let loggedInTokenSuccessfulResponse = "{\"access_token\":\"\(userAccessToken)=\",\"refresh_token\":\"\(userRefreshToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
+    let tokenMethod = HTTPRequestMethod.POST
     var tokenUrl: NSURL? {
         return NSURLRequest.phx_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
     }
@@ -38,7 +38,7 @@ class PhoenixBaseTestCase : XCTestCase {
     override func setUp() {
         super.setUp()
         do {
-            try mockConfiguration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
+            try mockConfiguration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixBaseTestCase.self))
             mockConfiguration.region = .Europe
             mockOAuthProvider = MockOAuthProvider()
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
@@ -69,11 +69,11 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
+    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, response:MockResponse, expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
         mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
     }
     
-    func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
+    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
         
         print("Mock URL: \(url)")
         
@@ -85,7 +85,7 @@ class PhoenixBaseTestCase : XCTestCase {
         }
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                if let method = method where method != request.HTTPMethod {
+                if let method = method?.rawValue where method != request.HTTPMethod {
                     return false
                 }
                 return request.URL! == url
@@ -98,7 +98,10 @@ class PhoenixBaseTestCase : XCTestCase {
                 print("expectation fulfilled: ", expectation.description)
                 expectation.fulfill()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
+                return OHHTTPStubsResponse(
+                    data: stubData,
+                    statusCode: Int32(response.statusCode.rawValue),
+                    headers:response.headers)
         })
     }
     
@@ -114,8 +117,8 @@ class PhoenixBaseTestCase : XCTestCase {
     }
     
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true, callback:MockCallback? = nil) {
-        let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
+    func mockResponseForAuthentication(statusCode:HTTPStatusCode, anonymous: Bool? = true, callback:MockCallback? = nil) {
+        let responseData = (statusCode == .Success) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,
@@ -123,10 +126,10 @@ class PhoenixBaseTestCase : XCTestCase {
             callback: callback)
     }
     
-    func assertURLNotCalled(url:NSURL, method:String? = "GET") {
+    func assertURLNotCalled(url:NSURL, method:HTTPRequestMethod? = .GET) {
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                if let method = method where method != request.HTTPMethod {
+                if let method = method?.rawValue where method != request.HTTPMethod {
                     return false
                 }
                 

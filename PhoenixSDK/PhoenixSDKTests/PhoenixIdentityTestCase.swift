@@ -12,16 +12,16 @@ import XCTest
 
 class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
-    let fakeUpdateUser = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
-    let updateUserWeakPassword = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
-    let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+    let fakeUpdateUser = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
+    let updateUserWeakPassword = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
+    let userWeakPassword = Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     var identity:Phoenix.Identity?
     
-    let validLogin = "{\n  \"access_token\": \"ZG1iY3dydWJudHYzY3FodHQ2cTdxdmhicWpoZDh1ODQ=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"rkdrdbyuh3awnsybvqvpgfvf4ymc8f5tmtbsbrfg7uppmnpxj7ggxjmapxnepmm3\"\n}"
+    let validLogin = "{\n  \"access_token\": \"\(userAccessToken)=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"\(userRefreshToken)\"\n}"
     
-    let validRefresh = "{\n  \"access_token\": \"dmdhdGc4MjZhZWdtczl1ZmFudDJ5bXc0ODI0ZDUydGs=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"9nr6dwgb7c8h3yhf5852tk3bm7kf5m29mwd6gp3d7gunec28hnawvssnkfj7a27k\"\n}"
+    let validRefresh = "{\n  \"access_token\": \"\(userAccessToken)=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"\(userRefreshToken)\"\n}"
     
-    let validValidate = "{\n  \"access_token\": \"dmdhdGc4MjZhZWdtczl1ZmFudDJ5bXc0ODI0ZDUydGs=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7172\n}"
+    let validValidate = "{\n  \"access_token\": \"\(userAccessToken)=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7172\n}"
     
     let invalidToken = "{\n  \"error\": \"invalid_grant\",\n  \"error_description\": \"Invalid authorization grant request: 'refresh_token not valid'.\"\n}"
 
@@ -80,44 +80,44 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // MARK: - Mock
     
-    func mockGetUserMe(status: Int32 = 200) {
+    func mockGetUserMe(status: HTTPStatusCode = .Success) {
         let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,
-            method: "GET",
-            response: (data: status == 200 ? successfulResponseGetUser : nil, statusCode:status, headers:nil))
+            method: .GET,
+            response: (data: status == .Success ? successfulResponseGetUser : nil, statusCode:status, headers:nil))
     }
     
-    func mockValidate(status: Int32 = 200) {
+    func mockValidate(status: HTTPStatusCode = .Success) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "GET",
-            response: (data: status == 200 ? validValidate : nil, statusCode: status, headers: nil))
+            method: .GET,
+            response: (data: status == .Success ? validValidate : nil, statusCode: status, headers: nil))
     }
     
-    func mockUserCreation(status: Int32 = 200) {
+    func mockUserCreation(status: HTTPStatusCode = .Success) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "POST",
-            response: (data: status == 200 ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+            method: .POST,
+            response: (data: status == .Success ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
     }
     
-    func mockUserUpdate(status: Int32 = 200) {
+    func mockUserUpdate(status: HTTPStatusCode = .Success) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!,
-            method: "PUT",
-            response: (data: status == 200 ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+            method: .PUT,
+            response: (data: status == .Success ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
     }
     
-    func mockUserAssignRole(status: Int32 = 200) {
+    func mockUserAssignRole(status: HTTPStatusCode = .Success) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "POST",
-            response: (data: status == 200 ? successfulAssignRoleResponse : nil, statusCode: status, headers: nil))
+            method: .POST,
+            response: (data: status == .Success ? successfulAssignRoleResponse : nil, statusCode: status, headers: nil))
     }
     
-    func mockRefreshAndLogin(status: Int32? = nil, loginStatus: Int32? = nil) {
+    func mockRefreshAndLogin(status: HTTPStatusCode? = nil, loginStatus: HTTPStatusCode? = nil) {
         var responses = [MockResponse]()
         if status != nil {
-            responses.append(MockResponse(status == 200 ? validRefresh : nil, status!, nil))
+            responses.append(MockResponse(status == .Success ? validRefresh : nil, status!, nil))
         }
-        if status != 200 || status == nil && loginStatus != nil {
-            responses.append(MockResponse(loginStatus == 200 ? validLogin : nil, loginStatus!, nil))
+        if status != .Success || status == nil && loginStatus != nil {
+            responses.append(MockResponse(loginStatus == .Success ? validLogin : nil, loginStatus!, nil))
         }
         mockAuthenticationResponses(responses)
     }
@@ -159,8 +159,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testValidateFailureRefreshSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(401)
-        mockRefreshAndLogin(200, loginStatus: nil)
+        mockValidate(.Unauthorized)
+        mockRefreshAndLogin(.Success, loginStatus: nil)
         mockGetUserMe()
         
         let expectation = expectationWithDescription("mock refresh")
@@ -175,8 +175,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testValidateRefreshLoginFailure() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(401)
-        mockRefreshAndLogin(401, loginStatus: 400)
+        mockValidate(.Unauthorized)
+        mockRefreshAndLogin(.Unauthorized, loginStatus: .BadRequest)
         
         let expectation = expectationWithDescription("mock refresh")
         
@@ -190,8 +190,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testValidateRefreshFailureLoginSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(401)
-        mockRefreshAndLogin(401, loginStatus: 200)
+        mockValidate(.Unauthorized)
+        mockRefreshAndLogin(.Unauthorized, loginStatus: .Success)
         mockGetUserMe()
         
         let expectation = expectationWithDescription("mock refresh")
@@ -212,7 +212,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.loggedInUserOAuth.username = fakeUser.username
         mockOAuthProvider.loggedInUserOAuth.password = fakeUser.password
         
-        mockRefreshAndLogin(nil, loginStatus: 200)
+        mockRefreshAndLogin(nil, loginStatus: .Success)
         mockGetUserMe()
         
         let expectation = expectationWithDescription("mock logout")
@@ -221,7 +221,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Ensure we're logged in...
             XCTAssert(user != nil && error == nil, "Method should return authenticated = true")
             XCTAssert(self.mockOAuthProvider.loggedInUserOAuth.password == nil, "Password should be cleared")
-            XCTAssert(user?.userId == 6016, "User ID should be available")
+            XCTAssert(user?.userId == mockUserID, "User ID should be available")
             XCTAssert(self.mockOAuthProvider.loggedInUserOAuth.userId != nil, "User ID should be stored")
             XCTAssert(self.mockOAuthProvider.developerLoggedIn == true, "Logged in flag should be set")
             
@@ -244,8 +244,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        mockRefreshAndLogin(nil, loginStatus: 200)
-        mockGetUserMe(400)
+        mockRefreshAndLogin(nil, loginStatus: .Success)
+        mockGetUserMe(.BadRequest)
         
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
@@ -265,7 +265,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        mockRefreshAndLogin(nil, loginStatus: 400)
+        mockRefreshAndLogin(nil, loginStatus: .BadRequest)
         
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
@@ -308,7 +308,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // Assures that when the user is not valid to create, an error is returned.
     func testCreateUserErrorOnUserCondition() {
-        let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
+        let user = Phoenix.User(companyId: mockCompanyID, username: "", password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
         let URL = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         assertURLNotCalled(URL)
@@ -334,8 +334,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Create
-        mockUserCreation(200)
-        mockUserAssignRole(200)
+        mockUserCreation(.Success)
+        mockUserAssignRole(.Success)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -353,7 +353,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Mock
-        mockUserCreation(400)
+        mockUserCreation(.BadRequest)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -411,7 +411,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockUserUpdate(400)
+        mockUserUpdate(.BadRequest)
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -425,14 +425,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // Test the method that is used to see if the user is valid to be created
     func testUpdateUserConditions() {
-        XCTAssertFalse(Phoenix.User(userId: 6016, companyId: 0, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No company allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No username allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToUpdate, "No password allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "", lastName: "t", avatarURL: "t").isValidToUpdate, "No firstname allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "", avatarURL: "t").isValidToUpdate, "No lastname allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "").isValidToUpdate, "No Avatar blocks to create user")
-        XCTAssert(Phoenix.User(userId: 6016,companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToUpdate, "Can't send a complete user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToUpdate, "No user id")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID, companyId: 0, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No company allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: "", password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No username allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: "", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: "", lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No firstname allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: "", avatarURL: mockAvatarURL).isValidToUpdate, "No lastname allows to create user")
+        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "").isValidToUpdate, "No Avatar blocks to create user")
+        XCTAssert(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToUpdate, "Can't send a complete user")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToUpdate, "No user id")
     }
     
     func testUpdateUserFailureDueToPasswordSecurity() {
@@ -441,7 +441,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let URL = NSURLRequest.phx_URLRequestForUserUpdate(updateUserWeakPassword, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         // Assert that the call won't be done.
-        assertURLNotCalled(URL, method: "PUT")
+        assertURLNotCalled(URL, method: .PUT)
         
         identity!.updateUser(updateUserWeakPassword) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -455,29 +455,29 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // Test the method that is used to see if the user is valid to be created
     func testCreateUserConditions() {
-        XCTAssertFalse(Phoenix.User(companyId: 0, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No company allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No username allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "", firstName: "t", lastName: "t", avatarURL: "t").isValidToCreate, "No password allows to create user")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "", lastName: "t", avatarURL: "t").isValidToCreate, "No firstname allows to create user")
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "", avatarURL: "t").isValidToCreate, "No lastname allows to create user")
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
+        XCTAssertFalse(Phoenix.User(companyId: 0, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No company allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: "", password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No username allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: "", lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No firstname allows to create user")
+        XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: "", avatarURL: mockAvatarURL).isValidToCreate, "No lastname allows to create user")
+        XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
         
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "1").isValidToCreate, "Can't send a complete user")
+        XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToCreate, "Can't send a complete user")
         
     }
     // MARK:- Password security
     
     func testPasswordRequirementsVerification() {
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123456789", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only numbers passes the check")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "abcdefghf", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only letters passes the check")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "abc", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only letters below the size passes the check")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Only  numbers below the size passes the check")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "test123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Numbers and letters below the size passes the check")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "testing123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with no uppercase, numbers and more than 8 characters passes the test")
-        XCTAssertFalse(Phoenix.User(companyId: 1, username: "123", password: "test1234", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with no uppercase, numbers and exactly 8 characters passes the test")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123456789", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only numbers passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "abcdefghf", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only letters passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "abc", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only letters below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only  numbers below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "test123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Numbers and letters below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "testing123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Letters with no uppercase, numbers and more than 8 characters passes the test")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "test1234", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Letters with no uppercase, numbers and exactly 8 characters passes the test")
         
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with uppercase, numbers and more than 8 characters fails the test")
-        XCTAssert(Phoenix.User(companyId: 1, username: "123", password: "Test1234", firstName: "t", lastName: "t", avatarURL: "t").isPasswordSecure(), "Letters with uppercase, numbers and exactly 8 characters fails the test")
+        XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Letters with uppercase, numbers and more than 8 characters fails the test")
+        XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "Test1234", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Letters with uppercase, numbers and exactly 8 characters fails the test")
     }
     
 }

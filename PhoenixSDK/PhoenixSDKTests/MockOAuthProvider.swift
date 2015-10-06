@@ -10,7 +10,20 @@ import XCTest
 
 @testable import PhoenixSDK
 
+let applicationAccessToken = "1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+let userAccessToken = "OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+let userRefreshToken = "JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+
+let mockCompanyID = 1
+let mockUserID = 6016
+let mockUsername = "username"
+let mockPassword = "Pas5w0rd5"
+let mockFirstName = "Firstname"
+let mockLastName = "Surname"
+let mockAvatarURL = "http://tigerspike.com"
+
 class MockOAuthProvider: PhoenixOAuthProvider {
+    
     /// grant_type 'client_credentials' OAuth type.
     internal var applicationOAuth: PhoenixOAuthProtocol
     
@@ -31,15 +44,15 @@ class MockOAuthProvider: PhoenixOAuthProvider {
     }
     
     func fakeAccessToken(var oauth: PhoenixOAuthProtocol) {
-        oauth.accessToken = "1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        oauth.accessToken = applicationAccessToken
     }
     
     func fakeLoggedIn(var oauth: PhoenixOAuthProtocol, fakeUser: Phoenix.User) {
         oauth.username = fakeUser.username
         oauth.password = fakeUser.password
         oauth.userId = fakeUser.userId
-        oauth.refreshToken = "JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
-        oauth.accessToken = "OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        oauth.refreshToken = userRefreshToken
+        oauth.accessToken = userAccessToken
         if oauth.tokenType == .LoggedInUser {
             developerLoggedIn = true
         }

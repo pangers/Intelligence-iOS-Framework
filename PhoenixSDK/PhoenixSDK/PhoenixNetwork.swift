@@ -12,10 +12,23 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
+/// An enumeration of the HTTP Methods available to use
+internal enum HTTPRequestMethod : String {
+    /// HTTP GET
+    case GET = "GET"
+    /// HTTP POST
+    case POST = "POST"
+    /// HTTP PUT
+    case PUT = "PUT"
+}
+
 internal enum HTTPStatusCode: Int {
     case Success = 200
+    case MultipleChoices = 300
+    case BadRequest = 400
     case Unauthorized = 401
     case Forbidden = 403
+    case NotFound = 404
 }
 
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
