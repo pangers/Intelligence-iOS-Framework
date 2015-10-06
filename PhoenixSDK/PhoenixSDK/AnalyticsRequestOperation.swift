@@ -9,11 +9,11 @@
 import Foundation
 
 /// NSOperation that handles sending analytics.
-internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
+internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying {
     
     private let eventsJSON: JSONDictionaryArray
     
-    init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
+    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         self.eventsJSON = json
         super.init()
         self.configuration = configuration
@@ -32,6 +32,10 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
     }
     
 }

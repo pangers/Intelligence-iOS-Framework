@@ -9,12 +9,12 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
-internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
+internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, NSCopying {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
 
-    init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
+    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         super.init()
         self.oauth = oauth
         self.configuration = configuration
@@ -32,5 +32,9 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
             return
         }
         geofences = downloaded
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!)
     }
 }

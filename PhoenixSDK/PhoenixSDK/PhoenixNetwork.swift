@@ -143,7 +143,11 @@ internal final class Network {
                 pipeline.completionBlock = { [weak pipeline, weak network] in
                     if pipeline?.output?.error == nil {
                         // Add original operation again, should be called after pipeline succeeds.
-                        network?.queue.addOperation(operation)
+                        if operation.conformsToProtocol(NSCopying) {
+                            network?.queue.addOperation(operation.copy() as! NSOperation)
+                        } else {
+                            assertionFailure("Tried to enqueue uncopyable operation")
+                        }
                     } else {
                         // Call completion block for original operation.
                         initialBlock?()

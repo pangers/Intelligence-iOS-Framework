@@ -21,7 +21,7 @@ class UtilsTestCase: XCTestCase {
         XCTAssert(!"1".contains("123"), "A substring of the string contains the second string.")
         XCTAssert("123".contains("123"), "Two equal strings are contained.")
         XCTAssert("PADDING123PADDING".contains("123"), "Strings contain.")
-        
+        XCTAssert("123"[1] == "2")
         
         //  isContained
         XCTAssert(!"".isContained(""), "Empty strings are contained")

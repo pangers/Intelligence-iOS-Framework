@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PhoenixUserRequestOperation : PhoenixOAuthOperation {
+class PhoenixUserRequestOperation : PhoenixOAuthOperation, NSCopying {
     
     /// Once successful, this will contain the user provided by the backend.
     var user: Phoenix.User?
@@ -16,7 +16,7 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
     let sentUser: Phoenix.User?
     
     /// Create new User request.
-    init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
+    required init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
         self.sentUser = user
         super.init()
         self.oauth = oauth
@@ -37,4 +37,8 @@ class PhoenixUserRequestOperation : PhoenixOAuthOperation {
         user = receivedUser
     }
 
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!)
+    }
+    
 }
