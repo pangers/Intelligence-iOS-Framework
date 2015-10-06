@@ -11,77 +11,48 @@ import XCTest
 
 import OHHTTPStubs
 
-class PhoenixDelegateTest: PhoenixDelegate {
-    private var creation = false, login = false, role = false
-    init(
-        expectCreationFailed: Bool = false,
-        expectLoginFailed: Bool = false,
-        expectRoleFailed: Bool = false)
-    {
-        creation = expectCreationFailed
-        login = expectLoginFailed
-        role = expectRoleFailed
-    }
-    
-    
-    @objc func userCreationFailedForPhoenix(phoenix: Phoenix) {
-        XCTAssertTrue(creation)
-    }
-    
-    @objc func userLoginRequiredForPhoenix(phoenix: Phoenix) {
-        XCTAssertTrue(login)
-    }
-    
-    @objc func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
-        XCTAssertTrue(role)
-    }
-}
-
-
 class PhoenixBaseTestCase : XCTestCase {
     
-    let mockClientCredentialsOAuth = PhoenixOAuth(tokenType: .Application, storage: MockSimpleStorage())
-    let mockPasswordOAuth = PhoenixOAuth(tokenType: .SDKUser, storage: MockSimpleStorage())
-    let mockLoginOAuth = PhoenixOAuth(tokenType: .LoggedInUser, storage: MockSimpleStorage())
+    let expectationTimeout:NSTimeInterval = 5
     
     typealias MockCallback = (()->Void)
     typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
-    let tokenUrl = NSURL(string: "https://api.phoenixplatform.eu/identity/v1/oauth/token")!
-    let tokenMethod = "POST"
+    
+    var mockOAuthProvider: MockOAuthProvider!
+    var mockDelegateWrapper: MockPhoenixDelegateWrapper!
+    var mockNetwork: Network!
+    var mockConfiguration: Phoenix.Configuration!
+    var phoenix: Phoenix!
+    var mockInstallationStorage = InstallationStorage()
+    var mockInstallation: Phoenix.Installation!
+    
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
-    var storage = MockSimpleStorage()
-    var configuration: Phoenix.Configuration!
-    var phoenix: Phoenix!
-    
-    var isAuthenticated: Bool = false
-    var isLoggedIn: Bool = false
+    let tokenMethod = "POST"
+    var tokenUrl: NSURL? {
+        return NSURLRequest.phx_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+    }
     
     override func setUp() {
         super.setUp()
         do {
-            try self.configuration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
-            self.configuration!.region = .Europe
+            try mockConfiguration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixNetworkRequestTestCase.self))
+            mockConfiguration.region = .Europe
+            mockOAuthProvider = MockOAuthProvider()
+            mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+            mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
+            mockInstallation = MockPhoenixInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
             
-            let tester = PhoenixDelegateTest(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+            try phoenix = Phoenix(
+                withDelegate: mockDelegateWrapper.mockDelegate,
+                delegateWrapper: mockDelegateWrapper,
+                network: mockNetwork,
+                configuration: mockConfiguration,
+                oauthProvider: mockOAuthProvider,
+                installation: mockInstallation,
+                locationManager: PhoenixLocationManager())
             
-            try self.phoenix = Phoenix(withDelegate: tester, configuration: configuration, oauthStorage: storage)
-            
-            let expectation = expectationWithDescription("Expectation")
-            
-            
-            
-            mockResponseForAuthentication(200, true)
-            mockResponseForAuthentication(200, false)
-            
-            
-            self.phoenix.startup({ (success) -> () in
-                if success {
-                    expectation.fulfill()
-                } else {
-                    XCTFail("Startup failed!")
-                }
-            })
+            // Test individual modules rather than calling startup here.
         }
         catch {
         }
@@ -91,7 +62,6 @@ class PhoenixBaseTestCase : XCTestCase {
         super.tearDown()
         OHHTTPStubs.removeAllStubs()
         phoenix = nil
-        configuration = nil
     }
     
     // MARK: URL Mock
@@ -119,6 +89,7 @@ class PhoenixBaseTestCase : XCTestCase {
                 runs.removeAtIndex(0)
                 // Execute callback before fulfilling expectation so we can chain multiple expectations together
                 callback?()
+                print("expectation fulfilled: ", expectation.description)
                 expectation.fulfill()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
                 return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)

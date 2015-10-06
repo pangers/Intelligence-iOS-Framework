@@ -109,7 +109,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         XCTAssertFalse(cfg.isValid)
         XCTAssertTrue(cfg.hasMissingProperty)
         do {
-            let _ = try Phoenix(withDelegate: PhoenixDelegateTest(), configuration: cfg, oauthStorage: storage)
+            let _ = try Phoenix(withDelegate: MockPhoenixDelegate(), configuration: cfg, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {

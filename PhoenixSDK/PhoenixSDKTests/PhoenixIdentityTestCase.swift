@@ -18,8 +18,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
 
-    let expectationTimeout:NSTimeInterval = 5
-    
     let successfulResponseCreateUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -67,74 +65,91 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     override func setUp() {
         super.setUp()
         self.identity = phoenix?.identity as? Phoenix.Identity
+        mockOAuthProvider.reset()
     }
     
     override func tearDown() {
         super.tearDown()
-        self.configuration = nil
         self.identity =  nil
     }
     
     // MARK:- Login/Logout
     
+    func fakeLoggedIn(var oauth: PhoenixOAuthProtocol) {
+        oauth.username = fakeUser.username
+        oauth.password = fakeUser.password
+        oauth.userId = fakeUser.userId
+        oauth.refreshToken = "JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        oauth.accessToken = "OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        if oauth.tokenType == .LoggedInUser {
+            mockOAuthProvider.developerLoggedIn = true
+        }
+    }
+    
+    func fakeLoggedOut(oauth: PhoenixOAuthProtocol) {
+        mockOAuthProvider.reset(oauth)
+    }
+    
+    func assertLoggedOut(oauth: PhoenixOAuthProtocol) {
+        XCTAssert(oauth.userId == nil)
+        XCTAssert(oauth.username == nil)
+        XCTAssert(oauth.refreshToken == nil)
+        XCTAssert(oauth.accessToken == nil)
+        XCTAssert(oauth.password == nil)
+        XCTAssert(mockOAuthProvider.developerLoggedIn == false)
+    }
+    
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
     func testLoginLogout() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
+        XCTAssert(self.mockOAuthProvider.developerLoggedIn == false, "Should be logged out")
         
-        // Fake anonymous login
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.loggedInUserOAuth.username = fakeUser.username
+        mockOAuthProvider.loggedInUserOAuth.password = fakeUser.password
         
-        // Create expectation for login...
-        let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
-        mockAuthenticationResponses(responses)
+        mockAuthenticationResponse(MockResponse((data: loggedInTokenSuccessfulResponse, statusCode:200, headers:nil)))
         
-        let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration!).URL!
-        mockResponseForURL(request,
+        let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        mockResponseForURL(guURL,
             method: "GET",
             response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
         
-        let expectation = expectationWithDescription("Expectation")
-        phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
+        let expectation = expectationWithDescription("mock logout")
+        
+        phoenix?.identity.login(withUsername: fakeUser.username, password: fakeUser.password!) { (user, error) -> () in
             // Ensure we're logged in...
             XCTAssert(user != nil && error == nil, "Method should return authenticated = true")
-            
-            // Ensure user was parsed.
-            XCTAssert(user?.userId == 6016)
-            
-            // Ensure user id was stored
-            XCTAssert(self.phoenix?.network.authentication.userId != nil)
-            
-            XCTAssert(self.checkLoggedIn == true, "Phoenix should be logged in")
+            XCTAssert(self.mockOAuthProvider.loggedInUserOAuth.password == nil, "Password should be cleared")
+            XCTAssert(user?.userId == 6016, "User ID should be available")
+            XCTAssert(self.mockOAuthProvider.loggedInUserOAuth.userId != nil, "User ID should be stored")
+            XCTAssert(self.mockOAuthProvider.developerLoggedIn == true, "Logged in flag should be set")
             
             // Logout...
             self.phoenix?.identity.logout()
-            XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
+            XCTAssert(self.mockOAuthProvider.developerLoggedIn == false)
             
-            XCTAssert(self.phoenix?.network.authentication.userId == nil)
+            // Ensure details were cleared
+            self.assertLoggedOut(self.mockOAuthProvider.loggedInUserOAuth)
+            
             expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkAuthenticated == true, "Phoenix is authenticated after a login-logout-anonymouslogin")
         }
     }
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
-    func testLoginGetMeFailure() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        // Fake anonymous login
-        mockValidPhoenixOAuthStorage()
+    func testLoginFailureOnGetMe() {
+        XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
         let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
         mockAuthenticationResponses(responses)
         
-        let request = NSURLRequest.phx_URLRequestForGetUserMe(configuration!).URL!
-        mockResponseForURL(request,
+        let URL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        mockResponseForURL(URL,
             method: "GET",
             response: (data: nil, statusCode:400, headers:nil))
         
@@ -143,27 +158,20 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Ensure we're logged in...
             XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
             
-            // Ensure user was parsed.
-            XCTAssert(user?.userId == nil)
-            XCTAssert(self.phoenix?.network.authentication.userId == nil)
-            XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
+            XCTAssert(self.mockOAuthProvider.developerLoggedIn == false)
             
             expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkLoggedIn == false, "Phoenix is authenticated after a login-logout-anonymouslogin")
         }
     }
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
     func testLoginFailure() {
-        XCTAssert(!checkAuthenticated, "Phoenix is authenticated before a response")
-        
-        // Fake anonymous login
-        mockValidPhoenixOAuthStorage()
+        XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
         let responses = [MockResponse(nil, 400, nil)]
@@ -174,37 +182,38 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             // Ensure we're logged in...
             XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
             
-            // Ensure user was parsed.
-            XCTAssert(user?.userId == nil)
-            XCTAssert(self.phoenix?.network.authentication.userId == nil)
-            XCTAssert(self.checkLoggedIn == false, "Phoenix should be logged out")
+            XCTAssertFalse(self.mockOAuthProvider.developerLoggedIn)
+            self.assertLoggedOut(self.mockOAuthProvider.loggedInUserOAuth)
             
             expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
             XCTAssertNil(error,"Error in expectation")
-            XCTAssert(self.checkLoggedIn == false, "Phoenix is authenticated after a login-logout-anonymouslogin")
         }
     }
     
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
     func testLogout() {
-        // Mock that we have a token
-        mockValidPhoenixOAuthStorage()
-        XCTAssert(checkAuthenticated, "Phoenix is authenticated before a response")
+        XCTAssert(mockOAuthProvider.developerLoggedIn == false)
+        
+        // Fake login
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        mockOAuthProvider.developerLoggedIn = true
         
         phoenix?.identity.logout()
-        XCTAssert(!checkLoggedIn, "Phoenix is not authenticated after a successful response")
+        
+        XCTAssert(mockOAuthProvider.developerLoggedIn == false)
+        assertLoggedOut(mockOAuthProvider.loggedInUserOAuth)
     }
     
 
     // MARK:- Create User
     
     // Assures that when the user is not valid to create, an error is returned.
-    func testCreateUserErrorOnUserCondition() {
+    /*func testCreateUserErrorOnUserCondition() {
         let user = Phoenix.User(companyId: 1, username: "", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
-        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: mockConfiguration).URL!
         
         assertURLNotCalled(request)
         
@@ -219,7 +228,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserSuccess() {
         let user = fakeUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: mockConfiguration).URL!
 
         // Mock auth
         mockValidPhoenixOAuthStorage()
@@ -243,7 +252,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserFailure() {
         let user = fakeUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: mockConfiguration).URL!
 
         // Mock auth
         mockValidPhoenixOAuthStorage()
@@ -291,7 +300,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testCreateUserFailureDueToPasswordSecurity() {
         let user = userWeakPassword
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: mockConfiguration).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(request)
@@ -314,7 +323,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserSuccess() {
         let user = fakeUpdateUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: mockConfiguration).URL!
         
         // Mock auth
         mockValidPhoenixOAuthStorage()
@@ -338,7 +347,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserFailure() {
         let user = fakeUpdateUser
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: mockConfiguration).URL!
         
         // Mock auth
         mockValidPhoenixOAuthStorage()
@@ -376,7 +385,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserFailureDueToPasswordSecurity() {
         let user = updateUserWeakPassword
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForUpdateUser(user, configuration: mockConfiguration).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(request, method: HTTPRequestMethod.PUT.rawValue)
@@ -398,7 +407,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     func testGetUserByIdSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: mockConfiguration).URL!
         
         // Mock request being authorized
         mockValidPhoenixOAuthStorage()
@@ -421,7 +430,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     func testGetUserByIdFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: mockConfiguration).URL!
         
         // Mock request being authorized
         mockValidPhoenixOAuthStorage()
@@ -465,7 +474,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
     func testGetUserByIdNoUsersBack() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: configuration!).URL!
+        let request = NSURLRequest.phx_URLRequestForGetUserById(10, withConfiguration: mockConfiguration).URL!
         
         // Mock request being authorized
         mockValidPhoenixOAuthStorage()
@@ -486,7 +495,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
-    }
+    }*/
     
     // MARK:- Password security
     

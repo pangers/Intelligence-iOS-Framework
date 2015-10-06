@@ -95,7 +95,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             self.configurationDisabled = try Phoenix.Configuration(fromFile: "confignogeofences", inBundle: NSBundle(forClass: PhoenixIdentityTestCase.self))
             self.location = self.phoenix?.location
             
-            XCTAssert(self.configuration?.useGeofences == true)
+            XCTAssert(mockConfiguration.useGeofences == true)
             XCTAssert(self.configurationDisabled?.useGeofences == false)
         }
             
@@ -103,7 +103,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
             XCTAssert(false, "Must provide valid config")
         }
     }
-    
+    /*
     override func tearDown() {
         super.tearDown()
         self.configuration = nil
@@ -115,7 +115,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
         query.setDefaultValues()
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockConfiguration,queryDetails:query).URL!
         
         // Mock 200 on auth
         mockValidPhoenixOAuthStorage()
@@ -146,7 +146,7 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         NSURLRequest.phx_URLRequestForDownloadGeofences(<#T##oauth: PhoenixOAuth##PhoenixOAuth#>, configuration: <#T##Phoenix.Configuration#>, network: <#T##Network#>)
         
         
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration!,queryDetails:query).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockConfiguration,queryDetails:query).URL!
         
         // Mock 200 on auth
         mockValidPhoenixOAuthStorage()
@@ -240,5 +240,5 @@ class PhoenixLocationTestCase: PhoenixBaseTestCase {
         } catch {
             XCTAssert(false)
         }
-    }
+    }*/
 }
