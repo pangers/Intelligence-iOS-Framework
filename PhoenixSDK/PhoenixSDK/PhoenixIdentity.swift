@@ -167,10 +167,12 @@ extension Phoenix {
                     callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                 } else {
                     // Get user me.
-                    self?.network.oauthProvider.developerLoggedIn = true
-                    self?.getMe({ (user, error) -> Void in
+                    self?.getMe({ [weak self] (user, error) -> Void in
                         // Clear userid if get me fails, otherwise update user id.
                         pipeline?.oauth?.userId = user?.userId
+                    
+                        // Logged in only if we have a user.
+                        self?.network.oauthProvider.developerLoggedIn = user?.userId != nil
                         
                         // Notify developer
                         callback(user: user, error: error)
