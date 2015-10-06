@@ -109,10 +109,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test if event type is correct and id matches.
@@ -149,10 +146,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     // MARK:- Open Application
@@ -190,10 +184,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
 
     // MARK:- Analytics Requests
@@ -226,10 +217,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test a invalid number of events is returned
@@ -262,10 +250,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test a invalid response
@@ -298,10 +283,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test an error
@@ -332,10 +314,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     

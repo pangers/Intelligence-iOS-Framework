@@ -122,10 +122,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-        }
+        waitForExpectations()
     }
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
@@ -151,10 +148,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-        }
+        waitForExpectations()
     }
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
@@ -176,10 +170,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-        }
+        waitForExpectations()
     }
     
     /// Verify that we logout clearing our tokens successfully when anonymously logged in.
@@ -225,10 +216,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (error) -> Void in
-            XCTAssertNil(error,"Error in expectation")
-        }
+        waitForExpectations()
     }
     
     func testCreateUserSuccess() {
@@ -252,10 +240,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(expectationTimeout) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testCreateUserFailure() {
@@ -277,10 +262,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testCreateUserFailureDueToPasswordSecurity() {
@@ -298,10 +280,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
 
     // MARK:- Update User
@@ -324,10 +303,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testUpdateUserFailure() {
@@ -350,10 +326,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(5) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     // Test the method that is used to see if the user is valid to be created
@@ -383,10 +356,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             expectCallback.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     // Test the method that is used to see if the user is valid to be created

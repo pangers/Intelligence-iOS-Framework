@@ -132,4 +132,10 @@ class PhoenixBaseTestCase : XCTestCase {
                 return OHHTTPStubsResponse() // Never reached
         })
     }
+    
+    func waitForExpectations() {
+        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+            XCTAssertNil(error, "Error in expectation: \(error)")
+        }
+    }
 }
