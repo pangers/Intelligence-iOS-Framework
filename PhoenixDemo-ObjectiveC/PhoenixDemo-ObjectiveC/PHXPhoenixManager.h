@@ -12,6 +12,8 @@
 
 @interface PHXPhoenixManager : NSObject
 
++ (void)setupPhoenix:(Phoenix*)phoenix;
+
 + (Phoenix *)phoenix;
 
 @end

@@ -13,10 +13,32 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	// Override point for customization after application launch.
+    // Attempt to instantiate Phoenix from file.
+    NSError *err;
+    Phoenix* phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
     
+    if (err != nil) {
+        // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+        // and generally indicate that something has gone wrong and needs to be resolved.
+        NSLog(@"Error initialising Phoenix: %zd", err.code);
+    }
+    
+    NSParameterAssert(err == nil && phoenix != nil);
+
     // Initialize the manager responsible for Phoenix and Location Manager, calling 'startup' method.
-    [PHXPhoenixManager phoenix];
+    [PHXPhoenixManager setupPhoenix:phoenix];
+    
+    // Start phoenix, will throw a network error if something is configured incorrectly.
+    [phoenix startup:^(NSError * _Nonnull error) {
+        NSLog(@"Fundamental error occurred: %@", error);
+
+        // Track test event.
+        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+        [phoenix.analytics track:myTestEvent];
+    }];
+    
+    [PHXPhoenixManager setupPhoenix:phoenix];
+    
 	return YES;
 }
 

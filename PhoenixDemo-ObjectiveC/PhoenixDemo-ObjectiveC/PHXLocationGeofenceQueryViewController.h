@@ -8,6 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@import PhoenixSDK;
+
+@protocol PHXGeofenceQueryBuilderDelegate <NSObject>
+
+-(void) didSelectGeofenceQuery:(PHXGeofenceQuery*)query;
+
+@end
+
 @interface PHXLocationGeofenceQueryViewController : UIViewController
+
+@property(nonatomic,weak) id<PHXGeofenceQueryBuilderDelegate> delegate;
+
+@property(nonatomic) double latitude;
+@property(nonatomic) double longitude;
 
 @end
