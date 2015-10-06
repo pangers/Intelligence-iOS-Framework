@@ -35,7 +35,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             return true
         }
         if output?.error != nil {
-            output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil)
+            output?.error = NSError(domain: domain, code: code, userInfo: nil)
             return true
         }
         return false
