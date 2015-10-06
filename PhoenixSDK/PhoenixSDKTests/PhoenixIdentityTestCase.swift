@@ -141,7 +141,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(mockOAuthProvider.developerLoggedIn == false)
     }
     
-    func testValidate() {
+    func testValidateSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
         mockValidate()
@@ -156,7 +156,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
-    func testRefresh() {
+    func testValidateFailureRefreshSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
         mockValidate(401)
@@ -206,7 +206,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
-    func testLoginLogout() {
+    func testLoginLogoutSuccess() {
         XCTAssert(self.mockOAuthProvider.developerLoggedIn == false, "Should be logged out")
         
         mockOAuthProvider.loggedInUserOAuth.username = fakeUser.username
@@ -240,7 +240,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
-    func testLoginFailureOnGetMe() {
+    func testLoginSuccessGetMeFailure() {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
