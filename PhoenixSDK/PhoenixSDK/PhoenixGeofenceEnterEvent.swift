@@ -14,7 +14,7 @@ internal extension Phoenix {
     internal class GeofenceEnterEvent: Event {
         
         init(geofence: Geofence) {
-            super.init(withType: "Phoenix.Location.Geofence.Enter", value: 0, targetId: geofence.id, metadata: nil)
+            super.init(withType: "Phoenix.Location.Geofence.Enter", value: 0, targetId: String(geofence.id), metadata: nil)
         }
         
     }
