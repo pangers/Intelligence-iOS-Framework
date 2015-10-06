@@ -19,7 +19,7 @@ public enum GeofenceSortCriteria: String {
 }
 
 ///An instance of object using to create query part of URL for Geofence API
-@objc public class GeofenceQuery : NSObject {
+@objc(PHXGeofenceQuery) public class GeofenceQuery : NSObject {
     
     public var sortingDirection: GeofenceSortDirection?
     
