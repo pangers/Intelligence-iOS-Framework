@@ -89,6 +89,7 @@ internal extension NSURLRequest {
         if oauth.tokenType == .Application {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
         } else {
+            assert(oauth.username != nil && oauth.password != nil, "Credentials missing")
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
             body[HTTPBodyUsernameKey] = oauth.username!
             body[HTTPBodyPasswordKey] = oauth.password!

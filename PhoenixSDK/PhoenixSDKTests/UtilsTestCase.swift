@@ -10,7 +10,7 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class UtilsTestCase: PhoenixBaseTestCase {
+class UtilsTestCase: XCTestCase {
 
     func testStringContains() {
         // This is an example of a functional test case.

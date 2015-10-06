@@ -17,6 +17,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
     
+    let validLogin = "{\n  \"access_token\": \"ZG1iY3dydWJudHYzY3FodHQ2cTdxdmhicWpoZDh1ODQ=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"rkdrdbyuh3awnsybvqvpgfvf4ymc8f5tmtbsbrfg7uppmnpxj7ggxjmapxnepmm3\"\n}"
+    
+    let validRefresh = "{\n  \"access_token\": \"dmdhdGc4MjZhZWdtczl1ZmFudDJ5bXc0ODI0ZDUydGs=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7200,\n  \"refresh_token\": \"9nr6dwgb7c8h3yhf5852tk3bm7kf5m29mwd6gp3d7gunec28hnawvssnkfj7a27k\"\n}"
+    
+    let validValidate = "{\n  \"access_token\": \"dmdhdGc4MjZhZWdtczl1ZmFudDJ5bXc0ODI0ZDUydGs=\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 7172\n}"
+    
+    let invalidToken = "{\n  \"error\": \"invalid_grant\",\n  \"error_description\": \"Invalid authorization grant request: 'refresh_token not valid'.\"\n}"
+
     let successfulAssignRoleResponse = "{\"TotalRecords\":1,\"Data\":[{\"Id\":1132,\"UserId\":6161,\"RoleId\":1008,\"ProviderId\":6,\"CompanyId\":3,\"ProjectId\":2030,\"CreateDate\":\"2015-10-06T11:55:40.5245055Z\",\"ModifyDate\":\"2015-10-06T11:55:40.5245055Z\"}]}"
     
     let successfulResponseCreateUser = "{" +
@@ -69,6 +77,52 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         self.identity =  nil
     }
     
+    
+    // MARK: - Mock
+    
+    func mockGetUserMe(status: Int32 = 200) {
+        let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        mockResponseForURL(guURL,
+            method: "GET",
+            response: (data: status == 200 ? successfulResponseGetUser : nil, statusCode:status, headers:nil))
+    }
+    
+    func mockValidate(status: Int32 = 200) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: "GET",
+            response: (data: status == 200 ? validValidate : nil, statusCode: status, headers: nil))
+    }
+    
+    func mockUserCreation(status: Int32 = 200) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: "POST",
+            response: (data: status == 200 ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+    }
+    
+    func mockUserUpdate(status: Int32 = 200) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!,
+            method: "PUT",
+            response: (data: status == 200 ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+    }
+    
+    func mockUserAssignRole(status: Int32 = 200) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: "POST",
+            response: (data: status == 200 ? successfulAssignRoleResponse : nil, statusCode: status, headers: nil))
+    }
+    
+    func mockRefreshAndLogin(status: Int32? = nil, loginStatus: Int32? = nil) {
+        var responses = [MockResponse]()
+        if status != nil {
+            responses.append(MockResponse(status == 200 ? validRefresh : nil, status!, nil))
+        }
+        if status != 200 || status == nil && loginStatus != nil {
+            responses.append(MockResponse(loginStatus == 200 ? validLogin : nil, loginStatus!, nil))
+        }
+        mockAuthenticationResponses(responses)
+    }
+    
+    
     // MARK:- Login/Logout
     
     func fakeLoggedIn(oauth: PhoenixOAuthProtocol) {
@@ -87,6 +141,69 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(mockOAuthProvider.developerLoggedIn == false)
     }
     
+    func testValidate() {
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        
+        mockValidate()
+        mockGetUserMe()
+        
+        let expectation = expectationWithDescription("mock validate")
+        
+        phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        })
+        waitForExpectations()
+    }
+    
+    func testRefresh() {
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        
+        mockValidate(401)
+        mockRefreshAndLogin(200, loginStatus: nil)
+        mockGetUserMe()
+        
+        let expectation = expectationWithDescription("mock refresh")
+        
+        phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        })
+        waitForExpectations()
+    }
+    
+    func testValidateRefreshLoginFailure() {
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        
+        mockValidate(401)
+        mockRefreshAndLogin(401, loginStatus: 400)
+        
+        let expectation = expectationWithDescription("mock refresh")
+        
+        phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
+            XCTAssert(error != nil)
+            expectation.fulfill()
+        })
+        waitForExpectations()
+    }
+    
+    func testValidateRefreshFailureLoginSuccess() {
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        
+        mockValidate(401)
+        mockRefreshAndLogin(401, loginStatus: 200)
+        mockGetUserMe()
+        
+        let expectation = expectationWithDescription("mock refresh")
+        
+        phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
+            XCTAssertNil(error, "Unexpeced login error")
+            expectation.fulfill()
+        })
+        waitForExpectations()
+    }
+    
+    
     /// Verify if a user logs out, then logs in anonymously (triggered by a request being added to the queue)
     /// that the userId does gets set and unset correctly.
     func testLoginLogout() {
@@ -95,12 +212,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.loggedInUserOAuth.username = fakeUser.username
         mockOAuthProvider.loggedInUserOAuth.password = fakeUser.password
         
-        mockAuthenticationResponse(MockResponse((data: loggedInTokenSuccessfulResponse, statusCode:200, headers:nil)))
-        
-        let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
-        mockResponseForURL(guURL,
-            method: "GET",
-            response: (data: successfulResponseGetUser, statusCode:200, headers:nil))
+        mockRefreshAndLogin(nil, loginStatus: 200)
+        mockGetUserMe()
         
         let expectation = expectationWithDescription("mock logout")
         
@@ -131,13 +244,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        let responses = [MockResponse(loggedInTokenSuccessfulResponse, 200, nil)]
-        mockAuthenticationResponses(responses)
-        
-        let URL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
-        mockResponseForURL(URL,
-            method: "GET",
-            response: (data: nil, statusCode:400, headers:nil))
+        mockRefreshAndLogin(nil, loginStatus: 200)
+        mockGetUserMe(400)
         
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
@@ -157,8 +265,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        let responses = [MockResponse(nil, 400, nil)]
-        mockAuthenticationResponses(responses)
+        mockRefreshAndLogin(nil, loginStatus: 400)
         
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
@@ -227,13 +334,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Create
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "POST",
-            response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
-        
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "POST",
-            response: (data: successfulAssignRoleResponse, statusCode: 200, headers: nil))
+        mockUserCreation(200)
+        mockUserAssignRole(200)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -251,10 +353,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Mock
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL,
-            method: "POST",
-            response: (data: nil, statusCode:400, headers:nil))
-
+        mockUserCreation(400)
+        
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
@@ -288,15 +388,12 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserSuccess() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let URL = NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(URL,
-            method: "PUT",
-            response: (data: successfulResponseCreateUser, statusCode:200, headers:nil))
+        mockUserUpdate()
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -309,15 +406,12 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testUpdateUserFailure() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let URL = NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(URL,
-            method: "PUT",
-            response: (data: successfulResponseCreateUser, statusCode:400, headers:nil))
+        mockUserUpdate(400)
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")

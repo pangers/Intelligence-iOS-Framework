@@ -15,7 +15,7 @@ internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
         assert(oauth?.tokenType != .Application)
         let request = NSURLRequest.phx_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
-        parse(withErrorCode: IdentityError.UserUpdateError.rawValue)
+        parse(withErrorCode: IdentityError.GetUserError.rawValue)
     }
 
 }

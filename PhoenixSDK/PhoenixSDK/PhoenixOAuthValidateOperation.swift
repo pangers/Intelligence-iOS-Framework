@@ -19,6 +19,11 @@ internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
         let request = NSURLRequest.phx_URLRequestForValidate(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
+        if handleError(IdentityError.domain, code: IdentityError.LoginFailed.rawValue) {
+            print("\(oauth!.tokenType) Validate Failed \(output?.error)")
+            return
+        }
+        
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
             where httpResponse.statusCode == HTTPStatusCode.Success.rawValue else {

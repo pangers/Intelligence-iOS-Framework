@@ -13,7 +13,7 @@ import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
     
-    let expectationTimeout:NSTimeInterval = 5
+    let expectationTimeout:NSTimeInterval = 2
     
     typealias MockCallback = (()->Void)
     typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
@@ -23,10 +23,11 @@ class PhoenixBaseTestCase : XCTestCase {
     var mockNetwork: Network!
     var mockConfiguration: Phoenix.Configuration!
     var phoenix: Phoenix!
-    var mockInstallationStorage = InstallationStorage()
+    var mockInstallationStorage: InstallationStorage!
     var mockInstallation: Phoenix.Installation!
     
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
+    
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"1JJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"refresh_token\":\"JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let tokenMethod = "POST"
@@ -42,6 +43,7 @@ class PhoenixBaseTestCase : XCTestCase {
             mockOAuthProvider = MockOAuthProvider()
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
             mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
+            mockInstallationStorage = InstallationStorage()
             mockInstallation = MockPhoenixInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
             
             try phoenix = Phoenix(
@@ -72,6 +74,9 @@ class PhoenixBaseTestCase : XCTestCase {
     }
     
     func mockResponseForURL(url:NSURL!, method:String?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
+        
+        print("Mock URL: \(url)")
+        
         let count = responses.count
         var runs = [(MockCallback?, MockResponse, XCTestExpectation)]()
         for i in 0..<count {

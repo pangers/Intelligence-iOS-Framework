@@ -22,7 +22,6 @@
 		BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
 		BBA573761B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */; };
 		BBA573781B692B6900685EFB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573771B692B6900685EFB /* String.swift */; };
-		BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */; };
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
 		BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */; };
 		BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */; };
@@ -55,7 +54,6 @@
 		FE65772E1B832C8400E02B03 /* PhoenixAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */; };
 		FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6577301B832EB000E02B03 /* PhoenixEvent.swift */; };
 		FE667E981BC27DAF0094395F /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FE667EA31BC2B5D60094395F /* PhoenixOAuthTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667EA21BC2B5D60094395F /* PhoenixOAuthTestCase.swift */; settings = {ASSET_TAGS = (); }; };
 		FE667EA71BC2C04F0094395F /* PhoenixOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667EA61BC2C04F0094395F /* PhoenixOAuthProvider.swift */; settings = {ASSET_TAGS = (); }; };
 		FE69993D1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */; };
 		FE6999401B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */; };
@@ -150,7 +148,6 @@
 		BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../../Libraries/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworkRequestTestCase.swift; sourceTree = "<group>"; };
 		BBA573771B692B6900685EFB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAuthenticationTestCase.swift; sourceTree = "<group>"; };
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
 		BBC0DFE21B5E30890077E39A /* PhoenixConfigurationTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfigurationTestCase.swift; sourceTree = "<group>"; };
 		BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixConfiguration.swift; sourceTree = "<group>"; };
@@ -182,7 +179,6 @@
 		FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalytics.swift; sourceTree = "<group>"; };
 		FE6577301B832EB000E02B03 /* PhoenixEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEvent.swift; sourceTree = "<group>"; };
 		FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignUserRoleRequestOperation.swift; sourceTree = "<group>"; };
-		FE667EA21BC2B5D60094395F /* PhoenixOAuthTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOAuthTestCase.swift; sourceTree = "<group>"; };
 		FE667EA61BC2C04F0094395F /* PhoenixOAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOAuthProvider.swift; sourceTree = "<group>"; };
 		FE69993C1B8619AE00EB7094 /* PhoenixGeofenceEnterEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixGeofenceEnterEvent.swift; sourceTree = "<group>"; };
 		FE69993F1B861A5400EB7094 /* PhoenixGeofenceExitEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixGeofenceExitEvent.swift; sourceTree = "<group>"; };
@@ -403,8 +399,6 @@
 			isa = PBXGroup;
 			children = (
 				BBA573751B69270C00685EFB /* PhoenixNetworkRequestTestCase.swift */,
-				BBA5D4351B678992007D2B60 /* PhoenixAuthenticationTestCase.swift */,
-				FE667EA21BC2B5D60094395F /* PhoenixOAuthTestCase.swift */,
 				BB0A238E1B70F12600CE0C81 /* PhoenixURLRequestTestCase.swift */,
 			);
 			name = Network;
@@ -787,10 +781,8 @@
 				FE2D5EEA1B74C298008A590E /* PhoenixLocationTestCase.swift in Sources */,
 				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
 				BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */,
-				FE667EA31BC2B5D60094395F /* PhoenixOAuthTestCase.swift in Sources */,
 				FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */,
 				FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */,
-				BBA5D4361B678992007D2B60 /* PhoenixAuthenticationTestCase.swift in Sources */,
 				FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */,
 				FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */,
 			);
