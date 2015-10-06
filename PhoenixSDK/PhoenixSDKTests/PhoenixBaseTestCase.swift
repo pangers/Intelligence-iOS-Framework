@@ -97,7 +97,8 @@ class PhoenixBaseTestCase : XCTestCase {
     
     /// Mock the authentication response
     func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true, callback:MockCallback? = nil) {
-        let responseData = (statusCode == 200) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
+        let successResponse = (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse)
+        let responseData = (statusCode == 200) ? successResponse : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,
