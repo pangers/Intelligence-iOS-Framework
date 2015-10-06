@@ -12,14 +12,16 @@ import PhoenixSDK
 
 class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate, GeofenceQueryBuilderDelegate {
     
+    // MARK:- Constants
     private static let cellIdentifier = "cell"
     
+    // MARK:- Properties
     private var eventsTitles = [String]()
     private lazy var locationManager = CLLocationManager()
     private var lastDownloadedGeofences:[Geofence]?
     private var timer:NSTimer?
     
-    // Views
+    // MARK:- IBOutlets
     @IBOutlet var downloadButton: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
@@ -59,66 +61,19 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
         timer = nil
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return eventsTitles.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCellWithIdentifier(PhoenixLocationModuleViewController.cellIdentifier, forIndexPath: indexPath)
-        cell.textLabel?.text = eventsTitles[indexPath.row]
-        return cell
-    }
-
-    func didReceiveGeofences(geofences: [Geofence]?, error:NSError?) {
-        guard let geofences = geofences where error == nil else {
-            if error != nil {
-                logEvent("Error occured while downloading geofences")
-                logEvent("\(error)")
-            }
-            else {
-                logEvent("No geofences fetched")                
-            }
-            return
-        }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
         
-        lastDownloadedGeofences = geofences
-        
-        refreshGeofences()
-        
-        if PhoenixManager.phoenix!.location.isMonitoringGeofences() {
-            PhoenixManager.phoenix!.location.startMonitoringGeofences(geofences)
-        }
-        
-        logEvent("Fetched \(geofences.count) geofences")
-    }
-    
-    func displayGeofences(geofences:[Geofence]){
-        mapView.removeOverlays(mapView.overlays)
-        
-        for geofence in geofences {
-            let coordinate = CLLocationCoordinate2D(latitude: geofence.latitude, longitude: geofence.longitude)
-            let circle = MKCircle(centerCoordinate: coordinate, radius: geofence.radius)
-            mapView.addOverlay(circle)
+        if segue.identifier == "download" {
+            let geofenceBuilderViewController = segue.destinationViewController as! PhoenixLocationGeofenceQueryViewController
+            geofenceBuilderViewController.latitude = locationManager.location?.coordinate.latitude
+            geofenceBuilderViewController.longitude = locationManager.location?.coordinate.longitude
+            geofenceBuilderViewController.delegate = self
         }
     }
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
-        let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
-        let color = PhoenixManager.phoenix!.location.isMonitoringGeofences() ? UIColor.greenColor() : UIColor.redColor()
-        circleRenderer.fillColor = color.colorWithAlphaComponent(0.4)
-        circleRenderer.strokeColor = color
-        circleRenderer.lineWidth = 2
-        return circleRenderer
-    }
+    // MARK:- IBActions
     
-    func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
-        logEvent("Entered \(geofence.name)")
-    }
-    
-    func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
-        logEvent("Exited \(geofence.name)")
-    }
-
     @IBAction func didTapMonitoringButton(sender: AnyObject) {
         let locationModule = PhoenixManager.phoenix!.location
         
@@ -142,29 +97,7 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
         refreshGeofences()
     }
     
-    func refreshGeofences(){
-        if let geofences = lastDownloadedGeofences {
-            displayGeofences(geofences)
-        }
-    }
-    
-    func logEvent(text:String) {
-        self.eventsTitles.insert(text, atIndex: 0)
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        
-        if segue.identifier == "download" {
-            let geofenceBuilderViewController = segue.destinationViewController as! PhoenixLocationGeofenceQueryViewController
-            geofenceBuilderViewController.latitude = locationManager.location?.coordinate.latitude
-            geofenceBuilderViewController.longitude = locationManager.location?.coordinate.longitude
-            geofenceBuilderViewController.delegate = self
-        }
-    }
+    // MARK:- GeofenceQueryBuilderDelegate and handling result of download
     
     func didSelectGeofenceQuery(geofenceQuery: GeofenceQuery) {
         PhoenixManager.phoenix!.location.downloadGeofences(geofenceQuery) { [weak self] (geofences, error) -> Void in
@@ -173,5 +106,86 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
                 self?.didReceiveGeofences(geofences,error:error)
             })
         }
-   }
+    }
+    
+    func didReceiveGeofences(geofences: [Geofence]?, error:NSError?) {
+        guard let geofences = geofences where error == nil else {
+            if error != nil {
+                logEvent("Error occured while downloading geofences")
+                logEvent("\(error)")
+            }
+            else {
+                logEvent("No geofences fetched")
+            }
+            return
+        }
+        
+        lastDownloadedGeofences = geofences
+        
+        refreshGeofences()
+        
+        if PhoenixManager.phoenix!.location.isMonitoringGeofences() {
+            PhoenixManager.phoenix!.location.startMonitoringGeofences(geofences)
+        }
+        
+        logEvent("Fetched \(geofences.count) geofences")
+    }
+    
+    // MARK:- PhoenixLocationDelegate
+    
+    func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
+        logEvent("Entered \(geofence.name)")
+    }
+    
+    func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
+        logEvent("Exited \(geofence.name)")
+    }
+    
+    // MARK:- Table view data source
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return eventsTitles.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = self.tableView.dequeueReusableCellWithIdentifier(PhoenixLocationModuleViewController.cellIdentifier, forIndexPath: indexPath)
+        cell.textLabel?.text = eventsTitles[indexPath.row]
+        return cell
+    }
+    
+    // MARK:- MKMapViewDelegate
+    
+    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+        let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
+        let color = PhoenixManager.phoenix!.location.isMonitoringGeofences() ? UIColor.greenColor() : UIColor.redColor()
+        circleRenderer.fillColor = color.colorWithAlphaComponent(0.4)
+        circleRenderer.strokeColor = color
+        circleRenderer.lineWidth = 2
+        return circleRenderer
+    }
+
+    // MARK:- Helpers
+    
+    func logEvent(text:String) {
+        self.eventsTitles.insert(text, atIndex: 0)
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.tableView.reloadData()
+        }
+    }
+    
+    func refreshGeofences(){
+        if let geofences = lastDownloadedGeofences {
+            displayGeofences(geofences)
+        }
+    }
+ 
+    func displayGeofences(geofences:[Geofence]){
+        mapView.removeOverlays(mapView.overlays)
+        
+        for geofence in geofences {
+            let coordinate = CLLocationCoordinate2D(latitude: geofence.latitude, longitude: geofence.longitude)
+            let circle = MKCircle(centerCoordinate: coordinate, radius: geofence.radius)
+            mapView.addOverlay(circle)
+        }
+    }
 }

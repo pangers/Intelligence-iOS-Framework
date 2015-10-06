@@ -17,6 +17,7 @@ protocol GeofenceQueryBuilderDelegate {
 
 class PhoenixLocationGeofenceQueryViewController: UIViewController {
 
+    // MARK:- IBOutlets
     @IBOutlet weak var latitudeText: UITextField!
     @IBOutlet weak var longitudeText: UITextField!
     @IBOutlet weak var pageSizeText: UITextField!
@@ -24,9 +25,12 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
     @IBOutlet weak var radiusText: UITextField!
     @IBOutlet weak var sortDirectionSegmentedControl: UISegmentedControl!
     
+    // MARK:- Properties
     var latitude:Double?
     var longitude:Double?
     var delegate:GeofenceQueryBuilderDelegate?
+    
+    // MARK:- ViewController lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +46,8 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
             $0.resignFirstResponder()
         }
     }
+    
+    // MARK:- IBActions
     
     @IBAction func didTapSave(sender: AnyObject) {
         let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: Double(latitudeText.text ?? "0") ?? 0, longitude: Double(longitudeText.text ?? "0") ?? 0))
