@@ -18,6 +18,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="TP7-be-7LT">
                                 <rect key="frame" x="0.0" y="64" width="600" height="216"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Xa0-3V-nqW" id="RZd-b6-NeQ"/>
+                                </connections>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0mZ-Es-6Un">
                                 <rect key="frame" x="0.0" y="280" width="600" height="216"/>
@@ -48,6 +51,9 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Xa0-3V-nqW" id="kkt-yT-9FO"/>
+                                </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1gC-0v-cmI">
                                 <rect key="frame" x="15" y="510" width="570" height="30"/>
@@ -197,10 +203,16 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3tB-fV-Pau">
                                 <rect key="frame" x="15" y="510" width="570" height="30"/>
                                 <state key="normal" title="Download"/>
+                                <connections>
+                                    <action selector="didTapSave:" destination="yEt-hT-k1r" eventType="touchUpInside" id="jiP-D3-iOB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ke9-fy-Jr4">
                                 <rect key="frame" x="15" y="555" width="570" height="30"/>
                                 <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="didTapCancel:" destination="yEt-hT-k1r" eventType="touchUpInside" id="AcA-Zt-E3l"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -218,6 +230,14 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
+                    <connections>
+                        <outlet property="latitudeText" destination="ygh-4E-z7W" id="cg7-7H-6Jj"/>
+                        <outlet property="longitudeText" destination="6VN-Mo-qBd" id="VQI-Cz-6Kg"/>
+                        <outlet property="pageSizeText" destination="f0a-K0-pmX" id="TrU-Aa-fcE"/>
+                        <outlet property="pageText" destination="QXD-XC-6Um" id="RmJ-8f-zKu"/>
+                        <outlet property="radiusText" destination="9UA-Za-DLA" id="aze-SH-gKb"/>
+                        <outlet property="sortDirectionSegmentedControl" destination="s8K-iF-4LE" id="49E-Vm-247"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d1n-b3-F3p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,9 +9,19 @@
 import Foundation
 import CoreLocation
 
-public enum GeofenceSortDirection: String {
-    case Ascending = "asc"
-    case Descending = "desc"
+@objc public enum GeofenceSortDirection:Int {
+    
+    case Ascending
+    case Descending
+    
+    func stringValue() -> String {
+        switch self {
+        case .Ascending:
+            return "asc"
+        case .Descending:
+            return "desc"
+        }
+    }
 }
 
 public enum GeofenceSortCriteria: String {
@@ -25,9 +35,9 @@ public enum GeofenceSortCriteria: String {
     
     public var sortingCriteria: GeofenceSortCriteria?
     
-    public var longitude: Double
+    @objc public var longitude: Double
     
-    public var latitude: Double
+    @objc public var latitude: Double
     
     public var radius: Double?
     
@@ -66,7 +76,7 @@ public enum GeofenceSortCriteria: String {
             queryString.appendUrlQueryParameter("Radius", parameterValue: radiusValue)
         }
         
-        if let sortDir = sortingDirection?.rawValue {
+        if let sortDir = sortingDirection?.stringValue() {
             queryString.appendUrlQueryParameter("sortDir", parameterValue: sortDir)
         }
         
@@ -86,6 +96,24 @@ public enum GeofenceSortCriteria: String {
         }
         
         return queryString
+    }
+    
+    // So that Obj-c can edit the optional values.
+    
+    public func setRadius(radius:Double) {
+        self.radius = radius;
+    }
+
+    public func setPageSize(pageSize:Int) {
+        self.pageSize = pageSize;
+    }
+    
+    public func setPage(page:Int) {
+        self.pageNumber = page;
+    }
+    
+    public func setSortingDirection(direction:GeofenceSortDirection) {
+        self.sortingDirection = direction
     }
 }
 

@@ -37,6 +37,8 @@ static NSString* const cellIdentifier = @"cell";
     [super viewDidLoad];
     self.events = @[];
     
+    self.locationManager = [[CLLocationManager alloc] init];
+    
     [PHXPhoenixManager phoenix].location.delegate = self;
     
     // Using the best kind of accuracy for demo purposes.
@@ -159,7 +161,7 @@ static NSString* const cellIdentifier = @"cell";
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    cell.textLabel.text = self.events[indexPath.row];
+    cell.textLabel.text = self.events[self.events.count - 1 - indexPath.row];
     return cell;
 }
 
