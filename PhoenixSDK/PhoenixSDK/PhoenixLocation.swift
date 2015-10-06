@@ -209,22 +209,12 @@ internal extension Phoenix {
         // MARK:- PhoenixLocationManagerDelegate
 
         func didEnterGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-            if configuration.useGeofences == false {
-                locationManager.stopMonitoringGeofences()
-                return
-            }
-            
             self.delegate?.phoenixLocation?(self, didEnterGeofence: geofence)
             self.enteredGeofences[geofence.id] = geofence
             self.trackGeofenceEntered(geofence)
         }
         
         func didExitGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-            if configuration.useGeofences == false {
-                locationManager.stopMonitoringGeofences()
-                return
-            }
-            
             self.delegate?.phoenixLocation?(self, didExitGeofence: geofence)
             self.enteredGeofences[geofence.id] = nil
             self.trackGeofenceExited(geofence)

@@ -25,10 +25,7 @@ public extension Phoenix {
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
     @objc(PHXConfiguration) public class Configuration: NSObject {
-        
-        /// Flag specifying whether or not to download geofences on launch.
-        public var useGeofences = true
-        
+
         /// The client ID
         public var clientID = ""
         
@@ -78,7 +75,6 @@ public extension Phoenix {
         /// - Returns: A copy of the configuration object.
         public func clone() -> Configuration {
             let copy = Configuration()
-            copy.useGeofences = self.useGeofences
             copy.region = self.region
             copy.applicationID = self.applicationID
             copy.projectID = self.projectID
@@ -115,12 +111,6 @@ public extension Phoenix {
             }
             
             // Fetch from the contents dictionary
-            do {
-                self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
-            }
-            catch {
-                self.useGeofences = true
-            }
             self.clientID = try value(forKey: .ClientID, inContents:contents)
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
