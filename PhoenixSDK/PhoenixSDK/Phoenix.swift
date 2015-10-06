@@ -138,6 +138,7 @@ public final class Phoenix: NSObject {
     /// (INTERNAL) Initializes the Phoenix entry point with a configuration object.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
+    /// - parameter oauthProvider:  Object responsible for storing OAuth information.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Phoenix SDK base class.
     internal convenience init(
@@ -159,9 +160,9 @@ public final class Phoenix: NSObject {
     
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.
     /// - parameter delegate:      Object that responds to delegate events.
-    /// - parameter oauthStorage:  Object responsible for storing OAuth information.
     /// - parameter file:          The JSON file name (no extension) of the configuration.
     /// - parameter inBundle:      The NSBundle to use. Defaults to the main bundle.
+    /// - parameter oauthProvider:  Object responsible for storing OAuth information.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Phoenix SDK base class.
     convenience internal init(
