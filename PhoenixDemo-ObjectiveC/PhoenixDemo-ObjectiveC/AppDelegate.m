@@ -20,7 +20,7 @@
     if (err != nil) {
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
         // and generally indicate that something has gone wrong and needs to be resolved.
-        NSLog(@"Error initialising Phoenix: %zd", err.code);
+        NSLog(@"Error initialising Phoenix: %@", @(err.code));
     }
     
     NSParameterAssert(err == nil && phoenix != nil);

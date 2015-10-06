@@ -88,19 +88,19 @@ static NSString* const cellIdentifier = @"cell";
     if ( [locationModule isMonitoringGeofences] )
     {
         [locationModule stopMonitoringGeofences];
-        [self logEvent:@"Stopped monitoring"];
+        [self addRecord:@"Stopped monitoring"];
         [self.monitoringButton setTitle:@"Enable monitoring" forState:UIControlStateNormal];
     }
     else
     {
         if ( self.lastDownloadedGeofences.count == 0 ) {
-            [self logEvent:@"No geofences available."];
+            [self addRecord:@"No geofences available."];
         }
         else
         {
             [locationModule startMonitoringGeofences:self.lastDownloadedGeofences];
             [self displayGeofences:self.lastDownloadedGeofences];
-            [self logEvent:@"Started monitoring"];
+            [self addRecord:@"Started monitoring"];
             [self.monitoringButton setTitle:@"Disable monitoring" forState:UIControlStateNormal];
         }
     }
@@ -123,11 +123,11 @@ static NSString* const cellIdentifier = @"cell";
     id<PHXLocation> locationModule = PHXPhoenixManager.phoenix.location;
 
     if ( error != nil ) {
-        [self logEvent:@"Error occured while downloading geofences"];
+        [self addRecord:@"Error occured while downloading geofences"];
     }
     else if ( geofences.count == 0 )
     {
-        [self logEvent:@"No geofences fetched"];
+        [self addRecord:@"No geofences fetched"];
     }
     else
     {
@@ -140,18 +140,18 @@ static NSString* const cellIdentifier = @"cell";
             [locationModule startMonitoringGeofences:geofences];
         }
         
-        [self logEvent:@"Fetched geofences"];
+        [self addRecord:@"Fetched geofences"];
     }
 }
 
 -(void)phoenixLocation:(id<PHXLocation>)location didEnterGeofence:(PHXGeofence *)geofence
 {
-    [self logEvent:[NSString stringWithFormat:@"Entered %@", geofence.name]];
+    [self addRecord:[NSString stringWithFormat:@"Entered %@", geofence.name]];
 }
 
 -(void)phoenixLocation:(id<PHXLocation>)location didExitGeofence:(PHXGeofence *)geofence
 {
-    [self logEvent:[NSString stringWithFormat:@"Exited %@", geofence.name]];
+    [self addRecord:[NSString stringWithFormat:@"Exited %@", geofence.name]];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -177,7 +177,7 @@ static NSString* const cellIdentifier = @"cell";
     return renderer;
 }
 
--(void) logEvent:(NSString*)event
+-(void) addRecord:(NSString*)event
 {
     self.events = [self.events arrayByAddingObject:event];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{

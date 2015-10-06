@@ -12,7 +12,7 @@ import Foundation
 Assures that only one thread at a time will enter the closures passed for the given lock.
 
 Consider that passing self might be bad since other classes can use your object as a lock, and lead
-to death locks.
+to deadlocks.
 
 - parameter lock:    The lock to use as a semaphore
 - parameter closure: The closure to run thread safely.

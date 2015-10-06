@@ -79,18 +79,18 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
         
         if locationModule.isMonitoringGeofences() {
             locationModule.stopMonitoringGeofences()
-            logEvent("Stopped monitoring")
+            addRecord("Stopped monitoring")
             self.monitoringButton.setTitle("Enable monitoring", forState: .Normal)
         }
         else {
             if let lastDownloadedGeofences = lastDownloadedGeofences {
                 locationModule.startMonitoringGeofences(lastDownloadedGeofences)
                 displayGeofences(lastDownloadedGeofences)
-                logEvent("Started monitoring")
+                addRecord("Started monitoring")
                 self.monitoringButton.setTitle("Disable monitoring", forState: .Normal)
             }
             else {
-                logEvent("No geofences available.")
+                addRecord("No geofences available.")
             }
         }
         
@@ -111,11 +111,11 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
     func didReceiveGeofences(geofences: [Geofence]?, error:NSError?) {
         guard let geofences = geofences where error == nil else {
             if error != nil {
-                logEvent("Error occured while downloading geofences")
-                logEvent("\(error)")
+                addRecord("Error occured while downloading geofences")
+                addRecord("\(error)")
             }
             else {
-                logEvent("No geofences fetched")
+                addRecord("No geofences fetched")
             }
             return
         }
@@ -128,17 +128,17 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
             PhoenixManager.phoenix!.location.startMonitoringGeofences(geofences)
         }
         
-        logEvent("Fetched \(geofences.count) geofences")
+        addRecord("Fetched \(geofences.count) geofences")
     }
     
     // MARK:- PhoenixLocationDelegate
     
     func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
-        logEvent("Entered \(geofence.name)")
+        addRecord("Entered \(geofence.name)")
     }
     
     func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
-        logEvent("Exited \(geofence.name)")
+        addRecord("Exited \(geofence.name)")
     }
     
     // MARK:- Table view data source
@@ -166,7 +166,7 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
 
     // MARK:- Helpers
     
-    func logEvent(text:String) {
+    func addRecord(text:String) {
         self.eventsTitles.insert(text, atIndex: 0)
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             self.tableView.reloadData()
