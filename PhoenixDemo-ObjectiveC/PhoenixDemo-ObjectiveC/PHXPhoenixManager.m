@@ -71,7 +71,7 @@
 }
 
 - (void)userRoleAssignmentFailedForPhoenix:(Phoenix *)phoenix {
-    NSAssert(false, @"Cannot assign sdk_user_role provided in configuration file, permissions error or role doesn't exist.");
+    NSLog(@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.");
 }
 
 @end
