@@ -74,7 +74,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     }
     
     // MARK:- Geofences
-    /*
+    
     /// Test if event type is correct and id matches.
     func testGeofenceEnterSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
@@ -94,13 +94,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -134,13 +134,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -175,13 +175,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -211,13 +211,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -245,13 +245,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -281,13 +281,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
             response: (data: successfulResponse, statusCode:200, headers:nil))
         
@@ -315,20 +315,20 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let eventsJSON: JSONDictionaryArray = [eventJSON]
         
         // Create request
-        let request = NSURLRequest.phx_URLRequestForAnalytics(mockConfiguration, json: eventsJSON).URL!
+        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Mock 200 on auth
-        mockValidPhoenixOAuthStorage()
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
         
         // Mock
-        mockResponseForURL(request,
+        mockResponseForURL(URL,
             method: "POST",
-            response: (data: "", statusCode:404, headers:nil))
+            response: (data: nil, statusCode:404, headers:nil))
         
         // Avoid using the EventQueue so we are certain that we are only sending one request here.
         analytics.sendEvents(eventsJSON) { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request error")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         }
@@ -398,7 +398,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in file")
         }
     }
-    */
     
     /// Test that having over 100 events in the queue will fire two calls.
     func test101EventsInQueueRequiresTwoCalls() {

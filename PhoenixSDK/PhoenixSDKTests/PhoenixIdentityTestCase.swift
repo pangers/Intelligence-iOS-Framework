@@ -13,7 +13,6 @@ import XCTest
 class PhoenixIdentityTestCase: PhoenixBaseTestCase {
 
     let fakeUpdateUser = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
-    let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     let updateUserWeakPassword = Phoenix.User(userId: 6016, companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     let userWeakPassword = Phoenix.User(companyId: 1, username: "123", password: "123", firstName: "t", lastName: "t", avatarURL: "t")
     var identity:Phoenix.Identity?
@@ -75,15 +74,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // MARK:- Login/Logout
     
-    func fakeLoggedIn(var oauth: PhoenixOAuthProtocol) {
-        oauth.username = fakeUser.username
-        oauth.password = fakeUser.password
-        oauth.userId = fakeUser.userId
-        oauth.refreshToken = "JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
-        oauth.accessToken = "OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
-        if oauth.tokenType == .LoggedInUser {
-            mockOAuthProvider.developerLoggedIn = true
-        }
+    func fakeLoggedIn(oauth: PhoenixOAuthProtocol) {
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
     }
     
     func fakeLoggedOut(oauth: PhoenixOAuthProtocol) {
@@ -92,7 +84,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     func assertLoggedOut(oauth: PhoenixOAuthProtocol) {
         XCTAssert(oauth.userId == nil)
-        XCTAssert(oauth.username == nil)
+        //XCTAssert(oauth.username == nil)
         XCTAssert(oauth.refreshToken == nil)
         XCTAssert(oauth.accessToken == nil)
         XCTAssert(oauth.password == nil)
@@ -130,6 +122,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             // Ensure details were cleared
             self.assertLoggedOut(self.mockOAuthProvider.loggedInUserOAuth)
+            XCTAssert(self.mockOAuthProvider.loggedInUserOAuth.username == nil)
             
             expectation.fulfill()
         }

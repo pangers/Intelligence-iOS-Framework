@@ -30,6 +30,17 @@ class MockOAuthProvider: PhoenixOAuthProvider {
         loggedInUserOAuth = PhoenixOAuth(tokenType: .LoggedInUser, storage: MockSimpleStorage())
     }
     
+    func fakeLoggedIn(var oauth: PhoenixOAuthProtocol, fakeUser: Phoenix.User) {
+        oauth.username = fakeUser.username
+        oauth.password = fakeUser.password
+        oauth.userId = fakeUser.userId
+        oauth.refreshToken = "JJJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        oauth.accessToken = "OTJ1a2tyeGZrMzRqM2twdXZ5ZzI4N3QycmFmcWp3ZW0"
+        if oauth.tokenType == .LoggedInUser {
+            developerLoggedIn = true
+        }
+    }
+    
     func reset() {
         reset(sdkUserOAuth)
         reset(applicationOAuth)
