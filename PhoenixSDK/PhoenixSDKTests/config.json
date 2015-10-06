@@ -4,6 +4,5 @@
     "application_id": 10,
     "project_id": 20,
     "region": "EU",
-    "company_id":10,
-    "use_geofences":true
+    "company_id":10
 }
