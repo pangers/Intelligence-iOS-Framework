@@ -164,7 +164,12 @@ extension Phoenix {
                 
                 if pipeline?.output?.error != nil {
                     // Failed, tell developer!
-                    callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
+                    guard let domain = pipeline?.output?.error?.domain where domain == IdentityError.domain || domain == RequestError.domain else {
+                        // Wrap again
+                        callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
+                        return
+                    }
+                    callback(user: nil, error: pipeline?.output?.error)
                 } else {
                     // Get user me.
                     self?.getMe({ [weak self] (user, error) -> Void in
