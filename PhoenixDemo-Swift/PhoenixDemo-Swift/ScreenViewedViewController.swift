@@ -74,6 +74,8 @@ class ScreenViewedViewController : UIViewController {
 	
 	internal func startClock() {
 		self.startDate = NSDate()
+		
+		self.timer?.invalidate()
 		self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("timerFired:"), userInfo: nil, repeats: true)
 	}
 	

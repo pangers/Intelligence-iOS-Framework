@@ -77,6 +77,8 @@
 
 - (void)startClock {
 	self.startDate = [NSDate date];
+	
+	[self.timer invalidate];
 	self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
 }
 
