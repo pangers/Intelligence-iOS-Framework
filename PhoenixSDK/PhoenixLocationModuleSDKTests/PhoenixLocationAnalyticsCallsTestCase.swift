@@ -13,10 +13,14 @@ import XCTest
 class PhoenixLocationAnalyticsCallsTestCase: PhoenixLocationBaseTestCase {
     
     var analytics:MockAnalyticsModule!
+    var geofence:Geofence!
     
     override func setUp() {
         super.setUp()
         analytics = MockAnalyticsModule()
+        geofence = Geofence()
+        geofence.id = 100
+        
         (location as! Phoenix.Location).analytics = analytics
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -28,16 +32,16 @@ class PhoenixLocationAnalyticsCallsTestCase: PhoenixLocationBaseTestCase {
     }
     
     func testEnterRegion() {
-        (location as! Phoenix.Location).didEnterGeofence(Geofence(), withUserCoordinate: nil)
+        (location as! Phoenix.Location).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
-            return $0.eventType == "Phoenix.Location.Geofence.Enter"
+            return $0.eventType == "Phoenix.Location.Geofence.Enter" && $0.targetId == geofence.id
         }.count == 1
     }
     
     func testExitRegion() {
-        (location as! Phoenix.Location).didEnterGeofence(Geofence(), withUserCoordinate: nil)
+        (location as! Phoenix.Location).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
-            return $0.eventType == "Phoenix.Location.Geofence.Exit"
+            return $0.eventType == "Phoenix.Location.Geofence.Exit" && $0.targetId == geofence.id
         }.count == 1
     }
     
