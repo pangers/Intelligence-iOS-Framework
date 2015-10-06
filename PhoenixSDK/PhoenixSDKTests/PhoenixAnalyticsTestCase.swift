@@ -299,7 +299,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             expectCallback.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
+        waitForExpectationsWithTimeout(expectationTimeout) { (_:NSError?) -> Void in
             // Wait for calls to be made and the callback to be notified
         }
     }
@@ -328,8 +328,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Avoid using the EventQueue so we are certain that we are only sending one request here.
         analytics.sendEvents(eventsJSON) { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
+            XCTAssert(error?.code == AnalyticsError.SendAnalyticsError.rawValue, "Expected analytics error")
+            XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
             expectCallback.fulfill()
         }
         

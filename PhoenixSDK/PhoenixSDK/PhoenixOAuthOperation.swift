@@ -38,6 +38,12 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             output?.error = NSError(domain: domain, code: code, userInfo: nil)
             return true
         }
+        if let httpResponse = output?.response as? NSHTTPURLResponse {
+            if httpResponse.statusCode / 100 != 2 {
+                output?.error = NSError(domain: domain, code: code, userInfo: nil)
+                return true
+            }
+        }
         return false
     }
     
