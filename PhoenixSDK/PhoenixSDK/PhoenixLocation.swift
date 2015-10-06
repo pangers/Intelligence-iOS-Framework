@@ -17,6 +17,12 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     optional func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence)
 
     optional func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence)
+    
+    optional func phoenixLocation(location:PhoenixLocation, didStartMonitoringGeofence:Geofence)
+
+    optional func phoenixLocation(location:PhoenixLocation, didFailMonitoringGeofence:Geofence)
+
+    optional func phoenixLocation(location:PhoenixLocation, didStopMonitoringGeofence:Geofence)
 }
 
 /**
@@ -39,10 +45,8 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     
     - parameter geofences: The geofences to monitor.
     
-    - returns: True if the geofences were monitored. The location module won't trigger a location
-    permission request, and therefore can reject the request to start monitoring geofences.
     */
-    func startMonitoringGeofences(geofences:[Geofence]) -> Bool
+    func startMonitoringGeofences(geofences:[Geofence])
     
     /**
     Stops monitoring the geofences, and flushes the ones the location module keeps.
@@ -69,6 +73,8 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 }
 
 /// Phoenix coordinate object. CLLocationCoordinate2D can't be used as an optional.
+/// Furthermore, not providing a custom location object would force the developers to
+/// always require CoreLocation even if they don't need to use it.
 @objc(PHXCoordinate) public class PhoenixCoordinate : NSObject {
     
     let longitude:Double
@@ -182,8 +188,8 @@ internal extension Phoenix {
             return self.locationManager.isMonitoringGeofences()
         }
         
-        func startMonitoringGeofences(geofences:[Geofence]) -> Bool {
-            return self.locationManager.startMonitoringGeofences(geofences)
+        func startMonitoringGeofences(geofences:[Geofence]) {
+            self.locationManager.startMonitoringGeofences(geofences)
         }
         
         func stopMonitoringGeofences() {
@@ -223,6 +229,19 @@ internal extension Phoenix {
         func didUpdateLocationWithCoordinate(coordinate:PhoenixCoordinate) {
             
         }
+        
+        func didStartMonitoringGeofence(geofence:Geofence) {
+            self.delegate?.phoenixLocation?(self, didStartMonitoringGeofence: geofence)
+        }
+        
+        func didFailMonitoringGeofence(geofence:Geofence) {
+            self.delegate?.phoenixLocation?(self, didFailMonitoringGeofence: geofence)
+        }
+        
+        func didStopMonitoringGeofence(geofence:Geofence) {
+            self.delegate?.phoenixLocation?(self, didStopMonitoringGeofence: geofence)
+        }
+
     }
     
 }
