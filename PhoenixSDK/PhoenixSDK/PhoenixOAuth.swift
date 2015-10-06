@@ -29,6 +29,7 @@ protocol PhoenixOAuthProtocol {
     func isAuthenticated() -> Bool
     func updateCredentials(withUsername username: String, password: String)
     func updateWithResponse(response: JSONDictionary?) -> Bool
+    func store()
 }
 
 
@@ -68,12 +69,13 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
         return true
     }
     
-    class func reset(storage: PhoenixOAuthStorage) {
-        storage.accessToken = nil
-        storage.refreshToken = nil
-        storage.username = nil
-        storage.password = nil
-        storage.userId = nil
+    class func reset(var oauth: PhoenixOAuthProtocol) {
+        oauth.accessToken = nil
+        oauth.refreshToken = nil
+        oauth.username = nil
+        oauth.password = nil
+        oauth.userId = nil
+        oauth.store()
     }
     
     func updateCredentials(withUsername username: String, password: String) {
@@ -82,6 +84,7 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
         self.password = password
         // Reset userId, could be a different server but same username
         self.userId = nil
+        store()
     }
     
     func updateWithResponse(response: JSONDictionary?) -> Bool {
@@ -102,18 +105,15 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
         return true
     }
     
-    private func store() {
-        assert(accessToken != nil)
+    func store() {
         storage.accessToken = accessToken
         if tokenType != .Application {
             // Assert we have required information.
-            assert(refreshToken != nil && username != nil)
             storage.refreshToken = refreshToken
             storage.username = username
             storage.userId = userId
             if tokenType == .SDKUser {
                 // Only store SDKUser passwords.
-                assert(password != nil)
                 storage.password = password
             }
         }

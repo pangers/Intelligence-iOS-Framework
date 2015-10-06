@@ -183,7 +183,7 @@ extension Phoenix {
         
         @objc func logout() {
             network.oauthProvider.developerLoggedIn = false
-            PhoenixOAuth.reset(PhoenixKeychain(account: PhoenixOAuthTokenType.LoggedInUser.rawValue))
+            PhoenixOAuth.reset(network.oauthProvider.loggedInUserOAuth)
         }
         
         
