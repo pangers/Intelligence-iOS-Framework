@@ -96,7 +96,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -136,7 +136,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -177,7 +177,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -213,7 +213,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -247,7 +247,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -283,7 +283,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -317,7 +317,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create request
         let request = NSURLRequest.phx_URLRequestForAnalytics(configuration!, json: eventsJSON).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock

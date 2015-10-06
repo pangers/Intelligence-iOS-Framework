@@ -103,7 +103,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         query.setDefaultValues()
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth(), configuration: configuration, network: network, query: query).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
@@ -129,7 +129,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth(), configuration: configuration, network: network, query: query).URL!
         
-        // Mock 200 on auth
+        // Mock a valid token
         mockValidTokenStorage()
         
         // Mock
