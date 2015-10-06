@@ -24,21 +24,18 @@
     }
     
     NSParameterAssert(err == nil && phoenix != nil);
-
-    // Initialize the manager responsible for Phoenix and Location Manager, calling 'startup' method.
-    [PHXPhoenixManager setupPhoenix:phoenix];
     
     // Start phoenix, will throw a network error if something is configured incorrectly.
     [phoenix startup:^(NSError * _Nonnull error) {
         NSLog(@"Fundamental error occurred: %@", error);
-
-        // Track test event.
-        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
-        [phoenix.analytics track:myTestEvent];
     }];
     
     [PHXPhoenixManager setupPhoenix:phoenix];
-    
+
+    // Track test event.
+    PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+    [phoenix.analytics track:myTestEvent];
+
 	return YES;
 }
 
