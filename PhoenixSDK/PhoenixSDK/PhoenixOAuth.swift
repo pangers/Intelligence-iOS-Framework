@@ -32,17 +32,19 @@ internal class PhoenixOAuth {
     
     init(tokenType:PhoenixOAuthTokenType, tokenStorage:TokenStorage) {
         self.tokenType = tokenType
-        let keychain = tokenStorage
-        accessToken = keychain.accessToken
+        let storage = tokenStorage
+        accessToken = storage.accessToken
         
         // Application User only has 'accessToken' they don't care about refresh tokens.
         if tokenType != .Application {
+            
             // SDKUser and LoggedInUser have 'username'
-            refreshToken = keychain.refreshToken
-            username = keychain.username
+            refreshToken = storage.refreshToken
+            username = storage.username
+            
             if tokenType == .SDKUser {
                 // SDKUser also has a 'password'
-                password = keychain.password
+                password = storage.password
             }
         }
     }
