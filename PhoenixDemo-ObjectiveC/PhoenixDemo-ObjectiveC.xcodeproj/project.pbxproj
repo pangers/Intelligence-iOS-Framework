@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
+		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; settings = {ASSET_TAGS = (); }; };
 		7FDAAB051B5D360800DF2BE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB041B5D360800DF2BE6 /* main.m */; };
 		7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */; };
 		7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */; };
@@ -16,7 +18,7 @@
 		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
-		BB77B9471BC3B78400B53ABE /* LocationModule.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* LocationModule.storyboard */; settings = {ASSET_TAGS = (); }; };
+		BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* Location.storyboard */; settings = {ASSET_TAGS = (); }; };
 		BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */; settings = {ASSET_TAGS = (); }; };
 		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; settings = {ASSET_TAGS = (); }; };
 		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
@@ -41,6 +43,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		455D85F51BC2D73C00A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
+		455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXScreenViewedViewController.h; sourceTree = "<group>"; };
+		455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXScreenViewedViewController.m; sourceTree = "<group>"; };
 		7FDAAB001B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoenixDemo-ObjectiveC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FDAAB041B5D360800DF2BE6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -56,7 +61,7 @@
 		BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXPhoenixManager.m; sourceTree = "<group>"; };
 		BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXViewUserViewController.h; sourceTree = "<group>"; };
 		BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXViewUserViewController.m; sourceTree = "<group>"; };
-		BB77B9461BC3B78400B53ABE /* LocationModule.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LocationModule.storyboard; sourceTree = "<group>"; };
+		BB77B9461BC3B78400B53ABE /* Location.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Location.storyboard; sourceTree = "<group>"; };
 		BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationModuleViewController.h; sourceTree = "<group>"; };
 		BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXLocationModuleViewController.m; sourceTree = "<group>"; };
 		BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationGeofenceQueryViewController.h; sourceTree = "<group>"; };
@@ -83,6 +88,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		455D85F71BC2D74100A64B96 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
+				455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */,
+				455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
 		7FDAAAF71B5D360800DF2BE6 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +122,7 @@
 				BB0A23791B70B89F00CE0C81 /* Phoenix */,
 				BB0A236E1B70B1A400CE0C81 /* Identity */,
 				BB77B9451BC3B76D00B53ABE /* Location */,
+				455D85F71BC2D74100A64B96 /* Analytics */,
 				FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
 				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
@@ -155,7 +171,7 @@
 		BB77B9451BC3B76D00B53ABE /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				BB77B9461BC3B78400B53ABE /* LocationModule.storyboard */,
+				BB77B9461BC3B78400B53ABE /* Location.storyboard */,
 				BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */,
 				BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */,
 				BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */,
@@ -223,11 +239,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */,
+				455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */,
 				FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */,
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
 				7FDAAB0E1B5D360800DF2BE6 /* Main.storyboard in Resources */,
-				BB77B9471BC3B78400B53ABE /* LocationModule.storyboard in Resources */,
+				BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +263,7 @@
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
 				BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */,
 				BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */,
-				BB0A23771B70B25F00CE0C81 /* PHXCreateUserViewController.m in Sources */,
+				455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */,
 				7FDAAB051B5D360800DF2BE6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,6 +271,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		455D85F41BC2D73C00A64B96 /* Analytics.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				455D85F51BC2D73C00A64B96 /* Base */,
+			);
+			name = Analytics.storyboard;
+			sourceTree = "<group>";
+		};
 		7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

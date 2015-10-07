@@ -18,6 +18,13 @@ class MockAnalyticsModule: NSObject, PhoenixAnalytics {
         trackedEvents += [event]
     }
     
+    /// Track user engagement and behavioral insight.
+    /// - parameter screenName: An identifier for the screen.
+    /// - parameter viewingDuration: The time (in seconds) spent on the screen.
+    func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
+        
+    }
+    
     func startup(completion: (success: Bool) -> ()) {
         completion(success: true)
     }

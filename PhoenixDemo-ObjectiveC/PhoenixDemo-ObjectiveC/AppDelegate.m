@@ -36,7 +36,7 @@
         [PHXPhoenixManager setupPhoenix:phoenix];
         
         // Track test event.
-        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
         [phoenix.analytics track:myTestEvent];
     }];
     
