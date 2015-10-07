@@ -142,11 +142,6 @@ internal extension Phoenix {
             lastLocation = userLocation
         }
         
-        deinit {
-            locationManager.stopUpdatingLocation()
-            locationManager.stopMonitoringGeofences()
-        }
-        
         // MARK:- Startup and shutdown methods.
         
         override func startup(completion: (success: Bool) -> ()) {
@@ -158,8 +153,6 @@ internal extension Phoenix {
         */
         override func shutdown() {
             // Clear geofences.
-            locationManager.stopUpdatingLocation()
-            locationManager.stopMonitoringGeofences()
             geofences = nil
             
             super.shutdown()
