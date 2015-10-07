@@ -340,8 +340,6 @@ This module provides methods for user management within the Phoenix platform. Al
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
 
-These errors will usually have the domain 'IdentityError'. 
-
 #### Login ####
 
 If you have a registered account on the Phoenix platform you will be able to login to that account using the 'login' method:
