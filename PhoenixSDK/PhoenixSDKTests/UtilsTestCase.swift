@@ -19,6 +19,11 @@ class UtilsTestCase: XCTestCase {
         values.shuffle()
         XCTAssert(original == values)
         
+        values.removeAll()
+        XCTAssert(values.count == 0)
+        values.shuffle()
+        XCTAssert(values.count == 0)
+        
         values = ["A","B","C","D","E","F","G","H","I"]
         original = values
         while original == values {
