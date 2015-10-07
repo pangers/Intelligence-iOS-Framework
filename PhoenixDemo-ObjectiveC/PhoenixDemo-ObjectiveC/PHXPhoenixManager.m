@@ -62,16 +62,26 @@
     return [[self sharedInstance] phoenix];
 }
 
+- (void)alertWithMessage:(NSString*)message {
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+    [controller addAction:action];
+    [[[[[UIApplication sharedApplication] windows] firstObject] rootViewController] presentViewController:controller animated:true completion:nil];
+}
+
 - (void)userCreationFailedForPhoenix:(Phoenix *)phoenix {
-    NSLog(@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.");
+    // Existing username, cannot create.
+    [self alertWithMessage:@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly."];
 }
 
 - (void)userLoginRequiredForPhoenix:(Phoenix *)phoenix {
-    NSLog(@"Present login screen or call identity.login with credentials stored in Keychain.");
+    // Present login screen or call identity.login with credentials stored in Keychain.
+    [self alertWithMessage:@"Token expired, you will need to login again."];
 }
 
 - (void)userRoleAssignmentFailedForPhoenix:(Phoenix *)phoenix {
-    NSLog(@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.");
+    // Potentially invalid role specified.
+    [self alertWithMessage:@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly."];
 }
 
 @end

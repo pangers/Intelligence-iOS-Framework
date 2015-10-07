@@ -71,7 +71,6 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     override func setUp() {
         super.setUp()
         self.identity = phoenix?.identity as? Phoenix.Identity
-        mockOAuthProvider.reset()
     }
     
     override func tearDown() {
@@ -171,9 +170,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectation = expectationWithDescription("mock validate")
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
-            XCTAssertNil(error)
+            XCTAssertNil(error, "Unexpected login error")
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -186,8 +187,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -201,9 +204,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectation = expectationWithDescription("mock refresh")
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
-            XCTAssertNil(error)
+            XCTAssertNil(error, "Unexpected login error")
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -217,8 +222,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -231,9 +238,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectation = expectationWithDescription("mock refresh")
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
-            XCTAssert(error != nil)
+            XCTAssert(error != nil, "Expected login error")
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -247,9 +256,11 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectation = expectationWithDescription("mock refresh")
         
         phoenix?.identity?.login(withUsername: fakeUser.username, password: fakeUser.password!, callback: { (user, error) -> Void in
-            XCTAssertNil(error, "Unexpeced login error")
+            XCTAssertNil(error, "Unexpected login error")
+            
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -285,6 +296,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -298,13 +310,14 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockGetUserMe(.BadRequest)
         
         let expectation = expectationWithDescription("Expectation")
+        
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
             XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
-            
             XCTAssert(self.mockOAuthProvider.developerLoggedIn == false)
             
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -319,12 +332,12 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
             XCTAssert(user == nil && error != nil, "Method should return authenticated = false")
-            
             XCTAssertFalse(self.mockOAuthProvider.developerLoggedIn)
             self.assertLoggedOut(self.mockOAuthProvider.loggedInUserOAuth)
             
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -338,10 +351,13 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockRefreshAndLogin(nil, loginStatus: .Success, alternateLoginResponse: badResponse)
         
         let expectation = expectationWithDescription("Expectation")
+        
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -388,6 +404,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -407,6 +424,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -425,8 +443,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -443,8 +463,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
 
@@ -463,8 +485,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
             XCTAssert(error == nil, "Error occured while parsing a success request")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -483,8 +507,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.UserUpdateError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -499,12 +525,12 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockResponseForURL(mockUserUpdateURL(), method: .PUT, responses: mockUserUpdateResponses())
         
         identity?.updateUser(fakeUpdateUser) { (user, error) -> Void in
-            print(error)
-            print(user)
-            //XCTAssert(user != nil, "User not found")
-            //XCTAssert(error == nil, "Error occured while parsing a success request")
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -533,8 +559,10 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            
             expectCallback.fulfill()
         }
+        
         waitForExpectations()
     }
     
