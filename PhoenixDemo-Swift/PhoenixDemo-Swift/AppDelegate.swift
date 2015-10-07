@@ -83,16 +83,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 
     // MARK:- PhoenixDelegate
     
+    func alert(withMessage message: String) {
+        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+        controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+        window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+    }
+    
     func userCreationFailedForPhoenix(phoenix: Phoenix) {
-        print("Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
+        alert(withMessage: "Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
     }
     
     func userLoginRequiredForPhoenix(phoenix: Phoenix) {
-        print("Present login screen or call identity.login with credentials stored in Keychain.")
+        // Present login screen or call identity.login with credentials stored in Keychain.
+        alert(withMessage: "Token expired, you will need to login again.")
     }
     
     func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
-        print("Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.")
+        alert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.")
     }
 }
 
