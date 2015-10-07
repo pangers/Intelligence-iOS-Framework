@@ -12,6 +12,7 @@ import Foundation
 internal final class AssignUserRoleRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
+        super.main()
         assert(sentUser != nil)
         let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)

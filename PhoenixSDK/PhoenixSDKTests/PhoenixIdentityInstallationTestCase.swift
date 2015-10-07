@@ -140,6 +140,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             }
             expectation.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -162,6 +163,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             XCTAssert(error?.code == InstallationError.CreateInstallationError.rawValue, "Expected wrapped 4001 error")
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -184,6 +186,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -289,6 +292,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             XCTAssert(self.mockInstallation.isUpdatedInstallation == false)
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -311,6 +315,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             XCTAssert(error?.code == InstallationError.UpdateInstallationError.rawValue, "Expected wrapped 4002 error")
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     
@@ -333,6 +338,7 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
             expectation.fulfill()
         }
+        
         waitForExpectations()
     }
     

@@ -10,12 +10,16 @@ import Foundation
 
 typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
 
+// Returned operation will be different than operation in some circumstances where tokens expire.
+typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
+
 private let AccessDeniedErrorCode = "access_denied"
 
 internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
     var shouldBreak: Bool = false
     
     // Contextually relevant information to pass between operations.
+    var callback: PhoenixOAuthCallback?
     var oauth: PhoenixOAuthProtocol?
     var configuration: Phoenix.Configuration?
     var network: Network?
@@ -24,6 +28,10 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     }
     
     // MARK: Output Helpers
+    
+    func complete() {
+        callback?(returnedOperation: self)
+    }
     
     func handleError(domain: String, code: Int) -> Bool {
         if let error = outputErrorCode() {

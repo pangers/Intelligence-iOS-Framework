@@ -11,6 +11,7 @@ import Foundation
 internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {
+        super.main()
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
             print("\(oauth!.tokenType) Refresh Token Skipped")
@@ -27,8 +28,13 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
             where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
-                oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
-                    print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+                oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else
+        {
+            if output?.error == nil {
+                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            }
+            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            self.shouldBreak = true
             return
         }
         self.shouldBreak = true

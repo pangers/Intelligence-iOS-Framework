@@ -16,7 +16,6 @@ private enum ConfigurationKey: String {
     case ProjectID = "project_id"
     case Region = "region"
     case CompanyId = "company_id"
-    case UseGeofences = "use_geofences"
     case SDKUserRole = "sdk_user_role"
 }
 

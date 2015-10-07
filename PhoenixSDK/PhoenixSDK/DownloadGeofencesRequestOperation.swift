@@ -9,23 +9,24 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
-internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
+internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, NSCopying {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
-    let queryDetails:GeofenceQuery
+    let queryDetails: GeofenceQuery
 
-    init(configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) {
+    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery, callback: PhoenixOAuthCallback) {
         queryDetails = query
         super.init()
-        self.oauth = network.oauthProvider.bestPasswordGrantOAuth
+        self.callback = callback
+        self.oauth = oauth
         self.configuration = configuration
         self.network = network
     }
     
     override func main() {
+        super.main()
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!, query:queryDetails)
-        
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         
         if handleError(LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue) {
@@ -38,5 +39,9 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
         }
         
         geofences = downloaded
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails, callback: callback!)
     }
 }

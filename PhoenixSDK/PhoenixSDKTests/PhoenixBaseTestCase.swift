@@ -41,7 +41,7 @@ class PhoenixBaseTestCase : XCTestCase {
             try mockConfiguration = PhoenixSDK.Phoenix.Configuration(fromFile: "config", inBundle:NSBundle(forClass: PhoenixBaseTestCase.self))
             mockConfiguration.region = .Europe
             mockOAuthProvider = MockOAuthProvider()
-            mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+            mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
             mockInstallation = MockPhoenixInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)

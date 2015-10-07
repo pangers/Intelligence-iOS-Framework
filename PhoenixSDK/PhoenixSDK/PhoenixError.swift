@@ -65,18 +65,11 @@ public enum RequestError: Int, ErrorType {
     /// The domain passed to NSErrors.
     static let domain = "RequestError"
     
-    /// The request failed with a non 200 error code.
-    case RequestFailedError = 3001
-    
-    /// The authentication operation failed, canceling all 
-    /// pending operations.
-    case AuthenticationFailedError = 3002
-    
     /// Error to return when parsing JSON fails.
-    case ParseError = 3003
+    case ParseError = 3001
     
     /// Error to return if user doesn't have access to a particular API.
-    case AccessDeniedError = 3004
+    case AccessDeniedError = 3002
 }
 
 /// Enumeration to list the errors that can occur in the installation module
@@ -84,8 +77,10 @@ internal enum InstallationError: Int, ErrorType {
     /// The domain passed to NSErrors.
     static let domain = "InstallationError"
     
+    /// Unable to execute create installation, server returned an error.
     case CreateInstallationError = 4001
     
+    /// Unable to execute update installation, server returned an error.
     case UpdateInstallationError = 4002
     
     /// Called 'create' method unnecessarily.
@@ -95,7 +90,7 @@ internal enum InstallationError: Int, ErrorType {
     case AlreadyUpdatedError = 4004
 }
 
-/// These are internal errors thrown by the Geofence class. Hence the custom Enum type.
+/// These are internal errors thrown by the Geofence class.
 internal enum GeofenceError: ErrorType {
     
     /// Error to return when we have a property error. Internal use only.
@@ -105,15 +100,19 @@ internal enum GeofenceError: ErrorType {
     case CannotRequestGeofencesWhenDisabled
 }
 
+/// These are internal errors thrown by the Analytics class.
 internal enum AnalyticsError: Int, ErrorType {
     static let domain = "AnalyticsError"
     
+    /// Sending analytics batch failed.
     case SendAnalyticsError = 5001
 }
 
+/// These are internal errors thrown by the Location class.
 internal enum LocationError: Int, ErrorType {
     static let domain = "LocationError"
     
+    /// Download geofences failed.
     case DownloadGeofencesError = 6001
 }
 

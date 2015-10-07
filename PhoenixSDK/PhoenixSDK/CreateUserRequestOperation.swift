@@ -12,6 +12,7 @@ import Foundation
 internal final class CreateUserRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
+        super.main()
         assert(sentUser != nil)
         let request = NSURLRequest.phx_URLRequestForUserCreation(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)

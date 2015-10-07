@@ -12,6 +12,7 @@ import Foundation
 internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
     
     override func main() {
+        super.main()
         assert(oauth?.tokenType != .Application)
         let request = NSURLRequest.phx_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)

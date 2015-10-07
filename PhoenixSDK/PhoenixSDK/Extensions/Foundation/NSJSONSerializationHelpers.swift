@@ -40,12 +40,7 @@ internal extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData
     private func phx_tryJSON() -> AnyObject? {
-        do {
-            return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)
-        } catch let err {
-            print(err)
-        }
-        return nil
+        return try? NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)
     }
     
     /// - Returns: Array of AnyObjects or nil if cast fails.
@@ -71,11 +66,8 @@ internal extension Dictionary {
     /// Converts a JSON Dictionary to NSData. Accepts any Dictionary type, not just the JSONDictionary we defined.
     /// - Returns: nil or NSData representation of JSON Object.
     func phx_toJSONData() -> NSData? {
-        if let anyObject = self as? AnyObject {
-            do {
-                return try NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
-            } catch {
-            }
+        if let anyObject = self as? AnyObject where NSJSONSerialization.isValidJSONObject(anyObject) {
+            return try? NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
         }
         return nil
     }
@@ -86,11 +78,8 @@ internal extension CollectionType {
     /// Converts a JSON Array to NSData. Accepts any Collection type, not just the JSONArray/JSONDictionaryArray we defined.
     /// - Returns: nil or NSData representation of JSON Object.
     func phx_toJSONData() -> NSData? {
-        if let anyObject = self as? AnyObject {
-            do {
-                return try NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
-            } catch {
-            }
+        if let anyObject = self as? AnyObject where NSJSONSerialization.isValidJSONObject(anyObject) {
+            return try? NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
         }
         return nil
     }

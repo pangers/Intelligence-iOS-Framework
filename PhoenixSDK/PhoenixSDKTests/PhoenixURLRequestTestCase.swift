@@ -24,8 +24,8 @@ class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
         let user = Phoenix.User(companyId: companyId, username: username, password: password, firstName: firstname, lastName: lastname, avatarURL: avatarURL)
         
         let request = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
-
-        XCTAssertEqual(request.URL!.absoluteString, "https://api.phoenixplatform.eu/identity/v1/projects/20/users")
+        
+        XCTAssertEqual(request.URL!.absoluteString, "\(mockConfiguration.region.baseURL())/identity/v1/projects/\(mockConfiguration.projectID)/users")
         
         guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")

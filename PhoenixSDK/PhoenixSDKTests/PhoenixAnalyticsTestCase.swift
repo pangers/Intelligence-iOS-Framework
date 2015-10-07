@@ -66,11 +66,19 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         myQueue.runTimer()
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
+        myQueue.startQueue()    // Call second time to check 'isPaused'.
         myQueue.fire(withCompletion: nil)
         XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
         myQueue.stopQueue()
-        myQueue.fire(withCompletion: nil)
         XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
+        myQueue.enteredForeground(NSNotification(name: "Test", object: nil))
+        XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
+        myQueue.enteredBackground(NSNotification(name: "Test", object: nil))
+        XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
+        myQueue.fire(withCompletion: nil)
+        myQueue.stopQueue() // Call while stopped to check 'isPaused'.
+        
+        XCTAssertNotNil(myQueue.jsonPath())
     }
     
     // MARK:- Geofences
@@ -100,15 +108,14 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -123,15 +130,14 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -147,15 +153,14 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
 	
@@ -164,7 +169,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
 	/// Test if event type is correct and id matches.
 	func testScreenViewedSuccess() {
 		let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-		let analytics = (phoenix?.analytics as! Phoenix.Analytics)
 		
 		// Create event, avoiding queueing/storage system.
 		let screenName = "Unit Test Screen"
@@ -174,29 +178,13 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
 		XCTAssert(event.targetId == screenName)
 		XCTAssert(event.value == viewingDuration)
 		
-		let eventJSON = analytics.prepareEvent(event)
-		ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-		let eventsJSON: JSONDictionaryArray = [eventJSON]
-		let eventsJSONResponse: JSONDictionary = ["TotalRecords": 1, "Data": eventsJSON]
-		let successfulResponse = NSString(data: eventsJSONResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
-		
-		// Create request
-		let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
-		
-		// Mock
-		mockResponseForURL(request,
-			method: HTTPRequestMethod.POST,
-			response: (data: successfulResponse, statusCode:HTTPStatusCode.Success, headers:nil))
-		
-		// Avoid using the EventQueue so we are certain that we are only sending one request here.
-		analytics.sendEvents(eventsJSON) { (error) -> () in
-			XCTAssertNil(error, "Expected success")
-			expectCallback.fulfill()
-		}
-		
-		waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-			// Wait for calls to be made and the callback to be notified
-		}
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
+        mockSendAnalytics(event: event) { (error) -> () in
+            XCTAssertNil(error, "Expected success")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
 	}
 
     // MARK:- Analytics Requests
@@ -205,15 +193,14 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testAnalyticsSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: genericEvent(),
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -221,9 +208,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testAnalyticsInvalidCount() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: genericEvent(),
             eventsJSONResponse: ["TotalRecords": 2, "Data": [genericEvent().toJSON(), genericEvent().toJSON()]],
@@ -233,6 +218,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -240,9 +226,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testAnalyticsInvalidResponse() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.Success,
             event: genericEvent(),
             eventsJSONResponse: ["Blah": "123"],
@@ -252,6 +236,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -259,9 +244,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testAnalyticsError404() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
-        // Mock HTTPStatusCode.Success.rawValue on auth
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        
         mockSendAnalytics(.NotFound,
             event: genericEvent(),
             completion: { (error) -> () in
@@ -270,6 +253,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
             expectCallback.fulfill()
         })
+        
         waitForExpectations()
     }
     
@@ -315,7 +299,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testEventsQueueFireFailed() {
         let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
-            completion(error: NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil))
+            completion(error: NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil))
         }
         let analytics = (phoenix?.analytics as! Phoenix.Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
@@ -326,8 +310,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
             XCTAssertNotNil(error, "Expected error")
-            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected request failed error code")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
+            XCTAssert(error?.code == AnalyticsError.SendAnalyticsError.rawValue, "Expected SendAnalyticsError error code")
+            XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in array")
             queue.loadEvents()
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in file")

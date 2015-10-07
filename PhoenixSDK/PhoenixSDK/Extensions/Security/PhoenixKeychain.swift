@@ -35,10 +35,6 @@ internal final class PhoenixKeychain: TSDKeychain, PhoenixOAuthStorage {
         executeManagedRequest(.Update, keyValues: values)
     }
     
-    private func erase() {
-        executeManagedRequest(.Delete)
-    }
-    
     // Subscript implementation
     @objc subscript(index: String) -> AnyObject? {
         get {

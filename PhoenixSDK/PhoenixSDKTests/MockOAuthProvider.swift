@@ -70,4 +70,20 @@ class MockOAuthProvider: PhoenixOAuthProvider {
             developerLoggedIn = false
         }
     }
+    
+    func isAuthenticated() -> Bool {
+        return true
+    }
+    
+    func updateCredentials(withUsername username: String, password: String) {
+        
+    }
+    
+    func updateWithResponse(response: JSONDictionary?) -> Bool {
+        return true
+    }
+    
+    func store() {
+        
+    }
 }
