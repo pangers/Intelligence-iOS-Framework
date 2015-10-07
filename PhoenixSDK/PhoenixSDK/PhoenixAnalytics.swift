@@ -15,6 +15,10 @@ import Foundation
     /// - parameter event: Event containing information to track.
     func track(event:Phoenix.Event)
     
+	/// Track user engagement and behavioral insight.
+	/// - parameter screenName: An identifier for the screen.
+	/// - parameter viewingDuration: The time (in seconds) spent on the screen.
+	func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval)
 }
 
 internal protocol PhoenixLocationProvider:class {
@@ -69,6 +73,11 @@ internal extension Phoenix {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
         
+		/// Track screen viewed event (externally managed).
+		@objc func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
+			track(Phoenix.ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration))
+		}
+		
         // MARK: Internal
         
         /// Track application open event (internally managed).

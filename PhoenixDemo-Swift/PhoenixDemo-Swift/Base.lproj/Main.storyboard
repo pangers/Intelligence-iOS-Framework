@@ -13,9 +13,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
-                            <tableViewSection id="PBi-wx-xY1">
-                                <cells/>
-                            </tableViewSection>
                             <tableViewSection id="s9J-c6-4Ib">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="aWK-CK-cSn" style="IBUITableViewCellStyleDefault" id="rZE-qy-9st">
@@ -36,6 +33,30 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <segue destination="I3U-ag-Cbz" kind="show" id="bI8-BF-5mC"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="PBi-wx-xY1">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="vaQ-Qf-VA3" style="IBUITableViewCellStyleDefault" id="rMM-8P-Lik">
+                                        <rect key="frame" x="0.0" y="108" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rMM-8P-Lik" id="9qO-tg-GMV">
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Analytics module" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vaQ-Qf-VA3">
+                                                    <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Auu-FX-b8D" kind="show" id="oEG-Gx-n1c"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -70,13 +91,21 @@
             </objects>
             <point key="canvasLocation" x="576" y="563"/>
         </scene>
+        <!--Analytics-->
+        <scene sceneID="vfO-6R-Fgt">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Analytics" id="Auu-FX-b8D" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TCM-Nz-wbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1813" y="396"/>
+        </scene>
         <!--Identity-->
         <scene sceneID="vIV-JZ-MXl">
             <objects>
                 <viewControllerPlaceholder storyboardName="Identity" id="I3U-ag-Cbz" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ugG-NU-10g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2060" y="563"/>
+            <point key="canvasLocation" x="1808" y="353"/>
         </scene>
     </scenes>
 </document>

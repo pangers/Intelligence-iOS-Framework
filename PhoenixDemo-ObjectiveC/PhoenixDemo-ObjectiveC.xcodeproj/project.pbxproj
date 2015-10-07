@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
+		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; settings = {ASSET_TAGS = (); }; };
 		7FDAAB051B5D360800DF2BE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB041B5D360800DF2BE6 /* main.m */; };
 		7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */; };
 		7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */; };
@@ -38,6 +40,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		455D85F51BC2D73C00A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
+		455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXScreenViewedViewController.h; sourceTree = "<group>"; };
+		455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXScreenViewedViewController.m; sourceTree = "<group>"; };
 		7FDAAB001B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoenixDemo-ObjectiveC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FDAAB041B5D360800DF2BE6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -75,6 +80,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		455D85F71BC2D74100A64B96 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
+				455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */,
+				455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
 		7FDAAAF71B5D360800DF2BE6 = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +112,7 @@
 			children = (
 				BB0A23791B70B89F00CE0C81 /* Phoenix */,
 				BB0A236E1B70B1A400CE0C81 /* Identity */,
+				455D85F71BC2D74100A64B96 /* Analytics */,
 				FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
 				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
@@ -203,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */,
+				455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */,
 				FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */,
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
@@ -224,6 +241,7 @@
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
 				FE18F9411B86027D00DCF2EF /* PHXPhoenixLocationManager.m in Sources */,
 				BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */,
+				455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */,
 				7FDAAB051B5D360800DF2BE6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -231,6 +249,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		455D85F41BC2D73C00A64B96 /* Analytics.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				455D85F51BC2D73C00A64B96 /* Base */,
+			);
+			name = Analytics.storyboard;
+			sourceTree = "<group>";
+		};
 		7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
