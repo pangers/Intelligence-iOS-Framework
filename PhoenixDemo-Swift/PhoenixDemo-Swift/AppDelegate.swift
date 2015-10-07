@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {       
         do {
             let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
-            PhoenixManager.startupWithPhoenix(phoenix)
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -39,9 +38,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         // Startup all modules.
         PhoenixManager.phoenix.startup { (success) -> () in
             assert(success, "Phoenix could not startup")
+            
             // Register test event.
             let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
             PhoenixManager.phoenix.analytics.track(testEvent)
+            
+            PhoenixManager.startupWithPhoenix(phoenix)
         }
         
 		return true
