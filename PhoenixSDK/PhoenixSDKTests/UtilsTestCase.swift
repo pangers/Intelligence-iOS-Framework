@@ -14,35 +14,35 @@ class UtilsTestCase: XCTestCase {
 
     func testShuffle() {
         
-        var values = ["A"]
-        var original = values
-        values.shuffle()
-        XCTAssert(original == values)
-        
-        values.removeAll()
-        XCTAssert(values.count == 0)
-        values.shuffle()
-        XCTAssert(values.count == 0)
-        
-        values = ["A","B","C","D","E","F","G","H","I"]
-        original = values
-        while original == values {
+        measureBlock { () -> Void in
+            var values = ["A"]
+            var original = values
             values.shuffle()
+            XCTAssert(original == values)
+            
+            values.removeAll()
+            XCTAssert(values.count == 0)
+            values.shuffle()
+            XCTAssert(values.count == 0)
+            
+            values = ["A","B","C","D","E","F","G","H","I"]
+            original = values
+            while original == values {
+                values.shuffle()
+            }
+            XCTAssert(original != values)
+            XCTAssert(original == values.sort())
+            
+            let immutable = [1,2,3,4,5]
+            let originalNumbers = immutable
+            
+            while immutable.shuffle() == immutable {
+            }
+            
+            XCTAssert(immutable.sort() == originalNumbers)
+            
+            XCTAssert(true)
         }
-        XCTAssert(original != values)
-        XCTAssert(original == values.sort())
-        
-        let immutable = [1,2,3,4,5]
-        let originalNumbers = immutable
-        XCTAssert(immutable != [5,4,3,2,1])
-        
-        while immutable.shuffle() == immutable {
-        }
-        
-        XCTAssert(immutable.sort() == originalNumbers)
-        
-        XCTAssert(true)
-        
     }
     
     func testStringContains() {
