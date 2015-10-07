@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 
 	var window: UIWindow?
     
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {       
+	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         do {
             let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
             
@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 
                 // Register test event.
                 let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
-                PhoenixManager.phoenix.analytics.track(testEvent)
+                phoenix.analytics.track(testEvent)
                 
                 PhoenixManager.startupWithPhoenix(phoenix)
             }
