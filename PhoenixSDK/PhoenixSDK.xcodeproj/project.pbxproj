@@ -50,7 +50,6 @@
 		FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */; };
 		FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */; };
 		FE4DB62B1BC5392E00D7C1C3 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */; settings = {ASSET_TAGS = (); }; };
-		FE5BAC141B74F597000ACBC2 /* confignogeofences.json in Resources */ = {isa = PBXBuildFile; fileRef = FE5BAC131B74F597000ACBC2 /* confignogeofences.json */; };
 		FE65772E1B832C8400E02B03 /* PhoenixAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */; };
 		FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6577301B832EB000E02B03 /* PhoenixEvent.swift */; };
 		FE667E981BC27DAF0094395F /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
@@ -175,7 +174,6 @@
 		FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsRequestOperation.swift; sourceTree = "<group>"; };
 		FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalyticsTestCase.swift; sourceTree = "<group>"; };
 		FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceQuery.swift; sourceTree = "<group>"; };
-		FE5BAC131B74F597000ACBC2 /* confignogeofences.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = confignogeofences.json; sourceTree = "<group>"; };
 		FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalytics.swift; sourceTree = "<group>"; };
 		FE6577301B832EB000E02B03 /* PhoenixEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEvent.swift; sourceTree = "<group>"; };
 		FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignUserRoleRequestOperation.swift; sourceTree = "<group>"; };
@@ -316,7 +314,6 @@
 		BB8FFC521B611A6500E37146 /* Configuration files */ = {
 			isa = PBXGroup;
 			children = (
-				FE5BAC131B74F597000ACBC2 /* confignogeofences.json */,
 				FE22F88B1B5FF71600711EBF /* config.json */,
 				BB27B5AF1B5FFF0A005221EF /* wrongjson.json */,
 				BB8FFC501B611A5E00E37146 /* invalidproperty.json */,
@@ -697,7 +694,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE5BAC141B74F597000ACBC2 /* confignogeofences.json in Resources */,
 				BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */,
 				FE22F88C1B5FF71600711EBF /* config.json in Resources */,
 				BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */,

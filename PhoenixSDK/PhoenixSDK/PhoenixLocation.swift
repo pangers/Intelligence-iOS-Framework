@@ -107,15 +107,12 @@ internal extension Phoenix {
         Will download the geofences and put them in the monitored regions if required.
         */
         override func startup(completion: (success: Bool) -> ()) {
-            super.startup { [weak self, weak configuration] (success) -> () in
+            super.startup { [weak self] (success) -> () in
                 if !success {
                     completion(success: false)
                     return
                 }
-                // TODO: Remove 'usegeofences' flag.
-                if configuration?.useGeofences == true {
-                    self?.downloadGeofences(nil)
-                }
+                self?.downloadGeofences(nil)
             }
             
         }
@@ -214,9 +211,7 @@ internal extension Phoenix {
         }
 
         func didUpdateLocationWithCoordinate(coordinate: PhoenixCoordinate) {
-            if configuration.useGeofences {
-                downloadGeofences(withCoordinates: coordinate, callback: nil)
-            }
+            downloadGeofences(withCoordinates: coordinate, callback: nil)
         }
     }
     

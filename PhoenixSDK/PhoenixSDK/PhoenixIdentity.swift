@@ -29,15 +29,15 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
     
+    /// Get details about logged in user.
+    /// - parameter callback: Will be called with either an error or a user.
+    func getMe(callback: PhoenixUserCallback)
+    
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
     func updateUser(user: Phoenix.User, callback: PhoenixUserCallback)
-    
-    /// Get details about logged in user.
-    /// - parameter callback: Will be called with either an error or a user.
-    func getMe(callback: PhoenixUserCallback)
 }
 
 extension Phoenix {
