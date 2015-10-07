@@ -12,12 +12,17 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     
     var installation: Phoenix.Installation!
     
-    required init(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
+    required init(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
         super.init()
+        self.callback = callback
         self.configuration = configuration
         self.network = network
         self.oauth = oauth
         self.installation = installation
+    }
+    
+    override func main() {
+        super.main()
     }
     
     func parse(withErrorCode errorCode: Int) {
@@ -32,7 +37,7 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!)
+        return self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
     }
     
 }

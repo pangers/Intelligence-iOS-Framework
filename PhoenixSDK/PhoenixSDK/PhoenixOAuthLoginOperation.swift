@@ -11,6 +11,7 @@ import Foundation
 internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
     
     override func main() {
+        super.main()
         assert(oauth != nil && network != nil)
         let request = NSURLRequest.phx_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)

@@ -14,14 +14,16 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, N
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
 
-    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) {
+    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
         super.init()
+        self.callback = callback
         self.oauth = oauth
         self.configuration = configuration
         self.network = network
     }
     
     override func main() {
+        super.main()
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         if handleError(LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue) {
@@ -35,6 +37,6 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, N
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!)
+        return self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
     }
 }

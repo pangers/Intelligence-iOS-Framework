@@ -11,6 +11,7 @@ import Foundation
 internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
     
     override func main() {
+        super.main()
         assert(oauth != nil && network != nil && configuration != nil)
         if (oauth?.accessToken == nil) {
             print("\(oauth!.tokenType) Validate Token Skipped")

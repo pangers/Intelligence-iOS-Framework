@@ -12,6 +12,7 @@ import Foundation
 internal final class UpdateUserRequestOperation: PhoenixUserRequestOperation {
 
     override func main() {
+        super.main()
         assert(network!.oauthProvider.developerLoggedIn, "Update can only be called explicitly by developers currently, and only on an account they have logged into.")
         assert(sentUser != nil)
         let request = NSURLRequest.phx_URLRequestForUserUpdate(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)

@@ -113,15 +113,15 @@ internal final class Network {
         // This method will enqueue an operation and override the completion handler
         // to cover the case that we require reauthentication (HTTP 401). It will then
         // execute the initial completion block when appropriate.
-        let initialBlock = operation.completionBlock
-        operation.completionBlock = { [weak self] in
+        operation.completionBlock = { [weak self, weak operation] in
+            guard let operation = operation else { return }
             // Check if our request failed.
             guard let httpResponse = operation.output?.response as? NSHTTPURLResponse
                 where httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue else
             {
                 // Cannot be handled as an unauthorized error.
                 // Call completion block for original operation.
-                initialBlock?()
+                operation.complete()
                 return
             }
             guard let network = self else { return }
@@ -130,27 +130,34 @@ internal final class Network {
                 // Token is no longer valid and cannot be refreshed without user input.
                 // This will occur if refreshToken fails.
                 // Do not try again. Alert developer.
-                self?.delegate?.userLoginRequired()
+                network.delegate?.userLoginRequired()
                 return
             }
             
             // Attempt to get the pipeline for this operation's OAuth token type.
             // Then execute the login pipeline before trying this operation again.
-            self?.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, completion: { (pipeline) -> () in
+            network.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, completion: { (pipeline) -> () in
                 // Pipeline will be nil if it already exists in the queue.
                 guard let pipeline = pipeline else { return }
                 
-                pipeline.completionBlock = { [weak pipeline, weak network] in
+                pipeline.callback = { [weak pipeline, weak network] (returnedOperation: PhoenixOAuthOperation) in
                     if pipeline?.output?.error == nil {
-                        // Add original operation again, should be called after pipeline succeeds.
                         if operation.conformsToProtocol(NSCopying) {
-                            network?.queue.addOperation(operation.copy() as! NSOperation)
+                            // Add original operation again, should be called after pipeline succeeds.
+                            // Explicitly enqueue here, rather than calling enqueueOperation again (which would result in loop).
+                            let copiedOperation = operation.copy() as! PhoenixOAuthOperation
+                            copiedOperation.completionBlock = { [weak copiedOperation] in
+                                // Always call complete in this case, there is no special logic since we avoid the
+                                // enqueueOperation: method.
+                                copiedOperation?.complete()
+                            }
+                            network?.queue.addOperation(copiedOperation)
                         } else {
                             assertionFailure("Tried to enqueue uncopyable operation")
                         }
                     } else {
                         // Call completion block for original operation.
-                        initialBlock?()
+                        operation.complete()
                     }
                 }
                 

@@ -23,6 +23,9 @@ internal class PhoenixOAuthPipeline: PhoenixOAuthOperation {
         self.oauth = oauth
         self.configuration = configuration
         self.network = network
+        self.completionBlock = { [weak self] in
+            self?.complete()
+        }
     }
     
     override func main() {

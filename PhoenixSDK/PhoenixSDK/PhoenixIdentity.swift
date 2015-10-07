@@ -33,11 +33,11 @@ internal typealias PhoenixInstallationCallback = (installation: Phoenix.Installa
     /// - Parameters:
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func updateUser(user:Phoenix.User, callback:PhoenixUserCallback?)
+    func updateUser(user: Phoenix.User, callback: PhoenixUserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
-    func getMe(callback:PhoenixUserCallback)
+    func getMe(callback: PhoenixUserCallback)
 }
 
 extension Phoenix {
@@ -106,8 +106,7 @@ extension Phoenix {
                     }
                     identity.network.enqueueOperation(applicationPipeline)
                     
-                    // Once complete, lets login/create our SDK User.
-                    applicationPipeline.completionBlock = {
+                    applicationPipeline.callback = { (returnedOperation: PhoenixOAuthOperation) -> () in
                         // Create user if their credentials are empty.
                         identity.createSDKUserIfRequired({ () -> () in
                             // Get pipeline if created or existing.
@@ -119,7 +118,8 @@ extension Phoenix {
                                 }
                                 
                                 identity.network.enqueueOperation(sdkUserPipeline)
-                                sdkUserPipeline.completionBlock = { [weak self] in
+                                
+                                sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
                                     guard let identity = self else {
                                         completion(success: false)
                                         return
@@ -149,35 +149,40 @@ extension Phoenix {
         // MARK:- Login
         
         @objc func login(withUsername username: String, password: String, callback: PhoenixUserCallback) {
-            let oauth = network.oauthProvider.loggedInUserOAuth
+            var oauth = network.oauthProvider.loggedInUserOAuth
             oauth.updateCredentials(withUsername: username, password: password)
             
             network.oauthProvider.developerLoggedIn = false
             
             let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
             
-            pipeline.completionBlock = { [weak pipeline, weak self] in
-                // Clear password from memory.
-                if (pipeline?.oauth?.tokenType == .LoggedInUser) {
-                    pipeline?.oauth?.password = nil
+            pipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
+                guard let returnedPipeline = returnedOperation as? PhoenixOAuthPipeline else {
+                    assertionFailure("Invalid operation returned")
+                    return
                 }
                 
-                if pipeline?.output?.error != nil {
+                // Clear password from memory.
+                if oauth.tokenType == .LoggedInUser {
+                    oauth.password = nil
+                }
+                
+                if returnedPipeline.output?.error != nil {
                     // Failed, tell developer!
-                    guard let domain = pipeline?.output?.error?.domain where domain == IdentityError.domain || domain == RequestError.domain else {
+                    guard let domain = returnedPipeline.output?.error?.domain where domain == IdentityError.domain || domain == RequestError.domain else {
                         // Wrap again
                         callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
                         return
                     }
-                    callback(user: nil, error: pipeline?.output?.error)
+                    callback(user: nil, error: returnedPipeline.output?.error)
                 } else {
                     // Get user me.
-                    self?.getMe({ [weak self] (user, error) -> Void in
+                    self?.getMe({ (user, error) -> Void in
                         // Clear userid if get me fails, otherwise update user id.
-                        pipeline?.oauth?.userId = user?.userId
-                    
+                        oauth.userId = user?.userId
+                        
                         // Logged in only if we have a user.
-                        self?.network.oauthProvider.developerLoggedIn = user?.userId != nil
+                        self?.network.oauthProvider.developerLoggedIn = oauth.userId != nil
                         
                         // Notify developer
                         callback(user: user, error: error)
@@ -196,31 +201,38 @@ extension Phoenix {
         
         // MARK: - User Management
         
-        @objc func updateUser(user: Phoenix.User, callback: PhoenixUserCallback? = nil) {
+        @objc func updateUser(user: Phoenix.User, callback: PhoenixUserCallback) {
             if !user.isValidToUpdate {
-                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+                callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
                 return
             }
             
             if !user.isPasswordSecure() {
-                callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+                callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
                 return
             }
             
-            let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth, configuration: configuration, network: network)
-            operation.completionBlock = { [weak operation] in
-                callback?(user: operation?.user, error: operation?.output?.error)
-            }
+            let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
+                configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                    if let updateOperation = returnedOperation as? UpdateUserRequestOperation {
+                        callback(user: updateOperation.user, error: updateOperation.output?.error)
+                    } else {
+                        assertionFailure("Invalid operation returned")
+                    }
+            })
             
             // Execute the network operation
             network.enqueueOperation(operation)
         }
         
         internal func getMe(oauth: PhoenixOAuthProtocol, callback: PhoenixUserCallback) {
-            let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network)
-            operation.completionBlock = { [weak operation] in
-                callback(user: operation?.user, error: operation?.output?.error)
-            }
+            let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                if let getMeOperation = returnedOperation as? GetUserMeRequestOperation {
+                    callback(user: getMeOperation.user, error: getMeOperation.output?.error)
+                } else {
+                    assertionFailure("Invalid operation returned")
+                }
+            })
             
             // Execute the network operation
             network.enqueueOperation(operation)
@@ -252,29 +264,35 @@ extension Phoenix {
             }
             
             // Create user operation.
-            let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network)
-            operation.completionBlock = { [weak operation] in
-                if operation?.output?.error == nil && operation?.user != nil {
+            let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                guard let createUserOperation = returnedOperation as? CreateUserRequestOperation else {
+                    assertionFailure("Invalid operation returned")
+                    return
+                }
+                if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                     // On successful operation, lets assign users role.
                     // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
-                    let assignOperation = AssignUserRoleRequestOperation(user: operation!.user, oauth: operation!.oauth!, configuration: operation!.configuration!, network: operation!.network!)
-                    assignOperation.completionBlock = { [weak assignOperation, weak self] in
+                    let assignOperation = AssignUserRoleRequestOperation(user: createUserOperation.user, oauth: createUserOperation.oauth!, configuration: createUserOperation.configuration!, network: createUserOperation.network!, callback: { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
+                        guard let assignRoleOperation = returnedOperation as? AssignUserRoleRequestOperation else {
+                            assertionFailure("Invalid operation returned")
+                            return
+                        }
                         // Execute original callback.
                         // If assign role fails, the user will exist but not have any access, there is nothing we can do
                         // if the developer is trying to assign a role that doesn't exist or the server changes in some
                         // unexpected way. We don't receive a unique error code, so just call the delegate on any error.
-                        if assignOperation?.output?.error != nil {
+                        if assignRoleOperation.output?.error != nil {
                             self?.delegate.userRoleAssignmentFailed()
                         } else {
-                            callback?(user: assignOperation?.user, error: assignOperation?.output?.error)
+                            callback?(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
                         }
-                    }
-                    operation!.network!.enqueueOperation(assignOperation)
+                    })
+                    createUserOperation.network!.enqueueOperation(assignOperation)
                 } else {
                     // On failure, simply execute callback.
-                    callback?(user: operation?.user, error: operation?.output?.error)
+                    callback?(user: createUserOperation.user, error: createUserOperation.output?.error)
                 }
-            }
+            })
             
             // Execute the network operation
             network.enqueueOperation(operation)
@@ -292,10 +310,13 @@ extension Phoenix {
                 return
             }
             
-            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network)
-            operation.completionBlock = { [weak operation, weak self] in
-                callback?(installation: self?.installation, error: operation?.output?.error)
-            }
+            let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                if let createInstallationOperation = returnedOperation as? CreateInstallationRequestOperation {
+                    callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
+                } else {
+                    assertionFailure("Invalid operation returned")
+                }
+            })
             
             // Execute the network operation
             network.enqueueOperation(operation)
@@ -311,10 +332,13 @@ extension Phoenix {
             }
             
             // If this call fails, it will retry again the next time we open the app.
-            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network)
-            operation.completionBlock = { [weak operation, weak self] in
-                callback?(installation: self?.installation, error: operation?.output?.error)
-            }
+            let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                if let updateInstallationOperation = returnedOperation as? UpdateInstallationRequestOperation {
+                    callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
+                } else {
+                    assertionFailure("Invalid operation returned")
+                }
+            })
             
             // Execute the network operation
             network.enqueueOperation(operation)

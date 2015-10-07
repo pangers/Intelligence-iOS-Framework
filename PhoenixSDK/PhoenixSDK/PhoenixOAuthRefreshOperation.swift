@@ -11,6 +11,7 @@ import Foundation
 internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {
+        super.main()
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
             print("\(oauth!.tokenType) Refresh Token Skipped")
