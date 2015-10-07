@@ -55,6 +55,7 @@ internal class PhoenixDelegateWrapper: PhoenixInternalDelegate {
     internal func userRoleAssignmentFailed() {
         delegate.userRoleAssignmentFailedForPhoenix(phoenix)
     }
+    
 }
 
 

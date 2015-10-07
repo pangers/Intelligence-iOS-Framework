@@ -270,6 +270,13 @@ The Phoenix SDK is composed of several modules which can be used as necessary by
 
 Note: Developers are responsible for ensuring the callbacks are executed on the correct thread, i.e. anything related to the UI will need to be dispatched on the main thread.
 
+In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
+
+* RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Phoenix Platform are incorrectly configured. **Developer is responsible to fix these issues.**
+* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
+
+These errors will be wrapped within an NSError using as domain RequestError.domain.
+
 
 ## Analytics Module ##
 
@@ -333,13 +340,7 @@ This module provides methods for user management within the Phoenix platform. Al
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
 
-In addition to the errors specified by each individual method, you may also get one of the following errors if the request fails:
-
-* RequestError.RequestFailedError: Unable to receive a response from the server, could be due to local connection or server issues.
-* RequestError.ParseError: Unable to parse the response of the call.
-
-These errors will be wrapped within an NSError using as domain RequestError.domain.
-
+These errors will usually have the domain 'IdentityError'. 
 
 #### Login ####
 
@@ -370,10 +371,7 @@ phoenix.identity.login(withUsername: username, password: password, callback: { (
 
 The 'login' method can return the following additional errors:
 
-* RequestError.AuthenticationFailedError: There was an issue that occurred during login, could be due to incorrect credentials.
-
-This error will be wrapped within an NSError using as domain RequestError.domain.
-
+* IdentityError.LoginFailed: There was an issue that occurred during login, could be due to incorrect credentials.
 
 
 #### Logout ####
@@ -437,10 +435,6 @@ The 'getMe' method can return the following additional errors:
 
 * IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
 
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
-
 
 #### Update User ####
 
@@ -480,9 +474,6 @@ The 'updateUser' method can return the following additional errors:
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
 
 
 ## Location Module ##
