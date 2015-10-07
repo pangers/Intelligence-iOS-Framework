@@ -428,6 +428,28 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    func testCreateUserSuccessAssignRoleFailure() {
+        let oauth = mockOAuthProvider.applicationOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        let sdkUser = Phoenix.User(companyId: 1)
+        
+        // Mock auth
+        mockOAuthProvider.fakeAccessToken(oauth)
+        
+        // Create
+        mockUserCreation(.Success)
+        mockUserAssignRole(.BadRequest)
+        
+        identity!.createUser(sdkUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "User not found")
+            XCTAssert(error != nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
     func testCreateUserFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let oauth = mockOAuthProvider.applicationOAuth
@@ -481,6 +503,8 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         
         // Mock
         mockUserUpdate()
+        
+        XCTAssert(Phoenix.User.isUserIdValid(fakeUpdateUser.userId))
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -571,6 +595,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssertFalse(Phoenix.User(companyId: 0, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No company allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: "", password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No username allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No password allows to create user")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: nil, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No password allows to create user")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: "", lastName: mockLastName, avatarURL: mockAvatarURL).isValidToCreate, "No firstname allows to create user")
         XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: "", avatarURL: mockAvatarURL).isValidToCreate, "No lastname allows to create user")
         XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "").isValidToCreate, "No Avatar blocks to create user")
@@ -584,6 +609,9 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123456789", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only numbers passes the check")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "abcdefghf", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only letters passes the check")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "abc", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only letters below the size passes the check")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "No password")
+        XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: nil, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "No password")
+        
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Only  numbers below the size passes the check")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "test123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Numbers and letters below the size passes the check")
         XCTAssertFalse(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "testing123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isPasswordSecure(), "Letters with no uppercase, numbers and more than 8 characters passes the test")

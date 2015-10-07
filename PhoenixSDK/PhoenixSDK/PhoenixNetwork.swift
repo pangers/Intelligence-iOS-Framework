@@ -55,7 +55,7 @@ internal final class Network {
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
-    private func queuedOAuthOperations() -> [PhoenixOAuthOperation] {
+    internal func queuedOAuthOperations() -> [PhoenixOAuthOperation] {
         return queue.operations.filter({
             $0.isMemberOfClass(PhoenixOAuthPipeline.self) == false &&
                 $0.isKindOfClass(PhoenixOAuthOperation.self) == true })
@@ -63,7 +63,7 @@ internal final class Network {
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
-    private func queuedOAuthPipelines() -> [PhoenixOAuthPipeline] {
+    internal func queuedOAuthPipelines() -> [PhoenixOAuthPipeline] {
         return queue.operations.filter({
             $0.isMemberOfClass(PhoenixOAuthPipeline.self) == true })
             .map({ $0 as! PhoenixOAuthPipeline })
@@ -83,7 +83,7 @@ internal final class Network {
         
         // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
         if self.queuedOAuthPipelines()
-            .filter({ $0.oauth != nil && $0.oauth?.tokenType != oauth.tokenType })
+            .filter({ $0.oauth != nil && $0.oauth?.tokenType == oauth.tokenType })
             .count > 0
         {
             // Nothing we can do, we are already logging in with this token type.

@@ -66,11 +66,19 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         myQueue.runTimer()
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
+        myQueue.startQueue()    // Call second time to check 'isPaused'.
         myQueue.fire(withCompletion: nil)
         XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
         myQueue.stopQueue()
-        myQueue.fire(withCompletion: nil)
         XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
+        myQueue.enteredForeground(NSNotification(name: "Test", object: nil))
+        XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
+        myQueue.enteredBackground(NSNotification(name: "Test", object: nil))
+        XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
+        myQueue.fire(withCompletion: nil)
+        myQueue.stopQueue() // Call while stopped to check 'isPaused'.
+        
+        XCTAssertNotNil(myQueue.jsonPath())
     }
     
     // MARK:- Geofences

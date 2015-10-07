@@ -50,6 +50,7 @@
 		FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */; };
 		FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */; };
 		FE4DB62B1BC5392E00D7C1C3 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */; settings = {ASSET_TAGS = (); }; };
+		FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */; settings = {ASSET_TAGS = (); }; };
 		FE65772E1B832C8400E02B03 /* PhoenixAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */; };
 		FE6577311B832EB000E02B03 /* PhoenixEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6577301B832EB000E02B03 /* PhoenixEvent.swift */; };
 		FE667E981BC27DAF0094395F /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
@@ -174,6 +175,7 @@
 		FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsRequestOperation.swift; sourceTree = "<group>"; };
 		FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalyticsTestCase.swift; sourceTree = "<group>"; };
 		FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceQuery.swift; sourceTree = "<group>"; };
+		FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetworkTestCase.swift; sourceTree = "<group>"; };
 		FE65772D1B832C8400E02B03 /* PhoenixAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixAnalytics.swift; sourceTree = "<group>"; };
 		FE6577301B832EB000E02B03 /* PhoenixEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEvent.swift; sourceTree = "<group>"; };
 		FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignUserRoleRequestOperation.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 		BBD7AF1E1B6A2C2300F5B9C1 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */,
 				BB0A238E1B70F12600CE0C81 /* PhoenixURLRequestTestCase.swift */,
 			);
 			name = Network;
@@ -779,6 +782,7 @@
 				FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */,
 				FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */,
 				FE3449611BC4269B00449445 /* PhoenixOAuthTestCase.swift in Sources */,
+				FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */,
 				FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */,
 				FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */,
 			);

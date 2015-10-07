@@ -12,6 +12,27 @@ import XCTest
 
 class UtilsTestCase: XCTestCase {
 
+    func testShuffle() {
+        
+        var values = ["A"]
+        var original = values
+        values.shuffle()
+        XCTAssert(original == values)
+        
+        values = ["A","B","C","D","E","F","G","H","I"]
+        original = values
+        while original == values {
+            values.shuffle()
+        }
+        XCTAssert(original != values)
+        
+        let immutable = [1,2,3,4,5]
+        while immutable.shuffle() == immutable {
+        }
+        XCTAssert(true)
+        
+    }
+    
     func testStringContains() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -47,6 +68,14 @@ class UtilsTestCase: XCTestCase {
         defaults[key] = nil
         
         XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
+    }
+    
+    func testDictionaryToJSONData() {
+        
+        var dict = [NSString: NSObject]()
+        dict["TEST"] = NSObject()
+        XCTAssert(dict.phx_toJSONData() == nil)
+        
     }
     
     func testDataToJSONArray() {

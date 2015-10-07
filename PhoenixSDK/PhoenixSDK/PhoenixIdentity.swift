@@ -283,6 +283,7 @@ extension Phoenix {
                         // unexpected way. We don't receive a unique error code, so just call the delegate on any error.
                         if assignRoleOperation.output?.error != nil {
                             self?.delegate.userRoleAssignmentFailed()
+                            callback?(user: nil, error: assignRoleOperation.output?.error)
                         } else {
                             callback?(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
                         }

@@ -37,11 +37,11 @@ class MockPhoenixDelegateWrapper: PhoenixDelegateWrapper {
 }
 
 class MockPhoenixDelegate: PhoenixDelegate {
-    private var creation = false, login = false, role = false
+    private var creation = true, login = true, role = true
     init(
-        expectCreationFailed: Bool = false,
-        expectLoginFailed: Bool = false,
-        expectRoleFailed: Bool = false)
+        expectCreationFailed: Bool = true,
+        expectLoginFailed: Bool = true,
+        expectRoleFailed: Bool = true)
     {
         creation = expectCreationFailed
         login = expectLoginFailed
