@@ -514,7 +514,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
-    func testUpdateUserFailureLoginPassedUpdateSuccess() {
+    func testUpdateUserFailureRefreshTokenPassedUpdateUserSuccess() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
