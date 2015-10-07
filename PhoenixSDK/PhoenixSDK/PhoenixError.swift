@@ -55,7 +55,7 @@ public enum IdentityError: Int, ErrorType {
     /// Login failed.
     case LoginFailed = 2006
 
-    /// The user role assignment operation failed. Internal only, delegate will be notified of these errors.
+    /// The user role assignment operation failed.
     case UserRoleAssignmentError = 2007
 }
 

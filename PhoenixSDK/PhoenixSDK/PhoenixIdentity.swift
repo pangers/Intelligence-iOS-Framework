@@ -64,9 +64,6 @@ extension Phoenix {
                 // Need to create user first.
                 let sdkUser = Phoenix.User(companyId: configuration.companyId)
                 createUser(sdkUser, callback: { [weak sdkUser, weak self] (serverUser, error) -> Void in
-                    // Note: Assign role will call delegate method if it fails because the Phoenix Intelligence
-                    // backend may be configured incorrectly.
-                    // This callback will NOT be called if that happens because the error is unrecoverable.
                     guard let sdkUser = sdkUser else { return }
                     if serverUser != nil {
                         // Store credentials in keychain.
@@ -280,9 +277,13 @@ extension Phoenix {
                         // Execute original callback.
                         // If assign role fails, the user will exist but not have any access, there is nothing we can do
                         // if the developer is trying to assign a role that doesn't exist or the server changes in some
-                        // unexpected way. We don't receive a unique error code, so just call the delegate on any error.
+                        // unexpected way.
                         if assignRoleOperation.output?.error != nil {
+                            // Note: Assign role will also call a delegate method if it fails because the Phoenix Intelligence
+                            // backend may be configured incorrectly.
+                            // We don't receive a unique error code, so just call the delegate on any error.
                             self?.delegate.userRoleAssignmentFailed()
+                            // Also call callback, so developer doesn't get stuck waiting for a response.
                             callback?(user: nil, error: assignRoleOperation.output?.error)
                         } else {
                             callback?(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
