@@ -25,10 +25,17 @@ class UtilsTestCase: XCTestCase {
             values.shuffle()
         }
         XCTAssert(original != values)
+        XCTAssert(original == values.sort())
         
         let immutable = [1,2,3,4,5]
+        let originalNumbers = immutable
+        XCTAssert(immutable != [5,4,3,2,1])
+        
         while immutable.shuffle() == immutable {
         }
+        
+        XCTAssert(immutable.sort() == originalNumbers)
+        
         XCTAssert(true)
         
     }
