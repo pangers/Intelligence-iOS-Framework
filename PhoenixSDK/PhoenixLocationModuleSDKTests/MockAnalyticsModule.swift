@@ -18,8 +18,8 @@ class MockAnalyticsModule: NSObject, PhoenixAnalytics {
         trackedEvents += [event]
     }
     
-    func startup() {
-        
+    func startup(completion: (success: Bool) -> ()) {
+        completion(success: true)
     }
     
     func shutdown() {

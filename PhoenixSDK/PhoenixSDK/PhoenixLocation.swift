@@ -68,7 +68,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     var geofences: [Geofence]? { get }
     
     /// The delegate that will be notified upon entering/exiting a geofence.
-    var delegate:PhoenixLocationDelegate? { get set }
+    var locationDelegate:PhoenixLocationDelegate? { get set }
 
 }
 
@@ -102,7 +102,7 @@ internal extension Phoenix {
         /// The last coordinate we received.
         private var lastLocation:PhoenixCoordinate?
         
-        var delegate:PhoenixLocationDelegate?
+        var locationDelegate:PhoenixLocationDelegate?
         
         /// A reference to the analytics module so we can track the geofences entered/exited events
         internal weak var analytics:PhoenixAnalytics?
@@ -133,9 +133,9 @@ internal extension Phoenix {
         /// - parameter configuration:    Configuration used to configure requests.
         /// - parameter geofenceCallback: Called on enter/exit of geofence.
         /// - returns: Returns a Location object.
-        internal init(withNetwork network:Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
+        internal init(withDelegate delegate:PhoenixInternalDelegate,network:Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
             self.locationManager = locationManager
-            super.init(withNetwork: network, configuration: configuration)
+            super.init(withDelegate:delegate, network: network, configuration: configuration)
             self.locationManager.delegate = self
             
             // Initialize the last known location with the user's one.
@@ -149,11 +149,8 @@ internal extension Phoenix {
         
         // MARK:- Startup and shutdown methods.
         
-        /**
-        Will download the geofences and put them in the monitored regions if required.
-        */
-        override func startup() {
-            super.startup()
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup(completion)
         }
         
         /**
@@ -215,13 +212,13 @@ internal extension Phoenix {
         // MARK:- PhoenixLocationManagerDelegate
 
         func didEnterGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-            self.delegate?.phoenixLocation?(self, didEnterGeofence: geofence)
+            self.locationDelegate?.phoenixLocation?(self, didEnterGeofence: geofence)
             self.enteredGeofences[geofence.id] = geofence
             self.trackGeofenceEntered(geofence)
         }
         
         func didExitGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-            self.delegate?.phoenixLocation?(self, didExitGeofence: geofence)
+            self.locationDelegate?.phoenixLocation?(self, didExitGeofence: geofence)
             self.enteredGeofences[geofence.id] = nil
             self.trackGeofenceExited(geofence)
         }
@@ -231,15 +228,15 @@ internal extension Phoenix {
         }
         
         func didStartMonitoringGeofence(geofence:Geofence) {
-            self.delegate?.phoenixLocation?(self, didStartMonitoringGeofence: geofence)
+            self.locationDelegate?.phoenixLocation?(self, didStartMonitoringGeofence: geofence)
         }
         
         func didFailMonitoringGeofence(geofence:Geofence) {
-            self.delegate?.phoenixLocation?(self, didFailMonitoringGeofence: geofence)
+            self.locationDelegate?.phoenixLocation?(self, didFailMonitoringGeofence: geofence)
         }
         
         func didStopMonitoringGeofence(geofence:Geofence) {
-            self.delegate?.phoenixLocation?(self, didStopMonitoringGeofence: geofence)
+            self.locationDelegate?.phoenixLocation?(self, didStopMonitoringGeofence: geofence)
         }
 
     }

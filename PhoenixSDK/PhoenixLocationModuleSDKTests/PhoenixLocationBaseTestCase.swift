@@ -13,7 +13,7 @@ import OHHTTPStubs
 typealias MockCallback = (()->Void)
 typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
 
-class PhoenixLocationBaseTestCase : XCTestCase {
+class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     
     // MARK:- Test data
     
@@ -38,7 +38,7 @@ class PhoenixLocationBaseTestCase : XCTestCase {
         mockLocationManager = MockCLLocationManager()
         configuration = mockConfiguration()
         network = mockNetwork();
-        location = Phoenix.Location(withNetwork: network, configuration: configuration, locationManager: PhoenixLocationManager(locationManager:mockLocationManager))
+        location = Phoenix.Location(withDelegate: self, network: network, configuration: configuration, locationManager: PhoenixLocationManager(locationManager:mockLocationManager))
     }
     
     override func tearDown() {
@@ -130,16 +130,22 @@ class PhoenixLocationBaseTestCase : XCTestCase {
 //        storage.tokenExpirationDate = NSDate(timeIntervalSinceNow: 10)
     }
 
-    func mockOAuth() ->PhoenixOAuth {
-        return PhoenixOAuth(tokenType: .Application, tokenStorage:storage)
+    func mockOAuth() -> MockOAuthProvider {
+        let oauth = MockOAuthProvider()
+        oauth.fakeAccessToken(oauth.sdkUserOAuth)
+        return oauth
     }
     
     func mockNetwork() -> Network {
-        return Network()
+        return Network(delegate: self, oauthProvider: mockOAuth())
     }
     
     func mockConfiguration() -> Phoenix.Configuration {
         return try! Phoenix.Configuration(fromFile: "config", inBundle: NSBundle(forClass: PhoenixLocationDownloadGeofencesSDKTests.self))
     }
-
+    
+    // MARK:- PhoenixInternalDelegate
+    func userCreationFailed() {}
+    func userLoginRequired() {}
+    func userRoleAssignmentFailed() {}
 }

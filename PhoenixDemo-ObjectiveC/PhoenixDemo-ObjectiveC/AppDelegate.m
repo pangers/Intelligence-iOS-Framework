@@ -9,13 +9,16 @@
 #import "AppDelegate.h"
 #import "PHXPhoenixManager.h"
 
-@implementation AppDelegate
+@interface AppDelegate () <PHXPhoenixDelegate>
 
+@end
+
+@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Attempt to instantiate Phoenix from file.
     NSError *err;
-    Phoenix* phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+    Phoenix* phoenix = [[Phoenix alloc] initWithDelegate:self file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
     
     if (err != nil) {
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
@@ -26,17 +29,33 @@
     NSParameterAssert(err == nil && phoenix != nil);
     
     // Start phoenix, will throw a network error if something is configured incorrectly.
-    [phoenix startup:^(NSError * _Nonnull error) {
-        NSLog(@"Fundamental error occurred: %@", error);
+    [phoenix startup:^(BOOL success) {
+        NSAssert(success, @"An error occured while initializing Phoenix.");
+        
+        // Setup phoenix
+        [PHXPhoenixManager setupPhoenix:phoenix];
+        
+        // Track test event.
+        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
+        [phoenix.analytics track:myTestEvent];
     }];
     
-    [PHXPhoenixManager setupPhoenix:phoenix];
-
-    // Track test event.
-    PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:5 metadata:nil];
-    [phoenix.analytics track:myTestEvent];
-
 	return YES;
+}
+
+/// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
+- (void)userCreationFailedForPhoenix:(Phoenix * __nonnull)phoenix {
+    
+}
+
+/// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
+- (void)userLoginRequiredForPhoenix:(Phoenix * __nonnull)phoenix {
+    
+}
+
+/// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
+- (void)userRoleAssignmentFailedForPhoenix:(Phoenix * __nonnull)phoenix {
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

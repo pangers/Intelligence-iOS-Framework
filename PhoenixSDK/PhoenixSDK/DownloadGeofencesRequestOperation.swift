@@ -18,7 +18,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation {
     init(configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) {
         queryDetails = query
         super.init()
-        self.oauth = network.bestSDKUserOAuth
+        self.oauth = network.oauthProvider.bestPasswordGrantOAuth
         self.configuration = configuration
         self.network = network
     }

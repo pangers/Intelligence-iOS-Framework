@@ -4,5 +4,6 @@
     "application_id": "adb",
     "project_id": 20,
     "region": "EU",
+    "sdk_user_role": 1008,
     "company_id": 5
 }

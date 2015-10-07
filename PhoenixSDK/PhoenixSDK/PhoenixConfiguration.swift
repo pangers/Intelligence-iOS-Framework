@@ -17,6 +17,7 @@ private enum ConfigurationKey: String {
     case Region = "region"
     case CompanyId = "company_id"
     case UseGeofences = "use_geofences"
+    case SDKUserRole = "sdk_user_role"
 }
 
 public extension Phoenix {
@@ -40,6 +41,9 @@ public extension Phoenix {
         
         /// The application ID
         public var applicationID = 0
+        
+        /// The role ID to assign to users the SDK creates
+        public var sdkUserRole = 0
         
         /// The region
         public var region:Region
@@ -81,6 +85,7 @@ public extension Phoenix {
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
             copy.companyId = companyId
+            copy.sdkUserRole = sdkUserRole
             return copy
         }
         
@@ -117,6 +122,7 @@ public extension Phoenix {
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
+            self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
         }
         
         /// - Returns: True if the configuration is correct and can be used to initialize
@@ -129,7 +135,7 @@ public extension Phoenix {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == .NoRegion || companyId <= 0
+                applicationID <= 0 || region == .NoRegion || companyId <= 0 || sdkUserRole <= 0
         }
         
         /// - Returns: Optional base URL to call.

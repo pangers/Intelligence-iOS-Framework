@@ -13,20 +13,25 @@ internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
     override func main() {
         assert(oauth != nil && network != nil && configuration != nil)
         if (oauth?.accessToken == nil) {
-            print("Validate Token Skipped")
+            print("\(oauth!.tokenType) Validate Token Skipped")
             return
         }
         let request = NSURLRequest.phx_URLRequestForValidate(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
+        if handleError(IdentityError.domain, code: IdentityError.LoginFailed.rawValue) {
+            print("\(oauth!.tokenType) Validate Failed \(output?.error)")
+            return
+        }
+        
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == 200 else {
-                print("Validate Token Failed \(output?.error)")
+            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue else {
+                print("\(oauth!.tokenType) Validate Token Failed \(output?.error)")
             return
         }
         self.shouldBreak = true
-        print("Validate Token Passed")
+        print("\(oauth!.tokenType) Validate Token Passed")
     }
     
 }

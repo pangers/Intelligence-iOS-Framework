@@ -11,13 +11,13 @@ import UIKit
 import PhoenixSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 
 	var window: UIWindow?
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {       
         do {
-            let phoenix = try Phoenix(withFile: "PhoenixConfiguration")
+            let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
             PhoenixManager.startupWithPhoenix(phoenix)
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
@@ -37,13 +37,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Startup all modules.
-        PhoenixManager.phoenix?.startup { (error) -> () in
-            print("Fundamental error occurred \(error)")
+        PhoenixManager.phoenix.startup { (success) -> () in
+            assert(success, "Phoenix could not startup")
+            // Register test event.
+            let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+            PhoenixManager.phoenix.analytics.track(testEvent)
         }
-
-        // Register test event.
-        let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
-        PhoenixManager.phoenix?.analytics.track(testEvent)
         
 		return true
 	}
@@ -51,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func applicationWillResignActive(application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-        PhoenixManager.phoenix?.shutdown()
+        PhoenixManager.phoenix.shutdown()
 	}
 
 	func applicationDidEnterBackground(application: UIApplication) {
@@ -61,8 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationWillEnterForeground(application: UIApplication) {
 		// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        PhoenixManager.phoenix?.startup({ (error) -> () in
-            print("Fundamental error occurred \(error)")
+        PhoenixManager.phoenix.startup({ (success) -> () in
+            assert(success, "Phoenix could not startup")
         })
 	}
 
@@ -72,9 +71,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationWillTerminate(application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        PhoenixManager.phoenix?.shutdown()
+        PhoenixManager.phoenix.shutdown()
 	}
 
-
+    // MARK:- PhoenixDelegate
+    
+    func userCreationFailedForPhoenix(phoenix: Phoenix) {
+        print("Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
+    }
+    
+    func userLoginRequiredForPhoenix(phoenix: Phoenix) {
+        print("Present login screen or call identity.login with credentials stored in Keychain.")
+    }
+    
+    func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
+        print("Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.")
+    }
 }
 

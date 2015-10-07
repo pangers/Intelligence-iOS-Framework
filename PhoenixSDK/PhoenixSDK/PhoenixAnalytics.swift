@@ -38,18 +38,26 @@ internal extension Phoenix {
         
         // MARK:- PhoenixModuleProtocol
         
-        init(withNetwork network: Network, configuration: Phoenix.Configuration, installation: Installation) {
-            super.init(withNetwork: network, configuration: configuration)
+        internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: Installation) {
+            super.init(withDelegate: delegate, network: network, configuration: configuration)
             self.installation = installation
         }
         
-        override func startup() {
-            super.startup()
-            
-            eventQueue = PhoenixEventQueue(withCallback: sendEvents)
-            eventQueue?.startQueue()
-            // Track application opened.
-            trackApplicationOpened()
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup { [weak self] (success) -> () in
+                if !success {
+                    completion(success: false)
+                    return
+                }
+                guard let this = self else {
+                    completion(success: false)
+                    return
+                }
+                this.eventQueue = PhoenixEventQueue(withCallback: this.sendEvents)
+                this.eventQueue?.startQueue()
+                this.trackApplicationOpened()
+                completion(success: true)
+            }
         }
         
         override func shutdown() {
@@ -81,7 +89,7 @@ internal extension Phoenix {
             // Set optional values (may fail for whatever reason).
             dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.phx_applicationVersionString)
             dictionary <-? (Event.InstallationIdKey, installation.installationStorage.phx_installationID)
-            // TODO: Get User ID dictionary <-? (Event.UserIdKey, network.authentication.userId)
+            dictionary <-? (Event.UserIdKey, network.oauthProvider.bestPasswordGrantOAuth.userId)
             
             // Add geolocation
             if let coordinates = locationProvider?.userLocation {
@@ -98,7 +106,7 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-            let operation = AnalyticsRequestOperation(json: events, oauth: network.bestSDKUserOAuth, configuration: configuration, network: network)
+            let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network)
             operation.completionBlock = { [weak operation] in
                 completion(error: operation?.output?.error)
             }

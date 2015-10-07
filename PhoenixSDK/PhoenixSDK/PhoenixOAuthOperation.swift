@@ -16,7 +16,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     var shouldBreak: Bool = false
     
     // Contextually relevant information to pass between operations.
-    var oauth: PhoenixOAuth?
+    var oauth: PhoenixOAuthProtocol?
     var configuration: Phoenix.Configuration?
     var network: Network?
     var session: NSURLSession! {
@@ -35,8 +35,14 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             return true
         }
         if output?.error != nil {
-            output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil)
+            output?.error = NSError(domain: domain, code: code, userInfo: nil)
             return true
+        }
+        if let httpResponse = output?.response as? NSHTTPURLResponse {
+            if httpResponse.statusCode / 100 != 2 {
+                output?.error = NSError(domain: domain, code: code, userInfo: nil)
+                return true
+            }
         }
         return false
     }

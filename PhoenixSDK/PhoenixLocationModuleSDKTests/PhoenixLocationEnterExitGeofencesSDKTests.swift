@@ -37,7 +37,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         
         let geofences = [ geofence ]
         
-        location.delegate = self
+        location.locationDelegate = self
         
         // Start monitoring with an expectation.
         startMonitorGeofenceExpectation = expectationWithDescription("Start monitoring")
@@ -65,7 +65,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         
         let geofences = [ geofence ]
         
-        location.delegate = self
+        location.locationDelegate = self
 
         // Start monitoring with an expectation.
         startMonitorGeofenceExpectation = expectationWithDescription("Start monitoring")
@@ -84,7 +84,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
     
     func testGeofencesNotNotifiedWhenNotMonitoring() {
         assertNotCalled = true
-        location.delegate = self
+        location.locationDelegate = self
         location.stopMonitoringGeofences()
         
         mockLocationManager.fireEnterGeofence(Geofence())

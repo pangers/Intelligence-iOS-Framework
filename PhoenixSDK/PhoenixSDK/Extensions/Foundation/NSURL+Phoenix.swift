@@ -60,6 +60,11 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/geofences")
     }
     
+    /// - Returns: NSURL with append geofences path.
+    func phx_URLByAppendingRoles() -> NSURL! {
+        return URLByAppendingPathComponent("/roles")
+    }
+    
     /// - Returns: NSURL with appended projects path.
     func phx_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
         if let projectID = projectID {

@@ -101,7 +101,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
         query.setDefaultValues()
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth(), configuration: configuration, network: network, query: query).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!
         
         // Mock a valid token
         mockValidTokenStorage()
@@ -127,7 +127,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
 
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth(), configuration: configuration, network: network, query: query).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!
         
         // Mock a valid token
         mockValidTokenStorage()

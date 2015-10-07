@@ -8,7 +8,7 @@
 
 #import "PHXPhoenixManager.h"
 
-@interface PHXPhoenixManager()
+@interface PHXPhoenixManager() <PHXPhoenixDelegate>
 
 @property (nonatomic) Phoenix* phoenix;
 
@@ -33,6 +33,18 @@
 
 + (Phoenix*)phoenix {
     return [[self sharedInstance] phoenix];
+}
+
+- (void)userCreationFailedForPhoenix:(Phoenix *)phoenix {
+    NSLog(@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.");
+}
+
+- (void)userLoginRequiredForPhoenix:(Phoenix *)phoenix {
+    NSLog(@"Present login screen or call identity.login with credentials stored in Keychain.");
+}
+
+- (void)userRoleAssignmentFailedForPhoenix:(Phoenix *)phoenix {
+    NSLog(@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.");
 }
 
 @end

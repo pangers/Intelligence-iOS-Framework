@@ -8,30 +8,31 @@
 
 import Foundation
 
-// Status Codes:
-// 401: token_expired (EXPIRE token, need to refresh)
-// 403: invalid_token (INVALID access, cannot use this method)
-
 internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
-            print("Refresh Token Skipped")
+            print("\(oauth!.tokenType) Refresh Token Skipped")
             return
         }
         let request = NSURLRequest.phx_URLRequestForRefresh(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
+        if handleError(IdentityError.domain, code: IdentityError.LoginFailed.rawValue) {
+            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            return
+        }
+        
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == 200 &&
+            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else {
-                    print("Refresh Token Failed \(output?.error)")
+                    print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             return
         }
         self.shouldBreak = true
-        print("Refresh Token Passed")
+        print("\(oauth!.tokenType) Refresh Token Passed")
     }
     
 }

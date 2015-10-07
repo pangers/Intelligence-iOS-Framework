@@ -12,26 +12,33 @@ import Foundation
 /// than giving this object back to the developer.
 typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
 
-internal enum HTTPStatusCode: Int {
-    case Success = 200
-    case Unauthorized = 401
-    case Forbidden = 403
+/// An enumeration of the HTTP Methods available to use
+internal enum HTTPRequestMethod : String {
+    /// HTTP GET
+    case GET = "GET"
+    /// HTTP POST
+    case POST = "POST"
+    /// HTTP PUT
+    case PUT = "PUT"
 }
 
-// MARK: HTTP Method constants
+internal enum HTTPStatusCode: Int {
+    case Success = 200
+    case MultipleChoices = 300
+    case BadRequest = 400
+    case Unauthorized = 401
+    case Forbidden = 403
+    case NotFound = 404
+}
 
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
 internal final class Network {
     
-    internal let applicationOAuth = PhoenixOAuth(tokenType: .Application)
-    internal var bestSDKUserOAuth: PhoenixOAuth {
-        if developerLoggedIn {
-            return PhoenixOAuth(tokenType: .LoggedInUser)
-        } else {
-            return PhoenixOAuth(tokenType: .SDKUser)
-        }
-    }
-    internal var developerLoggedIn = false
+    /// Delegate must be set before startup is called on modules.
+    internal var delegate: PhoenixInternalDelegate!
+    
+    /// Provider responsible for serving OAuth information.
+    internal var oauthProvider: PhoenixOAuthProvider!
     
     /// NSURLSession with default session configuration.
     internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -40,9 +47,11 @@ internal final class Network {
     // MARK: Initializers
     
     /// Initialize new instance of Phoenix Networking class
-    init() {
+    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
+        self.delegate = delegate
+        self.oauthProvider = oauthProvider
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
@@ -65,16 +74,11 @@ internal final class Network {
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return PhoenixOAuthPipeline for given token type.
-    internal func getPipeline(forTokenType tokenType: PhoenixOAuthTokenType, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
-        let oauth = PhoenixOAuth(tokenType: tokenType)
-        
-        if (oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil)) {
-            // TODO: Create SDKUser if their credentials are empty here.
+    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
+        if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
+            assertionFailure("User should have been created in startup()")
             completion(nil)
             return
-            
-            // Once SDKUser is created, we can then return the pipeline.
-            // getPipeline(forTokenType: .SDKUser, completion: completion)
         }
         
         // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
@@ -99,13 +103,16 @@ internal final class Network {
             }
         })
         
-        // Add original operation again, should be called after pipeline succeeds.
+        // Set priority of pipeline to high, to move it above other requests (that aren't in progress already).
         pipeline.queuePriority = .VeryHigh
         
         completion(pipeline)
     }
     
     internal func enqueueOperation(operation: PhoenixOAuthOperation) {
+        // This method will enqueue an operation and override the completion handler
+        // to cover the case that we require reauthentication (HTTP 401). It will then
+        // execute the initial completion block when appropriate.
         let initialBlock = operation.completionBlock
         operation.completionBlock = { [weak self] in
             // Check if our request failed.
@@ -121,19 +128,20 @@ internal final class Network {
                 return
             }
             
-            // Token is no longer valid and cannot be refreshed without user input.
-            // Do not try again. Alert developer.
             if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
-                // TODO: Alert developer
+                // Token is no longer valid and cannot be refreshed without user input.
+                // This will occur if refreshToken fails.
+                // Do not try again. Alert developer.
+                self?.delegate?.userLoginRequired()
                 return
             }
             
-            // Attempt to get the pipeline for this OAuth token type.
-            self?.getPipeline(forTokenType: operation.oauth!.tokenType, configuration: operation.configuration!, completion: { (pipeline) -> () in
-                guard let pipeline = pipeline else {
-                    // Already enqueued, return
-                    return
-                }
+            // Attempt to get the pipeline for this operation's OAuth token type.
+            // Then execute the login pipeline before trying this operation again.
+            self?.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, completion: { (pipeline) -> () in
+                // Pipeline will be nil if it already exists in the queue.
+                guard let pipeline = pipeline else { return }
+                
                 pipeline.completionBlock = { [weak pipeline, weak network] in
                     if pipeline?.output?.error == nil {
                         // Add original operation again, should be called after pipeline succeeds.
@@ -144,7 +152,7 @@ internal final class Network {
                     }
                 }
                 
-                // Prevent looping by adding explicitly to queue here.
+                // Add explicitly to queue here, rather than calling enqueueOperation again (which would result in loop).
                 network.queue.addOperation(pipeline)
             })
         }

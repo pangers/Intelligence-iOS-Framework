@@ -13,8 +13,6 @@ import Foundation
 /// Refer to the Readme file to obtain further instructions on setup.
 public enum ConfigurationError: Int, ErrorType {
     
-    // TODO: Domain (change to NSError, unless ErrorType
-    //      has been fixed and now returns code)
     /// The domain passed to NSErrors.
     static let domain = "ConfigurationError"
     
@@ -57,6 +55,8 @@ public enum IdentityError: Int, ErrorType {
     /// Login failed.
     case LoginFailed = 2006
 
+    /// The user role assignment operation failed.
+    case UserRoleAssignmentError = 2007
 }
 
 /// Enumeration to list the errors that can occur in any request.

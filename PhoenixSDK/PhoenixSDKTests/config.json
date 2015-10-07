@@ -4,5 +4,6 @@
     "application_id": 10,
     "project_id": 20,
     "region": "EU",
-    "company_id":10
+    "company_id":10,
+    "sdk_user_role": 1008
 }

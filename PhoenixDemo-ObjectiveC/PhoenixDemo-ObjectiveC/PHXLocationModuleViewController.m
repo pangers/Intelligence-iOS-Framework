@@ -39,7 +39,7 @@ static NSString* const cellIdentifier = @"cell";
     
     self.locationManager = [[CLLocationManager alloc] init];
     
-    [PHXPhoenixManager phoenix].location.delegate = self;
+    [PHXPhoenixManager phoenix].location.locationDelegate = self;
     
     // Using the best kind of accuracy for demo purposes.
     [[PHXPhoenixManager phoenix].location setLocationAccuracy:kCLLocationAccuracyBest];

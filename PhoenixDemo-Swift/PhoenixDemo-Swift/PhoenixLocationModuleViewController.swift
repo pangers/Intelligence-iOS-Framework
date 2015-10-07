@@ -29,7 +29,7 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        PhoenixManager.phoenix!.location.delegate = self
+        PhoenixManager.phoenix!.location.locationDelegate = self
         
         // Using the best kind of accuracy for demo purposes.
         PhoenixManager.phoenix!.location.setLocationAccuracy(kCLLocationAccuracyBest)

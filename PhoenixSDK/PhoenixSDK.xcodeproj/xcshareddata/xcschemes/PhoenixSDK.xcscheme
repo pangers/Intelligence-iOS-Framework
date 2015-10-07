@@ -39,8 +39,22 @@
                ReferencedContainer = "container:PhoenixSDK.xcodeproj">
             </BuildableReference>
             <LocationScenarioReference
-               identifier = "../Tigerspike.gpx"
-               referenceType = "0">
+               identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+               referenceType = "1">
+            </LocationScenarioReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BB77B9551BC3D95B00B53ABE"
+               BuildableName = "PhoenixLocationModuleSDKTests.xctest"
+               BlueprintName = "PhoenixLocationModuleSDKTests"
+               ReferencedContainer = "container:PhoenixSDK.xcodeproj">
+            </BuildableReference>
+            <LocationScenarioReference
+               identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+               referenceType = "1">
             </LocationScenarioReference>
          </TestableReference>
       </Testables>

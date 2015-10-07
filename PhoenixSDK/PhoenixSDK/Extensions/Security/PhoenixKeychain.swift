@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal final class PhoenixKeychain: TSDKeychain, TokenStorage {
+internal final class PhoenixKeychain: TSDKeychain, PhoenixOAuthStorage {
     
     init(account: String = "PhoenixSDK") {
         super.init(account, service: "com.tigerspike.PhoenixSDK")

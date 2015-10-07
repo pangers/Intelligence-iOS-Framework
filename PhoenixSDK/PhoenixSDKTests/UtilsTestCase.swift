@@ -10,7 +10,7 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class UtilsTestCase: PhoenixBaseTestCase {
+class UtilsTestCase: XCTestCase {
 
     func testStringContains() {
         // This is an example of a functional test case.
@@ -47,13 +47,6 @@ class UtilsTestCase: PhoenixBaseTestCase {
         defaults[key] = nil
         
         XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
-    }
-    
-    func testTokenStorageNoDate() {
-        let storage = MockSimpleStorage()
-        storage.tokenExpirationDate = nil
-        
-        XCTAssert(storage.tokenExpirationDate == nil ,"Can clear the storage date correctly.")
     }
     
     func testDataToJSONArray() {
