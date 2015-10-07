@@ -257,7 +257,7 @@ phoenix.startup { (success) -> () in
 #!objc
 
 // Startup the SDK...
-[phoenix startupWithCompletion:^(BOOL success) {        
+[phoenix startup:^(BOOL success) {        
 	// Startup succeeded if success is true.
 }];
         
