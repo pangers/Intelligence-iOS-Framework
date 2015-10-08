@@ -161,14 +161,15 @@ internal extension Phoenix {
         // MARK:- Download geofences
 
         func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) {
-            let operation = DownloadGeofencesRequestOperation(configuration: configuration, network: network, query:queryDetails)
-
-            // set the completion block to notify the caller
-            operation.completionBlock = {
-                let error = operation.output?.error
-                let geofences = operation.geofences
+            let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) -> () in
+                guard let downloadGeofencesOperation = returnedOperation as? DownloadGeofencesRequestOperation else {
+                    assertionFailure("Invalid operation")
+                    return
+                }
+                let error = downloadGeofencesOperation.output?.error
+                let geofences = downloadGeofencesOperation.geofences
                 callback?(geofences: geofences, error: error)
-            }
+            })
 
             // Execute the network operation
             network.enqueueOperation(operation)
