@@ -211,24 +211,9 @@ internal extension Phoenix {
         }
         
         func didExitGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
-<<<<<<< HEAD
             self.locationDelegate?.phoenixLocation?(self, didExitGeofence: geofence)
             self.enteredGeofences[geofence.id] = nil
             self.trackGeofenceExited(geofence)
-=======
-//            if configuration.useGeofences == false { return }
-//            guard let geofence = geofenceForRegion(region) else { return }
-//            objc_sync_enter(self)
-//            if enteredGeofences.contains(geofence) {
-//                geofenceCallback(geofence: geofence, entered: false)
-//                enteredGeofences = enteredGeofences.filter({$0 != geofence})
-//            }
-//            objc_sync_exit(self)
-        }
-
-        func didUpdateLocationWithCoordinate(coordinate: PhoenixCoordinate) {
-            downloadGeofences(withCoordinates: coordinate, callback: nil)
->>>>>>> feature/PSDK-156
         }
         
         func didUpdateLocationWithCoordinate(coordinate:PhoenixCoordinate) {
