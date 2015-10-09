@@ -67,6 +67,7 @@
     self.latitudeText.text = [NSString stringWithFormat:@"%@",@(self.latitude)];
     self.longitudeText.text = [NSString stringWithFormat:@"%@",@(self.longitude)];
     self.sortByText.inputView = self.sortByPickerView;
+    self.sortByText.text = @"Distance";
     
     NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
     [textFields makeObjectsPerformSelector:@selector(setInputAccessoryView:)
@@ -78,6 +79,20 @@
 {
     NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
     [textFields makeObjectsPerformSelector:@selector(resignFirstResponder)];
+}
+
+-(GeofenceSortCriteria) sortingCriteriaInRow:(NSInteger)row {
+    switch ( row ) {
+        case GeofenceSortCriteriaAddress:
+        case GeofenceSortCriteriaDescription:
+        case GeofenceSortCriteriaDistance:
+        case GeofenceSortCriteriaId:
+        case GeofenceSortCriteriaName:
+        case GeofenceSortCriteriaReference:
+            return row;
+    }
+    NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
+    return GeofenceSortCriteriaDistance;
 }
 
 - (IBAction)didTapSave:(id)sender {
@@ -92,6 +107,7 @@
         [query setPage:self.pageText.phx_integer == 0 ? 0 : self.pageText.phx_integer];
         [query setPageSize:self.pageSizeText.phx_integer == 0 ? 10 : self.radiusText.phx_integer];
         [query setSortingDirection:self.sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? GeofenceSortDirectionAscending : GeofenceSortDirectionDescending];
+        [query setSortingCriteria:[self sortingCriteriaInRow:[self.sortByPickerView selectedRowInComponent:0]]];
         [self.delegate didSelectGeofenceQuery:query];
     }
     
