@@ -28,8 +28,9 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
+        // Swallowing the invalid request so that the events sent are cleared.
+        // This error is not recoverable and we need to purge the data.
         let errorString = output?.data?.phx_jsonDictionary?["error"] as? String ?? ""
-        
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == 400 && errorString == "invalid_request" {
                 return
