@@ -1,5 +1,5 @@
 //
-//  PhoenixIdentityTestCase.swift
+//  IdentityModuleTestCase.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 04/08/2015.
@@ -10,12 +10,12 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class PhoenixIdentityTestCase: PhoenixBaseTestCase {
+class IdentityModuleTestCase: PhoenixBaseTestCase {
 
     let fakeUpdateUser = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let updateUserWeakPassword = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let userWeakPassword = Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
-    var identity:Phoenix.Identity?
+    var identity: PhoenixIdentity?
     
     let badResponse = "BAD RESPONSE"
     
@@ -70,7 +70,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     override func setUp() {
         super.setUp()
-        self.identity = phoenix?.identity as? Phoenix.Identity
+        self.identity = phoenix?.identity as? PhoenixIdentity
     }
     
     override func tearDown() {

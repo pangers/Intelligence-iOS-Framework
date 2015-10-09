@@ -159,7 +159,7 @@ internal extension NSURLRequest {
     // MARK: Installation
     
     /// - Returns: An NSURLRequest to create a given installation.
-    class func phx_URLRequestForInstallationCreate(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationCreate(installation: PhoenixInstallation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -176,7 +176,7 @@ internal extension NSURLRequest {
     
 
     /// - returns: An NSURLRequest to update a given installation.
-    class func phx_URLRequestForInstallationUpdate(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationUpdate(installation: PhoenixInstallation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)

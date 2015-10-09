@@ -24,7 +24,7 @@ class PhoenixBaseTestCase : XCTestCase {
     var mockConfiguration: Phoenix.Configuration!
     var phoenix: Phoenix!
     var mockInstallationStorage: InstallationStorage!
-    var mockInstallation: Phoenix.Installation!
+    var mockInstallation: PhoenixInstallation!
     
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     

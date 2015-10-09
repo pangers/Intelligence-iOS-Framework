@@ -71,13 +71,13 @@ public final class Phoenix: NSObject {
     // MARK: - Modules
     
     /// The identity module, enables user management in the Phoenix backend.
-    @objc public internal(set) var identity: PhoenixIdentity!
+    @objc public internal(set) var identity: PhoenixIdentityProtocol!
     
     /// Analytics instance that can be used for posting Events.
-    @objc public internal(set) var analytics: PhoenixAnalytics!
+    @objc public internal(set) var analytics: PhoenixAnalyticsProtocol!
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    @objc public internal(set) var location: PhoenixLocation!
+    @objc public internal(set) var location: PhoenixLocationProtocol!
     
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [PhoenixModuleProtocol] {
@@ -101,7 +101,7 @@ public final class Phoenix: NSObject {
         network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
         oauthProvider: PhoenixOAuthProvider,
-        installation: Phoenix.Installation,
+        installation: PhoenixInstallation,
         locationManager: PhoenixLocationManager
         ) throws
     {
@@ -125,12 +125,12 @@ public final class Phoenix: NSObject {
         let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
         
         // Modules
-        identity = Identity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        analytics = Analytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        location = Location(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
+        identity = PhoenixIdentity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        analytics = PhoenixAnalytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        location = PhoenixLocation(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
         
-        let internalAnalytics = analytics as! Analytics
-        let internalLocation = location as! Location
+        let internalAnalytics = analytics as! PhoenixAnalytics
+        let internalLocation = location as! PhoenixLocation
         
         internalAnalytics.locationProvider = (location as? PhoenixLocationProvider)
         internalLocation.analytics = analytics
@@ -153,7 +153,7 @@ public final class Phoenix: NSObject {
             network: nil,
             configuration: phoenixConfiguration,
             oauthProvider: oauthProvider,
-            installation: Phoenix.Installation(configuration: phoenixConfiguration.clone(),
+            installation: PhoenixInstallation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults()),
             locationManager: PhoenixLocationManager())

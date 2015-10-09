@@ -26,7 +26,7 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     
     var storage:MockSimpleStorage!
     var configuration:Phoenix.Configuration!
-    var location:PhoenixLocation!
+    var location:PhoenixLocationProtocol!
     var network:Network!
     var mockLocationManager:MockCLLocationManager!
     
@@ -38,7 +38,7 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
         mockLocationManager = MockCLLocationManager()
         configuration = mockConfiguration()
         network = mockNetwork();
-        location = Phoenix.Location(withDelegate: self, network: network, configuration: configuration, locationManager: PhoenixLocationManager(locationManager:mockLocationManager))
+        location = PhoenixLocation(withDelegate: self, network: network, configuration: configuration, locationManager: PhoenixLocationManager(locationManager:mockLocationManager))
     }
     
     override func tearDown() {
