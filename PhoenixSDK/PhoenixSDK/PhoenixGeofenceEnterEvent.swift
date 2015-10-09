@@ -8,15 +8,11 @@
 
 import Foundation
 
-internal extension Phoenix {
+/// Event that gets fired when a monitored geofence is entered.
+internal class GeofenceEnterEvent: Event {
     
-    /// Event that gets fired when a monitored geofence is entered.
-    internal class GeofenceEnterEvent: Event {
-        
-        init(geofence: Geofence) {
-            super.init(withType: "Phoenix.Location.Geofence.Enter", value: 0, targetId: String(geofence.id), metadata: nil)
-        }
-        
+    init(geofence: Geofence) {
+        super.init(withType: "Phoenix.Location.Geofence.Enter", value: 0, targetId: String(geofence.id), metadata: nil)
     }
     
 }

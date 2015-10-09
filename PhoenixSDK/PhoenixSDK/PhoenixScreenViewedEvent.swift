@@ -8,15 +8,11 @@
 
 import Foundation
 
-internal extension Phoenix {
-	
-	/// Event that the developer can fire once a screen has been viewed
-	internal class ScreenViewedEvent: Event {
-		
-		init(screenName: String, viewingDuration: NSTimeInterval) {
-			super.init(withType: "Phoenix.Identity.Application.ScreenViewed", value:viewingDuration, targetId:screenName, metadata:nil)
-		}
-		
-	}
-	
+/// Event that the developer can fire once a screen has been viewed
+internal class ScreenViewedEvent: Event {
+    
+    init(screenName: String, viewingDuration: NSTimeInterval) {
+        super.init(withType: "Phoenix.Identity.Application.ScreenViewed", value:viewingDuration, targetId:screenName, metadata:nil)
+    }
+    
 }

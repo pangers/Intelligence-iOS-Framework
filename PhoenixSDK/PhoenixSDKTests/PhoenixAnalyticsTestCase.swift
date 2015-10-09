@@ -42,8 +42,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         queue.clearEvents()
     }
     
-    func genericEvent() -> Phoenix.Event {
-        let event = Phoenix.Event(withType: "Phoenix.Test.Event")
+    func genericEvent() -> Event {
+        let event = Event(withType: "Phoenix.Test.Event")
         XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
         XCTAssert(event.eventType == "Phoenix.Test.Event")
@@ -51,10 +51,10 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     }
     
     func ensureJSONIncludesMandatoryPopulatedData(json: JSONDictionary) {
-        XCTAssert(json[Phoenix.Event.ApplicationIdKey] as! Int == mockConfiguration.applicationID, "Expected application ID to match configuration")
-        XCTAssert(json[Phoenix.Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
-        XCTAssert(json[Phoenix.Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
-        XCTAssert(json[Phoenix.Event.EventDateKey] as? String != nil, "Expected time interval")
+        XCTAssert(json[Event.ApplicationIdKey] as! Int == mockConfiguration.applicationID, "Expected application ID to match configuration")
+        XCTAssert(json[Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
+        XCTAssert(json[Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
+        XCTAssert(json[Event.EventDateKey] as? String != nil, "Expected time interval")
     }
     
     func testEventQueue() {
@@ -71,10 +71,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
         myQueue.stopQueue()
         XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
-        myQueue.enteredForeground(NSNotification(name: "Test", object: nil))
-        XCTAssertFalse(myQueue.isPaused, "Expected to be unpaused after start")
-        myQueue.enteredBackground(NSNotification(name: "Test", object: nil))
-        XCTAssert(myQueue.isPaused, "Expected to be paused after stop")
         myQueue.fire(withCompletion: nil)
         myQueue.stopQueue() // Call while stopped to check 'isPaused'.
         
@@ -83,7 +79,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     // MARK:- Geofences
     
-    func mockSendAnalytics(status: HTTPStatusCode = .Success, event: Phoenix.Event, eventsJSONResponse: JSONDictionary? = nil, completion: (error: NSError?) -> ()) {
+    func mockSendAnalytics(status: HTTPStatusCode = .Success, event: Event, eventsJSONResponse: JSONDictionary? = nil, completion: (error: NSError?) -> ()) {
         let analytics = (phoenix?.analytics as! Phoenix.Analytics)
         let eventJSON = analytics.prepareEvent(event)
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
@@ -103,7 +99,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
-        let event = Phoenix.GeofenceEnterEvent(geofence: geofence)
+        let event = GeofenceEnterEvent(geofence: geofence)
         XCTAssert(event.eventType == "Phoenix.Location.Geofence.Enter")
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
@@ -125,7 +121,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
-        let event = Phoenix.GeofenceExitEvent(geofence: geofence)
+        let event = GeofenceExitEvent(geofence: geofence)
         XCTAssert(event.eventType == "Phoenix.Location.Geofence.Exit")
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
@@ -148,7 +144,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
         // Create event, avoiding queueing/storage system.
-        let event = Phoenix.OpenApplicationEvent()
+        let event = OpenApplicationEvent()
         XCTAssert(event.eventType == "Phoenix.Identity.Application.Opened")
         XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
@@ -173,7 +169,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
 		// Create event, avoiding queueing/storage system.
 		let screenName = "Unit Test Screen"
 		let viewingDuration = 42.0
-		let event = Phoenix.ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration)
+		let event = ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration)
 		XCTAssert(event.eventType == "Phoenix.Identity.Application.ScreenViewed")
 		XCTAssert(event.targetId == screenName)
 		XCTAssert(event.value == viewingDuration)

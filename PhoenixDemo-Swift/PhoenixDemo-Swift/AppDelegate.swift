@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 assert(success, "Phoenix could not startup")
                 
                 // Register test event.
-                let testEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
+                let testEvent = Event(withType: "Phoenix.Test.Event.Type")
                 phoenix.analytics.track(testEvent)
                 
                 PhoenixManager.startupWithPhoenix(phoenix)

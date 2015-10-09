@@ -69,20 +69,20 @@ internal extension Phoenix {
             super.shutdown()
         }
         
-        @objc func track(event: Phoenix.Event) {
+        func track(event: Event) {
             eventQueue?.enqueueEvent(prepareEvent(event))
         }
         
 		/// Track screen viewed event (externally managed).
-		@objc func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
-			track(Phoenix.ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration))
+		func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
+			track(ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration))
 		}
 		
         // MARK: Internal
         
         /// Track application open event (internally managed).
         internal func trackApplicationOpened() {
-            track(Phoenix.OpenApplicationEvent())
+            track(OpenApplicationEvent())
         }
         
         /// Add automatically populated fields to dictionary.

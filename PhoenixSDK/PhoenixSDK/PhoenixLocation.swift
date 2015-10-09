@@ -192,13 +192,13 @@ internal extension Phoenix {
         }
         
         func trackGeofenceEntered(geofence:Geofence) {
-            let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Enter")
+            let geofenceEvent = Event(withType: "Phoenix.Location.Geofence.Enter")
             geofenceEvent.targetId = String(geofence.id)
             analytics?.track(geofenceEvent)
         }
 
         func trackGeofenceExited(geofence:Geofence) {
-            let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Exit")
+            let geofenceEvent = Event(withType: "Phoenix.Location.Geofence.Exit")
             geofenceEvent.targetId = String(geofence.id)
             analytics?.track(geofenceEvent)
         }

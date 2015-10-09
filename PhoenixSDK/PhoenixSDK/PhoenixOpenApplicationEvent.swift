@@ -8,15 +8,11 @@
 
 import Foundation
 
-internal extension Phoenix {
+/// Event that gets fired on `startup()` of SDK.
+internal class OpenApplicationEvent: Event {
     
-    /// Event that gets fired on `startup()` of SDK.
-    internal class OpenApplicationEvent: Event {
-        
-        init() {
-            super.init(withType: "Phoenix.Identity.Application.Opened")
-        }
-        
+    init() {
+        super.init(withType: "Phoenix.Identity.Application.Opened")
     }
     
 }
