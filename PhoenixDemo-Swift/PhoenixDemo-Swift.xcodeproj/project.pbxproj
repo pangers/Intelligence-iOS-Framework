@@ -10,7 +10,6 @@
 		455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
 		455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */; };
-		7FDAAADF1B5D35AE00DF2BE6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAADE1B5D35AE00DF2BE6 /* ViewController.swift */; };
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
 		7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */; };
@@ -46,7 +45,6 @@
 		455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedViewController.swift; sourceTree = "<group>"; };
 		7FDAAAD91B5D35AE00DF2BE6 /* PhoenixDemo-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PhoenixDemo-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7FDAAADE1B5D35AE00DF2BE6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7FDAAAE11B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAAE61B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -113,7 +111,6 @@
 				455D85F11BC2BFCB00A64B96 /* Analytics */,
 				BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */,
 				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
-				7FDAAADE1B5D35AE00DF2BE6 /* ViewController.swift */,
 				7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */,
 				7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */,
 				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
@@ -229,7 +226,6 @@
 			files = (
 				BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift in Sources */,
 				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
-				7FDAAADF1B5D35AE00DF2BE6 /* ViewController.swift in Sources */,
 				BB61731E1BC2D58D005D4C5B /* PhoenixLocationGeofenceQueryViewController.swift in Sources */,
 				BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */,
 				FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */,
