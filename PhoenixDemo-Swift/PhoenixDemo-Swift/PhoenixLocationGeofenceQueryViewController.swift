@@ -59,6 +59,31 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
         }
     }
     
+    func criteriaFromRow(row:Int) -> GeofenceSortCriteria {
+        switch row {
+        case GeofenceSortCriteria.Distance.rawValue:
+            return GeofenceSortCriteria.Distance
+            
+        case GeofenceSortCriteria.Id.rawValue:
+            return GeofenceSortCriteria.Id
+            
+        case GeofenceSortCriteria.Reference.rawValue:
+            return GeofenceSortCriteria.Reference
+            
+        case GeofenceSortCriteria.Name.rawValue:
+            return GeofenceSortCriteria.Name
+            
+        case GeofenceSortCriteria.Description.rawValue:
+            return GeofenceSortCriteria.Description
+            
+        case GeofenceSortCriteria.Address.rawValue:
+            return GeofenceSortCriteria.Address
+            
+        default:
+            assert(false,"Should never have a row above the number of sort criteria")
+        }
+    }
+    
     // MARK:- IBActions
     
     @IBAction func didTapSave(sender: AnyObject) {
@@ -69,7 +94,8 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
         query.pageSize = Int(pageSizeText.text ?? "10")
         query.pageNumber = Int(pageText.text ?? "1")
         query.sortingDirection = sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? .Ascending : .Descending
-
+        query.sortingCriteria = criteriaFromRow(sortByPickerView.selectedRowInComponent(0))
+            
         delegate?.didSelectGeofenceQuery(query)
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -95,30 +121,7 @@ extension PhoenixLocationGeofenceQueryViewController : UIPickerViewDataSource {
 extension PhoenixLocationGeofenceQueryViewController : UIPickerViewDelegate {
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch row {
-        case GeofenceSortCriteria.Distance.rawValue:
-            return "Distance"
-            
-        case GeofenceSortCriteria.Id.rawValue:
-            return "Id"
-            
-        case GeofenceSortCriteria.Reference.rawValue:
-            return "Reference"
-            
-        case GeofenceSortCriteria.Name.rawValue:
-            return "Name"
-            
-        case GeofenceSortCriteria.Description.rawValue:
-            return "Description"
-            
-        case GeofenceSortCriteria.Address.rawValue:
-            return "Address"
-            
-        default:
-            assert(false,"Should never have a row above the number of sort criteria")
-        }
-        
-        return ""
+        return criteriaFromRow(row).stringValue()
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
