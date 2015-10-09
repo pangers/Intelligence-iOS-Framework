@@ -1,5 +1,5 @@
 //
-//  ApplicationTimeTracker.swift
+//  PhoenixTimeTracker.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 09/10/2015.
@@ -9,6 +9,8 @@
 import Foundation
 
 typealias PhoenixTimeTrackerCallback = (event: TrackApplicationTimeEvent) -> ()
+
+/// Responsible for tracking time between startup, pause, resume, and stop events.
 class PhoenixTimeTracker: NSObject {
     private let storageTimeInterval = 5.0
     private let backgroundThreshold: UInt64 = 5 * 60
