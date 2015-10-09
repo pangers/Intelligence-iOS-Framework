@@ -28,9 +28,6 @@ import CoreLocation
     case Distance
     case Id
     case Name
-    case Description
-    case Address
-    case Reference
 
     public func stringValue() -> String {
         switch self {
@@ -40,12 +37,6 @@ import CoreLocation
             return "Id"
         case .Name:
             return "Name"
-        case .Description:
-            return "Description"
-        case .Address:
-            return "Address"
-        case .Reference:
-            return "Reference"
         }
     }
     

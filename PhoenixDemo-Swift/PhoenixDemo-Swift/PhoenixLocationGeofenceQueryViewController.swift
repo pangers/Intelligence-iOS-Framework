@@ -67,17 +67,8 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
         case GeofenceSortCriteria.Id.rawValue:
             return GeofenceSortCriteria.Id
             
-        case GeofenceSortCriteria.Reference.rawValue:
-            return GeofenceSortCriteria.Reference
-            
         case GeofenceSortCriteria.Name.rawValue:
             return GeofenceSortCriteria.Name
-            
-        case GeofenceSortCriteria.Description.rawValue:
-            return GeofenceSortCriteria.Description
-            
-        case GeofenceSortCriteria.Address.rawValue:
-            return GeofenceSortCriteria.Address
             
         default:
             assert(false,"Should never have a row above the number of sort criteria")
@@ -114,7 +105,7 @@ extension PhoenixLocationGeofenceQueryViewController : UIPickerViewDataSource {
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 6
+        return 3
     }
 }
 

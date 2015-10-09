@@ -83,12 +83,9 @@
 
 -(GeofenceSortCriteria) sortingCriteriaInRow:(NSInteger)row {
     switch ( row ) {
-        case GeofenceSortCriteriaAddress:
-        case GeofenceSortCriteriaDescription:
         case GeofenceSortCriteriaDistance:
         case GeofenceSortCriteriaId:
         case GeofenceSortCriteriaName:
-        case GeofenceSortCriteriaReference:
             return row;
     }
     NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
@@ -135,18 +132,12 @@
 
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 6;
+    return 3;
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     switch ( row ) {
-        case GeofenceSortCriteriaAddress:
-            return @"Address";
-            
-        case GeofenceSortCriteriaDescription:
-            return @"Description";
-            
         case GeofenceSortCriteriaDistance:
             return @"Distance";
             
@@ -156,8 +147,6 @@
         case GeofenceSortCriteriaName:
             return @"Name";
             
-        case GeofenceSortCriteriaReference:
-            return @"Reference";
     }
     NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
     return @"";
