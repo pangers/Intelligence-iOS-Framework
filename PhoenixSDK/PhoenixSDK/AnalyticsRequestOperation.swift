@@ -27,9 +27,19 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         assert(network != nil && configuration != nil)
         let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        
+        let errorString = output?.data?.phx_jsonDictionary?["error"] as? String ?? ""
+        
+        if let httpResponse = output?.response as? NSHTTPURLResponse {
+            if httpResponse.statusCode == 400 && errorString == "invalid_request" {
+                return
+            }
+        }
+
         if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
             return
         }
+        
         if outputArray()?.count != eventsJSON.count {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
