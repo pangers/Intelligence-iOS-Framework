@@ -14,6 +14,8 @@ typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, completion: 
 
 internal class PhoenixEventQueue {
     
+    private let eventExpirationTime:NSTimeInterval = 24 * 60 * 60
+    
     /// A private semaphore.
     private let semaphore = NSObject()
     
@@ -145,6 +147,17 @@ internal class PhoenixEventQueue {
         var result = false
         
         synced(semaphore) {
+            
+            // Filter old events to avoid being discarded in a big batch
+            self.eventArray = self.eventArray.filter {
+                guard let dateString = $0[Phoenix.Event.EventDateKey] as? String,
+                    let date = RFC3339DateFormatter.dateFromString(dateString) else {
+                    // filter out events without date.
+                    return false
+                }
+                return NSDate().timeIntervalSinceDate(date) <= self.eventExpirationTime
+            }
+            
             // Ensure we aren't already sending, paused, and have events to send.
             if self.isSending || self.isPaused || self.eventArray.count == 0 {
                 return
