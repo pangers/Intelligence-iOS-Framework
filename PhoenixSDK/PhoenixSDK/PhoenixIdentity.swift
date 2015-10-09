@@ -63,12 +63,13 @@ extension Phoenix {
             if oauth.username == nil || oauth.password == nil {
                 // Need to create user first.
                 let sdkUser = Phoenix.User(companyId: configuration.companyId)
-                createUser(sdkUser, callback: { [weak sdkUser, weak self] (serverUser, error) -> Void in
-                    guard let sdkUser = sdkUser else { return }
+                let password = sdkUser.password
+                createUser(sdkUser, callback: { [weak self] (serverUser, error) -> Void in
                     if serverUser != nil {
                         // Store credentials in keychain.
-                        oauth.updateCredentials(withUsername: sdkUser.username, password: sdkUser.password!)
+                        oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
                         oauth.userId = serverUser?.userId
+                        
                         // If we have a user, need to call get pipeline again.
                         successBlock()
                     } else {
