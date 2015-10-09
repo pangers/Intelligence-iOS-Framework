@@ -11,9 +11,15 @@ import Foundation
 /// The Phoenix Analytics Module defines the methods available for tracking events.
 @objc public protocol PhoenixAnalytics : PhoenixModuleProtocol {
     
+    /// Pause analytics module, must be called when entering the background.
+    func pause()
+    
+    /// Resume analytics module, must be called after returning from background.
+    func resume()
+    
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
-    func track(event:Phoenix.Event)
+    func track(event: Event)
     
 	/// Track user engagement and behavioral insight.
 	/// - parameter screenName: An identifier for the screen.
@@ -31,14 +37,15 @@ internal extension Phoenix {
     
     /// The Phoenix Analytics Module defines the methods available for tracking events.
     internal final class Analytics: PhoenixModule, PhoenixAnalytics {
-        // TODO Override PhoenixModule class.
         
         internal weak var locationProvider:PhoenixLocationProvider?
     
         /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
-
+        private var timeTracker: PhoenixTimeTracker?
+        
         internal var installation: Phoenix.Installation!
+        
         
         // MARK:- PhoenixModuleProtocol
         
@@ -60,12 +67,26 @@ internal extension Phoenix {
                 this.eventQueue = PhoenixEventQueue(withCallback: this.sendEvents)
                 this.eventQueue?.startQueue()
                 this.trackApplicationOpened()
+                this.timeTracker = PhoenixTimeTracker(callback: { [weak self] (event) -> () in
+                    self?.track(event)
+                })
                 completion(success: true)
             }
         }
         
+        func pause() {
+            eventQueue?.stopQueue()
+            timeTracker?.pause()
+        }
+        
+        func resume() {
+            eventQueue?.startQueue()
+            timeTracker?.resume()
+        }
+        
         override func shutdown() {
             eventQueue?.stopQueue()
+            timeTracker = nil
             super.shutdown()
         }
         
