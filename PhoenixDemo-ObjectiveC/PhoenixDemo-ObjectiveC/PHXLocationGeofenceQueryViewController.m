@@ -50,7 +50,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *pageSizeText;
 @property (weak, nonatomic) IBOutlet UITextField *pageText;
 @property (weak, nonatomic) IBOutlet UITextField *radiusText;
+@property (weak, nonatomic) IBOutlet UITextField *sortByText;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sortDirectionSegmentedControl;
+
+@property (strong, nonatomic) IBOutlet UIView *accessoryView;
+@property (strong, nonatomic) IBOutlet UIPickerView *sortByPickerView;
 
 @end
 
@@ -58,18 +62,26 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView)]];
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignResponders)]];
     
     self.latitudeText.text = [NSString stringWithFormat:@"%@",@(self.latitude)];
     self.longitudeText.text = [NSString stringWithFormat:@"%@",@(self.longitude)];
+    self.sortByText.inputView = self.sortByPickerView;
+    
+    NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
+    [textFields makeObjectsPerformSelector:@selector(setInputAccessoryView:)
+                                withObject:self.accessoryView];
+
 }
 
--(void) didTapOnView
+-(void) resignResponders
 {
-    [@[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText] makeObjectsPerformSelector:@selector(resignFirstResponder)];
+    NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
+    [textFields makeObjectsPerformSelector:@selector(resignFirstResponder)];
 }
 
 - (IBAction)didTapSave:(id)sender {
+    [self resignResponders];
     if ( [self.delegate respondsToSelector:@selector(didSelectGeofenceQuery:)] )
     {
         PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:self.latitudeText.phx_double
@@ -87,7 +99,57 @@
 }
 
 - (IBAction)didTapCancel:(id)sender {
+    [self resignResponders];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+@end
+
+#pragma mark - UIPickerViewDelegate and UIPickerViewDataSource
+
+@interface PHXLocationGeofenceQueryViewController (PickerViewDatasource) <UIPickerViewDelegate, UIPickerViewDataSource>
+@end
+
+@implementation PHXLocationGeofenceQueryViewController (PickerViewDatasource)
+
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 6;
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    switch ( row ) {
+        case GeofenceSortCriteriaAddress:
+            return @"Address";
+            
+        case GeofenceSortCriteriaDescription:
+            return @"Description";
+            
+        case GeofenceSortCriteriaDistance:
+            return @"Distance";
+            
+        case GeofenceSortCriteriaId:
+            return @"Id";
+            
+        case GeofenceSortCriteriaName:
+            return @"Name";
+            
+        case GeofenceSortCriteriaReference:
+            return @"Reference";
+    }
+    NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
+    return @"";
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    self.sortByText.text = [self pickerView:pickerView titleForRow:row forComponent:component];
 }
 
 @end
