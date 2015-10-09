@@ -39,8 +39,8 @@ internal final class PhoenixAnalytics: PhoenixModule, PhoenixAnalyticsProtocol {
     internal weak var locationProvider:PhoenixLocationProvider?
     
     /// Event queue responsible for queuing and storing events to disk.
-    private var eventQueue: PhoenixEventQueue?
-    private var timeTracker: PhoenixTimeTracker?
+    private var eventQueue: EventQueue?
+    private var timeTracker: TimeTracker?
     
     internal var installation: PhoenixInstallation!
     
@@ -62,10 +62,10 @@ internal final class PhoenixAnalytics: PhoenixModule, PhoenixAnalyticsProtocol {
                 completion(success: false)
                 return
             }
-            this.eventQueue = PhoenixEventQueue(withCallback: this.sendEvents)
+            this.eventQueue = EventQueue(withCallback: this.sendEvents)
             this.eventQueue?.startQueue()
             this.trackApplicationOpened()
-            this.timeTracker = PhoenixTimeTracker(callback: { [weak self] (event) -> () in
+            this.timeTracker = TimeTracker(callback: { [weak self] (event) -> () in
                 self?.track(event)
                 })
             completion(success: true)

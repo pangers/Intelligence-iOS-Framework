@@ -1,5 +1,5 @@
 //
-//  PhoenixTrackApplicationTimeEvent.swift
+//  TrackApplicationTimeEvent.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 09/10/2015.

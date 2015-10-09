@@ -36,7 +36,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     override func tearDown() {
         super.tearDown()
-        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             
         }
         queue.clearEvents()
@@ -58,7 +58,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     }
     
     func testEventQueue() {
-        let myQueue = PhoenixEventQueue { (events, completion) -> () in
+        let myQueue = EventQueue { (events, completion) -> () in
             
         }
         XCTAssert(myQueue.maxEvents == 100, "Expected 100 max")
@@ -258,7 +258,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test events queue saving/loading
     func testEventsQueueLoad() {
-        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             
         }
         let analytics = (phoenix?.analytics as! PhoenixAnalytics)
@@ -272,7 +272,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test events queue sending
     func testEventsQueueFire() {
-        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
             completion(error: nil)
         }
@@ -293,7 +293,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test events queue sending failure
     func testEventsQueueFireFailed() {
-        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
             completion(error: NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil))
         }
@@ -317,7 +317,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     /// Test that having over 100 events in the queue will fire two calls.
     func test101EventsInQueueRequiresTwoCalls() {
         var comparisonCount: Int = 0
-        let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             XCTAssert(events.count == comparisonCount)
             completion(error: nil)
         }

@@ -1,5 +1,5 @@
 //
-//  PhoenixScreenViewedEvent.swift
+//  ScreenViewedEvent.swift
 //  PhoenixSDK
 //
 //  Created by Michael Lake on 05/10/2015.

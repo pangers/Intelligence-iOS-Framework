@@ -1,5 +1,5 @@
 //
-//  PhoenixGeofenceEnterEvent.swift
+//  GeofenceEnterEvent.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 20/08/2015.

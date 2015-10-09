@@ -1,5 +1,5 @@
 //
-//  PhoenixOpenApplicationEvent.swift
+//  OpenApplicationEvent.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 19/08/2015.
