@@ -8,7 +8,7 @@
 
 #import "PHXPhoenixManager.h"
 
-@interface PHXPhoenixManager() <PHXPhoenixDelegate>
+@interface PHXPhoenixManager()
 
 @property (nonatomic) Phoenix* phoenix;
 
