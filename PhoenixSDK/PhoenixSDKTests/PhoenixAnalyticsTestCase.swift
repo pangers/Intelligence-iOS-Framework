@@ -63,7 +63,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         }
         XCTAssert(myQueue.maxEvents == 100, "Expected 100 max")
         XCTAssert(myQueue.isPaused, "Expected to start paused")
-        myQueue.runTimer()
+        myQueue.runTimer(NSTimer())
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
         myQueue.startQueue()    // Call second time to check 'isPaused'.
@@ -80,7 +80,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     // MARK:- Geofences
     
     func mockSendAnalytics(status: HTTPStatusCode = .Success, event: Event, eventsJSONResponse: JSONDictionary? = nil, completion: (error: NSError?) -> ()) {
-        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let analytics = (phoenix?.analytics as! Analytics)
         let eventJSON = analytics.prepareEvent(event)
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         let eventsJSON: JSONDictionaryArray = [eventJSON]
@@ -261,7 +261,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let queue = PhoenixEventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             
         }
-        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let analytics = (phoenix?.analytics as! Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
@@ -276,7 +276,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(events.count == 1)
             completion(error: nil)
         }
-        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let analytics = (phoenix?.analytics as! Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
@@ -297,7 +297,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(events.count == 1)
             completion(error: NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil))
         }
-        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let analytics = (phoenix?.analytics as! Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
@@ -321,7 +321,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             XCTAssert(events.count == comparisonCount)
             completion(error: nil)
         }
-        let analytics = (phoenix?.analytics as! Phoenix.Analytics)
+        let analytics = (phoenix?.analytics as! Analytics)
         let eventJSON = analytics.prepareEvent(genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
