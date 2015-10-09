@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         do {
             let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
+            let semaphore = dispatch_semaphore_create(0)
             
             // Startup all modules.
             phoenix.startup { (success) -> () in
@@ -28,8 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 phoenix.analytics.track(testEvent)
                 
                 PhoenixManager.startupWithPhoenix(phoenix)
+                dispatch_semaphore_signal(semaphore)
             }
-
+            
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -80,9 +83,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     // MARK:- PhoenixDelegate
     
     func alert(withMessage message: String) {
-        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
-        controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue()) { [weak self] in
+            let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+            self?.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+        }
     }
     
     func userCreationFailedForPhoenix(phoenix: Phoenix) {
