@@ -32,7 +32,7 @@ import CoreLocation
     case Address
     case Reference
 
-    func stringValue() -> String {
+    public func stringValue() -> String {
         switch self {
         case .Distance:
             return "Distance"
