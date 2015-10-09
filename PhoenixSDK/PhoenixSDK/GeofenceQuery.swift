@@ -39,8 +39,6 @@ import CoreLocation
             return "Name"
         }
     }
-    
-//        = "Distance"
 }
 
 ///An instance of object using to create query part of URL for Geofence API
