@@ -35,9 +35,9 @@ internal protocol PhoenixLocationProvider:class {
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
 internal final class PhoenixAnalytics: PhoenixModule, PhoenixAnalyticsProtocol {
-    
+
     internal weak var locationProvider:PhoenixLocationProvider?
-    
+
     /// Event queue responsible for queuing and storing events to disk.
     private var eventQueue: EventQueue?
     private var timeTracker: TimeTracker?

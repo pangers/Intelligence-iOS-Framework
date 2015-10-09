@@ -24,8 +24,21 @@ import CoreLocation
     }
 }
 
-public enum GeofenceSortCriteria: String {
-    case Distance = "Distance"
+@objc public enum GeofenceSortCriteria: Int {
+    case Distance
+    case Id
+    case Name
+
+    public func stringValue() -> String {
+        switch self {
+        case .Distance:
+            return "Distance"
+        case .Id:
+            return "Id"
+        case .Name:
+            return "Name"
+        }
+    }
 }
 
 ///An instance of object using to create query part of URL for Geofence API
@@ -80,11 +93,11 @@ public enum GeofenceSortCriteria: String {
             queryString.appendUrlQueryParameter("sortDir", parameterValue: sortDir)
         }
         
-        if let sortBy = sortingCriteria?.rawValue {
-            queryString.appendUrlQueryParameter("sortBy", parameterValue: sortBy)
+        if let sortBy = sortingCriteria {
+            queryString.appendUrlQueryParameter("sortBy", parameterValue: sortBy.stringValue())
         }
         else {
-            queryString.appendUrlQueryParameter("sortBy", parameterValue: GeofenceSortCriteria.Distance.rawValue)
+            queryString.appendUrlQueryParameter("sortBy", parameterValue: GeofenceSortCriteria.Distance.stringValue())
         }
         
         if let pagenum = pageNumber {
@@ -114,6 +127,10 @@ public enum GeofenceSortCriteria: String {
     
     public func setSortingDirection(direction:GeofenceSortDirection) {
         self.sortingDirection = direction
+    }
+
+    public func setSortingCriteria(criteria:GeofenceSortCriteria) {
+        self.sortingCriteria = criteria
     }
 }
 

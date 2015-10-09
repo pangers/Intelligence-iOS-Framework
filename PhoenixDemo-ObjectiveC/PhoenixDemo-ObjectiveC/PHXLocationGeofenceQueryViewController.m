@@ -50,7 +50,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *pageSizeText;
 @property (weak, nonatomic) IBOutlet UITextField *pageText;
 @property (weak, nonatomic) IBOutlet UITextField *radiusText;
+@property (weak, nonatomic) IBOutlet UITextField *sortByText;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sortDirectionSegmentedControl;
+
+@property (strong, nonatomic) IBOutlet UIView *accessoryView;
+@property (strong, nonatomic) IBOutlet UIPickerView *sortByPickerView;
 
 @end
 
@@ -58,18 +62,38 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView)]];
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignResponders)]];
     
     self.latitudeText.text = [NSString stringWithFormat:@"%@",@(self.latitude)];
     self.longitudeText.text = [NSString stringWithFormat:@"%@",@(self.longitude)];
+    self.sortByText.inputView = self.sortByPickerView;
+    self.sortByText.text = @"Distance";
+    
+    NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
+    [textFields makeObjectsPerformSelector:@selector(setInputAccessoryView:)
+                                withObject:self.accessoryView];
+
 }
 
--(void) didTapOnView
+-(void) resignResponders
 {
-    [@[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText] makeObjectsPerformSelector:@selector(resignFirstResponder)];
+    NSArray<UITextField*>* textFields = @[self.latitudeText, self.longitudeText, self.pageSizeText, self.pageText, self.radiusText, self.sortByText];
+    [textFields makeObjectsPerformSelector:@selector(resignFirstResponder)];
+}
+
+-(GeofenceSortCriteria) sortingCriteriaInRow:(NSInteger)row {
+    switch ( row ) {
+        case GeofenceSortCriteriaDistance:
+        case GeofenceSortCriteriaId:
+        case GeofenceSortCriteriaName:
+            return row;
+    }
+    NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
+    return GeofenceSortCriteriaDistance;
 }
 
 - (IBAction)didTapSave:(id)sender {
+    [self resignResponders];
     if ( [self.delegate respondsToSelector:@selector(didSelectGeofenceQuery:)] )
     {
         PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:self.latitudeText.phx_double
@@ -79,7 +103,8 @@
         [query setRadius:self.radiusText.phx_double == 0 ? 1000.0 : self.radiusText.phx_double];
         [query setPage:self.pageText.phx_integer == 0 ? 0 : self.pageText.phx_integer];
         [query setPageSize:self.pageSizeText.phx_integer == 0 ? 10 : self.radiusText.phx_integer];
-        [query setSortingDirection:self.sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? GeofenceSortDirectionAscending : GeofenceSortDirectionDescending];
+        [query setSortingDirection:self.sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? GeofenceSortDirectionDescending : GeofenceSortDirectionAscending];
+        [query setSortingCriteria:[self sortingCriteriaInRow:[self.sortByPickerView selectedRowInComponent:0]]];
         [self.delegate didSelectGeofenceQuery:query];
     }
     
@@ -87,7 +112,49 @@
 }
 
 - (IBAction)didTapCancel:(id)sender {
+    [self resignResponders];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+@end
+
+#pragma mark - UIPickerViewDelegate and UIPickerViewDataSource
+
+@interface PHXLocationGeofenceQueryViewController (PickerViewDatasource) <UIPickerViewDelegate, UIPickerViewDataSource>
+@end
+
+@implementation PHXLocationGeofenceQueryViewController (PickerViewDatasource)
+
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 3;
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    switch ( row ) {
+        case GeofenceSortCriteriaDistance:
+            return @"Distance";
+            
+        case GeofenceSortCriteriaId:
+            return @"Id";
+            
+        case GeofenceSortCriteriaName:
+            return @"Name";
+            
+    }
+    NSAssert(false, @"Should never have a value not in GeofenceSortCriteria.");
+    return @"";
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    self.sortByText.text = [self pickerView:pickerView titleForRow:row forComponent:component];
 }
 
 @end
