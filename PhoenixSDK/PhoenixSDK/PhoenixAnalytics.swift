@@ -31,7 +31,6 @@ internal extension Phoenix {
     
     /// The Phoenix Analytics Module defines the methods available for tracking events.
     internal final class Analytics: PhoenixModule, PhoenixAnalytics {
-        // TODO Override PhoenixModule class.
         
         internal weak var locationProvider:PhoenixLocationProvider?
     
