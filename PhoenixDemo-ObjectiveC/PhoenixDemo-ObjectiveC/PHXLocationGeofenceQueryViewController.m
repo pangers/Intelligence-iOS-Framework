@@ -103,7 +103,7 @@
         [query setRadius:self.radiusText.phx_double == 0 ? 1000.0 : self.radiusText.phx_double];
         [query setPage:self.pageText.phx_integer == 0 ? 0 : self.pageText.phx_integer];
         [query setPageSize:self.pageSizeText.phx_integer == 0 ? 10 : self.radiusText.phx_integer];
-        [query setSortingDirection:self.sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? GeofenceSortDirectionAscending : GeofenceSortDirectionDescending];
+        [query setSortingDirection:self.sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? GeofenceSortDirectionDescending : GeofenceSortDirectionAscending];
         [query setSortingCriteria:[self sortingCriteriaInRow:[self.sortByPickerView selectedRowInComponent:0]]];
         [self.delegate didSelectGeofenceQuery:query];
     }
