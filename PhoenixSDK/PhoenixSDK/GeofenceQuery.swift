@@ -139,6 +139,10 @@ import CoreLocation
     public func setSortingDirection(direction:GeofenceSortDirection) {
         self.sortingDirection = direction
     }
+
+    public func setSortingCriteria(criteria:GeofenceSortCriteria) {
+        self.sortingCriteria = criteria
+    }
 }
 
 private extension String {
