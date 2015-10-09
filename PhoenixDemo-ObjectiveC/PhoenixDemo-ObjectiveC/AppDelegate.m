@@ -28,6 +28,8 @@
     
     NSParameterAssert(err == nil && phoenix != nil);
     
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
     // Start phoenix, will throw a network error if something is configured incorrectly.
     [phoenix startup:^(BOOL success) {
         NSAssert(success, @"An error occured while initializing Phoenix.");
@@ -38,46 +40,45 @@
 
         // Setup phoenix
         [PHXPhoenixManager setupPhoenix:phoenix];
+        dispatch_semaphore_signal(semaphore);
     }];
     
-	return YES;
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return YES;
 }
+
+-(void) alertWithMessage:(NSString*)message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
+    });
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+	// Shutdown Phoenix in the applicationWillTerminate method so Phoenix has time
+    // to teardown properly.
+    [[PHXPhoenixManager phoenix] shutdown];
+}
+
+#pragma mark - PHXPhoenixDelegate
 
 /// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
 - (void)userCreationFailedForPhoenix:(Phoenix * __nonnull)phoenix {
-    NSLog(@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.");
+    [self alertWithMessage:@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly."];
 }
 
 /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
 - (void)userLoginRequiredForPhoenix:(Phoenix * __nonnull)phoenix {
-    NSLog(@"Present login screen or call identity.login with credentials stored in Keychain.");
+    [self alertWithMessage:@"Present login screen or call identity.login with credentials stored in Keychain."];
 }
 
 /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
 - (void)userRoleAssignmentFailedForPhoenix:(Phoenix * __nonnull)phoenix {
-    NSLog(@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.");
+    [self alertWithMessage:@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly."];
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
-	// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-	// Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-	// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-	// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-	// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
 
 @end
