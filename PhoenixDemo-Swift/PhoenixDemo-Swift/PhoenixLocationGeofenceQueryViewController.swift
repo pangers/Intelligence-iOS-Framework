@@ -84,7 +84,7 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
         query.radius = Double(radiusText.text ?? "1000")
         query.pageSize = Int(pageSizeText.text ?? "10")
         query.pageNumber = Int(pageText.text ?? "1")
-        query.sortingDirection = sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? .Ascending : .Descending
+        query.sortingDirection = sortDirectionSegmentedControl.selectedSegmentIndex == 1 ? .Descending : .Ascending
         query.sortingCriteria = criteriaFromRow(sortByPickerView.selectedRowInComponent(0))
             
         delegate?.didSelectGeofenceQuery(query)
