@@ -74,7 +74,7 @@ internal final class Network {
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return PhoenixOAuthPipeline for given token type.
-    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, completion: (PhoenixOAuthPipeline?) -> ()) {
+    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, shouldValidate: Bool = true, completion: (PhoenixOAuthPipeline?) -> ()) {
         if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
             assertionFailure("User should have been created in startup()")
             completion(nil)
@@ -91,8 +91,13 @@ internal final class Network {
             return
         }
         
-        // Token is no longer valid, lets try and refresh, if that fails login again.
-        let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()],
+        // If shouldValidate == false, the token is no longer valid, lets try and refresh, if that fails login again.
+        var operations = [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()]
+        if shouldValidate {
+            operations.insert(PhoenixOAuthValidateOperation(), atIndex: 0)
+        }
+        
+        let pipeline = PhoenixOAuthPipeline(withOperations: operations,
             oauth: oauth, configuration: configuration, network: self)
         
         // Iterate all queued OAuth operations (excluding pipeline operations).
@@ -138,7 +143,8 @@ internal final class Network {
             
             // Attempt to get the pipeline for this operation's OAuth token type.
             // Then execute the login pipeline before trying this operation again.
-            network.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, completion: { (pipeline) -> () in
+            // Shouldn't validate here, our token has expired.
+            network.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, shouldValidate: false, completion: { (pipeline) -> () in
                 // Pipeline will be nil if it already exists in the queue.
                 guard let pipeline = pipeline else { return }
                 

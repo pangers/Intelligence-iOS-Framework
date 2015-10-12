@@ -84,6 +84,13 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
     
     func updateCredentials(withUsername username: String, password: String) {
         assert(tokenType != .Application, "Invalid method for Application tokens")
+        // Compare usernames, if they differ we must clear tokens so login will not validate as
+        // incorrect user. Usernames are case insensitive.
+        if self.username != nil && self.username?.lowercaseString != username.lowercaseString {
+            self.accessToken = nil
+            self.refreshToken = nil
+            self.userId = nil
+        }
         self.username = username
         self.password = password
         // Reset userId, could be a different server but same username
