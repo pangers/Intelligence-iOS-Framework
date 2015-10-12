@@ -54,6 +54,7 @@
 		FE12E1DB1BC81D820077B5F6 /* GeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */; settings = {ASSET_TAGS = (); }; };
 		FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
 		FE12E1FA1BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
+		FE12E1FE1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1FD1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
 		FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */; settings = {ASSET_TAGS = (); }; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* OpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* OpenApplicationEvent.swift */; };
@@ -200,6 +201,7 @@
 		FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceEnterEvent.swift; sourceTree = "<group>"; };
 		FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Phoenix.swift"; sourceTree = "<group>"; };
 		FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateIdentifierRequestOperation.swift; sourceTree = "<group>"; };
+		FE12E1FD1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteIdentifierRequestOperation.swift; sourceTree = "<group>"; };
 		FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableCollectionType.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE18F91E1B84B23D00DCF2EF /* OpenApplicationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenApplicationEvent.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 			isa = PBXGroup;
 			children = (
 				FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */,
+				FE12E1FD1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift */,
 			);
 			name = Identifier;
 			sourceTree = "<group>";
@@ -867,6 +870,7 @@
 				BBC46D601B6F8D9000C8E418 /* CreateUserRequestOperation.swift in Sources */,
 				FEDE079B1B7398FE009BC6B6 /* Geofence.swift in Sources */,
 				FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */,
+				FE12E1FE1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift in Sources */,
 				FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */,
 				BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */,
 				BBD7AF181B6A28F800F5B9C1 /* PhoenixOAuthStorage.swift in Sources */,

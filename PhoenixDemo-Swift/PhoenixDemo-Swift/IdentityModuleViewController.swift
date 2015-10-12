@@ -7,7 +7,34 @@
 //
 
 import UIKit
+import PhoenixSDK
+
+let PhoenixDemoStoredDeviceTokenKey = "PhoenixDemoStoredDeviceTokenKey"
 
 class IdentityModuleViewController : UITableViewController {
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let application = UIApplication.sharedApplication()
+        let delegate = application.delegate as! AppDelegate
+        if indexPath.row == 1 {
+            application.registerForRemoteNotifications()
+            application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+        } else if indexPath.row == 2 {
+            let id = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
+            if id < 1 {
+                delegate.alert(withMessage: "Not Registered!")
+                return
+            }
+            PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
+                if error != nil {
+                    delegate.alert(withError: error!)
+                } else {
+                    delegate.alert(withMessage: "Unregister Succeeded!")
+                }
+            })
+        }
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
     
 }

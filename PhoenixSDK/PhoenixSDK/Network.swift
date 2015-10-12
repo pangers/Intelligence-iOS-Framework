@@ -16,6 +16,8 @@ internal enum HTTPRequestMethod : String {
     case POST = "POST"
     /// HTTP PUT
     case PUT = "PUT"
+    /// HTTP DELETE
+    case DELETE = "DELETE"
 }
 
 internal enum HTTPStatusCode: Int {

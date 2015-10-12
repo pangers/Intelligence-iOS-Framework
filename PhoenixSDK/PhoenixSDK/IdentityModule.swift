@@ -312,7 +312,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback) {
         if data.length == 0 || data.hexString().lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
-            callback(tokenId: -1, error: NSError(domain: IdentityError.domain, code: IdentityError.InvalidDeviceTokenError.rawValue, userInfo: nil))
+            callback(tokenId: -1, error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenInvalidError.rawValue, userInfo: nil))
             return
         }
         let operation = CreateIdentifierRequestOperation(tokenData: data,
@@ -333,7 +333,25 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     }
     
     func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback) {
+        if tokenId < 1 {
+            callback(error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationError.rawValue, userInfo: nil))
+            return
+        }
+        let operation = DeleteIdentifierRequestOperation(tokenId: tokenId,
+            oauth: network.oauthProvider.bestPasswordGrantOAuth,
+            configuration: configuration,
+            network: network,
+            callback: {
+                (returnedOperation: PhoenixOAuthOperation) -> () in
+                if let deleteIdentifierOperation = returnedOperation as? DeleteIdentifierRequestOperation {
+                    callback(error:deleteIdentifierOperation.output?.error)
+                } else {
+                    assertionFailure("Invalid operation returned")
+                }
+        })
         
+        // Execute the network operation
+        network.enqueueOperation(operation)
     }
     
     

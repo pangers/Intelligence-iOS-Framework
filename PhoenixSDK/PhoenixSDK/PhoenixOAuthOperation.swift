@@ -14,6 +14,9 @@ typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error
 typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
 
 private let AccessDeniedErrorCode = "access_denied"
+private let BodyData = "Data"
+private let BodyErrorDescription = "error_description"
+private let BodyError = "error"
 private let OfflineErrorCode = -1009
 
 internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
@@ -60,18 +63,26 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
         return false
     }
     
-    /// Returns error code if response contains some sort of server error but request was 200.
+    /// Returns error code if response contains some sort of error code in the body.
     func outputErrorCode() -> String? {
-        guard let error = self.output?.data?.phx_jsonDictionary?["error"] as? String else {
+        guard let error = self.output?.data?.phx_jsonDictionary?[BodyError] as? String else {
             return nil
         }
-        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?["error_description"] ?? "")
+        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?[BodyErrorDescription] ?? "")
         return error
+    }
+    
+    /// Returns error code if response contains some sort of error description in the body.
+    func outputErrorDescription() -> String? {
+        guard let error_description = self.output?.data?.phx_jsonDictionary?[BodyErrorDescription] as? String else {
+            return nil
+        }
+        return error_description
     }
     
     /// Returns all dictionaries in the 'Data' array of the output.
     func outputArray() -> JSONDictionaryArray? {
-        guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray else {
+        guard let dataArray = self.output?.data?.phx_jsonDictionary?[BodyData] as? JSONDictionaryArray else {
             return nil
         }
         return dataArray

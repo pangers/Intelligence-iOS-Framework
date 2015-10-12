@@ -180,6 +180,20 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(oauth.userId)
+            .phx_URLByAppendingIdentifiers(tokenId)
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
     // MARK: Installation
     
     /// - Returns: An NSURLRequest to create a given installation.

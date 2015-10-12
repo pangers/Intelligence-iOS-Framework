@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 phoenix.analytics.track(testEvent)
                 
                 PhoenixManager.startupWithPhoenix(phoenix)
+                
                 dispatch_semaphore_signal(semaphore)
             }
             
@@ -80,11 +81,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
-            
+            if error != nil {
+                self.alert(withError: error!)
+            } else {
+                // Store previous device token.
+                NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: PhoenixDemoStoredDeviceTokenKey)
+                NSUserDefaults.standardUserDefaults().synchronize()
+                self.alert(withMessage: "Registration Succeeded!")
+            }
         }
     }
     
     // MARK:- PhoenixDelegate
+    
+    func alert(withError error: NSError) {
+        if error.domain == IdentityError.domain {
+            alert(withMessage: "Failed: \(IdentityError(rawValue: error.code)!)")
+        } else if error.domain == RequestError.domain {
+            alert(withMessage: "Failed: \(RequestError(rawValue: error.code)!)")
+        } else {
+            alert(withMessage: "Unknown Error Occurred")
+        }
+    }
     
     func alert(withMessage message: String) {
         dispatch_async(dispatch_get_main_queue()) { [weak self] in

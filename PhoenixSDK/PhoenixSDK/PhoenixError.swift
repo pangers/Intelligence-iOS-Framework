@@ -14,7 +14,7 @@ import Foundation
 public enum ConfigurationError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "ConfigurationError"
+    public static let domain = "ConfigurationError"
     
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
@@ -34,7 +34,7 @@ public enum ConfigurationError: Int, ErrorType {
 public enum IdentityError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "IdentityError"
+    public static let domain = "IdentityError"
 
     /// The user creation request couldn't complete successfully.
     case UserCreationError = 2001
@@ -59,20 +59,23 @@ public enum IdentityError: Int, ErrorType {
     case UserRoleAssignmentError = 2007
     
     /// The device token is invalid (zero length).
-    case InvalidDeviceTokenError = 2008
+    case DeviceTokenInvalidError = 2008
     
     /// Registering the device token failed.
-    case RegisterDeviceTokenError = 2009
+    case DeviceTokenRegistrationError = 2009
+    
+    /// Registering the device token failed because it's already assigned to someone.
+    case DeviceTokenAlreadyRegisteredError = 2010
     
     /// Unregistering the device token failed, incorrect user?
-    case UnregisterDeviceTokenError = 2010
+    case DeviceTokenUnregistrationError = 2011
 }
 
 /// Enumeration to list the errors that can occur in any request.
 public enum RequestError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "RequestError"
+    public static let domain = "RequestError"
     
     /// Error to return when parsing JSON fails.
     case ParseError = 3001
