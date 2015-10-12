@@ -509,7 +509,7 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 
 *Objective-C:*
 ```
-#obj-c
+#objc
 
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -552,7 +552,7 @@ PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (e
 
 *Objective-C:*
 ```
-#!obj-c
+#!objc
 
 [[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
     if (error != nil) {
