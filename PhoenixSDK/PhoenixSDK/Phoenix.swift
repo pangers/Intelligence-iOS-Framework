@@ -125,11 +125,11 @@ public final class Phoenix: NSObject {
         let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
         
         // Modules
-        identity = PhoenixIdentity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        analytics = PhoenixAnalytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        identity = IdentityModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        analytics = AnalyticsModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
         location = LocationModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
         
-        let internalAnalytics = analytics as! PhoenixAnalytics
+        let internalAnalytics = analytics as! AnalyticsModule
         let internalLocation = location as! LocationModule
         
         internalAnalytics.locationProvider = (location as? LocationModuleProvider)

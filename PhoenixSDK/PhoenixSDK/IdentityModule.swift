@@ -1,5 +1,5 @@
 //
-//  PhoenixIdentity.swift
+//  IdentityModule.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 03/08/2015.
@@ -40,8 +40,8 @@ internal typealias PhoenixInstallationCallback = (installation: PhoenixInstallat
     func updateUser(user: Phoenix.User, callback: PhoenixUserCallback)
 }
 
-/// The PhoenixIdentity implementation.
-final class PhoenixIdentity : PhoenixModule, IdentityModuleProtocol {
+/// The IdentityModule implementation.
+final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     /// Installation object used for Create/Update Installation requests.
     private var installation: PhoenixInstallation!
@@ -128,9 +128,9 @@ final class PhoenixIdentity : PhoenixModule, IdentityModuleProtocol {
                                     // Update user id for SDKUser
                                     identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
                                     completion(success: error == nil)
-                                    })
+                                })
                             }
-                            })
+                        })
                     })
                 }
             }

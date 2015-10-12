@@ -15,7 +15,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     let fakeUpdateUser = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let updateUserWeakPassword = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let userWeakPassword = Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
-    var identity: PhoenixIdentity?
+    var identity: IdentityModule?
     
     let badResponse = "BAD RESPONSE"
     
@@ -70,7 +70,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     
     override func setUp() {
         super.setUp()
-        self.identity = phoenix?.identity as? PhoenixIdentity
+        self.identity = phoenix?.identity as? IdentityModule
     }
     
     override func tearDown() {

@@ -1,5 +1,5 @@
 //
-//  PhoenixAnalytics.swift
+//  AnalyticsModule.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 18/08/2015.
@@ -34,7 +34,7 @@ internal protocol LocationModuleProvider:class {
 }
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-internal final class PhoenixAnalytics: PhoenixModule, AnalyticsModuleProtocol {
+internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
 
     internal weak var locationProvider: LocationModuleProvider?
 
