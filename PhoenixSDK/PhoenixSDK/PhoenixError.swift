@@ -70,6 +70,9 @@ public enum RequestError: Int, ErrorType {
     
     /// Error to return if user doesn't have access to a particular API.
     case AccessDeniedError = 3002
+    
+    /// Error to return if user is offline.
+    case InternetOfflineError = 3003
 }
 
 /// Enumeration to list the errors that can occur in the installation module

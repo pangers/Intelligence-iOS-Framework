@@ -14,6 +14,7 @@ typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error
 typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
 
 private let AccessDeniedErrorCode = "access_denied"
+private let OfflineErrorCode = -1009
 
 internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
     var shouldBreak: Bool = false
@@ -43,7 +44,11 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             return true
         }
         if output?.error != nil {
-            output?.error = NSError(domain: domain, code: code, userInfo: nil)
+            if output?.error?.code == OfflineErrorCode {
+                output?.error = NSError(domain: RequestError.domain, code: RequestError.InternetOfflineError.rawValue, userInfo: nil)
+            } else {
+                output?.error = NSError(domain: domain, code: code, userInfo: nil)
+            }
             return true
         }
         if let httpResponse = output?.response as? NSHTTPURLResponse {
