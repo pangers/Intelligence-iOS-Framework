@@ -16,18 +16,15 @@
     UIApplication *application = UIApplication.sharedApplication;
     __weak AppDelegate *delegate = application.delegate;
     if (indexPath.row == 1) {
-        
         [application registerForRemoteNotifications];
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
-        
     } else if (indexPath.row == 2) {
-        
         NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:PhoenixDemoStoredDeviceTokenKey];
-        if (tokenId < 1) {
+        // Check if user defaults value is valid (non-zero).
+        if (tokenId == 0) {
             [delegate alertWithMessage:@"Not Registered!"];
             return;
         }
-        
         [[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
             if (error != nil) {
                 [delegate alertWithError: error];
@@ -37,7 +34,6 @@
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
         }];
-        
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

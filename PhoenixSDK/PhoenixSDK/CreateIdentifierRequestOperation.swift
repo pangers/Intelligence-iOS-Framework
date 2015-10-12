@@ -13,8 +13,6 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
     var tokenId: Int?
     
     internal var tokenString: String {
-        // 18892
-        // d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec00
         return tokenData.hexString()
     }
     private let tokenData: NSData
@@ -43,14 +41,12 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        guard let data = outputArrayFirstDictionary(), returnedId = data["Id"] as? Int where returnedId > 0 else {
+        guard let data = outputArrayFirstDictionary(), returnedId = data["Id"] as? Int else {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
         
         tokenId = returnedId
-        
-        print(returnedId)
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {

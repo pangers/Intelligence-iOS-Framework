@@ -20,12 +20,13 @@ class IdentityModuleViewController : UITableViewController {
             application.registerForRemoteNotifications()
             application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
         } else if indexPath.row == 2 {
-            let id = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
-            if id < 1 {
+            // This method will return zero if unset.
+            let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
+            if tokenId == 0 {
                 delegate.alert(withMessage: "Not Registered!")
                 return
             }
-            PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
+            PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
                 if error != nil {
                     delegate.alert(withError: error!)
                 } else {

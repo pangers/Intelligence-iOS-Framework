@@ -19,6 +19,8 @@ internal typealias InstallationCallback = (installation: Installation?, error: N
 public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -> Void
 public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
 
+private let InvalidDeviceTokenID = -1
+
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc(PHXIdentityModuleProtocol)
 public protocol IdentityModuleProtocol : ModuleProtocol {
@@ -312,7 +314,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback) {
         if data.length == 0 || data.hexString().lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
-            callback(tokenId: -1, error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenInvalidError.rawValue, userInfo: nil))
+            callback(tokenId: InvalidDeviceTokenID, error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenInvalidError.rawValue, userInfo: nil))
             return
         }
         let operation = CreateIdentifierRequestOperation(tokenData: data,
@@ -322,7 +324,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             callback: {
                 (returnedOperation: PhoenixOAuthOperation) -> () in
                 if let createIdentifierOperation = returnedOperation as? CreateIdentifierRequestOperation {
-                    callback(tokenId: createIdentifierOperation.tokenId ?? -1, error: createIdentifierOperation.output?.error)
+                    callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
                 } else {
                     assertionFailure("Invalid operation returned")
                 }
