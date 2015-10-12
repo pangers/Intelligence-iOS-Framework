@@ -99,7 +99,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
+        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
         query.setDefaultValues()
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!
         
@@ -124,7 +124,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
-        let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 2, longitude: 2))
+        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
 
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!

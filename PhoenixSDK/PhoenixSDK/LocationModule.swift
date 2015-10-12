@@ -9,10 +9,11 @@
 import Foundation
 import CoreLocation
 
-/// A generic PhoenixDownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
-public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
+/// A generic DownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
+public typealias DownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
-@objc(PHXLocationModuleDelegate) public protocol LocationModuleDelegate {
+@objc(PHXLocationModuleDelegate)
+public protocol LocationModuleDelegate {
     
     optional func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
 
@@ -28,7 +29,8 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 /**
 *  The Phoenix Location module protocol.
 */
-@objc(PHXLocation) public protocol LocationModuleProtocol : ModuleProtocol {
+@objc(PHXLocationModuleProtocol)
+public protocol LocationModuleProtocol : ModuleProtocol {
     
     /**
     Downloads a list of geofences using the given query details
@@ -36,7 +38,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     - parameter queryDetails: The geofence query to retrieve.
     - parameter callback:     The callback that will be notified upon success/error.
     */
-    func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?)
+    func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?)
     
     func isMonitoringGeofences() -> Bool
     
@@ -75,7 +77,8 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 /// Phoenix coordinate object. CLLocationCoordinate2D can't be used as an optional.
 /// Furthermore, not providing a custom location object would force the developers to
 /// always require CoreLocation even if they don't need to use it.
-@objc(PHXCoordinate) public class PhoenixCoordinate : NSObject {
+@objc(PHXCoordinate)
+public class Coordinate : NSObject {
     
     let longitude:Double
     let latitude:Double
@@ -86,7 +89,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
-        guard let object = object as? PhoenixCoordinate else {
+        guard let object = object as? Coordinate else {
             return false
         }
         
@@ -98,7 +101,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 internal final class LocationModule: PhoenixModule, LocationModuleProtocol, LocationManagerDelegate, LocationModuleProvider {
     
     /// The last coordinate we received.
-    private var lastLocation: PhoenixCoordinate?
+    private var lastLocation: Coordinate?
     
     var locationDelegate: LocationModuleDelegate?
     
@@ -122,7 +125,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     /// The location manager
     private let locationManager:LocationManager
     
-    var userLocation:PhoenixCoordinate? {
+    var userLocation:Coordinate? {
         return locationManager.userLocation
     }
     
@@ -163,7 +166,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     
     // MARK:- Download geofences
     
-    func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?) {
+    func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?) {
         let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) -> () in
             guard let downloadGeofencesOperation = returnedOperation as? DownloadGeofencesRequestOperation else {
                 assertionFailure("Invalid operation")
@@ -208,19 +211,19 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     
     // MARK:- LocationManagerDelegate
     
-    func didEnterGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
+    func didEnterGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
         self.locationDelegate?.phoenixLocation?(self, didEnterGeofence: geofence)
         self.enteredGeofences[geofence.id] = geofence
         self.trackGeofenceEntered(geofence)
     }
     
-    func didExitGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
+    func didExitGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
         self.locationDelegate?.phoenixLocation?(self, didExitGeofence: geofence)
         self.enteredGeofences[geofence.id] = nil
         self.trackGeofenceExited(geofence)
     }
     
-    func didUpdateLocationWithCoordinate(coordinate:PhoenixCoordinate) {
+    func didUpdateLocationWithCoordinate(coordinate:Coordinate) {
         
     }
     

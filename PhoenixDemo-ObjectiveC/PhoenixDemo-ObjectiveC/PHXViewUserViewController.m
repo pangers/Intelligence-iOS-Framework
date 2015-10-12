@@ -77,7 +77,7 @@
     });
 }
 
--(id<IdentityModuleProtocol>) phoenixIdentity {
+-(id<PHXIdentityModuleProtocol>) phoenixIdentity {
     return PHXPhoenixManager.phoenix.identity;
 }
 

@@ -16,7 +16,8 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 internal typealias InstallationCallback = (installation: Installation?, error: NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
-@objc public protocol IdentityModuleProtocol : ModuleProtocol {
+@objc(PHXIdentityModuleProtocol)
+public protocol IdentityModuleProtocol : ModuleProtocol {
     
     /// Attempt to authenticate with a username and password.
     /// Logging in with associate events with this user.

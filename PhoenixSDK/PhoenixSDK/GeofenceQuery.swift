@@ -61,7 +61,7 @@ import CoreLocation
     ///Default initializer. Requires location coordinates to query for list of geofences.
     /// - Parameters:
     ///     - location: location coordinates to look for geofences related to.
-    public init(location: PhoenixCoordinate) {
+    public init(location: Coordinate) {
         longitude = location.longitude
         latitude = location.latitude
     }
