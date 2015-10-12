@@ -273,6 +273,7 @@ Note: Developers are responsible for ensuring the callbacks are executed on the 
 In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
 
 * RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Phoenix Platform are incorrectly configured. **Developer is responsible to fix these issues.**
+* RequestError.InternetOfflineError: Internet connectivity error, developer will need to wait until device has connected to the internet then try this request again.
 * RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
 
 These errors will be wrapped within an NSError using as domain RequestError.domain.
@@ -477,8 +478,6 @@ The 'updateUser' method can return the following additional errors:
 ## Location Module ##
 
 The location module is responsible for managing a user's location in order to track entering/exiting geofences and add this information to analytics events. 
-
-Developers can disable geofences by setting 'use_geofences' to false in the Configuration file, however if they still want to include user's location in analytics they will still need to request permission for the users location.
 
 Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
 
