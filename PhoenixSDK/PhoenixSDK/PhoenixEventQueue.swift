@@ -170,9 +170,8 @@ internal class PhoenixEventQueue {
                 }
                 
                 synced(this.semaphore) {
-                    
-                    // If successful, remove this range.
-                    if error == nil {
+                    // If successful or outdated events, remove this range.
+                    if error == nil || error?.code == AnalyticsError.OldEventsError.rawValue {
                         // Remove items in range we just sent and store again
                         this.eventArray.removeRange(range)
                         this.storeEvents()

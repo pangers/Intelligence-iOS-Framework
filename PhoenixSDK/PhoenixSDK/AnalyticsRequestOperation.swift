@@ -33,6 +33,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         let errorString = output?.data?.phx_jsonDictionary?["error"] as? String ?? ""
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == 400 && errorString == "invalid_request" {
+                output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.OldEventsError.rawValue, userInfo: nil)
                 return
             }
         }
