@@ -63,10 +63,21 @@
 }
 
 - (void)alertWithMessage:(NSString*)message {
+    UIViewController *presenterViewController = [[[[UIApplication sharedApplication] windows] firstObject] rootViewController];
+    if (![NSThread isMainThread] ||
+        ![presenterViewController canBecomeFirstResponder] ||
+        [presenterViewController presentedViewController] != nil) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf alertWithMessage:message];
+        });
+        return;
+    }
+    
     UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
     [controller addAction:action];
-    [[[[[UIApplication sharedApplication] windows] firstObject] rootViewController] presentViewController:controller animated:true completion:nil];
+    [presenterViewController presentViewController:controller animated:true completion:nil];
 }
 
 - (void)userCreationFailedForPhoenix:(Phoenix *)phoenix {

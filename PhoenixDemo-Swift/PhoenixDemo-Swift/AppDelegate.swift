@@ -84,9 +84,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     // MARK:- PhoenixDelegate
     
     func alert(withMessage message: String) {
+        let presenterViewController = window?.rootViewController
+        if !NSThread.isMainThread() ||
+            presenterViewController?.canBecomeFirstResponder() == false ||
+            presenterViewController?.presentedViewController != nil {
+            dispatch_after(1, dispatch_get_main_queue(), { [weak self] () -> Void in
+                self?.alert(withMessage: message)
+            })
+            return
+        }
         let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+        presenterViewController?.presentViewController(controller, animated: true, completion: nil)
     }
     
     func userCreationFailedForPhoenix(phoenix: Phoenix) {
