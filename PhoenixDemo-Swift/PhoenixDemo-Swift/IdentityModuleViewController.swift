@@ -30,6 +30,8 @@ class IdentityModuleViewController : UITableViewController {
                     delegate.alert(withError: error!)
                 } else {
                     delegate.alert(withMessage: "Unregister Succeeded!")
+                    NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
+                    NSUserDefaults.standardUserDefaults().synchronize()
                 }
             })
         }

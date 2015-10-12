@@ -84,7 +84,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             if error != nil {
                 self.alert(withError: error!)
             } else {
-                // Store token id for unregistration.
+                // Store token id for unregistration. For this example I have stored it in user defaults.
+                // However, this should be stored in the keychain as the app may be uninstalled and reinstalled
+                // multiple times and may receive the same device token from Apple.
                 NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: PhoenixDemoStoredDeviceTokenKey)
                 NSUserDefaults.standardUserDefaults().synchronize()
                 

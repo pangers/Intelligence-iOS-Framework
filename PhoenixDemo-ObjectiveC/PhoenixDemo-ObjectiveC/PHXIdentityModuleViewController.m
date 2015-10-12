@@ -33,6 +33,8 @@
                 [delegate alertWithError: error];
             } else {
                 [delegate alertWithMessage: @"Unregister Succeeded!"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey: PhoenixDemoStoredDeviceTokenKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
             }
         }];
         
