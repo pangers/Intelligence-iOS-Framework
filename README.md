@@ -474,6 +474,96 @@ The 'updateUser' method can return the following additional errors:
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
+#### Register Device Token ####
+
+As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded.
+
+In order to request the push notification token from Apple, you will need to call the following:
+```
+#!swift
+
+let application = UIApplication.sharedApplication()
+application.registerForRemoteNotifications()
+application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+
+```
+
+Here is an example of how to respond to the delegate method 'didRegisterForRemoteNotificationsWithDeviceToken':
+
+*Swift:*
+```
+#!swift
+
+
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+            if error != nil {
+                // Failed, handle error.
+            } else {
+				// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+            }
+        }
+    }
+
+```
+
+*Objective-C:*
+```
+#obj-c
+
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[[PHXPhoenixManager phoenix] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+        if (error != nil) {
+            // Failed, handle error.
+        } else {
+		    // Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+        }
+    }];
+}
+
+
+```
+
+The 'registerDeviceToken' method can return the following additional errors:
+
+* IdentityError.DeviceTokenInvalidError: Invalid device token provided.
+* IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform.
+* IdentityError.DeviceTokenAlreadyRegisteredError: Device token has already been registered by you or someone else, you should unregister from that user before trying to register again.
+
+
+#### Unregister Device Token ####
+
+The developer is responsible for unregistering device tokens, they can only be assigned to one user at a time, so if you forget to unregister from the previous user you will continue receiving push notifications meant for another user. In order to unregister you will need to store the tokenId returned by the 'registerDeviceToken' method then send this before logging out. If your app does not implement the login/logout functionality you will most likely never need to call this method.
+
+*Swift:*
+```
+#!swift
+
+PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
+    if error != nil {
+        // Failed, handle error.
+    } else {
+        // Successfully unregistered, clear anything stored in the keychain.
+    }
+})
+
+```
+
+*Objective-C:*
+```
+#!obj-c
+
+[[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+    if (error != nil) {
+        // Failed, handle error.
+    } else {
+        // Successfully unregistered, clear anything stored in the keychain.
+    }
+}];
+
+```
+
 
 ## Location Module ##
 
