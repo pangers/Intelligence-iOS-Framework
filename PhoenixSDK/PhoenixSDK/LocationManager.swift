@@ -8,7 +8,7 @@
 
 import CoreLocation
 
-protocol PhoenixLocationManagerDelegate {
+protocol LocationManagerDelegate {
 
     func didEnterGeofence(geofence:Geofence, withUserCoordinate:PhoenixCoordinate?)
     
@@ -23,13 +23,13 @@ protocol PhoenixLocationManagerDelegate {
     func didStopMonitoringGeofence(geofence:Geofence)
 }
 
-internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
+internal class LocationManager: NSObject, CLLocationManagerDelegate {
     
     /// The location manager to use.
     private let locationManager: CLLocationManager
     
     /// The delegate that will be notified of entering/leaving geofences.
-    internal var delegate:PhoenixLocationManagerDelegate?
+    internal var delegate: LocationManagerDelegate?
     
     /// List of geofences monitored.
     private var geofencesMonitored:[Geofence]?

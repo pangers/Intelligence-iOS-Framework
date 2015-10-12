@@ -11,7 +11,7 @@ import XCTest
 @testable import PhoenixSDK
 import CoreLocation
 
-class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, PhoenixLocationDelegate {
+class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, LocationModuleDelegate {
     
     var enterGeofenceExpectation:XCTestExpectation?
     var exitGeofenceExpectation:XCTestExpectation?

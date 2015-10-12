@@ -1,5 +1,5 @@
 //
-//  PhoenixLocation.swift
+//  LocationModule.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 06/08/2015.
@@ -12,7 +12,7 @@ import CoreLocation
 /// A generic PhoenixDownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
 public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
-@objc(PHXLocationDelegate) public protocol PhoenixLocationDelegate {
+@objc(PHXLocationModuleDelegate) public protocol LocationModuleDelegate {
     
     optional func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
 
@@ -68,7 +68,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     var geofences: [Geofence]? { get }
     
     /// The delegate that will be notified upon entering/exiting a geofence.
-    var locationDelegate:PhoenixLocationDelegate? { get set }
+    var locationDelegate:LocationModuleDelegate? { get set }
     
 }
 
@@ -95,12 +95,12 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 }
 
 /// Location module that is responsible for managing Geofences and User Location.
-internal final class PhoenixLocation: PhoenixModule, LocationModuleProtocol, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
+internal final class LocationModule: PhoenixModule, LocationModuleProtocol, LocationManagerDelegate, LocationModuleProvider {
     
     /// The last coordinate we received.
-    private var lastLocation:PhoenixCoordinate?
+    private var lastLocation: PhoenixCoordinate?
     
-    var locationDelegate:PhoenixLocationDelegate?
+    var locationDelegate: LocationModuleDelegate?
     
     /// A reference to the analytics module so we can track the geofences entered/exited events
     internal weak var analytics: AnalyticsModuleProtocol?
@@ -120,7 +120,7 @@ internal final class PhoenixLocation: PhoenixModule, LocationModuleProtocol, Pho
     }
     
     /// The location manager
-    private let locationManager:PhoenixLocationManager
+    private let locationManager:LocationManager
     
     var userLocation:PhoenixCoordinate? {
         return locationManager.userLocation
@@ -131,7 +131,12 @@ internal final class PhoenixLocation: PhoenixModule, LocationModuleProtocol, Pho
     /// - parameter configuration:    Configuration used to configure requests.
     /// - parameter geofenceCallback: Called on enter/exit of geofence.
     /// - returns: Returns a Location object.
-    internal init(withDelegate delegate:PhoenixInternalDelegate,network:Network, configuration: Phoenix.Configuration, locationManager:PhoenixLocationManager) {
+    internal init(withDelegate delegate:
+        PhoenixInternalDelegate,
+        network:Network,
+        configuration: Phoenix.Configuration,
+        locationManager:LocationManager)
+    {
         self.locationManager = locationManager
         super.init(withDelegate:delegate, network: network, configuration: configuration)
         self.locationManager.delegate = self
@@ -201,7 +206,7 @@ internal final class PhoenixLocation: PhoenixModule, LocationModuleProtocol, Pho
         analytics?.track(geofenceEvent)
     }
     
-    // MARK:- PhoenixLocationManagerDelegate
+    // MARK:- LocationManagerDelegate
     
     func didEnterGeofence(geofence: Geofence, withUserCoordinate: PhoenixCoordinate?) {
         self.locationDelegate?.phoenixLocation?(self, didEnterGeofence: geofence)

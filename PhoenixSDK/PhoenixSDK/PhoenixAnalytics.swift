@@ -27,7 +27,7 @@ import Foundation
 	func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval)
 }
 
-internal protocol PhoenixLocationProvider:class {
+internal protocol LocationModuleProvider:class {
     
     var userLocation:PhoenixCoordinate? { get }
     
@@ -36,7 +36,7 @@ internal protocol PhoenixLocationProvider:class {
 /// The Phoenix Analytics Module defines the methods available for tracking events.
 internal final class PhoenixAnalytics: PhoenixModule, AnalyticsModuleProtocol {
 
-    internal weak var locationProvider:PhoenixLocationProvider?
+    internal weak var locationProvider: LocationModuleProvider?
 
     /// Event queue responsible for queuing and storing events to disk.
     private var eventQueue: EventQueue?

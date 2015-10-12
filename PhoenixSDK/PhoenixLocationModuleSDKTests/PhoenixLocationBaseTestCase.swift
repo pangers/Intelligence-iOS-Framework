@@ -38,7 +38,7 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
         mockLocationManager = MockCLLocationManager()
         configuration = mockConfiguration()
         network = mockNetwork();
-        location = PhoenixLocation(withDelegate: self, network: network, configuration: configuration, locationManager: PhoenixLocationManager(locationManager:mockLocationManager))
+        location = LocationModule(withDelegate: self, network: network, configuration: configuration, locationManager: LocationManager(locationManager:mockLocationManager))
     }
     
     override func tearDown() {

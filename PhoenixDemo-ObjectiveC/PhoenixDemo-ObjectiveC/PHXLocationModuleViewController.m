@@ -15,7 +15,7 @@
 #import "PHXPhoenixManager.h"
 #import "PHXLocationGeofenceQueryViewController.h"
 
-@interface PHXLocationModuleViewController () <PHXLocationDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
+@interface PHXLocationModuleViewController () <PHXLocationModuleDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
 
 @property(nonatomic, strong) NSArray<NSString*>* events;
 @property(nonatomic, strong) CLLocationManager* locationManager;

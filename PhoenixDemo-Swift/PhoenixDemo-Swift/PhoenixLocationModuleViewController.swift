@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import PhoenixSDK
 
-class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate, GeofenceQueryBuilderDelegate {
+class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, LocationModuleDelegate, GeofenceQueryBuilderDelegate {
     
     // MARK:- Constants
     private static let cellIdentifier = "cell"

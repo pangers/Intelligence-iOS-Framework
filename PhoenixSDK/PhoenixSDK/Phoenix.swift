@@ -102,7 +102,7 @@ public final class Phoenix: NSObject {
         configuration phoenixConfiguration: Phoenix.Configuration,
         oauthProvider: PhoenixOAuthProvider,
         installation: PhoenixInstallation,
-        locationManager: PhoenixLocationManager
+        locationManager: LocationManager
         ) throws
     {
         self.configuration = phoenixConfiguration.clone()
@@ -127,12 +127,12 @@ public final class Phoenix: NSObject {
         // Modules
         identity = PhoenixIdentity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
         analytics = PhoenixAnalytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        location = PhoenixLocation(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
+        location = LocationModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
         
         let internalAnalytics = analytics as! PhoenixAnalytics
-        let internalLocation = location as! PhoenixLocation
+        let internalLocation = location as! LocationModule
         
-        internalAnalytics.locationProvider = (location as? PhoenixLocationProvider)
+        internalAnalytics.locationProvider = (location as? LocationModuleProvider)
         internalLocation.analytics = analytics
     }
     
@@ -156,7 +156,7 @@ public final class Phoenix: NSObject {
             installation: PhoenixInstallation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults()),
-            locationManager: PhoenixLocationManager())
+            locationManager: LocationManager())
     }
     
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.

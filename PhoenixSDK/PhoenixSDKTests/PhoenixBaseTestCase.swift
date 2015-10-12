@@ -53,7 +53,7 @@ class PhoenixBaseTestCase : XCTestCase {
                 configuration: mockConfiguration,
                 oauthProvider: mockOAuthProvider,
                 installation: mockInstallation,
-                locationManager: PhoenixLocationManager())
+                locationManager: LocationManager())
             
             // Test individual modules rather than calling startup here.
         }
