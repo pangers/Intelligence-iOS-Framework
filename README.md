@@ -478,7 +478,7 @@ The 'updateUser' method can return the following additional errors:
 
 As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token, since you would not want to send it multiple times.
 
-In order to request the push notification token from Apple, you will need to call the following:
+An example of how to request the push notification token from Apple:
 ```
 #!swift
 
