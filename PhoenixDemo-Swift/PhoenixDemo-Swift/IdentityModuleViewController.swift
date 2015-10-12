@@ -13,7 +13,6 @@ let PhoenixDemoStoredDeviceTokenKey = "PhoenixDemoStoredDeviceTokenKey"
 
 class IdentityModuleViewController : UITableViewController {
     
-    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let application = UIApplication.sharedApplication()
         let delegate = application.delegate as! AppDelegate

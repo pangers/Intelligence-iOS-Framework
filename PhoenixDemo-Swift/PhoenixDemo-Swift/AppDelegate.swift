@@ -84,9 +84,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             if error != nil {
                 self.alert(withError: error!)
             } else {
-                // Store previous device token.
+                // Store token id for unregistration.
                 NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: PhoenixDemoStoredDeviceTokenKey)
                 NSUserDefaults.standardUserDefaults().synchronize()
+                
                 self.alert(withMessage: "Registration Succeeded!")
             }
         }
