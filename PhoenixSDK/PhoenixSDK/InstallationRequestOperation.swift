@@ -10,9 +10,9 @@ import Foundation
 
 class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     
-    var installation: PhoenixInstallation!
+    var installation: Installation!
     
-    required init(installation: PhoenixInstallation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
         super.init()
         self.callback = callback
         self.configuration = configuration

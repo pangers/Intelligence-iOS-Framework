@@ -24,7 +24,7 @@ class PhoenixBaseTestCase : XCTestCase {
     var mockConfiguration: Phoenix.Configuration!
     var phoenix: Phoenix!
     var mockInstallationStorage: InstallationStorage!
-    var mockInstallation: PhoenixInstallation!
+    var mockInstallation: Installation!
     
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     
@@ -44,7 +44,7 @@ class PhoenixBaseTestCase : XCTestCase {
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
-            mockInstallation = MockPhoenixInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
+            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
             
             try phoenix = Phoenix(
                 withDelegate: mockDelegateWrapper.mockDelegate,

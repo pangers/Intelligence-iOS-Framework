@@ -42,12 +42,12 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     private var eventQueue: EventQueue?
     private var timeTracker: TimeTracker?
     
-    internal var installation: PhoenixInstallation!
+    internal var installation: Installation!
     
     
     // MARK:- ModuleProtocol
     
-    internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: PhoenixInstallation) {
+    internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: Installation) {
         super.init(withDelegate: delegate, network: network, configuration: configuration)
         self.installation = installation
     }

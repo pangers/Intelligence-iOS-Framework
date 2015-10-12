@@ -101,7 +101,7 @@ public final class Phoenix: NSObject {
         network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
         oauthProvider: PhoenixOAuthProvider,
-        installation: PhoenixInstallation,
+        installation: Installation,
         locationManager: LocationManager
         ) throws
     {
@@ -153,7 +153,7 @@ public final class Phoenix: NSObject {
             network: nil,
             configuration: phoenixConfiguration,
             oauthProvider: oauthProvider,
-            installation: PhoenixInstallation(configuration: phoenixConfiguration.clone(),
+            installation: Installation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults()),
             locationManager: LocationManager())

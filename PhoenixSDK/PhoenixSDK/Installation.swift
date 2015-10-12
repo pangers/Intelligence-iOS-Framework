@@ -1,5 +1,5 @@
 //
-//  PhoenixInstallation.swift
+//  Installation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 14/08/2015.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// Manager used for Installation requests.
-internal struct PhoenixInstallation {
+internal struct Installation {
     // MARK:- Keys
     static let InstallationId = "InstallationId"
     static let RequestId = "Id"
@@ -27,7 +27,7 @@ internal struct PhoenixInstallation {
     /// Bundle of application used to get version and build number.
     let applicationVersion: PhoenixApplicationVersionProtocol
     /// User defaults to store response data for update installation request.
-    let installationStorage: PhoenixInstallationStorageProtocol
+    let installationStorage: InstallationStorageProtocol
     
     // MARK:- Parameters used in requests
     private let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
@@ -59,20 +59,20 @@ internal struct PhoenixInstallation {
     /// - Returns: JSON Dictionary representation used in Installation requests.
     func toJSON() -> JSONDictionary {
         var json: JSONDictionary = [
-            PhoenixInstallation.ProjectId: projectId,
-            PhoenixInstallation.ApplicationId: applicationId,
-            PhoenixInstallation.InstallationId: installationId,
-            PhoenixInstallation.InstalledVersion: installedVersion,
-            PhoenixInstallation.DeviceTypeId: deviceTypeId,
-            PhoenixInstallation.OperatingSystemVersion: systemVersion,
-            PhoenixInstallation.ModelReference: modelReference]
+            Installation.ProjectId: projectId,
+            Installation.ApplicationId: applicationId,
+            Installation.InstallationId: installationId,
+            Installation.InstalledVersion: installedVersion,
+            Installation.DeviceTypeId: deviceTypeId,
+            Installation.OperatingSystemVersion: systemVersion,
+            Installation.ModelReference: modelReference]
         // Update Installation requires the Id of the previous Create Installation request.
         if requestId != nil {
-            json[PhoenixInstallation.RequestId] = requestId!
+            json[Installation.RequestId] = requestId!
         }
         // Currently, if we don't send the CreateDate the Phoenix backend will overwrite it with the ModifyDate.
         if createDate != nil {
-            json[PhoenixInstallation.CreateDate] = createDate!
+            json[Installation.CreateDate] = createDate!
         }
         return json
     }
@@ -82,10 +82,10 @@ internal struct PhoenixInstallation {
     func updateWithJSON(json: JSONDictionary?) -> Bool {
         if let
             json = json,
-            installation = json[PhoenixInstallation.InstallationId] as? String,
-            id = json[PhoenixInstallation.RequestId] as? Int,
-            installedVersion = json[PhoenixInstallation.InstalledVersion] as? String,
-            createDate = json[PhoenixInstallation.CreateDate] as? String {
+            installation = json[Installation.InstallationId] as? String,
+            id = json[Installation.RequestId] as? Int,
+            installedVersion = json[Installation.InstalledVersion] as? String,
+            createDate = json[Installation.CreateDate] as? String {
                 installationStorage.phx_storeInstallationID(installation)
                 installationStorage.phx_storeInstallationCreateDate(createDate)
                 installationStorage.phx_storeInstallationRequestID(id)

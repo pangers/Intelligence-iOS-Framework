@@ -21,7 +21,7 @@ class VersionClass: PhoenixApplicationVersionProtocol {
 
 // MARK: - Fake Storage Object
 
-class InstallationStorage: PhoenixInstallationStorageProtocol {
+class InstallationStorage: InstallationStorageProtocol {
     static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
     var dictionary = [String: AnyObject]()
     var phx_applicationVersion: String? {
@@ -118,14 +118,14 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
                 XCTFail()
                 return
             }
-            if let projectID = json[PhoenixInstallation.ProjectId] as? Int,
-                appID = json[PhoenixInstallation.ApplicationId] as? Int,
-                installationID = json[PhoenixInstallation.InstallationId] as? String,
-                id = json[PhoenixInstallation.RequestId] as? Int,
-                createDate = json[PhoenixInstallation.CreateDate] as? String,
-                modelRef = json[PhoenixInstallation.ModelReference] as? String,
-                installed = json[PhoenixInstallation.InstalledVersion] as? String,
-                OSVer = json[PhoenixInstallation.OperatingSystemVersion] as? String
+            if let projectID = json[Installation.ProjectId] as? Int,
+                appID = json[Installation.ApplicationId] as? Int,
+                installationID = json[Installation.InstallationId] as? String,
+                id = json[Installation.RequestId] as? Int,
+                createDate = json[Installation.CreateDate] as? String,
+                modelRef = json[Installation.ModelReference] as? String,
+                installed = json[Installation.InstalledVersion] as? String,
+                OSVer = json[Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
                     OSVer == UIDevice.currentDevice().systemVersion &&
@@ -221,15 +221,15 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.ProjectId] as! Int == mockConfiguration.projectID, "Project ID must match configuration")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.ApplicationId] as! Int == mockConfiguration.applicationID, "Application ID must match configuration")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.RequestId] as? String == nil, "Request ID must be nil")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.CreateDate] as? String == nil, "Create date must be nil")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
+        XCTAssert(installation.toJSON()[Installation.ProjectId] as! Int == mockConfiguration.projectID, "Project ID must match configuration")
+        XCTAssert(installation.toJSON()[Installation.ApplicationId] as! Int == mockConfiguration.applicationID, "Application ID must match configuration")
+        XCTAssert(installation.toJSON()[Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
+        XCTAssert(installation.toJSON()[Installation.RequestId] as? String == nil, "Request ID must be nil")
+        XCTAssert(installation.toJSON()[Installation.CreateDate] as? String == nil, "Create date must be nil")
+        XCTAssert(installation.toJSON()[Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
+        XCTAssert(installation.toJSON()[Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
+        XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
+        XCTAssert(installation.toJSON()[Installation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
     }
     
     func mockPrepareForUpdateInstallation() {
@@ -243,10 +243,10 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         (installation.applicationVersion as? VersionClass)?.fakeVersion = "1.0.2"
-        installation = PhoenixInstallation(configuration: mockConfiguration, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
+        installation = Installation(configuration: mockConfiguration, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
         XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.CreateDate] != nil, "Create date must be set")
-        XCTAssert(installation.toJSON()[PhoenixInstallation.RequestId] != nil, "Request ID must be set")
+        XCTAssert(installation.toJSON()[Installation.CreateDate] != nil, "Create date must be set")
+        XCTAssert(installation.toJSON()[Installation.RequestId] != nil, "Request ID must be set")
         XCTAssert(installation.isValidToUpdate)
     }
     
@@ -268,14 +268,14 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             XCTAssert(error == nil, "Unexpected error")
             
             let json = self.mockInstallation.toJSON()
-            if let projectID = json[PhoenixInstallation.ProjectId] as? Int,
-                appID = json[PhoenixInstallation.ApplicationId] as? Int,
-                installationID = json[PhoenixInstallation.InstallationId] as? String,
-                id = json[PhoenixInstallation.RequestId] as? Int,
-                createDate = json[PhoenixInstallation.CreateDate] as? String,
-                modelRef = json[PhoenixInstallation.ModelReference] as? String,
-                installed = json[PhoenixInstallation.InstalledVersion] as? String,
-                OSVer = json[PhoenixInstallation.OperatingSystemVersion] as? String
+            if let projectID = json[Installation.ProjectId] as? Int,
+                appID = json[Installation.ApplicationId] as? Int,
+                installationID = json[Installation.InstallationId] as? String,
+                id = json[Installation.RequestId] as? Int,
+                createDate = json[Installation.CreateDate] as? String,
+                modelRef = json[Installation.ModelReference] as? String,
+                installed = json[Installation.InstalledVersion] as? String,
+                OSVer = json[Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
                     OSVer == UIDevice.currentDevice().systemVersion &&

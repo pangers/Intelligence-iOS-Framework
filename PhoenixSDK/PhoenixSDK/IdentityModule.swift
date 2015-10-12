@@ -13,7 +13,7 @@ public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> V
 
 /// Called on completion of update or create installation request.
 /// - Returns: Installation object and optional error.
-internal typealias PhoenixInstallationCallback = (installation: PhoenixInstallation?, error: NSError?) -> Void
+internal typealias InstallationCallback = (installation: Installation?, error: NSError?) -> Void
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc public protocol IdentityModuleProtocol : ModuleProtocol {
@@ -44,13 +44,13 @@ internal typealias PhoenixInstallationCallback = (installation: PhoenixInstallat
 final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     /// Installation object used for Create/Update Installation requests.
-    private var installation: PhoenixInstallation!
+    private var installation: Installation!
     
     init(
         withDelegate delegate: PhoenixInternalDelegate,
         network: Network,
         configuration: Phoenix.Configuration,
-        installation: PhoenixInstallation)
+        installation: Installation)
     {
         super.init(withDelegate: delegate, network: network, configuration: configuration)
         self.installation = installation
@@ -305,7 +305,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     /// - Parameters:
     ///     - installation: Optional installation object to use instead of self.installation.
     ///     - callback: Optionally provide a callback to fire on completion.
-    internal func createInstallation(callback: PhoenixInstallationCallback? = nil) {
+    internal func createInstallation(callback: InstallationCallback? = nil) {
         if !installation.isNewInstallation {
             callback?(installation: installation, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyInstalledError.rawValue, userInfo: nil))
             return
@@ -326,7 +326,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     /// Schedules an update installation request if version number changed.
     /// - Parameters:
     ///     - callback: Optionally provide a callback to fire on completion.
-    internal func updateInstallation(callback: PhoenixInstallationCallback? = nil) {
+    internal func updateInstallation(callback: InstallationCallback? = nil) {
         if !installation.isUpdatedInstallation {
             callback?(installation: installation, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyUpdatedError.rawValue, userInfo: nil))
             return
