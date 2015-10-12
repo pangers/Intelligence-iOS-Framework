@@ -1,5 +1,5 @@
 //
-//  PhoenixInstallationRequestOperation.swift
+//  InstallationRequestOperation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 01/10/2015.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PhoenixInstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
+class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     
     var installation: PhoenixInstallation!
     

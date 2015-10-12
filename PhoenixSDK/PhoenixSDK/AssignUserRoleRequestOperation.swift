@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation for User Role Assignment.
-internal final class AssignUserRoleRequestOperation : PhoenixUserRequestOperation {
+internal final class AssignUserRoleRequestOperation : UserRequestOperation {
     
     override func main() {
         super.main()

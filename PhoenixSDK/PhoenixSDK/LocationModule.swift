@@ -28,7 +28,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 /**
 *  The Phoenix Location module protocol.
 */
-@objc(PHXLocation) public protocol LocationModuleProtocol : PhoenixModuleProtocol {
+@objc(PHXLocation) public protocol LocationModuleProtocol : ModuleProtocol {
     
     /**
     Downloads a list of geofences using the given query details

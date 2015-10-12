@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation for Get Me API.
-internal final class GetUserMeRequestOperation : PhoenixUserRequestOperation {
+internal final class GetUserMeRequestOperation : UserRequestOperation {
     
     override func main() {
         super.main()

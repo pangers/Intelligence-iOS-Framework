@@ -1,5 +1,5 @@
 //
-//  PhoenixUserRequestOperation.swift
+//  UserRequestOperation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 01/10/2015.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PhoenixUserRequestOperation : PhoenixOAuthOperation, NSCopying {
+class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
     
     /// Once successful, this will contain the user provided by the backend.
     var user: Phoenix.User?

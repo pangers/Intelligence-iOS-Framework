@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation for Update User API.
-internal final class UpdateUserRequestOperation: PhoenixUserRequestOperation {
+internal final class UpdateUserRequestOperation: UserRequestOperation {
 
     override func main() {
         super.main()

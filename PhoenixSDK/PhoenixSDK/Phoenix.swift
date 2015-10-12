@@ -80,7 +80,7 @@ public final class Phoenix: NSObject {
     @objc public internal(set) var location: LocationModuleProtocol!
     
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules: [PhoenixModuleProtocol] {
+    internal var modules: [ModuleProtocol] {
         return [identity, location, analytics]
     }
     
