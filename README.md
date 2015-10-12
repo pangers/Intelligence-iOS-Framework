@@ -476,7 +476,7 @@ The 'updateUser' method can return the following additional errors:
 
 #### Register Device Token ####
 
-As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded.
+As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token, since you would not want to send it multiple times.
 
 In order to request the push notification token from Apple, you will need to call the following:
 ```
@@ -527,8 +527,7 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 The 'registerDeviceToken' method can return the following additional errors:
 
 * IdentityError.DeviceTokenInvalidError: Invalid device token provided.
-* IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform.
-* IdentityError.DeviceTokenAlreadyRegisteredError: Device token has already been registered by you or someone else, you should unregister from that user before trying to register again.
+* IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform. This may occur if you register the same token twice.
 
 
 #### Unregister Device Token ####
@@ -565,8 +564,8 @@ PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (e
 
 The 'unregisterDeviceTokenWithId' method can return the follow additional errors:
 
+* IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Phoenix platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
 * IdentityError.DeviceTokenUnregistrationError: Unable to unregister token in Phoenix platform.
-
 
 ## Location Module ##
 

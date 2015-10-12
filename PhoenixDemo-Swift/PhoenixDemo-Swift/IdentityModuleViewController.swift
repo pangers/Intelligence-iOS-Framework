@@ -16,12 +16,17 @@ class IdentityModuleViewController : UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let application = UIApplication.sharedApplication()
         let delegate = application.delegate as! AppDelegate
+        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
         if indexPath.row == 1 {
+            if tokenId != 0 {
+                delegate.alert(withMessage: "Already Registered!")
+                return
+            }
+            
             application.registerForRemoteNotifications()
             application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
         } else if indexPath.row == 2 {
             // This method will return zero if unset.
-            let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
             if tokenId == 0 {
                 delegate.alert(withMessage: "Not Registered!")
                 return

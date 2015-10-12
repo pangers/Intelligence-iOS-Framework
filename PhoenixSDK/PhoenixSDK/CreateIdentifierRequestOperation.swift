@@ -31,12 +31,6 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         let request = NSURLRequest.phx_URLRequestForIdentifierCreation(tokenString, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
         
-        // Note: Hacky, we should ask for an error code.
-        if let errorDescription = outputErrorDescription() where errorDescription.rangeOfString("assigned") != nil {
-            output?.error = NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenAlreadyRegisteredError.rawValue, userInfo: nil)
-            return
-        }
-        
         if handleError(IdentityError.domain, code: IdentityError.DeviceTokenRegistrationError.rawValue) {
             return
         }

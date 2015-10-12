@@ -15,12 +15,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIApplication *application = UIApplication.sharedApplication;
     __weak AppDelegate *delegate = application.delegate;
+    NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:PhoenixDemoStoredDeviceTokenKey];
     if (indexPath.row == 1) {
+        // Check if user defaults value is valid (non-zero).
+        if (tokenId != 0) {
+            [delegate alertWithMessage:@"Already Registered!"];
+            return;
+        }
         [application registerForRemoteNotifications];
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
     } else if (indexPath.row == 2) {
-        NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:PhoenixDemoStoredDeviceTokenKey];
-        // Check if user defaults value is valid (non-zero).
+        // Check if user defaults value is invalid (zero).
         if (tokenId == 0) {
             [delegate alertWithMessage:@"Not Registered!"];
             return;

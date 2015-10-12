@@ -14,7 +14,5 @@ class TrackApplicationTimeEvent: Event {
     init(withSeconds seconds: UInt64) {
         super.init(withType: TrackEventType)
         self.value = Double(seconds)
-        
-        print("SEND \(seconds)")
     }
 }

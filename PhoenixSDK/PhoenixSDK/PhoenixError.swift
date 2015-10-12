@@ -64,11 +64,11 @@ public enum IdentityError: Int, ErrorType {
     /// Registering the device token failed.
     case DeviceTokenRegistrationError = 2009
     
-    /// Registering the device token failed because it's already assigned to someone.
-    case DeviceTokenAlreadyRegisteredError = 2010
-    
     /// Unregistering the device token failed, incorrect user?
-    case DeviceTokenUnregistrationError = 2011
+    case DeviceTokenUnregistrationError = 2010
+    
+    /// Device token has not been registered yet.
+    case DeviceTokenNotRegisteredError = 2011
 }
 
 /// Enumeration to list the errors that can occur in any request.
@@ -86,6 +86,7 @@ public enum RequestError: Int, ErrorType {
     /// Error to return if user is offline.
     case InternetOfflineError = 3003
 }
+
 
 /// Enumeration to list the errors that can occur in the installation module
 internal enum InstallationError: Int, ErrorType {
