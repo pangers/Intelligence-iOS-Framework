@@ -92,9 +92,10 @@ internal final class Network {
         }
         
         // If shouldValidate == false, the token is no longer valid, lets try and refresh, if that fails login again.
-        let operations = shouldValidate ?
-            [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()] :
-            [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()]
+        var operations = [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()]
+        if shouldValidate {
+            operations.insert(PhoenixOAuthValidateOperation(), atIndex: 0)
+        }
         
         let pipeline = PhoenixOAuthPipeline(withOperations: operations,
             oauth: oauth, configuration: configuration, network: self)
