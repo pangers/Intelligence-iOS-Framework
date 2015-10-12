@@ -13,6 +13,8 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
     
     private let eventsJSON: JSONDictionaryArray
     
+    private let InvalidRequestErrorCode = "invalid_request"
+    
     required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
         self.eventsJSON = json
         super.init()
@@ -30,9 +32,8 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         
         // Swallowing the invalid request so that the events sent are cleared.
         // This error is not recoverable and we need to purge the data.
-        let errorString = output?.data?.phx_jsonDictionary?["error"] as? String ?? ""
         if let httpResponse = output?.response as? NSHTTPURLResponse {
-            if httpResponse.statusCode == 400 && errorString == "invalid_request" {
+            if httpResponse.statusCode == 400 && outputErrorCode() == InvalidRequestErrorCode {
                 output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.OldEventsError.rawValue, userInfo: nil)
                 return
             }
