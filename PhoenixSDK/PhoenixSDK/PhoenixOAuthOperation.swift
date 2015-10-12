@@ -78,7 +78,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     }
     
     /// Most API methods can use this helper to extract the first dictionary in the 'Data' array of output.
-    func outputDictionary() -> JSONDictionary? {
+    func outputArrayFirstDictionary() -> JSONDictionary? {
         guard let dataDictionary = outputArray()?.first else {
             return nil
         }

@@ -78,6 +78,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         PhoenixManager.phoenix.shutdown()
 	}
 
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+            
+        }
+    }
+    
     // MARK:- PhoenixDelegate
     
     func alert(withMessage message: String) {

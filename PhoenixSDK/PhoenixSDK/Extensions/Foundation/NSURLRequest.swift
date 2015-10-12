@@ -25,6 +25,8 @@ private let HTTPBodyGrantTypeClientCredentials = "client_credentials"
 private let HTTPBodyGrantTypePassword = "password"
 private let HTTPBodyGrantTypeRefreshToken = "refresh_token"
 
+private let PHXIdentifierTypeDeviceToken = "iOS_Device_Token"
+
 // MARK: - OAuth
 
 internal extension NSURLRequest {
@@ -152,6 +154,28 @@ internal extension NSURLRequest {
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
         request.HTTPBody = [user.toJSON()].phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    // MARK: Identifiers
+    
+    class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(oauth.userId)
+            .phx_URLByAppendingIdentifiers()
+        let request = NSMutableURLRequest(URL: url)
+        
+        let json = [["ProjectId": "\(configuration.projectID)",
+            "IdentifierTypeId": PHXIdentifierTypeDeviceToken,
+            "IsConfirmed":" false",
+            "value": tokenString]]
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = json.phx_toJSONData()
         
         return request.copy() as! NSURLRequest
     }

@@ -30,7 +30,7 @@ class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        if installation.updateWithJSON(outputDictionary()) == false {
+        if installation.updateWithJSON(outputArrayFirstDictionary()) == false {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

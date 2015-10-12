@@ -52,6 +52,8 @@
 		FE12E1B81BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1B71BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift */; settings = {ASSET_TAGS = (); }; };
 		FE12E1C91BC7F5C30077B5F6 /* TimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1C81BC7F5C30077B5F6 /* TimeTracker.swift */; settings = {ASSET_TAGS = (); }; };
 		FE12E1DB1BC81D820077B5F6 /* GeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
+		FE12E1FA1BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
 		FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */; settings = {ASSET_TAGS = (); }; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* OpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* OpenApplicationEvent.swift */; };
@@ -92,7 +94,7 @@
 		FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEDA1BC2C89D00F02701 /* MockDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 		FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE11BC2C9D400F02701 /* MockOAuthProvider.swift */; settings = {ASSET_TAGS = (); }; };
 		FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE31BC2D05500F02701 /* MockInstallation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */; };
+		FEEE79EA1B661AFB0047905D /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* Network.swift */; };
 		FEEF2D061B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D051B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift */; };
 		FEEF2D0E1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */; };
 		FEEF2D101B7DFE6D007C1730 /* Installation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D0F1B7DFE6D007C1730 /* Installation.swift */; };
@@ -196,6 +198,8 @@
 		FE12E1B71BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackApplicationTimeEvent.swift; sourceTree = "<group>"; };
 		FE12E1C81BC7F5C30077B5F6 /* TimeTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeTracker.swift; sourceTree = "<group>"; };
 		FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceEnterEvent.swift; sourceTree = "<group>"; };
+		FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Phoenix.swift"; sourceTree = "<group>"; };
+		FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateIdentifierRequestOperation.swift; sourceTree = "<group>"; };
 		FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableCollectionType.swift; sourceTree = "<group>"; };
 		FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		FE18F91E1B84B23D00DCF2EF /* OpenApplicationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenApplicationEvent.swift; sourceTree = "<group>"; };
@@ -236,7 +240,7 @@
 		FEECFEDA1BC2C89D00F02701 /* MockDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegate.swift; sourceTree = "<group>"; };
 		FEECFEE11BC2C9D400F02701 /* MockOAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockOAuthProvider.swift; sourceTree = "<group>"; };
 		FEECFEE31BC2D05500F02701 /* MockInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockInstallation.swift; sourceTree = "<group>"; };
-		FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixNetwork.swift; sourceTree = "<group>"; };
+		FEEE79E91B661AFB0047905D /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		FEEF2D051B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateInstallationRequestOperation.swift; sourceTree = "<group>"; };
 		FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaultsInstallation.swift; sourceTree = "<group>"; };
 		FEEF2D0F1B7DFE6D007C1730 /* Installation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Installation.swift; sourceTree = "<group>"; };
@@ -303,7 +307,6 @@
 				BBA5D4341B67827A007D2B60 /* Configuration */,
 				BBA5D4331B678244007D2B60 /* Network */,
 				FEF7EF721B6671C700066AA3 /* Extensions */,
-				BB0F0ECA1B68C627008679C9 /* OAuth */,
 				BBFC3E541BBECD1500B20C2D /* Helpers */,
 			);
 			path = PhoenixSDK;
@@ -416,7 +419,8 @@
 		BBA5D4331B678244007D2B60 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				FEEE79E91B661AFB0047905D /* PhoenixNetwork.swift */,
+				FEEE79E91B661AFB0047905D /* Network.swift */,
+				BB0F0ECA1B68C627008679C9 /* OAuth */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -457,6 +461,7 @@
 			isa = PBXGroup;
 			children = (
 				BBC46D5A1B6F78D000C8E418 /* IdentityModule.swift */,
+				FE12E1F81BCBB2A10077B5F6 /* Identifier */,
 				FEB471521BBD7C6900640CD7 /* Installation */,
 				FEB471511BBD7C6500640CD7 /* User */,
 			);
@@ -495,6 +500,14 @@
 				BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		FE12E1F81BCBB2A10077B5F6 /* Identifier */ = {
+			isa = PBXGroup;
+			children = (
+				FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */,
+			);
+			name = Identifier;
 			sourceTree = "<group>";
 		};
 		FE18F9371B85CA2400DCF2EF /* Event Types */ = {
@@ -622,6 +635,7 @@
 			children = (
 				BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */,
 				FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */,
+				FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */,
 				FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */,
 				FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */,
 				FEF7EF741B6671C700066AA3 /* NSJSONSerializationHelpers.swift */,
@@ -846,6 +860,7 @@
 				BBC46D5B1B6F78D000C8E418 /* IdentityModule.swift in Sources */,
 				FE18F91F1B84B23D00DCF2EF /* OpenApplicationEvent.swift in Sources */,
 				FEDE077F1B735692009BC6B6 /* DownloadGeofencesRequestOperation.swift in Sources */,
+				FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */,
 				FEAFBC9D1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift in Sources */,
 				FEB4714C1BBD708000640CD7 /* NSURL+Phoenix.swift in Sources */,
 				FEB4713E1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift in Sources */,
@@ -856,7 +871,7 @@
 				BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */,
 				BBD7AF181B6A28F800F5B9C1 /* PhoenixOAuthStorage.swift in Sources */,
 				FEEF2D061B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift in Sources */,
-				FEEE79EA1B661AFB0047905D /* PhoenixNetwork.swift in Sources */,
+				FEEE79EA1B661AFB0047905D /* Network.swift in Sources */,
 				FEB471421BBD1DDA00640CD7 /* PhoenixOAuthLoginOperation.swift in Sources */,
 				FEEF2D101B7DFE6D007C1730 /* Installation.swift in Sources */,
 				FEEF2D0E1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift in Sources */,
@@ -874,6 +889,7 @@
 				BBC0DFE51B5E30DD0077E39A /* PhoenixConfiguration.swift in Sources */,
 				BB77B9841BC40A5900B53ABE /* SequenceType+Phoenix.swift in Sources */,
 				FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */,
+				FE12E1FA1BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift in Sources */,
 				BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

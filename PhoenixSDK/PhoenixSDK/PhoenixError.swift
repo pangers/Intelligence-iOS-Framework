@@ -57,6 +57,15 @@ public enum IdentityError: Int, ErrorType {
 
     /// The user role assignment operation failed.
     case UserRoleAssignmentError = 2007
+    
+    /// The device token is invalid (zero length).
+    case InvalidDeviceTokenError = 2008
+    
+    /// Registering the device token failed.
+    case RegisterDeviceTokenError = 2009
+    
+    /// Unregistering the device token failed, incorrect user?
+    case UnregisterDeviceTokenError = 2010
 }
 
 /// Enumeration to list the errors that can occur in any request.

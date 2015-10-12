@@ -45,6 +45,11 @@ internal extension NSURL {
         }
     }
     
+    /// - Returns: NSURL with append identifiers path.
+    func phx_URLByAppendingIdentifiers() -> NSURL! {
+        return URLByAppendingPathComponent("/identifiers")
+    }
+    
     /// - Returns: NSURL with append installations path.
     func phx_URLByAppendingInstallations() -> NSURL! {
         return URLByAppendingPathComponent("/installations")

@@ -15,6 +15,10 @@ public typealias UserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 /// - Returns: Installation object and optional error.
 internal typealias InstallationCallback = (installation: Installation?, error: NSError?) -> Void
 
+/// A generic IdentifierCallback, developer is responsbile for storing the identifier
+public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -> Void
+public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
+
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc(PHXIdentityModuleProtocol)
 public protocol IdentityModuleProtocol : ModuleProtocol {
@@ -39,6 +43,10 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
     func updateUser(user: Phoenix.User, callback: UserCallback)
+    
+    func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback)
+    
+    func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback)
 }
 
 /// The IdentityModule implementation.
@@ -299,6 +307,35 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         // Execute the network operation
         network.enqueueOperation(operation)
     }
+    
+    // MARK:- Identifiers
+    
+    func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback) {
+        if data.length == 0 || data.hexString().lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
+            callback(tokenId: -1, error: NSError(domain: IdentityError.domain, code: IdentityError.InvalidDeviceTokenError.rawValue, userInfo: nil))
+            return
+        }
+        let operation = CreateIdentifierRequestOperation(tokenData: data,
+            oauth: network.oauthProvider.bestPasswordGrantOAuth,
+            configuration: configuration,
+            network: network,
+            callback: {
+                (returnedOperation: PhoenixOAuthOperation) -> () in
+                if let createIdentifierOperation = returnedOperation as? CreateIdentifierRequestOperation {
+                    callback(tokenId: createIdentifierOperation.tokenId ?? -1, error: createIdentifierOperation.output?.error)
+                } else {
+                    assertionFailure("Invalid operation returned")
+                }
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
+    
+    func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback) {
+        
+    }
+    
     
     // MARK:- Installation
     

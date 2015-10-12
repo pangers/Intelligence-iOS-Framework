@@ -35,7 +35,7 @@ class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        guard let receivedUser = Phoenix.User(withJSON: self.outputDictionary(), configuration: configuration!) else {
+        guard let receivedUser = Phoenix.User(withJSON: outputArrayFirstDictionary(), configuration: configuration!) else {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

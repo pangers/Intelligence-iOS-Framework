@@ -8,10 +8,6 @@
 
 import Foundation
 
-/// The callback alias for internal purposes. The caller should parse this data into an object/struct rather
-/// than giving this object back to the developer.
-typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
-
 /// An enumeration of the HTTP Methods available to use
 internal enum HTTPRequestMethod : String {
     /// HTTP GET
