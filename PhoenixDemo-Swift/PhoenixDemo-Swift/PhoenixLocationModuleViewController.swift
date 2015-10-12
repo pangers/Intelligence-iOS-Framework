@@ -133,11 +133,11 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
     
     // MARK:- PhoenixLocationDelegate
     
-    func phoenixLocation(location: PhoenixLocationProtocol, didEnterGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence:Geofence) {
         addRecord("Entered \(geofence.name)")
     }
     
-    func phoenixLocation(location: PhoenixLocationProtocol, didExitGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence:Geofence) {
         addRecord("Exited \(geofence.name)")
     }
     

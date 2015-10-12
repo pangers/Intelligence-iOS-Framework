@@ -9,7 +9,7 @@
 import Foundation
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-@objc public protocol PhoenixAnalyticsProtocol : PhoenixModuleProtocol {
+@objc public protocol AnalyticsModuleProtocol : PhoenixModuleProtocol {
     
     /// Pause analytics module, must be called when entering the background.
     func pause()
@@ -34,7 +34,7 @@ internal protocol PhoenixLocationProvider:class {
 }
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-internal final class PhoenixAnalytics: PhoenixModule, PhoenixAnalyticsProtocol {
+internal final class PhoenixAnalytics: PhoenixModule, AnalyticsModuleProtocol {
 
     internal weak var locationProvider:PhoenixLocationProvider?
 

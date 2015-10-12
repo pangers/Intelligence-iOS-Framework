@@ -91,7 +91,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         mockLocationManager.fireExitGeofence(Geofence())
     }
 
-    func phoenixLocation(location: PhoenixLocationProtocol, didEnterGeofence geofence: Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = enterGeofenceExpectation else {
@@ -102,7 +102,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         enterGeofenceExpectation = nil
     }
     
-    func phoenixLocation(location: PhoenixLocationProtocol, didExitGeofence geofence: Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = exitGeofenceExpectation else {
@@ -114,7 +114,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
     }
     
     
-    func phoenixLocation(location: PhoenixLocationProtocol, didStartMonitoringGeofence: Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
         guard let expectation = startMonitorGeofenceExpectation else {
             return
         }

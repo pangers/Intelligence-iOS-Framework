@@ -71,13 +71,13 @@ public final class Phoenix: NSObject {
     // MARK: - Modules
     
     /// The identity module, enables user management in the Phoenix backend.
-    @objc public internal(set) var identity: PhoenixIdentityProtocol!
+    @objc public internal(set) var identity: IdentityModuleProtocol!
     
     /// Analytics instance that can be used for posting Events.
-    @objc public internal(set) var analytics: PhoenixAnalyticsProtocol!
+    @objc public internal(set) var analytics: AnalyticsModuleProtocol!
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    @objc public internal(set) var location: PhoenixLocationProtocol!
+    @objc public internal(set) var location: LocationModuleProtocol!
     
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [PhoenixModuleProtocol] {

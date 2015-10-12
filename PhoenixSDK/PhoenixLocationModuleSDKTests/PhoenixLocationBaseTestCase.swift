@@ -26,7 +26,7 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     
     var storage:MockSimpleStorage!
     var configuration:Phoenix.Configuration!
-    var location:PhoenixLocationProtocol!
+    var location:LocationModuleProtocol!
     var network:Network!
     var mockLocationManager:MockCLLocationManager!
     

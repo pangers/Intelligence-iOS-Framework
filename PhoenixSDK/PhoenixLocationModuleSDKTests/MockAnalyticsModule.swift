@@ -10,7 +10,7 @@ import UIKit
 
 @testable import PhoenixSDK
 
-class MockAnalyticsModule: NSObject, PhoenixAnalyticsProtocol {
+class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
 
     var trackedEvents:[Event] = []
     

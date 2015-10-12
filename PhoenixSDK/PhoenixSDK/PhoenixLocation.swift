@@ -14,21 +14,21 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 
 @objc(PHXLocationDelegate) public protocol PhoenixLocationDelegate {
     
-    optional func phoenixLocation(location: PhoenixLocationProtocol, didEnterGeofence geofence: Geofence)
+    optional func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
 
-    optional func phoenixLocation(location: PhoenixLocationProtocol, didExitGeofence geofence: Geofence)
+    optional func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence)
     
-    optional func phoenixLocation(location: PhoenixLocationProtocol, didStartMonitoringGeofence: Geofence)
+    optional func phoenixLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence)
 
-    optional func phoenixLocation(location: PhoenixLocationProtocol, didFailMonitoringGeofence: Geofence)
+    optional func phoenixLocation(location: LocationModuleProtocol, didFailMonitoringGeofence: Geofence)
 
-    optional func phoenixLocation(location: PhoenixLocationProtocol, didStopMonitoringGeofence: Geofence)
+    optional func phoenixLocation(location: LocationModuleProtocol, didStopMonitoringGeofence: Geofence)
 }
 
 /**
 *  The Phoenix Location module protocol.
 */
-@objc(PHXLocation) public protocol PhoenixLocationProtocol : PhoenixModuleProtocol {
+@objc(PHXLocation) public protocol LocationModuleProtocol : PhoenixModuleProtocol {
     
     /**
     Downloads a list of geofences using the given query details
@@ -95,7 +95,7 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
 }
 
 /// Location module that is responsible for managing Geofences and User Location.
-internal final class PhoenixLocation: PhoenixModule, PhoenixLocationProtocol, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
+internal final class PhoenixLocation: PhoenixModule, LocationModuleProtocol, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
     
     /// The last coordinate we received.
     private var lastLocation:PhoenixCoordinate?
@@ -103,7 +103,7 @@ internal final class PhoenixLocation: PhoenixModule, PhoenixLocationProtocol, Ph
     var locationDelegate:PhoenixLocationDelegate?
     
     /// A reference to the analytics module so we can track the geofences entered/exited events
-    internal weak var analytics: PhoenixAnalyticsProtocol?
+    internal weak var analytics: AnalyticsModuleProtocol?
     
     /// Array of recently entered geofences, on exit they will be removed, ensures no duplicate API calls on reload/download of geofences.
     internal lazy var enteredGeofences = [Int:Geofence]()
