@@ -509,8 +509,7 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 
 *Objective-C:*
 ```
-#objc
-
+#!objc
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[[PHXPhoenixManager phoenix] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
@@ -563,6 +562,10 @@ PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (e
 }];
 
 ```
+
+The 'unregisterDeviceTokenWithId' method can return the follow additional errors:
+
+* IdentityError.DeviceTokenUnregistrationError: Unable to unregister token in Phoenix platform.
 
 
 ## Location Module ##
