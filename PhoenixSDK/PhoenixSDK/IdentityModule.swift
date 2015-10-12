@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// A generic PhoenixUserCallback in which we get either a PhoenixUser or an error.
-public typealias PhoenixUserCallback = (user:Phoenix.User?, error:NSError?) -> Void
+/// A generic UserCallback in which we get either a PhoenixUser or an error.
+public typealias UserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 
 /// Called on completion of update or create installation request.
 /// - Returns: Installation object and optional error.
@@ -25,20 +25,20 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     ///     - username: Username of account to attempt login with.
     ///     - password: Password associated with username.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func login(withUsername username: String, password: String, callback: PhoenixUserCallback)
+    func login(withUsername username: String, password: String, callback: UserCallback)
     
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
-    func getMe(callback: PhoenixUserCallback)
+    func getMe(callback: UserCallback)
     
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: Phoenix User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func updateUser(user: Phoenix.User, callback: PhoenixUserCallback)
+    func updateUser(user: Phoenix.User, callback: UserCallback)
 }
 
 /// The IdentityModule implementation.
@@ -145,7 +145,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     // MARK:- Login
     
-    @objc func login(withUsername username: String, password: String, callback: PhoenixUserCallback) {
+    @objc func login(withUsername username: String, password: String, callback: UserCallback) {
         var oauth = network.oauthProvider.loggedInUserOAuth
         oauth.updateCredentials(withUsername: username, password: password)
         
@@ -198,7 +198,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     // MARK: - User Management
     
-    @objc func updateUser(user: Phoenix.User, callback: PhoenixUserCallback) {
+    @objc func updateUser(user: Phoenix.User, callback: UserCallback) {
         if !user.isValidToUpdate {
             callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
             return
@@ -222,7 +222,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         network.enqueueOperation(operation)
     }
     
-    internal func getMe(oauth: PhoenixOAuthProtocol, callback: PhoenixUserCallback) {
+    internal func getMe(oauth: PhoenixOAuthProtocol, callback: UserCallback) {
         let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
             if let getMeOperation = returnedOperation as? GetUserMeRequestOperation {
                 callback(user: getMeOperation.user, error: getMeOperation.output?.error)
@@ -235,7 +235,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         network.enqueueOperation(operation)
     }
     
-    @objc func getMe(callback: PhoenixUserCallback) {
+    @objc func getMe(callback: UserCallback) {
         getMe(network.oauthProvider.loggedInUserOAuth, callback: callback)
     }
     
@@ -249,7 +249,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
     /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
     /// The NSError domain is IdentityError.domain
-    internal func createUser(user: Phoenix.User, callback: PhoenixUserCallback? = nil) {
+    internal func createUser(user: Phoenix.User, callback: UserCallback? = nil) {
         if !user.isValidToCreate {
             callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
             return

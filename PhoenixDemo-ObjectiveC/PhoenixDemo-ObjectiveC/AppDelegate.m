@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "PHXPhoenixManager.h"
 
-@interface AppDelegate () <PHXPhoenixDelegate>
+@interface AppDelegate () <PHXDelegate>
 
 @end
 

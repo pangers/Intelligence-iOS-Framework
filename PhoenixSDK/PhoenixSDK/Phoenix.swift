@@ -9,7 +9,7 @@
 import Foundation
 
 /// Mandatory public protocol developers must implement in order to respond to events correctly.
-@objc(PHXPhoenixDelegate)
+@objc(PHXDelegate)
 public protocol PhoenixDelegate {
     /// Unable to create SDK user, this may occur if a user with the randomized
     /// credentials already exists (highly unlikely) or your Application is
