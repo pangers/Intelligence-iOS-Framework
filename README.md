@@ -139,7 +139,7 @@ configuration.region = Phoenix.Region.Europe
 configuration.sdk_user_role = 1000
 
 ```
-*Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
