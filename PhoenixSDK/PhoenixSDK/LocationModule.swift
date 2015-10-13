@@ -12,6 +12,10 @@ import CoreLocation
 /// A generic DownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
 public typealias DownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
+func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
+    return lhs.longitude == rhs.longitude && lhs.latitude == rhs.latitude
+}
+
 /**
 Implement the LocationModuleDelegate in order to be notified of events that
 occur related to the location module.
@@ -139,11 +143,7 @@ public class Coordinate : NSObject {
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
-        guard let object = object as? Coordinate else {
-            return false
-        }
-        
-        return object.longitude == longitude && object.latitude == latitude
+        return self == (object as? Coordinate)
     }
 }
 

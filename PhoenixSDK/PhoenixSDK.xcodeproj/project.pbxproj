@@ -72,6 +72,7 @@
 		FE6999401B861A5400EB7094 /* GeofenceExitEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993F1B861A5400EB7094 /* GeofenceExitEvent.swift */; };
 		FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */; };
 		FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */; };
+		FE7745E41BCD4F9900072B13 /* MockLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7745E31BCD4F9900072B13 /* MockLocationProvider.swift */; settings = {ASSET_TAGS = (); }; };
 		FEAB722F1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAB722E1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift */; settings = {ASSET_TAGS = (); }; };
 		FEAFBC9D1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAFBC9C1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift */; };
 		FEB4713E1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4713D1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift */; settings = {ASSET_TAGS = (); }; };
@@ -211,6 +212,7 @@
 		FE69993F1B861A5400EB7094 /* GeofenceExitEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceExitEvent.swift; sourceTree = "<group>"; };
 		FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDKeychain.swift; sourceTree = "<group>"; };
 		FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixKeychain.swift; sourceTree = "<group>"; };
+		FE7745E31BCD4F9900072B13 /* MockLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLocationProvider.swift; sourceTree = "<group>"; };
 		FEAB722E1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockTimeTrackerStorage.swift; sourceTree = "<group>"; };
 		FEAFBC9C1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInstallationRequestOperation.swift; sourceTree = "<group>"; };
 		FEB4713D1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOAuthValidateOperation.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 			isa = PBXGroup;
 			children = (
 				BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */,
+				FE7745E31BCD4F9900072B13 /* MockLocationProvider.swift */,
 				BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */,
 				BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */,
 				BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */,
@@ -848,6 +851,7 @@
 				BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */,
 				FE3B01D71BCD0AB900B98622 /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
+				FE7745E41BCD4F9900072B13 /* MockLocationProvider.swift in Sources */,
 				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
 				BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */,
 				FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */,
