@@ -10,26 +10,58 @@ import Foundation
 
 typealias TimeTrackerCallback = (event: TrackApplicationTimeEvent) -> ()
 
+protocol TimeTrackerStorageProtocol {
+    func seconds() -> UInt64?
+    func update(seconds: UInt64)
+    func reset()
+}
+
+class TimeTrackerStorage: TimeTrackerStorageProtocol {
+    let storage: NSUserDefaults
+    
+    init(userDefaults: NSUserDefaults) {
+       storage = userDefaults
+    }
+    
+    func seconds() -> UInt64? {
+        return (storage.objectForKey(TrackEventType) as? NSNumber)?.unsignedLongLongValue
+    }
+    
+    func update(seconds: UInt64) {
+        // Store value.
+        storage.setObject(NSNumber(unsignedLongLong: seconds), forKey: TrackEventType)
+        storage.synchronize()
+    }
+    
+    func reset() {
+        // Clear storage.
+        storage.removeObjectForKey(TrackEventType)
+        storage.synchronize()
+    }
+}
+
 /// Responsible for tracking time between startup, pause, resume, and stop events.
 class TimeTracker: NSObject {
     private let storageTimeInterval = 5.0
-    private let backgroundThreshold: UInt64 = 5 * 60
     private let callback: TimeTrackerCallback
-    private let storage = NSUserDefaults.standardUserDefaults()
-    private var seconds = UInt64(0)
-    private var backgroundTime: UInt64?
-    private var referenceTime: UInt64?
+    internal var backgroundThreshold: UInt64 = 5 * 60
+    internal var seconds = UInt64(0)
+    internal var backgroundTime: UInt64?
+    internal var referenceTime: UInt64?
     private var timer: NSTimer?
     
-    init(callback: TimeTrackerCallback) {
+    private let storage: TimeTrackerStorageProtocol
+    
+    init(storage: TimeTrackerStorageProtocol, callback: TimeTrackerCallback) {
+        self.storage = storage
         self.callback = callback
         
         super.init()
         
         // On initialize, check if we had an unsent duration stored
-        if let previousDuration = storage.objectForKey(TrackEventType) as? NSNumber {
+        if let previousDuration = storage.seconds() {
             // Send it
-            callback(event: TrackApplicationTimeEvent(withSeconds: previousDuration.unsignedLongLongValue))
+            callback(event: TrackApplicationTimeEvent(withSeconds: previousDuration))
             // Clean the slate
             reset()
         }
@@ -92,8 +124,7 @@ class TimeTracker: NSObject {
         seconds = 0
         
         // Clear storage.
-        storage.removeObjectForKey(TrackEventType)
-        storage.synchronize()
+        storage.reset()
     }
     
     /// Store value in NSUserDefaults, stop counting, and optionally resume counting.
@@ -104,8 +135,7 @@ class TimeTracker: NSObject {
         }
         
         // Store value.
-        storage.setObject(NSNumber(unsignedLongLong: seconds), forKey: TrackEventType)
-        storage.synchronize()
+        storage.update(seconds)
     }
     
     /// Calculate seconds elapsed since a starting reference time.

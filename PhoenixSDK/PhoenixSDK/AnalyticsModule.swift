@@ -66,7 +66,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
             this.eventQueue = EventQueue(withCallback: this.sendEvents)
             this.eventQueue?.startQueue()
             this.trackApplicationOpened()
-            this.timeTracker = TimeTracker(callback: { [weak self] (event) -> () in
+            this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: NSUserDefaults.standardUserDefaults()), callback: { [weak self] (event) -> () in
                 self?.track(event)
                 })
             completion(success: true)

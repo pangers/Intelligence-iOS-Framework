@@ -42,6 +42,47 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         queue.clearEvents()
     }
     
+    func testAppTimeEvent() {
+        let event = TrackApplicationTimeEvent(withSeconds: 10)
+        XCTAssert(event.value == Double(10))
+        XCTAssert(event.eventType == TrackEventType)
+    }
+    
+    func testTimeTracker() {
+        var expectCallbacks = [expectationWithDescription("Was expecting a callback to be notified"),
+        expectationWithDescription("Was expecting a callback to be notified 2")]
+        let storage = MockTimeTrackerStorage()
+        storage.duration = 10
+        var timeTracker: TimeTracker? = TimeTracker(storage: storage, callback: { (event) -> () in
+            if expectCallbacks.count == 2 {
+                XCTAssert(event.value == 10)
+            }
+            XCTAssert(event.eventType == TrackEventType)
+            expectCallbacks.first?.fulfill()
+            expectCallbacks.removeFirst()
+        })
+        sleep(1)
+        timeTracker?.pause()
+        XCTAssert(timeTracker?.seconds > 0)
+        
+        timeTracker?.backgroundThreshold = 1
+        sleep(2)
+        
+        timeTracker?.resume()
+        timeTracker?.runTimer(NSTimer())
+        
+        waitForExpectations()
+        
+        let actualStorage = TimeTrackerStorage(userDefaults: NSUserDefaults())
+        actualStorage.reset()
+        actualStorage.update(10)
+        XCTAssert(actualStorage.seconds() == 10)
+        actualStorage.reset()
+        XCTAssert(actualStorage.seconds() == nil)
+        
+        timeTracker = nil
+    }
+    
     func genericEvent() -> Event {
         let event = Event(withType: "Phoenix.Test.Event")
         XCTAssertNil(event.targetId)

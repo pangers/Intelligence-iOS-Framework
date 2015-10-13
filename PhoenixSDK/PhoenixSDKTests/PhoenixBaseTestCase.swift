@@ -55,6 +55,13 @@ class PhoenixBaseTestCase : XCTestCase {
                 installation: mockInstallation,
                 locationManager: LocationManager())
             
+            
+            XCTAssert(phoenix.modules[0] === phoenix.identity)
+            XCTAssert(phoenix.modules[1] === phoenix.location)
+            XCTAssert(phoenix.modules[2] === phoenix.analytics)
+            
+            
+            
             // Test individual modules rather than calling startup here.
         }
         catch {
