@@ -12,38 +12,81 @@ import CoreLocation
 /// A generic PhoenixDownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
 public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
+/**
+*  The phoenix location delegate. Implement it and set the locationDelegate of
+*   the PhoenixLocation module in order to be notified of events that occured in it.
+*/
 @objc(PHXLocationDelegate) public protocol PhoenixLocationDelegate {
     
+    /**
+    Called when the user enters into a monitored geofence.
+    
+    - parameter location: The location module.
+    - parameter geofence: The geofence that was entered.
+    */
     optional func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence)
 
+
+    /**
+    Called when the user exits a monitored geofence.
+    
+    - parameter location: The location module.
+    - parameter geofence: The geofence that was exited.
+    */
     optional func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence)
     
+    /**
+    Called when the a geofence has successfully started its monitoring.
+    
+    - parameter location: The location module.
+    - parameter geofence: The geofence that started the monitoring.
+    */
     optional func phoenixLocation(location:PhoenixLocation, didStartMonitoringGeofence:Geofence)
 
+    /**
+    Called when an error occured while we tried to start monitoring a geofence. This is likely to
+    be either that you passed the limit of geofences to monitor, or that the user has not granted
+    location permissions for your app.
+    
+    - parameter location: The location module.
+    - parameter geofence: The geofence that failed to be monitored.
+    */
     optional func phoenixLocation(location:PhoenixLocation, didFailMonitoringGeofence:Geofence)
 
+    /**
+    Called when a geofence is no longer monitored.
+    
+    - parameter location: The location module.
+    - parameter geofence: The geofence that stopped being monitored
+    */
     optional func phoenixLocation(location:PhoenixLocation, didStopMonitoringGeofence:Geofence)
 }
 
 /**
-*  The Phoenix Location module protocol.
+*  The Phoenix Location module protocol. Provides geofence downloading and tracking functionality.
 */
 @objc(PHXLocation) public protocol PhoenixLocation : PhoenixModuleProtocol {
     
     /**
-    Downloads a list of geofences using the given query details
+    Downloads a list of geofences using the given query details. Can return an DownloadGeofencesError with LocationError.domain as domain
     
     - parameter queryDetails: The geofence query to retrieve.
     - parameter callback:     The callback that will be notified upon success/error.
+    The callback receives either an array of geofences or an NSError. Apart from generic errors, the NSError can
+    have as errorcode DownloadGeofencesError (6001) and as domain LocationError.domain ("LocationError").
     */
     func downloadGeofences(queryDetails: GeofenceQuery, callback: PhoenixDownloadGeofencesCallback?)
     
+    /**
+    - returns: True if there are geofences being currently monitored.
+    */
     func isMonitoringGeofences() -> Bool
     
      /**
     Starts monitoring the given geofences.
     
-    - parameter geofences: The geofences to monitor.
+    - parameter geofences: The geofences to monitor. If an error occurs during the monitoring,
+    the locationDelegate will be notified asynchronously.
     
     */
     func startMonitoringGeofences(geofences:[Geofence])
@@ -80,6 +123,14 @@ public typealias PhoenixDownloadGeofencesCallback = (geofences: [Geofence]?, err
     let longitude:Double
     let latitude:Double
     
+    /**
+    Default initializer with latitude and longitude
+    
+    - parameter latitude
+    - parameter longitude
+    
+    - returns: A newly initialized geofence.
+    */
     public init(withLatitude latitude:Double, longitude:Double) {
         self.longitude = longitude
         self.latitude = latitude
@@ -98,9 +149,6 @@ internal extension Phoenix {
     
     /// Location module that is responsible for managing Geofences and User Location.
     internal final class Location: PhoenixModule, PhoenixLocation, PhoenixLocationManagerDelegate, PhoenixLocationProvider {
-        
-        /// The last coordinate we received.
-        private var lastLocation:PhoenixCoordinate?
         
         var locationDelegate:PhoenixLocationDelegate?
         
@@ -124,6 +172,7 @@ internal extension Phoenix {
         /// The location manager
         private let locationManager:PhoenixLocationManager
         
+        /// The current location as reported by the CLLocationManager
         var userLocation:PhoenixCoordinate? {
             return locationManager.userLocation
         }
@@ -137,25 +186,6 @@ internal extension Phoenix {
             self.locationManager = locationManager
             super.init(withDelegate:delegate, network: network, configuration: configuration)
             self.locationManager.delegate = self
-            
-            // Initialize the last known location with the user's one.
-            lastLocation = userLocation
-        }
-        
-        // MARK:- Startup and shutdown methods.
-        
-        override func startup(completion: (success: Bool) -> ()) {
-            super.startup(completion)
-        }
-        
-        /**
-        Stops monitoring and nils the geofences.
-        */
-        override func shutdown() {
-            // Clear geofences.
-            geofences = nil
-            
-            super.shutdown()
         }
         
         // MARK:- Download geofences
@@ -191,12 +221,22 @@ internal extension Phoenix {
             self.locationManager.setLocationAccuracy(accuracy)
         }
         
+        /**
+        Tracks via the analytics module that a geofence has been entered
+        
+        - parameter geofence: The geofence entered
+        */
         func trackGeofenceEntered(geofence:Geofence) {
             let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Enter")
             geofenceEvent.targetId = String(geofence.id)
             analytics?.track(geofenceEvent)
         }
 
+        /**
+        Tracks via the analytics module that a geofence has been exited
+        
+        - parameter geofence: The geofence exited
+        */
         func trackGeofenceExited(geofence:Geofence) {
             let geofenceEvent = Phoenix.Event(withType: "Phoenix.Location.Geofence.Exit")
             geofenceEvent.targetId = String(geofence.id)

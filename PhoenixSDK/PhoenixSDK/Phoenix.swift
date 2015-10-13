@@ -76,7 +76,7 @@ public final class Phoenix: NSObject {
     /// Analytics instance that can be used for posting Events.
     @objc public internal(set) var analytics: PhoenixAnalytics!
     
-    /// The location module, used to internally manages geofences and user location. Hidden from developers.
+    /// The location module, used to manages geofences and user location.
     @objc public internal(set) var location: PhoenixLocation!
     
     /// Array of modules used for calling startup/shutdown methods easily.
@@ -88,6 +88,7 @@ public final class Phoenix: NSObject {
     
     /// (INTERNAL) Initializes the Phoenix entry point with all objects necessary.
     /// - parameter delegate:      Object that responds to delegate events.
+    /// - parameter delegateWrapper: The delegate wrapper so we intercept calls to it.
     /// - parameter network:       Network object, responsible for sending all OAuth requests.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
     /// - parameter oauthProvider:  Object responsible for storing OAuth information.
@@ -212,7 +213,10 @@ public final class Phoenix: NSObject {
     }
     
     /// Starts up the Phoenix SDK modules.
-    /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
+    /// - parameter callback: Called when the startup of Phoenix finishes. Receives in a boolean 
+    /// whether the startup was successful or not. This call has to finish successfully
+    /// before using any of the phoenix modules. If any action is performed while startup
+    /// has not yet finished fully, an unexpected error is likely to occur.
     public func startup(completion: (success: Bool) -> ()) {
         // Anonymously logins into the SDK then:
         // - Cannot request anything on behalf of the user.
@@ -239,7 +243,8 @@ public final class Phoenix: NSObject {
         moduleToStartup(0)
     }
     
-    /// Shutdowns the Phoenix SDK modules.
+    /// Shutdowns the Phoenix SDK modules. After shutting down, you'll have to
+    /// startup again before being able to use Phoenix reliably again.
     public func shutdown() {
         modules.forEach{
             $0.shutdown()
