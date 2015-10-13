@@ -45,7 +45,7 @@ class UtilsTestCase: XCTestCase {
         }
     }
     
-    func testForEachInMainThread() {
+    func testForEachInMainThreadFromSecondaryThread() {
         let expectationsArray = [
             expectationWithDescription("1"),
             expectationWithDescription("2"),
@@ -75,6 +75,36 @@ class UtilsTestCase: XCTestCase {
         }
     }
     
+    /**
+    Checks that if we call it from the main thread there is no deadlock.
+    */
+    func testForEachInMainThreadFromMainThread() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that all runs in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEachInMainThread {
+            // Assert that all runs in the main thread
+            XCTAssert(NSThread.isMainThread())
+            
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+
     func testForEachInQueue() {
         let expectationsArray = [
             expectationWithDescription("1"),
