@@ -49,7 +49,10 @@ import PhoenixSDK
 
 ### Configuration ###
 
-The Phoenix SDK requires a few configuration properties in order to initialize itself. There are a few different ways of creating the configuration:
+The Phoenix SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
+
+
+**There are a few different ways of providing configuration to the SDK:**
 
 1- Initialize Phoenix with a configuration file:
 
@@ -58,12 +61,12 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-            phoenix = try Phoenix(withFile: "PhoenixConfiguration")
-        }
-        catch {
-            // Treat the error with care!
-        }
+do {
+    phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
+}
+catch {
+    // Treat the error with care!
+}
 
 ```
 
@@ -72,15 +75,15 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        Phoenix *phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && instance != nil);
 
 ```
 
@@ -92,13 +95,13 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-            let configuration = try Phoenix.Configuration(fromFile: "PhoenixConfiguration")
-            phoenix = try Phoenix(withConfiguration: configuration)
-        }
-        catch {
-            // Treat the error with care!
-        }
+do {
+	let configuration = try Phoenix.Configuration(fromFile: "PhoenixConfiguration")
+	phoenix = try Phoenix(withDelegate: self, configuration: configuration)
+}
+catch {
+	// Treat the error with care!
+}
 
 ```
 
@@ -107,16 +110,16 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, configuration:configuration error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && instance != nil);
         
 ```
 
@@ -127,13 +130,13 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        let configuration = Phoenix.Configuration()
-        configuration.clientID = "YOUR_CLIENT_ID"
-        configuration.clientSecret = "YOUR_CLIENT_SECRET"
-        configuration.projectID = 123456789
-        configuration.applicationID = 987654321
-        configuration.region = Phoenix.Region.Europe
-        configuration.useGeofences = true
+let configuration = Phoenix.Configuration()
+configuration.clientID = "YOUR_CLIENT_ID"
+configuration.clientSecret = "YOUR_CLIENT_SECRET"
+configuration.projectID = 123456789
+configuration.applicationID = 987654321
+configuration.region = Phoenix.Region.Europe
+configuration.sdk_user_role = 1000
 
 ```
 *Objective-C:**
@@ -141,13 +144,13 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] init];
-        configuration.clientID = @"YOUR_CLIENT_ID";
-        configuration.clientSecret = @"YOUR_CLIENT_SECRET";
-        configuration.projectID = 123456789;
-        configuration.applicationID = 987654321;
-        configuration.region = RegionEurope;
-        configuration.useGeofences = YES;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] init];
+configuration.clientID = @"YOUR_CLIENT_ID";
+configuration.clientSecret = @"YOUR_CLIENT_SECRET";
+configuration.projectID = 123456789;
+configuration.applicationID = 987654321;
+configuration.region = RegionEurope;                
+configuration.sdk_user_role = 1000;
         
 
 ```
@@ -161,19 +164,19 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-        	// Load from file
-            let configuration = try Phoenix.Configuration(fromFile: "config")
+do {
+	// Load from file
+	let configuration = try Phoenix.Configuration(fromFile: "config")
             
-            // Change region programmatically
-            configuration.region = Phoenix.Region.Europe
+	// Change region programmatically
+	configuration.region = Phoenix.Region.Europe
             
-            // Instantiate with hybrid configuration
-            phoenix = try Phoenix(withConfiguration: configuration)
-        }
-        catch {
-            // Treat the error with care!
-        }
+	// Instantiate with hybrid configuration
+	phoenix = try Phoenix(withDelegate: self, configuration: configuration)
+}
+catch {
+	// Treat the error with care!
+}
 
 ```
 
@@ -182,20 +185,20 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
         
-        // Change region programmatically
-        configuration.region = RegionEurope;
+// Change region programmatically
+configuration.region = RegionEurope;
         
-        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, configuration:configuration error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && instance != nil);
         
 
 ```
@@ -214,10 +217,9 @@ The configuration file is a JSON file with the following keys:
 3. "application_id" with an Integer value
 4. "project_id" with an Integer value
 5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
-6. "use_geofences" a Boolean value which needs to be true or false - this is an optional configuration, if not specified, the default value is true. Setting this value to false means the SDK will not attempt to download existing geofence data and use it to monitor geofences.
+6. "sdk_user_role" an Integer value which needs to be configured in the Phoenix Intelligence platform with the correct rights in order to use this SDK.
 
 As an example, your configuration file will look like:
-
 
 ```
 #!JSON
@@ -229,25 +231,24 @@ As an example, your configuration file will look like:
     "project_id": 20,
     "region": "EU",
     "company_id" : 10,
-    "use_geofences" : true
+    "sdk_user_role" : 1000
 }
 
 ```
 
 ### Startup ###
 
-Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. An error may occur at any time (usually due to networking) that cannot be handled by the SDK internally and will be surfaced through the error callback. These errors only really serve a purpose for developers to help with debugging.
-
+Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. You will receive a 'success' flag in the completion block, if this returns false, something is probably incorrectly configured. You should receive an error from one of the PhoenixDelegate methods.
 
 *Swift:*
 ```
 #!swift
         
-        // Startup all modules.
-        phoenix?.startup { (error) -> () in       
-            // Handle critical/network error.
-        }
-        
+// Startup all modules.
+phoenix.startup { (success) -> () in               
+	// Startup succeeded if success is true.
+}
+
 ```
 
 *Objective-C:*
@@ -255,10 +256,10 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
 ```
 #!objc
 
-        // Startup the SDK...
-        [phoenix startupWithCallback:^(NSError *error) {        
-            // Handle critical/network error.
-        }];
+// Startup the SDK...
+[phoenix startup:^(BOOL success) {        
+	// Startup succeeded if success is true.
+}];
         
 ```
 
@@ -267,6 +268,15 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
 
 The Phoenix SDK is composed of several modules which can be used as necessary by developers to perform specific functions. Each module is described below with sample code where necessary.
 
+Note: Developers are responsible for ensuring the callbacks are executed on the correct thread, i.e. anything related to the UI will need to be dispatched on the main thread.
+
+In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
+
+* RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Phoenix Platform are incorrectly configured. **Developer is responsible to fix these issues.**
+* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
+
+These errors will be wrapped within an NSError using as domain RequestError.domain.
+
 
 ## Analytics Module ##
 
@@ -274,7 +284,7 @@ The analytics module allows developers to effortlessly track several predefined 
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
 
-How to track an Event:
+**How to track a Custom Event:**
 
 *Swift:*
 Note: there are some optional fields in Swift that default to zero/nil if missing.
@@ -286,7 +296,7 @@ Note: there are some optional fields in Swift that default to zero/nil if missin
 let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
 
 // Send event to Analytics module
-phoenix?.analytics.track(myTestEvent)
+phoenix.analytics.track(myTestEvent)
 
 ```
 
@@ -302,109 +312,33 @@ PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type
 
 ```
 
+**How to track a Screen View Event:**
+
+*Swift:*
+
+```
+#!swift
+
+// Duration is in seconds and can include fractional seconds
+phoenix.analytics.trackScreenViewed("Main Screen", viewingDuration: 5)
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+// Duration is in seconds and can include fractional seconds
+[phoenix.analytics trackScreenViewedWithScreenName:@"Main Screen", viewingDuration: 5];
+
+```
+
+
 ## Identity Module ##
 
 This module provides methods for user management within the Phoenix platform. Allowing users to register, login, update, and retrieve information.
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
-
-In addition to the errors specified by each individual method, you may also get one of the following errors if the request fails:
-
-* RequestError.RequestFailedError: Unable to receive a response from the server, could be due to local connection or server issues.
-* RequestError.ParseError: Unable to parse the response of the call.
-
-These errors will be wrapped within an NSError using as domain RequestError.domain.
-
-
-
-#### Create User ####
-
-Register a user on the Phoenix platform.
-
-Calling this method does not also perform a login, it is a two-step process, developers must call the 'login' method afterward if they want to streamline their app experience.
-
-The code to create a user for each language is as follows:
-
-*Swift:*
-
-
-```
-#!swift
-    let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
-        firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-        
-    phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
-        // Treat the user and error appropriately. Notice that the callback might be performed
-        // In a background thread. Use dispatch_async to handle it in the main thread.
-    })
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
-        firstName:firstname lastName:lastname avatarURL:avatarURL];
-
-    [phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
-        // Treat the user and error appropriately. Notice that the callback might be performed
-        // In a background thread. Use dispatch_async to handle it in the main thread.
-    }];
-
-```
-
-The 'createUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
-* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
-
-#### Get User ####
-
-Request the user information for a particular userId.
-
-The following code snippets illustrate how to request a user's information in Objective-C and Swift.
-
-*Swift:*
-
-
-```
-#!swift
-
-// Get the user via it's id
-phoenix?.identity.getUser(userId) { (user, error) -> Void in
-    // Get the user and treat the error
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-// Get the user via it's id
-[phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-    // Get the user and treat the error
-}];
-
-
-```
-
-The 'getUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the request can't be created with the provided user data (i.e. wrong userId, or authentication tokens).
-* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
 
 #### Login ####
 
@@ -415,7 +349,8 @@ If you have a registered account on the Phoenix platform you will be able to log
 #!swift
 
 phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-print("Logged in as: \(user)")
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 })
 
 ```
@@ -426,17 +361,15 @@ print("Logged in as: \(user)")
 #!objc
 
 [phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-NSLog(@"Logged in as: %@", user);
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 ```
 
 The 'login' method can return the following additional errors:
 
-* RequestError.AuthenticationFailedError: There was an issue that occurred during login, could be due to incorrect credentials.
-
-This error will be wrapped within an NSError using as domain RequestError.domain.
-
+* IdentityError.LoginFailed: There was an issue that occurred during login, could be due to incorrect credentials.
 
 
 #### Logout ####
@@ -462,6 +395,45 @@ phoenix.identity.logout()
 
 
 
+
+#### Get Me ####
+
+Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.
+
+The following code snippets illustrate how to request a user's information in Objective-C and Swift.
+
+*Swift:*
+
+
+```
+#!swift
+
+phoenix.identity.getMe { (user, error) -> Void in
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+[phoenix getMeWithCallback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+
+```
+
+The 'getMe' method can return the following additional errors:
+
+* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
+
+
 #### Update User ####
 
 The code to update a user for each language is as follows:
@@ -474,9 +446,9 @@ The code to update a user for each language is as follows:
 let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
 firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
 
-phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// In a background thread. Use dispatch_async to handle it in the main thread.
+phoenix.identity.updateUser(user, callback: { (user, error) -> Void in
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 })
 ```
 
@@ -489,8 +461,8 @@ PHXUser* user = [[PHXUser alloc] initWithUserId:userID companyId:companyID usern
 firstName:firstname lastName:lastname avatarURL:avatarURL];
 
 [phoenix.identity updateUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// In a background thread. Use dispatch_async to handle it in the main thread.
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 ```
@@ -500,9 +472,6 @@ The 'updateUser' method can return the following additional errors:
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
 
 
 ## Location Module ##
@@ -520,10 +489,10 @@ Furthermore, you will need to manage the request for permissions by implementing
 ```
 #!swift
 
-    // Request location access.
-    if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
-        locationManager.requestAlwaysAuthorization()
-    }
+// Request location access.
+if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
+    locationManager.requestAlwaysAuthorization()
+}
 
 ```
 
@@ -532,9 +501,9 @@ Furthermore, you will need to manage the request for permissions by implementing
 ```
 #!objc
 
-    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
-        [self.locationManager requestAlwaysAuthorization];
-    }
+if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
+    [self.locationManager requestAlwaysAuthorization];
+}
 
 ```
 

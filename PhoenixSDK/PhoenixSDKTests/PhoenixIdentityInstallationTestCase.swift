@@ -99,38 +99,25 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
     
     // MARK:- Create Installation
     
-    func prepareValidCreateInstallationObject() -> Phoenix.Installation {
-        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
-        XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
-        XCTAssert(installation.isNewInstallation == true, "Should be new installation")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == configuration!.projectID, "Project ID must match configuration")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == configuration!.applicationID, "Application ID must match configuration")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil, "Request ID must be nil")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
-        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
-        return installation
-    }
-    
     func testCreateInstallationSuccess() {
-        // Mock request being authorized
-        mockValidTokenStorage()
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidCreateInstallationObject()
+        mockPrepareForCreateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
+        let request = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork)
         
-        mockResponseForURL(request,
-            method: "POST",
-            response: (data: successfulInstallationResponse, statusCode:200, headers:nil))
+        mockResponseForURL(request.URL,
+            method: .POST,
+            response: (data: successfulInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.createInstallation(installation) { (installation, error) -> Void in
+        identity?.createInstallation({ (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
-            let json = installation.toJSON()
+            guard let json = installation?.toJSON() else {
+                XCTFail()
+                return
+            }
             if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
                 appID = json[Phoenix.Installation.ApplicationId] as? Int,
                 installationID = json[Phoenix.Installation.InstallationId] as? String,
@@ -152,86 +139,103 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
                 XCTAssert(false)
             }
             expectation.fulfill()
-        }
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        })
+        
+        waitForExpectations()
     }
     
     func testCreateInstallationFailure() {
-        mockValidTokenStorage()
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: VersionClass(), installationStorage: InstallationStorage())
+        mockPrepareForCreateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
+        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
-        mockResponseForURL(request,
-            method: "POST",
-            response: (data: successfulInstallationResponse, statusCode:404, headers:nil))
+        mockResponseForURL(URL,
+            method: .POST,
+            response: (data: successfulInstallationResponse, statusCode:.NotFound, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.createInstallation(installation) { (installation, error) -> Void in
+        
+        identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected wrapped 4001 error")
+            XCTAssert(error?.code == InstallationError.CreateInstallationError.rawValue, "Expected wrapped 4001 error")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testCreateInstallationParseFailure() {
         // Mock request being authorized
-        mockValidTokenStorage()
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidCreateInstallationObject()
+        mockPrepareForCreateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
+        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
-        mockResponseForURL(request,
-            method: "POST",
-            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
+        mockResponseForURL(URL,
+            method: .POST,
+            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.createInstallation(installation) { (installation, error) -> Void in
+        identity?.createInstallation() { (installation, error) -> Void in
             XCTAssertNotNil(error, "Expected error")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testCreateInstallationUnnecessary() {
-        mockValidTokenStorage()
+        // Mock request being authorized
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockPrepareForCreateInstallation()
         
         // Mock installation request
-        let storage = InstallationStorage()
-        let version = VersionClass()
-        let installation = Phoenix.Installation(configuration: configuration!, applicationVersion: version, installationStorage: storage)
-        
         let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
         let data = jsonData.first!
-        installation.updateWithJSON(data)
+        mockInstallation.updateWithJSON(data)
         
-        XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
+        XCTAssert(mockInstallation.isNewInstallation == false, "Should not be new installation")
         
-        let request = NSURLRequest.phx_URLRequestForCreateInstallation(installation).URL!
-        assertURLNotCalled(request)
+        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
-        identity?.createInstallation(installation) { (installation, error) -> Void in
+        assertURLNotCalled(URL)
+        
+        identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.AlreadyInstalled.rawValue, "Expected create error")
+            XCTAssert(error?.code == InstallationError.AlreadyInstalledError.rawValue, "Expected create error")
         }
     }
     
     // MARK: - Update Installation
     
-    func prepareValidUpdateInstallationObject() -> Phoenix.Installation {
-        var installation = prepareValidCreateInstallationObject()
+    func mockPrepareForCreateInstallation() {
+        let installation = mockInstallation
+        
+        XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
+        XCTAssert(installation.isNewInstallation == true, "Should be new installation")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ProjectId] as! Int == mockConfiguration.projectID, "Project ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ApplicationId] as! Int == mockConfiguration.applicationID, "Application ID must match configuration")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] as? String == nil, "Request ID must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] as? String == nil, "Create date must be nil")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
+        XCTAssert(installation.toJSON()[Phoenix.Installation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
+    }
+    
+    func mockPrepareForUpdateInstallation() {
+        var installation = mockInstallation
+        
+        mockPrepareForCreateInstallation()
         
         // Mock installation request
         let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
@@ -239,29 +243,31 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         (installation.applicationVersion as? VersionClass)?.fakeVersion = "1.0.2"
-        installation = Phoenix.Installation(configuration: configuration!, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
+        installation = Phoenix.Installation(configuration: mockConfiguration, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
         XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
         XCTAssert(installation.toJSON()[Phoenix.Installation.CreateDate] != nil, "Create date must be set")
         XCTAssert(installation.toJSON()[Phoenix.Installation.RequestId] != nil, "Request ID must be set")
         XCTAssert(installation.isValidToUpdate)
-        return installation
     }
     
     func testUpdateInstallationSuccess() {
         // Mock request being authorized
-        mockValidTokenStorage()
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidUpdateInstallationObject()
+        mockPrepareForUpdateInstallation()
         
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!,
-            method: "PUT",
-            response: (data: successfulInstallationUpdateResponse, statusCode:200, headers:nil))
+        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        
+        mockResponseForURL(URL,
+            method: .PUT,
+            response: (data: successfulInstallationUpdateResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.updateInstallation(installation) { (installation, error) -> Void in
+        identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error == nil, "Unexpected error")
             
-            let json = installation.toJSON()
+            let json = self.mockInstallation.toJSON()
             if let projectID = json[Phoenix.Installation.ProjectId] as? Int,
                 appID = json[Phoenix.Installation.ApplicationId] as? Int,
                 installationID = json[Phoenix.Installation.InstallationId] as? String,
@@ -283,74 +289,77 @@ class PhoenixIdentityInstallationTestCase: PhoenixIdentityTestCase {
                 XCTAssert(false)
             }
             
-            XCTAssert(installation.isUpdatedInstallation == false)
+            XCTAssert(self.mockInstallation.isUpdatedInstallation == false)
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        
+        waitForExpectations()
     }
     
     func testUpdateInstallationFailure() {
-        mockValidTokenStorage()
+        // Mock request being authorized
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidUpdateInstallationObject()
+        mockPrepareForUpdateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
+        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
-        mockResponseForURL(request,
-            method: "PUT",
-            response: (data: successfulInstallationUpdateResponse, statusCode:404, headers:nil))
+        mockResponseForURL(URL,
+            method:.PUT,
+            response: (data: successfulInstallationUpdateResponse, statusCode:.NotFound, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.updateInstallation(installation) { (installation, error) -> Void in
+        identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == RequestError.RequestFailedError.rawValue, "Expected wrapped 4001 error")
+            XCTAssert(error?.code == InstallationError.UpdateInstallationError.rawValue, "Expected wrapped 4002 error")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testUpdateInstallationParseFailure() {
-        mockValidTokenStorage()
+        // Mock request being authorized
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidUpdateInstallationObject()
+        mockPrepareForUpdateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
+        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
-        mockResponseForURL(request,
-            method: "PUT",
-            response: (data: failedInstallationResponse, statusCode:200, headers:nil))
+        mockResponseForURL(URL,
+            method: .PUT,
+            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
         
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.updateInstallation(installation) { (installation, error) -> Void in
+        identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     func testUpdateInstallationUnnecessary() {
-        mockValidTokenStorage()
+        // Mock request being authorized
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        let installation = prepareValidUpdateInstallationObject()
+        mockPrepareForUpdateInstallation()
+        
         let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
-        installation.updateWithJSON(jsonData)
-        XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated version")
+        mockInstallation.updateWithJSON(jsonData)
+        XCTAssert(mockInstallation.isUpdatedInstallation == false, "Should not be updated version")
         
-        let request = NSURLRequest.phx_URLRequestForUpdateInstallation(installation).URL!
-        assertURLNotCalled(request)
         
-        identity?.updateInstallation(installation) { (installation, error) -> Void in
+        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        assertURLNotCalled(URL)
+        
+        identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.AlreadyUpdated.rawValue, "Expected update error")
+            XCTAssert(error?.code == InstallationError.AlreadyUpdatedError.rawValue, "Expected update error")
         }
     }
 }

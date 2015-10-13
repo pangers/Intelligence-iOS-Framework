@@ -14,21 +14,17 @@ import XCTest
 class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     
     func testConfigurationFromFileAndBundle() {
-        let clientID="CLIENT_ID" // as in file
-        let clientSecret="CLIENT_SECRET" // as in file
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
-        let region: Phoenix.Region = .Europe
-        let applicationId = 10
-        let projectId = 20
-        
+        let cfg = genericConfiguration()
         do {
             let config = Phoenix.Configuration()
             try config.readFromFile("config", inBundle: bundle);
-            XCTAssert(config.clientID == clientID, "The client ID is incorrect")
-            XCTAssert(config.clientSecret == clientSecret, "The client secret is incorrect")
-            XCTAssert(config.region == region, "The region is incorrect")
-            XCTAssert(config.applicationID == applicationId , "The application Id is incorrect")
-            XCTAssert(config.projectID == projectId, "The project Id is incorrect")
+            XCTAssert(config.clientID == cfg.clientID, "The client ID is incorrect")
+            XCTAssert(config.clientSecret == cfg.clientSecret, "The client secret is incorrect")
+            XCTAssert(config.region == cfg.region, "The region is incorrect")
+            XCTAssert(config.applicationID == cfg.applicationID , "The application Id is incorrect")
+            XCTAssert(config.projectID == cfg.projectID, "The project Id is incorrect")
+            XCTAssert(config.sdkUserRole == cfg.sdkUserRole, "User role not read correctly")
         }
         catch {
             // nop
@@ -36,8 +32,23 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         }
     }
     
+    func genericConfiguration() -> Phoenix.Configuration {
+        let configuration = Phoenix.Configuration()
+        configuration.clientID = "CLIENT_ID" // as in file
+        configuration.clientSecret = "CLIENT_SECRET" // as in file
+        configuration.region = .Europe
+        
+        configuration.applicationID = 10
+        configuration.projectID = 20
+        configuration.companyId = 1
+        configuration.sdkUserRole = 1008
+        
+        return configuration
+    }
+    
+    
     func testFileNotFoundInReadFromFile() {
-        let config = Phoenix.Configuration();
+        let config = Phoenix.Configuration()
         
         do {
             try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
@@ -51,7 +62,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     }
     
     func testFileInvalidFileConfiguration() {
-        let config = Phoenix.Configuration();
+        let config = Phoenix.Configuration()
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
         
         do {
@@ -67,7 +78,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     }
     
     func testFileInvalidPropertyConfiguration() {
-        let config = Phoenix.Configuration();
+        let config = Phoenix.Configuration()
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
         
         do {
@@ -94,147 +105,52 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         }
     }
     
-    func testPSDK21Case5() {
+    func testConfigurationMissingPropertyError(cfg: Phoenix.Configuration) {
+        XCTAssertFalse(cfg.isValid)
+        XCTAssertTrue(cfg.hasMissingProperty)
         do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientSecret = "Secret";
-            configuration.projectID = 212;
-            configuration.applicationID = 42131;
-            configuration.region = .UnitedStates;
-            configuration.companyId = 1
-
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
+            let _ = try Phoenix(withDelegate: MockPhoenixDelegate(), configuration: cfg, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
         catch ConfigurationError.MissingPropertyError {
             // Correct path
+            XCTAssertTrue(true)
         }
         catch {
             XCTAssert(false, "Unexpected exception")
         }
     }
     
-    func testPSDK21Case6() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID";
-            configuration.projectID = 212;
-            configuration.applicationID = 42131;
-            configuration.region = .UnitedStates;
-            configuration.companyId = 1
-
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
+    func testConfigurationMissingPropertyErrors() {
+        var cfg = genericConfiguration()
+        cfg.clientID = ""
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.clientSecret = ""
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.companyId = 0
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.applicationID = 0
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.projectID = 0
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.sdkUserRole = 0
+        testConfigurationMissingPropertyError(cfg)
+        
+        cfg = genericConfiguration()
+        cfg.region = .NoRegion
+        testConfigurationMissingPropertyError(cfg)
     }
     
-    func testPSDK21Case7() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID";
-            configuration.clientSecret = "SECRET";
-            configuration.applicationID = 42131;
-            configuration.region = .UnitedStates;
-            configuration.companyId = 1
-
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
-    }
-    
-    func testPSDK21Case8() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID";
-            configuration.clientSecret = "SECRET";
-            configuration.projectID = 42131;
-            configuration.region = .UnitedStates;
-            configuration.companyId = 1
-
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
-    }
-    
-    func testPSDK21Case9() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID";
-            configuration.clientSecret = "SECRET";
-            configuration.projectID = 42131;
-            configuration.applicationID = 123;
-            configuration.companyId = 1
-            
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
-    }
-
-    func testNoCompanyIDInConfiguration() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID";
-            configuration.clientSecret = "SECRET";
-            configuration.projectID = 42131;
-            configuration.applicationID = 123;
-            configuration.region = .Europe;
-            
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
-    }
-
-    func testCompanyID0InConfiguration() {
-        do {
-            let configuration = Phoenix.Configuration()
-            configuration.clientID = "ID"
-            configuration.clientSecret = "SECRET"
-            configuration.projectID = 42131
-            configuration.applicationID = 123
-            configuration.region = .Europe
-            configuration.companyId = 0
-            
-            let _ = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch ConfigurationError.MissingPropertyError {
-            // Correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception")
-        }
-    }
-
     func testEmptyBaseUrlIfNoRegion(){
         let config = MockConfiguration()
         config.region = .NoRegion

@@ -9,7 +9,7 @@
 import Foundation
 
 /// The Phoenix Analytics Module defines the methods available for tracking events.
-@objc public protocol PhoenixAnalytics {
+@objc public protocol PhoenixAnalytics : PhoenixModuleProtocol {
     
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
@@ -21,54 +21,52 @@ import Foundation
 	func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval)
 }
 
+internal protocol PhoenixLocationProvider:class {
+    
+    var userLocation:PhoenixCoordinate? { get }
+    
+}
 
 internal extension Phoenix {
     
     /// The Phoenix Analytics Module defines the methods available for tracking events.
-    internal final class Analytics: PhoenixAnalytics, PhoenixModuleProtocol {
+    internal final class Analytics: PhoenixModule, PhoenixAnalytics {
+        // TODO Override PhoenixModule class.
         
-        /// Instance of the Configuration class, used for configuring requests.
-        private let configuration: Configuration
-        
-        /// Interrogated for 'InstallationId' to include in requests (if available).
-        private let installationStorage: PhoenixInstallationStorageProtocol
-        
-        /// Interrogated for 'ApplicationVersion' to include in requests.
-        private let applicationVersion: PhoenixApplicationVersionProtocol
-        
-        /// Instance of the Network class, used for sending analytical events.
-        private let network: Network
-        
+        internal weak var locationProvider:PhoenixLocationProvider?
+    
         /// Event queue responsible for queuing and storing events to disk.
         private var eventQueue: PhoenixEventQueue?
-        
-        /// Instance of location class, used for configuring requests and managing geofences.
-        internal weak var location: Location?
-        
-        /// Initializes Analytics module.
-        /// - parameter network:             Instance of the Network class, used for sending analytical events.
-        /// - parameter configuration:       Instance of the Configuration class, used for configuring requests.
-        /// - parameter installationStorage: Interrogated for 'InstallationId' to include in requests (if available).
-        /// - parameter applicationVersion:  Interrogated for 'ApplicationVersion' to include in requests.
-        /// - returns: Returns an Analytics object.
-        init(withNetwork network: Network, configuration: Configuration, installationStorage: PhoenixInstallationStorageProtocol, applicationVersion: PhoenixApplicationVersionProtocol) {
-            self.network = network
-            self.configuration = configuration
-            self.installationStorage = installationStorage
-            self.applicationVersion = applicationVersion
-        }
+
+        internal var installation: Phoenix.Installation!
         
         // MARK:- PhoenixModuleProtocol
         
-        internal func startup() {
-            eventQueue = PhoenixEventQueue(withCallback: sendEvents)
-            eventQueue?.startQueue()
-            // Track application opened.
-            trackApplicationOpened()
+        internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: Installation) {
+            super.init(withDelegate: delegate, network: network, configuration: configuration)
+            self.installation = installation
         }
         
-        internal func shutdown() {
+        override func startup(completion: (success: Bool) -> ()) {
+            super.startup { [weak self] (success) -> () in
+                if !success {
+                    completion(success: false)
+                    return
+                }
+                guard let this = self else {
+                    completion(success: false)
+                    return
+                }
+                this.eventQueue = PhoenixEventQueue(withCallback: this.sendEvents)
+                this.eventQueue?.startQueue()
+                this.trackApplicationOpened()
+                completion(success: true)
+            }
+        }
+        
+        override func shutdown() {
             eventQueue?.stopQueue()
+            super.shutdown()
         }
         
         @objc func track(event: Phoenix.Event) {
@@ -87,16 +85,6 @@ internal extension Phoenix {
             track(Phoenix.OpenApplicationEvent())
         }
         
-        /// Track geofence events (internally managed).
-        /// - parameter geofence: Geofence to track.
-        /// - parameter entered:  Whether we entered or exited.
-        internal func trackGeofence(geofence: Geofence, entered: Bool) {
-            // TODO: Re-implement once testing is completed.
-//            track(entered ?
-//                GeofenceEnterEvent(geofence: geofence) :
-//                GeofenceExitEvent(geofence: geofence))
-        }
-        
         /// Add automatically populated fields to dictionary.
         /// - parameter event: Event to prepare for sending.
         /// - returns: JSONDictionary representation of Event including populated fields.
@@ -108,16 +96,17 @@ internal extension Phoenix {
             dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
             
             // Set optional values (may fail for whatever reason).
-            dictionary <-? (Event.ApplicationVersionKey, applicationVersion.phx_applicationVersionString)
-            dictionary <-? (Event.InstallationIdKey, installationStorage.phx_installationID)
-            dictionary <-? (Event.UserIdKey, network.authentication.userId)
+            dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.phx_applicationVersionString)
+            dictionary <-? (Event.InstallationIdKey, installation.installationStorage.phx_installationID)
+            dictionary <-? (Event.UserIdKey, network.oauthProvider.bestPasswordGrantOAuth.userId)
             
             // Add geolocation
-            let geolocation = location?.userLocation
-            var geoDict = JSONDictionary()
-            geoDict <-? (Event.GeolocationLatitudeKey, geolocation?.latitude)
-            geoDict <-? (Event.GeolocationLongitudeKey, geolocation?.longitude)
-            dictionary <-? (Event.GeolocationKey, geoDict.keys.count == 2 ? geoDict : nil)
+            if let coordinates = locationProvider?.userLocation {
+                dictionary[Event.GeolocationKey] = [
+                    Event.GeolocationLatitudeKey  : coordinates.latitude,
+                    Event.GeolocationLongitudeKey : coordinates.longitude
+                ]
+            }
             
             return dictionary
         }
@@ -126,10 +115,15 @@ internal extension Phoenix {
         /// - parameter events:     Array of JSONified Events to send.
         /// - parameter completion: Must be called on completion to notify caller of success/failure.
         internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-            let operation = AnalyticsRequestOperation(withNetwork: network, configuration: configuration, eventsJSON: events) { (error) -> Void in
-                completion(error: error)
-            }
-            network.executeNetworkOperation(operation)
+            let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+                guard let analyticsOperation = returnedOperation as? AnalyticsRequestOperation else {
+                    assertionFailure("Unknown operation returned")
+                    return
+                }
+                completion(error: analyticsOperation.output?.error)
+            })
+            
+            network.enqueueOperation(operation)
         }
     }
 }

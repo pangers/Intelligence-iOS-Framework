@@ -16,7 +16,6 @@
 		7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */; };
 		7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */; };
 		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
-		BB0A23771B70B25F00CE0C81 /* PHXCreateUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A23761B70B25F00CE0C81 /* PHXCreateUserViewController.m */; };
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
@@ -55,8 +54,6 @@
 		7FDAAB121B5D360800DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAB141B5D360800DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB0A23701B70B1B800CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
-		BB0A23751B70B25F00CE0C81 /* PHXCreateUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXCreateUserViewController.h; sourceTree = "<group>"; };
-		BB0A23761B70B25F00CE0C81 /* PHXCreateUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXCreateUserViewController.m; sourceTree = "<group>"; };
 		BB0A237A1B70B8BE00CE0C81 /* PHXPhoenixManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXPhoenixManager.h; sourceTree = "<group>"; };
 		BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXPhoenixManager.m; sourceTree = "<group>"; };
 		BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXViewUserViewController.h; sourceTree = "<group>"; };
@@ -146,8 +143,6 @@
 				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
 				FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */,
 				FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */,
-				BB0A23751B70B25F00CE0C81 /* PHXCreateUserViewController.h */,
-				BB0A23761B70B25F00CE0C81 /* PHXCreateUserViewController.m */,
 				BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */,
 				BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */,
 			);
@@ -246,7 +241,6 @@
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
 				FE18F9411B86027D00DCF2EF /* PHXPhoenixLocationManager.m in Sources */,
 				BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */,
-				BB0A23771B70B25F00CE0C81 /* PHXCreateUserViewController.m in Sources */,
 				455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */,
 				7FDAAB051B5D360800DF2BE6 /* main.m in Sources */,
 			);

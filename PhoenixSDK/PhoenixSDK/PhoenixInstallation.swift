@@ -80,8 +80,10 @@ extension Phoenix {
         
         /// Updates stored values with incoming JSON Dictionary.
         /// - Parameter json: JSON Dictionary response from Installation request.
-        func updateWithJSON(json: JSONDictionary) -> Bool {
-            if let installation = json[Installation.InstallationId] as? String,
+        func updateWithJSON(json: JSONDictionary?) -> Bool {
+            if let
+                json = json,
+                installation = json[Installation.InstallationId] as? String,
                 id = json[Installation.RequestId] as? Int,
                 installedVersion = json[Installation.InstalledVersion] as? String,
                 createDate = json[Installation.CreateDate] as? String {

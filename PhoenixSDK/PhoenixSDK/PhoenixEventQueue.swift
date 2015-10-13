@@ -61,7 +61,7 @@ internal class PhoenixEventQueue {
     // MARK:- Read/Write
     
     /// - returns: Path to Events json file.
-    private func jsonPath() -> String? {
+    internal func jsonPath() -> String? {
         guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
         return "\(path)/Events.json"
     }

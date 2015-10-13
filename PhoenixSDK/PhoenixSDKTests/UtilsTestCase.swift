@@ -10,8 +10,41 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class UtilsTestCase: PhoenixBaseTestCase {
+class UtilsTestCase: XCTestCase {
 
+    func testShuffle() {
+        
+        measureBlock { () -> Void in
+            var values = ["A"]
+            var original = values
+            values.shuffle()
+            XCTAssert(original == values)
+            
+            values.removeAll()
+            XCTAssert(values.count == 0)
+            values.shuffle()
+            XCTAssert(values.count == 0)
+            
+            values = ["A","B","C","D","E","F","G","H","I"]
+            original = values
+            while original == values {
+                values.shuffle()
+            }
+            XCTAssert(original != values)
+            XCTAssert(original == values.sort())
+            
+            let immutable = [1,2,3,4,5]
+            let originalNumbers = immutable
+            
+            while immutable.shuffle() == immutable {
+            }
+            
+            XCTAssert(immutable.sort() == originalNumbers)
+            
+            XCTAssert(true)
+        }
+    }
+    
     func testStringContains() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -21,7 +54,7 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(!"1".contains("123"), "A substring of the string contains the second string.")
         XCTAssert("123".contains("123"), "Two equal strings are contained.")
         XCTAssert("PADDING123PADDING".contains("123"), "Strings contain.")
-        
+        XCTAssert("123"[1] == "2")
         
         //  isContained
         XCTAssert(!"".isContained(""), "Empty strings are contained")
@@ -49,11 +82,12 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
     }
     
-    func testTokenStorageNoDate() {
-        let storage = MockSimpleStorage()
-        storage.tokenExpirationDate = nil
+    func testDictionaryToJSONData() {
         
-        XCTAssert(storage.tokenExpirationDate == nil ,"Can clear the storage date correctly.")
+        var dict = [NSString: NSObject]()
+        dict["TEST"] = NSObject()
+        XCTAssert(dict.phx_toJSONData() == nil)
+        
     }
     
     func testDataToJSONArray() {
