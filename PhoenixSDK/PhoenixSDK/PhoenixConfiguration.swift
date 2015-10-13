@@ -25,7 +25,7 @@ public extension Phoenix {
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
     @objc(PHXConfiguration) public class Configuration: NSObject {
-        
+
         /// The client ID
         public var clientID = ""
         

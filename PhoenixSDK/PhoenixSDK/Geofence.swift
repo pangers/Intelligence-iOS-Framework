@@ -9,34 +9,34 @@
 import Foundation
 
 /// An instance of a geofence with a latitude/longitude/radius combination.
-@objc public final class Geofence: NSObject {
+@objc(PHXGeofence) public final class Geofence: NSObject {
     
     /// Longitude of the geofence.
-    internal(set) var longitude: Double = 0.0
+    internal(set) public var longitude: Double = 0.0
     
     /// Latitude of the geofence.
-    internal(set) var latitude: Double = 0.0
+    internal(set) public var latitude: Double = 0.0
     
     /// Radius around the longitude + latitude to include.
-    internal(set) var radius: Double = 0.0
+    internal(set) public var radius: Double = 0.0
     
     /// Identifier of this geofence.
-    internal(set) var id = 0
+    internal(set) public var id = 0
     
     /// Project ID for this geofence.
-    internal(set) var projectId = 0
+    internal(set) public var projectId = 0
     
     /// Name of this geofence.
-    internal(set) var name = ""
+    internal(set) public var name = ""
     
     /// Address associated with this geofence.
-    internal(set) var address = ""
+    internal(set) public var address = ""
     
     /// Date this geofence was modified last on the server. (Unused)
-    internal(set) var modifyDate: NSTimeInterval = 0.0
+    internal(set) public var modifyDate: NSTimeInterval = 0.0
     
     /// Date this geofence was created on the server. (Unused)
-    internal(set) var createDate: NSTimeInterval = 0.0
+    internal(set) public var createDate: NSTimeInterval = 0.0
     
     // Equatable
     override public func isEqual(object: AnyObject?) -> Bool {

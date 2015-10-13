@@ -1,5 +1,5 @@
 //
-//  PhoenixModuleProtocol.swift
+//  ModuleProtocol.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 19/08/2015.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public protocol PhoenixModuleProtocol {
+@objc public protocol ModuleProtocol {
     
     func startup(completion: (success: Bool) -> ())
     
@@ -16,7 +16,7 @@ import Foundation
     
 }
 
-internal class PhoenixModule : NSObject,PhoenixModuleProtocol {
+internal class PhoenixModule : NSObject, ModuleProtocol {
     
     internal var delegate: PhoenixInternalDelegate!
     

@@ -1,5 +1,5 @@
 //
-//  PhoenixEventQueue.swift
+//  EventQueue.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 18/08/2015.
@@ -10,9 +10,9 @@ import Foundation
 
 /// Callback used for propogating events up for another class to manage sending them. 
 /// Takes a JSONDictionaryArray and relies on callee returning success/failure on response from server.
-typealias PhoenixEventQueueCallback = (events: JSONDictionaryArray, completion: (error: NSError?) -> ()) -> ()
+typealias EventQueueCallback = (events: JSONDictionaryArray, completion: (error: NSError?) -> ()) -> ()
 
-internal class PhoenixEventQueue {
+internal class EventQueue: NSObject {
     
     /// Current events we have to send, stored to disk when changed and loaded on hard launch.
     internal lazy var eventArray = JSONDictionaryArray()
@@ -21,7 +21,7 @@ internal class PhoenixEventQueue {
     private let eventInterval: NSTimeInterval = 10
     
     /// Callback used for propogating events up for another class to manage sending them.
-    private let callback: PhoenixEventQueueCallback
+    private let callback: EventQueueCallback
     
     /// Maximum number of events to send in a single callback.
     internal let maxEvents = 100
@@ -37,25 +37,14 @@ internal class PhoenixEventQueue {
     /// Create new Event queue, loading any items on disk.
     /// - parameter callback: Callback used for propogating events back for sending.
     /// - returns: Instance of Event Queue.
-    init(withCallback callback: PhoenixEventQueueCallback) {
+    init(withCallback callback: EventQueueCallback) {
         self.callback = callback
+        super.init()
         loadEvents()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredBackground:"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("enteredForeground:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
-    }
-    
-    @objc func enteredBackground(notification: NSNotification) {
-        stopQueue()
-    }
-    
-    @objc func enteredForeground(notification: NSNotification) {
-        startQueue()
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
-        timer?.invalidate()
+        stopQueue()
     }
     
     // MARK:- Read/Write
@@ -103,7 +92,8 @@ internal class PhoenixEventQueue {
         objc_sync_enter(self)
         if !isPaused { return }
         isPaused = false
-        timer = NSTimer.scheduledTimerWithTimeInterval(eventInterval, target: self, selector: Selector("runTimer"), userInfo: nil, repeats: true)
+        timer = NSTimer(timeInterval: eventInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
         objc_sync_exit(self)
     }
     
@@ -118,7 +108,7 @@ internal class PhoenixEventQueue {
     }
     
     /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
-    @objc internal func runTimer() {
+    internal func runTimer(timer: NSTimer) {
         fire(withCompletion: nil)
     }
     

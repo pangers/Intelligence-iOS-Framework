@@ -9,14 +9,14 @@
 import XCTest
 @testable import PhoenixSDK
 
+typealias MockCallback = (()->Void)
+typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
+
 import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
     
     let expectationTimeout:NSTimeInterval = 2
-    
-    typealias MockCallback = (()->Void)
-    typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
     
     var mockOAuthProvider: MockOAuthProvider!
     var mockDelegateWrapper: MockPhoenixDelegateWrapper!
@@ -24,7 +24,7 @@ class PhoenixBaseTestCase : XCTestCase {
     var mockConfiguration: Phoenix.Configuration!
     var phoenix: Phoenix!
     var mockInstallationStorage: InstallationStorage!
-    var mockInstallation: Phoenix.Installation!
+    var mockInstallation: Installation!
     
     let fakeUser = Phoenix.User(companyId: 1, username: "123", password: "Testing123", firstName: "t", lastName: "t", avatarURL: "t")
     
@@ -44,7 +44,7 @@ class PhoenixBaseTestCase : XCTestCase {
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
-            mockInstallation = MockPhoenixInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
+            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
             
             try phoenix = Phoenix(
                 withDelegate: mockDelegateWrapper.mockDelegate,
@@ -53,7 +53,14 @@ class PhoenixBaseTestCase : XCTestCase {
                 configuration: mockConfiguration,
                 oauthProvider: mockOAuthProvider,
                 installation: mockInstallation,
-                locationManager: PhoenixLocationManager())
+                locationManager: LocationManager())
+            
+            
+            XCTAssert(phoenix.modules[0] === phoenix.identity)
+            XCTAssert(phoenix.modules[1] === phoenix.location)
+            XCTAssert(phoenix.modules[2] === phoenix.analytics)
+            
+            
             
             // Test individual modules rather than calling startup here.
         }
@@ -107,6 +114,11 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: - Authentication Mock
     
+    func getResponse(status: HTTPStatusCode, body: String) -> MockResponse {
+        return MockResponse(data: status == .Success ? body : nil,
+            statusCode: status,
+            headers: nil)
+    }
     
     func mockAuthenticationResponse(response: MockResponse) {
         mockAuthenticationResponses([response])

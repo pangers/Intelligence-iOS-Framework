@@ -14,7 +14,7 @@ import Foundation
 public enum ConfigurationError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "ConfigurationError"
+    public static let domain = "ConfigurationError"
     
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
@@ -34,7 +34,7 @@ public enum ConfigurationError: Int, ErrorType {
 public enum IdentityError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "IdentityError"
+    public static let domain = "IdentityError"
 
     /// The user creation request couldn't complete successfully.
     case UserCreationError = 2001
@@ -57,20 +57,36 @@ public enum IdentityError: Int, ErrorType {
 
     /// The user role assignment operation failed.
     case UserRoleAssignmentError = 2007
+    
+    /// The device token is invalid (zero length).
+    case DeviceTokenInvalidError = 2008
+    
+    /// Registering the device token failed.
+    case DeviceTokenRegistrationError = 2009
+    
+    /// Unregistering the device token failed, incorrect user?
+    case DeviceTokenUnregistrationError = 2010
+    
+    /// Device token has not been registered yet.
+    case DeviceTokenNotRegisteredError = 2011
 }
 
 /// Enumeration to list the errors that can occur in any request.
 public enum RequestError: Int, ErrorType {
     
     /// The domain passed to NSErrors.
-    static let domain = "RequestError"
+    public static let domain = "RequestError"
     
     /// Error to return when parsing JSON fails.
     case ParseError = 3001
     
     /// Error to return if user doesn't have access to a particular API.
     case AccessDeniedError = 3002
+    
+    /// Error to return if user is offline.
+    case InternetOfflineError = 3003
 }
+
 
 /// Enumeration to list the errors that can occur in the installation module
 internal enum InstallationError: Int, ErrorType {

@@ -44,9 +44,13 @@ internal class PhoenixOAuth: PhoenixOAuthProtocol {
     var userId: Int?
     var password: String?
     
-    init(tokenType: PhoenixOAuthTokenType, storage: PhoenixOAuthStorage? = nil) {
+    convenience init(tokenType: PhoenixOAuthTokenType) {
+        self.init(tokenType:tokenType, storage:PhoenixKeychain(account: tokenType.rawValue))
+    }
+    
+    init(tokenType:PhoenixOAuthTokenType, storage:PhoenixOAuthStorage) {
         self.tokenType = tokenType
-        self.storage = storage ?? PhoenixKeychain(account: tokenType.rawValue)
+        self.storage = storage
         accessToken = self.storage.accessToken
         // Application User only has 'accessToken' they don't care about refresh tokens.
         if tokenType != .Application {

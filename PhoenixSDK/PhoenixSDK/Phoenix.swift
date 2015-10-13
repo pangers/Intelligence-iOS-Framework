@@ -9,7 +9,7 @@
 import Foundation
 
 /// Mandatory public protocol developers must implement in order to respond to events correctly.
-@objc(PHXPhoenixDelegate)
+@objc(PHXDelegate)
 public protocol PhoenixDelegate {
     /// Unable to create SDK user, this may occur if a user with the randomized
     /// credentials already exists (highly unlikely) or your Application is
@@ -71,23 +71,24 @@ public final class Phoenix: NSObject {
     // MARK: - Modules
     
     /// The identity module, enables user management in the Phoenix backend.
-    @objc public internal(set) var identity: PhoenixIdentity!
+    @objc public internal(set) var identity: IdentityModuleProtocol!
     
     /// Analytics instance that can be used for posting Events.
-    @objc public internal(set) var analytics: PhoenixAnalytics!
+    @objc public internal(set) var analytics: AnalyticsModuleProtocol!
     
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
-    @objc public internal(set) var location: PhoenixLocation!
+    @objc public internal(set) var location: LocationModuleProtocol!
     
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules: [PhoenixModuleProtocol] {
-        return [location, identity, analytics]
+    internal var modules: [ModuleProtocol] {
+        return [identity, location, analytics]
     }
     
     // MARK: - Initializers
     
     /// (INTERNAL) Initializes the Phoenix entry point with all objects necessary.
     /// - parameter delegate:      Object that responds to delegate events.
+    /// - parameter delegateWrapper: The delegate wrapper so we intercept calls to it.
     /// - parameter network:       Network object, responsible for sending all OAuth requests.
     /// - parameter configuration: Configuration object to configure instance of Phoenix with, will fail if configured incorrectly.
     /// - parameter oauthProvider:  Object responsible for storing OAuth information.
@@ -101,8 +102,8 @@ public final class Phoenix: NSObject {
         network: Network? = nil,
         configuration phoenixConfiguration: Phoenix.Configuration,
         oauthProvider: PhoenixOAuthProvider,
-        installation: Phoenix.Installation,
-        locationManager: PhoenixLocationManager
+        installation: Installation,
+        locationManager: LocationManager
         ) throws
     {
         self.configuration = phoenixConfiguration.clone()
@@ -125,14 +126,14 @@ public final class Phoenix: NSObject {
         let internalConfiguration = phoenixConfiguration.clone()    // Copy for SDK
         
         // Modules
-        identity = Identity(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        analytics = Analytics(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
-        location = Location(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
+        identity = IdentityModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        analytics = AnalyticsModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
+        location = LocationModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
         
-        let internalAnalytics = analytics as! Analytics
-        let internalLocation = location as! Location
+        let internalAnalytics = analytics as! AnalyticsModule
+        let internalLocation = location as! LocationModule
         
-        internalAnalytics.locationProvider = (location as? PhoenixLocationProvider)
+        internalAnalytics.locationProvider = (location as? LocationModuleProvider)
         internalLocation.analytics = analytics
     }
     
@@ -153,10 +154,10 @@ public final class Phoenix: NSObject {
             network: nil,
             configuration: phoenixConfiguration,
             oauthProvider: oauthProvider,
-            installation: Phoenix.Installation(configuration: phoenixConfiguration.clone(),
+            installation: Installation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
             installationStorage: NSUserDefaults()),
-            locationManager: PhoenixLocationManager())
+            locationManager: LocationManager())
     }
     
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.
@@ -212,7 +213,10 @@ public final class Phoenix: NSObject {
     }
     
     /// Starts up the Phoenix SDK modules.
-    /// - parameter callback: Called when Phoenix SDK cannot resolve an issue. Interrogate NSError object to determine what happened.
+    /// - parameter callback: Called when the startup of Phoenix finishes. Receives in a boolean 
+    /// whether the startup was successful or not. This call has to finish successfully
+    /// before using any of the phoenix modules. If any action is performed while startup
+    /// has not yet finished fully, an unexpected error is likely to occur.
     public func startup(completion: (success: Bool) -> ()) {
         // Anonymously logins into the SDK then:
         // - Cannot request anything on behalf of the user.
@@ -220,24 +224,27 @@ public final class Phoenix: NSObject {
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
         
-        identity.startup { [weak self] (success) -> () in
-            if !success {
-                completion(success: false)
+        func moduleToStartup(module:Int) {
+            if module >= modules.count {
+                completion(success: true)
                 return
             }
-            self?.analytics.startup({ [weak self] (success) -> () in
-                if !success {
-                    completion(success: false)
-                    return
+            
+            modules[module].startup { (success) -> () in
+                if ( success ) {
+                    moduleToStartup(module + 1)
                 }
-                self?.location.startup({ (success) -> () in
-                    completion(success: success)
-                })
-            })
+                else {
+                    completion(success: false)
+                }
+            }
         }
+        
+        moduleToStartup(0)
     }
     
-    /// Shutdowns the Phoenix SDK modules.
+    /// Shutdowns the Phoenix SDK modules. After shutting down, you'll have to
+    /// startup again before being able to use Phoenix reliably again.
     public func shutdown() {
         modules.forEach{
             $0.shutdown()

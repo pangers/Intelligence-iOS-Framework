@@ -8,10 +8,6 @@
 
 import Foundation
 
-/// The callback alias for internal purposes. The caller should parse this data into an object/struct rather
-/// than giving this object back to the developer.
-typealias PhoenixNetworkingCallback = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> ()
-
 /// An enumeration of the HTTP Methods available to use
 internal enum HTTPRequestMethod : String {
     /// HTTP GET
@@ -20,6 +16,8 @@ internal enum HTTPRequestMethod : String {
     case POST = "POST"
     /// HTTP PUT
     case PUT = "PUT"
+    /// HTTP DELETE
+    case DELETE = "DELETE"
 }
 
 internal enum HTTPStatusCode: Int {
@@ -129,7 +127,9 @@ internal final class Network {
                 operation.complete()
                 return
             }
-            guard let network = self else { return }
+            guard let network = self else {
+                return
+            }
             
             if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
                 // Token is no longer valid and cannot be refreshed without user input.

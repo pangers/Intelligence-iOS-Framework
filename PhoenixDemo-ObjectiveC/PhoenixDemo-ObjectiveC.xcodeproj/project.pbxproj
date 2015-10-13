@@ -18,9 +18,12 @@
 		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
+		BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* Location.storyboard */; settings = {ASSET_TAGS = (); }; };
+		BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */; settings = {ASSET_TAGS = (); }; };
+		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; settings = {ASSET_TAGS = (); }; };
+		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
 		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
-		FE18F9411B86027D00DCF2EF /* PHXPhoenixLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE18F9401B86027D00DCF2EF /* PHXPhoenixLocationManager.m */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
 		FEF4A7511B7A28DA00CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; };
 		FEF4A7581B7A291000CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -58,12 +61,16 @@
 		BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXPhoenixManager.m; sourceTree = "<group>"; };
 		BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXViewUserViewController.h; sourceTree = "<group>"; };
 		BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXViewUserViewController.m; sourceTree = "<group>"; };
+		BB77B9461BC3B78400B53ABE /* Location.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Location.storyboard; sourceTree = "<group>"; };
+		BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationModuleViewController.h; sourceTree = "<group>"; };
+		BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXLocationModuleViewController.m; sourceTree = "<group>"; };
+		BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationGeofenceQueryViewController.h; sourceTree = "<group>"; };
+		BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXLocationGeofenceQueryViewController.m; sourceTree = "<group>"; };
+		BB77B94E1BC3BAF300B53ABE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIdentityModuleViewController.h; sourceTree = "<group>"; };
 		FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIdentityModuleViewController.m; sourceTree = "<group>"; };
 		FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXAuthenticationViewController.h; sourceTree = "<group>"; };
 		FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXAuthenticationViewController.m; sourceTree = "<group>"; };
-		FE18F93F1B86027D00DCF2EF /* PHXPhoenixLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXPhoenixLocationManager.h; sourceTree = "<group>"; };
-		FE18F9401B86027D00DCF2EF /* PHXPhoenixLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXPhoenixLocationManager.m; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 		FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -73,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */,
 				FEF4A7511B7A28DA00CD8603 /* PhoenixSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,6 +101,7 @@
 		7FDAAAF71B5D360800DF2BE6 = {
 			isa = PBXGroup;
 			children = (
+				BB77B94E1BC3BAF300B53ABE /* MapKit.framework */,
 				FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */,
 				7FDAAB021B5D360800DF2BE6 /* PhoenixDemo-ObjectiveC */,
 				7FDAAB011B5D360800DF2BE6 /* Products */,
@@ -112,6 +121,7 @@
 			children = (
 				BB0A23791B70B89F00CE0C81 /* Phoenix */,
 				BB0A236E1B70B1A400CE0C81 /* Identity */,
+				BB77B9451BC3B76D00B53ABE /* Location */,
 				455D85F71BC2D74100A64B96 /* Analytics */,
 				FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
@@ -154,10 +164,20 @@
 			children = (
 				BB0A237A1B70B8BE00CE0C81 /* PHXPhoenixManager.h */,
 				BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */,
-				FE18F93F1B86027D00DCF2EF /* PHXPhoenixLocationManager.h */,
-				FE18F9401B86027D00DCF2EF /* PHXPhoenixLocationManager.m */,
 			);
 			name = Phoenix;
+			sourceTree = "<group>";
+		};
+		BB77B9451BC3B76D00B53ABE /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				BB77B9461BC3B78400B53ABE /* Location.storyboard */,
+				BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */,
+				BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */,
+				BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */,
+				BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */,
+			);
+			name = Location;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,6 +244,7 @@
 				7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */,
 				7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */,
 				7FDAAB0E1B5D360800DF2BE6 /* Main.storyboard in Resources */,
+				BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,9 +259,10 @@
 				FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
 				BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */,
+				BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */,
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
-				FE18F9411B86027D00DCF2EF /* PHXPhoenixLocationManager.m in Sources */,
 				BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */,
+				BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */,
 				455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */,
 				7FDAAB051B5D360800DF2BE6 /* main.m in Sources */,
 			);

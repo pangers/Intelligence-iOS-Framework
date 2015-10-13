@@ -1,5 +1,5 @@
 //
-//  PhoenixInstallationRequestOperation.swift
+//  InstallationRequestOperation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 01/10/2015.
@@ -8,11 +8,11 @@
 
 import Foundation
 
-class PhoenixInstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
+class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     
-    var installation: Phoenix.Installation!
+    var installation: Installation!
     
-    required init(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
         super.init()
         self.callback = callback
         self.configuration = configuration
@@ -30,7 +30,7 @@ class PhoenixInstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        if installation.updateWithJSON(outputDictionary()) == false {
+        if installation.updateWithJSON(outputArrayFirstDictionary()) == false {
             output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }

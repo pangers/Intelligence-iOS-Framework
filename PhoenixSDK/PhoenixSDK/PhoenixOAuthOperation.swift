@@ -14,6 +14,10 @@ typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error
 typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
 
 private let AccessDeniedErrorCode = "access_denied"
+private let BodyData = "Data"
+private let BodyErrorDescription = "error_description"
+private let BodyError = "error"
+private let OfflineErrorCode = -1009
 
 internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
     var shouldBreak: Bool = false
@@ -43,7 +47,11 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             return true
         }
         if output?.error != nil {
-            output?.error = NSError(domain: domain, code: code, userInfo: nil)
+            if output?.error?.code == OfflineErrorCode {
+                output?.error = NSError(domain: RequestError.domain, code: RequestError.InternetOfflineError.rawValue, userInfo: nil)
+            } else {
+                output?.error = NSError(domain: domain, code: code, userInfo: nil)
+            }
             return true
         }
         if let httpResponse = output?.response as? NSHTTPURLResponse {
@@ -55,25 +63,25 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
         return false
     }
     
-    /// Returns error code if response contains some sort of server error but request was 200.
+    /// Returns error code if response contains some sort of error code in the body.
     func outputErrorCode() -> String? {
-        guard let error = self.output?.data?.phx_jsonDictionary?["error"] as? String else {
+        guard let error = self.output?.data?.phx_jsonDictionary?[BodyError] as? String else {
             return nil
         }
-        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?["error_description"] ?? "")
+        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?[BodyErrorDescription] ?? "")
         return error
     }
     
     /// Returns all dictionaries in the 'Data' array of the output.
     func outputArray() -> JSONDictionaryArray? {
-        guard let dataArray = self.output?.data?.phx_jsonDictionary?["Data"] as? JSONDictionaryArray else {
+        guard let dataArray = self.output?.data?.phx_jsonDictionary?[BodyData] as? JSONDictionaryArray else {
             return nil
         }
         return dataArray
     }
     
     /// Most API methods can use this helper to extract the first dictionary in the 'Data' array of output.
-    func outputDictionary() -> JSONDictionary? {
+    func outputArrayFirstDictionary() -> JSONDictionary? {
         guard let dataDictionary = outputArray()?.first else {
             return nil
         }
