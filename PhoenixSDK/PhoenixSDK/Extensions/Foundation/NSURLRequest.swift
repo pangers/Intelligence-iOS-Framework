@@ -25,6 +25,8 @@ private let HTTPBodyGrantTypeClientCredentials = "client_credentials"
 private let HTTPBodyGrantTypePassword = "password"
 private let HTTPBodyGrantTypeRefreshToken = "refresh_token"
 
+private let PHXIdentifierTypeDeviceToken = "iOS_Device_Token"
+
 // MARK: - OAuth
 
 internal extension NSURLRequest {
@@ -156,10 +158,46 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    // MARK: Identifiers
+    
+    class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(oauth.userId)
+            .phx_URLByAppendingIdentifiers()
+        let request = NSMutableURLRequest(URL: url)
+        
+        let json = [["ProjectId": "\(configuration.projectID)",
+            "IdentifierTypeId": PHXIdentifierTypeDeviceToken,
+            "IsConfirmed":" false",
+            "value": tokenString]]
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.POST.rawValue
+        request.HTTPBody = json.phx_toJSONData()
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = configuration.baseURL!
+            .phx_URLByAppendingRootIdentityPath()
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingUsers(oauth.userId)
+            .phx_URLByAppendingIdentifiers(tokenId)
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
     // MARK: Installation
     
     /// - Returns: An NSURLRequest to create a given installation.
-    class func phx_URLRequestForInstallationCreate(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationCreate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -176,7 +214,7 @@ internal extension NSURLRequest {
     
 
     /// - returns: An NSURLRequest to update a given installation.
-    class func phx_URLRequestForInstallationUpdate(installation: Phoenix.Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForInstallationUpdate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.baseURL!
             .phx_URLByAppendingRootIdentityPath()
             .phx_URLByAppendingProjects(configuration.projectID)

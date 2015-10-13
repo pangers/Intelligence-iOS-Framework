@@ -1,5 +1,5 @@
 //
-//  PhoenixLocationAnalyticsCallsTestCase.swift
+//  LocationModuleAnalyticsCallsTestCase.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 06/10/2015.
@@ -21,7 +21,7 @@ class PhoenixLocationAnalyticsCallsTestCase: PhoenixLocationBaseTestCase {
         geofence = Geofence()
         geofence.id = 100
         
-        (location as! Phoenix.Location).analytics = analytics
+        (location as! LocationModule).analytics = analytics
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -32,14 +32,14 @@ class PhoenixLocationAnalyticsCallsTestCase: PhoenixLocationBaseTestCase {
     }
     
     func testEnterRegion() {
-        (location as! Phoenix.Location).didEnterGeofence(geofence, withUserCoordinate: nil)
+        (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
             return $0.eventType == "Phoenix.Location.Geofence.Enter" && $0.targetId == String(geofence.id)
         }.count == 1
     }
     
     func testExitRegion() {
-        (location as! Phoenix.Location).didEnterGeofence(geofence, withUserCoordinate: nil)
+        (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
             return $0.eventType == "Phoenix.Location.Geofence.Exit" && $0.targetId == String(geofence.id)
         }.count == 1

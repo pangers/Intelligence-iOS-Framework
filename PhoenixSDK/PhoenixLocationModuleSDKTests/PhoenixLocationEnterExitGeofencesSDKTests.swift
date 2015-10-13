@@ -11,7 +11,7 @@ import XCTest
 @testable import PhoenixSDK
 import CoreLocation
 
-class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, PhoenixLocationDelegate {
+class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, LocationModuleDelegate {
     
     var enterGeofenceExpectation:XCTestExpectation?
     var exitGeofenceExpectation:XCTestExpectation?
@@ -91,7 +91,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         mockLocationManager.fireExitGeofence(Geofence())
     }
 
-    func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = enterGeofenceExpectation else {
@@ -102,7 +102,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
         enterGeofenceExpectation = nil
     }
     
-    func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = exitGeofenceExpectation else {
@@ -114,7 +114,7 @@ class PhoenixLocationEnterExitGeofencesSDKTests: PhoenixLocationBaseTestCase, Ph
     }
     
     
-    func phoenixLocation(location: PhoenixLocation, didStartMonitoringGeofence: Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
         guard let expectation = startMonitorGeofenceExpectation else {
             return
         }

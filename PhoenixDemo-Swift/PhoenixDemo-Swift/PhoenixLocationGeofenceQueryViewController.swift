@@ -80,7 +80,7 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
     @IBAction func didTapSave(sender: AnyObject) {
         resignResponders()
         
-        let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: Double(latitudeText.text ?? "0") ?? 0, longitude: Double(longitudeText.text ?? "0") ?? 0))
+        let query = GeofenceQuery(location: Coordinate(withLatitude: Double(latitudeText.text ?? "0") ?? 0, longitude: Double(longitudeText.text ?? "0") ?? 0))
         query.radius = Double(radiusText.text ?? "1000")
         query.pageSize = Int(pageSizeText.text ?? "10")
         query.pageNumber = Int(pageText.text ?? "1")

@@ -8,13 +8,13 @@
 
 import CoreLocation
 
-protocol PhoenixLocationManagerDelegate {
+protocol LocationManagerDelegate {
 
-    func didEnterGeofence(geofence:Geofence, withUserCoordinate:PhoenixCoordinate?)
+    func didEnterGeofence(geofence:Geofence, withUserCoordinate:Coordinate?)
     
-    func didExitGeofence(geofence:Geofence, withUserCoordinate:PhoenixCoordinate?)
+    func didExitGeofence(geofence:Geofence, withUserCoordinate:Coordinate?)
     
-    func didUpdateLocationWithCoordinate(coordinate:PhoenixCoordinate)
+    func didUpdateLocationWithCoordinate(coordinate:Coordinate)
     
     func didStartMonitoringGeofence(geofence:Geofence)
     
@@ -23,13 +23,13 @@ protocol PhoenixLocationManagerDelegate {
     func didStopMonitoringGeofence(geofence:Geofence)
 }
 
-internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
+internal class LocationManager: NSObject, CLLocationManagerDelegate {
     
     /// The location manager to use.
     private let locationManager: CLLocationManager
     
     /// The delegate that will be notified of entering/leaving geofences.
-    internal var delegate:PhoenixLocationManagerDelegate?
+    internal var delegate: LocationManagerDelegate?
     
     /// List of geofences monitored.
     private var geofencesMonitored:[Geofence]?
@@ -73,11 +73,11 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     /// Returns current location if available.
-    var userLocation: PhoenixCoordinate? {
+    var userLocation: Coordinate? {
         guard let coordinate = locationManager.location?.coordinate else {
             return nil
         }
-        return PhoenixCoordinate(withLatitude: coordinate.latitude, longitude: coordinate.longitude)
+        return Coordinate(withLatitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 
     // MARK:- Monitoring
@@ -146,7 +146,7 @@ internal class PhoenixLocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         
-        let coordinate = PhoenixCoordinate(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let coordinate = Coordinate(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         self.delegate?.didUpdateLocationWithCoordinate(coordinate)
     }
     

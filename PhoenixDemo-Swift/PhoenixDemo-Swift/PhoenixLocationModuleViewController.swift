@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import PhoenixSDK
 
-class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, PhoenixLocationDelegate, GeofenceQueryBuilderDelegate {
+class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSource, MKMapViewDelegate, LocationModuleDelegate, GeofenceQueryBuilderDelegate {
     
     // MARK:- Constants
     private static let cellIdentifier = "cell"
@@ -133,11 +133,11 @@ class PhoenixLocationModuleViewController : UIViewController, UITableViewDataSou
     
     // MARK:- PhoenixLocationDelegate
     
-    func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence:Geofence) {
         addRecord("Entered \(geofence.name)")
     }
     
-    func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
+    func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence:Geofence) {
         addRecord("Exited \(geofence.name)")
     }
     

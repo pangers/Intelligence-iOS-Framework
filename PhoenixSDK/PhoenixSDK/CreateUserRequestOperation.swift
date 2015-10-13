@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation for Create User API.
-internal final class CreateUserRequestOperation : PhoenixUserRequestOperation {
+internal final class CreateUserRequestOperation : UserRequestOperation {
     
     override func main() {
         super.main()

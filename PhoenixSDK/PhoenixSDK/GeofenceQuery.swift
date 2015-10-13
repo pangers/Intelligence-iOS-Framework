@@ -9,6 +9,12 @@
 import Foundation
 import CoreLocation
 
+/**
+The direction to sort with when fetching geofences.
+
+- Ascending
+- Descending
+*/
 @objc public enum GeofenceSortDirection:Int {
     
     case Ascending
@@ -24,11 +30,21 @@ import CoreLocation
     }
 }
 
+/**
+The criteria to sort with when fetching geofences.
+
+- Distance: Distance from the coordinate passed
+- Id:       The Id of the geofences
+- Name:     The name of the geofences.
+*/
 @objc public enum GeofenceSortCriteria: Int {
     case Distance
     case Id
     case Name
 
+    /**
+    - returns: A non localized value describing the criteria.
+    */
     public func stringValue() -> String {
         switch self {
         case .Distance:
@@ -44,24 +60,31 @@ import CoreLocation
 ///An instance of object using to create query part of URL for Geofence API
 @objc(PHXGeofenceQuery) public class GeofenceQuery : NSObject {
     
+    /// The direction to sort geofences with
     public var sortingDirection: GeofenceSortDirection?
     
+    /// The criteria to sort geofences with
     public var sortingCriteria: GeofenceSortCriteria?
     
+    /// The latitude of the coordinates.
     @objc public var longitude: Double
     
+    /// The longitude of the coordinates
     @objc public var latitude: Double
     
+    /// The radius to limit the geofences to fetch
     public var radius: Double?
     
+    /// The maximum number of geofences in a page
     public var pageSize: Int?
     
+    /// The page to load.
     public var pageNumber: Int?
     
     ///Default initializer. Requires location coordinates to query for list of geofences.
     /// - Parameters:
     ///     - location: location coordinates to look for geofences related to.
-    public init(location: PhoenixCoordinate) {
+    public init(location: Coordinate) {
         longitude = location.longitude
         latitude = location.latitude
     }

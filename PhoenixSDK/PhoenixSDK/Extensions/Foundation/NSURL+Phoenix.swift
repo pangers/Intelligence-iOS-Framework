@@ -40,9 +40,16 @@ internal extension NSURL {
     func phx_URLByAppendingApplications(applicationID: Int? = nil) -> NSURL! {
         if let applicationID = applicationID {
             return URLByAppendingPathComponent("/applications/\(applicationID)")
-        } else {
-            return URLByAppendingPathComponent("/applications")
         }
+        return URLByAppendingPathComponent("/applications")
+    }
+    
+    /// - Returns: NSURL with append identifiers path.
+    func phx_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
+        if let tokenID = tokenID {
+            return URLByAppendingPathComponent("/identifiers/\(tokenID)")
+        }
+        return URLByAppendingPathComponent("/identifiers")
     }
     
     /// - Returns: NSURL with append installations path.
@@ -69,18 +76,16 @@ internal extension NSURL {
     func phx_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
         if let projectID = projectID {
             return URLByAppendingPathComponent("/projects/\(projectID)")
-        } else {
-            return URLByAppendingPathComponent("/projects")
         }
+        return URLByAppendingPathComponent("/projects")
     }
     
     /// - Returns: NSURL with appended users path.
     func phx_URLByAppendingUsers(userID: Int? = nil) -> NSURL! {
         if let userID = userID {
             return URLByAppendingPathComponent("/users/\(userID)")
-        } else {
-            return URLByAppendingPathComponent("/users")
         }
+        return URLByAppendingPathComponent("/users")
     }
     
     /// - Returns: NSURL with appended '/users/me' path.
@@ -90,17 +95,12 @@ internal extension NSURL {
     
 
     func phx_URLByAppendingQueryString(queryString:String) -> NSURL! {
-
-        if (queryString.characters.count == 0 ) {
-            return self;
+        if queryString.characters.count == 0 {
+            return self
         }
+        let separator = query?.isEmpty == true ? "?" : "&"
+        let URLString = "\(absoluteString)\(separator)\(queryString)"
         
-        var query = "&"
-        if self.query == nil || self.query!.characters.count == 0 {
-            query = "?"
-        }
-        
-        let URLString = "\(self.absoluteString)\(query)\(queryString)"
         return NSURL(string: URLString)
     }
 

@@ -1,5 +1,5 @@
 //
-//  PhoenixIdentityTestCase.swift
+//  IdentityModuleTestCase.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 04/08/2015.
@@ -10,12 +10,12 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class PhoenixIdentityTestCase: PhoenixBaseTestCase {
+class IdentityModuleTestCase: PhoenixBaseTestCase {
 
     let fakeUpdateUser = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let updateUserWeakPassword = Phoenix.User(userId: mockUserID, companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
     let userWeakPassword = Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
-    var identity:Phoenix.Identity?
+    var identity: IdentityModule?
     
     let badResponse = "BAD RESPONSE"
     
@@ -68,9 +68,15 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         "}]" +
     "}"
     
+    let fakeDeviceToken = "d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01"
+    let fakeTokenID = 18952
+    let successfulResponseCreateIdentifier = "{\"TotalRecords\":1,\"Data\":[{\"Id\":18952,\"ProjectId\":2030,\"UserId\":6161,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
+    let unhandledJSONResponseCreateIdentifier = "{\"TotalRecords\":1,\"Data\":[{\"Identifier\":18952,\"ProjectId\":2030,\"UserId\":6161,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
+    let successfulResponseDeleteIdentifier = "{\"TotalRecords\":1,\"Id\":18952}"
+    
     override func setUp() {
         super.setUp()
-        self.identity = phoenix?.identity as? Phoenix.Identity
+        self.identity = phoenix?.identity as? IdentityModule
     }
     
     override func tearDown() {
@@ -81,47 +87,51 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     
     // MARK: - Mock
     
-    func mockGetUserMe(status: HTTPStatusCode = .Success) {
+    func mockGetUserMe(status: HTTPStatusCode = .Success, body: String? = nil) {
         let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,
             method: .GET,
-            response: (data: status == .Success ? successfulResponseGetUser : nil, statusCode:status, headers:nil))
+            response: getResponse(status, body: body ?? successfulResponseGetUser))
     }
     
-    func mockValidate(status: HTTPStatusCode = .Success, alternateResponse: String? = nil) {
+    func mockValidate(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .GET,
-            response: (data: status == .Success ? (alternateResponse ?? validValidate) : nil, statusCode: status, headers: nil))
+            response: getResponse(status, body: body ?? validValidate))
     }
     
-    func mockUserCreation(status: HTTPStatusCode = .Success) {
+    func mockUserCreation(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
-            response: (data: status == .Success ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+            response: getResponse(status, body: body ?? successfulResponseCreateUser))
     }
     
     func mockUserUpdateURL() -> NSURL {
-        return NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+        return NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser,
+            oauth: mockOAuthProvider.loggedInUserOAuth,
+            configuration: mockConfiguration,
+            network: mockNetwork).URL!
     }
     
-    func mockUserUpdate(status: HTTPStatusCode = .Success) {
+    func mockUserUpdate(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(mockUserUpdateURL(),
             method: .PUT,
-            response: (data: status == .Success ? successfulResponseCreateUser : nil, statusCode:status, headers:nil))
+            response: getResponse(status, body: body ?? successfulResponseCreateUser))
     }
     
-    func mockUserUpdateResponses(status: HTTPStatusCode = .Unauthorized, secondStatus: HTTPStatusCode = .Success) -> [MockResponse] {
+    func mockUserUpdateResponses(status: HTTPStatusCode = .Unauthorized,
+        secondStatus: HTTPStatusCode = .Success) -> [MockResponse] {
         let responses = [
-            MockResponse((data: status == .Success ? successfulResponseCreateUser : nil, statusCode: status, headers: nil)),
-            MockResponse((data: secondStatus == .Success ? successfulResponseCreateUser : nil, statusCode: secondStatus, headers: nil))
+            getResponse(status, body: successfulResponseCreateUser),
+            getResponse(secondStatus, body: successfulResponseCreateUser)
         ]
         return responses
     }
     
-    func mockUserAssignRole(status: HTTPStatusCode = .Success) {
+    func mockUserAssignRole(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
-            response: (data: status == .Success ? successfulAssignRoleResponse : nil, statusCode: status, headers: nil))
+            response: getResponse(status, body: body ?? successfulAssignRoleResponse))
     }
     
     func mockRefreshAndLogin(status: HTTPStatusCode? = nil,
@@ -142,6 +152,17 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         mockAuthenticationResponses(responses)
     }
     
+    func mockCreateIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierCreation(fakeDeviceToken, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .POST,
+            response: getResponse(status, body: body ?? successfulResponseCreateIdentifier))
+    }
+    
+    func mockDeleteIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .DELETE,
+            response: getResponse(status, body: body ?? successfulResponseDeleteIdentifier))
+    }
     
     // MARK:- Login/Logout
     
@@ -181,7 +202,7 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
     func testValidateSuccessParseError() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Success, alternateResponse: badResponse)
+        mockValidate(.Success, body: badResponse)
         
         let expectation = expectationWithDescription("mock validate")
         
@@ -450,6 +471,30 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    func testCreateUserSuccessAssignRoleParseFailure() {
+        let oauth = mockOAuthProvider.applicationOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        let sdkUser = Phoenix.User(companyId: 1)
+        
+        // Mock auth
+        mockOAuthProvider.fakeAccessToken(oauth)
+        
+        // Create
+        mockUserCreation(.Success)
+        mockUserAssignRole(.Success, body: badResponse)
+        
+        identity!.createUser(sdkUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "User not found")
+            XCTAssert(error != nil, "Error occured while parsing a success request")
+            XCTAssert(error?.domain == RequestError.domain)
+            XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
     func testCreateUserFailure() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let oauth = mockOAuthProvider.applicationOAuth
@@ -465,6 +510,28 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
             XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testCreateUserParseFailure() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        // Mock auth
+        mockOAuthProvider.fakeAccessToken(oauth)
+        
+        // Mock
+        mockUserCreation(.Success, body: badResponse)
+        
+        identity!.createUser(fakeUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == RequestError.domain, "Unexpected error type raised")
             
             expectCallback.fulfill()
         }
@@ -538,6 +605,28 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    func testUpdateUserParseFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        // Mock
+        mockUserUpdate(.Success, body: badResponse)
+        
+        identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Unexpected error type raised")
+            XCTAssert(error?.domain == RequestError.domain, "Unexpected error type raised")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
     func testUpdateUserFailureRefreshTokenPassedUpdateUserSuccess() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
@@ -603,6 +692,153 @@ class PhoenixIdentityTestCase: PhoenixBaseTestCase {
         XCTAssert(Phoenix.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToCreate, "Can't send a complete user")
         
     }
+    
+    // MARK:- Create Identifier
+    
+    func testCreateIdentifierSuccess() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockCreateIdentifier()
+        
+        identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
+            XCTAssert(error == nil)
+            XCTAssert(tokenId == self.fakeTokenID)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testCreateIdentifierFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockCreateIdentifier(.NotFound)
+        
+        identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(tokenId == -1)
+            XCTAssert(error?.domain == IdentityError.domain)
+            XCTAssert(error?.code == IdentityError.DeviceTokenRegistrationError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testCreateIdentifierParseFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockCreateIdentifier(.Success, body: unhandledJSONResponseCreateIdentifier)
+        
+        identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(tokenId == -1)
+            XCTAssert(error?.domain == RequestError.domain)
+            XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testCreateIdentifierParseFailureMalformed() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockCreateIdentifier(.Success, body: badResponse)
+        
+        identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(tokenId == -1)
+            XCTAssert(error?.domain == RequestError.domain)
+            XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    
+    // MARK:- Delete Identifier
+    
+    func testDeleteIdentifierSuccess() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier()
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error == nil)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testDeleteIdentifierFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier(.BadRequest)
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(error?.domain == IdentityError.domain)
+            XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testDeleteIdentifierParseFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier(.Success, body: badResponse)
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(error?.domain == RequestError.domain)
+            XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    
     // MARK:- Password security
     
     func testPasswordRequirementsVerification() {

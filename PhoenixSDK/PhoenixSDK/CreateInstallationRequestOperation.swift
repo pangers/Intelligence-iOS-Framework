@@ -9,7 +9,7 @@
 import Foundation
 
 /// Operation for Create Installation API.
-internal final class CreateInstallationRequestOperation : PhoenixInstallationRequestOperation {
+internal final class CreateInstallationRequestOperation : InstallationRequestOperation {
     
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {

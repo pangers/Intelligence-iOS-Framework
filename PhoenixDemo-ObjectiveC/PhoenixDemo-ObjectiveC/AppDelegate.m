@@ -9,7 +9,9 @@
 #import "AppDelegate.h"
 #import "PHXPhoenixManager.h"
 
-@interface AppDelegate () <PHXPhoenixDelegate>
+NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceTokenKey";
+
+@interface AppDelegate () <PHXDelegate>
 
 @end
 
@@ -48,18 +50,49 @@
     return YES;
 }
 
--(void) alertWithMessage:(NSString*)message {
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Shutdown Phoenix in the applicationWillTerminate method so Phoenix has time
+    // to teardown properly.
+    [[PHXPhoenixManager phoenix] shutdown];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    __weak __typeof(self) weakSelf = self;
+    [[[PHXPhoenixManager phoenix] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+        if (error != nil) {
+            [weakSelf alertWithError:error];
+        } else {
+            // Store token id for unregistration. For this example I have stored it in user defaults.
+            // However, this should be stored in the keychain as the app may be uninstalled and reinstalled
+            // multiple times and may receive the same device token from Apple.
+            [[NSUserDefaults standardUserDefaults] setInteger:tokenId forKey:PhoenixDemoStoredDeviceTokenKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [weakSelf alertWithMessage:@"Registration Succeeded!"];
+        }
+    }];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [self alertWithMessage:@"Unable to Register for Push Notifications"];
+}
+
+#pragma mark - Alert
+
+- (void)alertWithError:(NSError *)error {
+    if ([error.domain isEqualToString:@"IdentityError"]) {
+        [self alertWithMessage:[NSString stringWithFormat:@"Identity Error: %ld", (long)error.code]];
+    } else if ([error.domain isEqualToString:@"RequestError"]) {
+        [self alertWithMessage:[NSString stringWithFormat:@"Request Error: %ld", (long)error.code]];
+    }
+}
+
+- (void)alertWithMessage:(NSString*)message {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Phoenix Demo" message:message preferredStyle:UIAlertControllerStyleAlert];
         [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
         [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
     });
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-	// Shutdown Phoenix in the applicationWillTerminate method so Phoenix has time
-    // to teardown properly.
-    [[PHXPhoenixManager phoenix] shutdown];
 }
 
 #pragma mark - PHXPhoenixDelegate

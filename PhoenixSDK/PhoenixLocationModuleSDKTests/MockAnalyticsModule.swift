@@ -10,11 +10,19 @@ import UIKit
 
 @testable import PhoenixSDK
 
-class MockAnalyticsModule: NSObject, PhoenixAnalytics {
+class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
 
-    var trackedEvents:[Phoenix.Event] = []
+    var trackedEvents:[Event] = []
     
-    func track(event:Phoenix.Event) {
+    func pause() {
+        
+    }
+    
+    func resume() {
+        
+    }
+    
+    func track(event: Event) {
         trackedEvents += [event]
     }
     

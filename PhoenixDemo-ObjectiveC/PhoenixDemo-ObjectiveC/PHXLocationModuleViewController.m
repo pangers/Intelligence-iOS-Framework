@@ -15,7 +15,7 @@
 #import "PHXPhoenixManager.h"
 #import "PHXLocationGeofenceQueryViewController.h"
 
-@interface PHXLocationModuleViewController () <PHXLocationDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
+@interface PHXLocationModuleViewController () <PHXLocationModuleDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
 
 @property(nonatomic, strong) NSArray<NSString*>* events;
 @property(nonatomic, strong) CLLocationManager* locationManager;
@@ -83,7 +83,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 - (IBAction)didTapMonitoringButton:(id)sender {
-    id<PHXLocation> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
     
     if ( [locationModule isMonitoringGeofences] )
     {
@@ -109,7 +109,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 -(void)didSelectGeofenceQuery:(PHXGeofenceQuery *)query {
-    id<PHXLocation> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
     [locationModule downloadGeofences:query callback:^(NSArray<PHXGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -120,7 +120,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 -(void) didReceiveGeofences:(NSArray<PHXGeofence*>*)geofences error:(NSError*) error {
-    id<PHXLocation> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
 
     if ( error != nil ) {
         [self addRecord:@"Error occured while downloading geofences"];
@@ -144,12 +144,12 @@ static NSString* const cellIdentifier = @"cell";
     }
 }
 
--(void)phoenixLocation:(id<PHXLocation>)location didEnterGeofence:(PHXGeofence *)geofence
+-(void)phoenixLocation:(id<PHXLocationModuleProtocol>)location didEnterGeofence:(PHXGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Entered %@", geofence.name]];
 }
 
--(void)phoenixLocation:(id<PHXLocation>)location didExitGeofence:(PHXGeofence *)geofence
+-(void)phoenixLocation:(id<PHXLocationModuleProtocol>)location didExitGeofence:(PHXGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Exited %@", geofence.name]];
 }
