@@ -13,8 +13,8 @@ import CoreLocation
 public typealias DownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
 
 /**
-*  The phoenix location delegate. Implement it and set the locationDelegate of
-*   the PhoenixLocation module in order to be notified of events that occured in it.
+Implement the LocationModuleDelegate in order to be notified of events that
+occur related to the location module.
 */
 @objc(PHXLocationModuleDelegate)
 public protocol LocationModuleDelegate {
@@ -63,7 +63,7 @@ public protocol LocationModuleDelegate {
 }
 
 /**
-*  The Phoenix Location module protocol. Provides geofence downloading and tracking functionality.
+The Phoenix Location module protocol. Provides geofence downloading and tracking functionality.
 */
 @objc(PHXLocationModuleProtocol)
 public protocol LocationModuleProtocol : ModuleProtocol {
@@ -180,12 +180,13 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     }
     
     /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
+    /// - parameter delegate:         Internal delegate that notifies Phoenix.
     /// - parameter network:          Instance of Network class to use.
     /// - parameter configuration:    Configuration used to configure requests.
-    /// - parameter geofenceCallback: Called on enter/exit of geofence.
+    /// - parameter locationManager:  Location manager used for tracking.
     /// - returns: Returns a Location object.
-    internal init(withDelegate delegate:
-        PhoenixInternalDelegate,
+    internal init(
+        withDelegate delegate: PhoenixInternalDelegate,
         network:Network,
         configuration: Phoenix.Configuration,
         locationManager:LocationManager)
@@ -249,7 +250,6 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     
     /**
     Tracks via the analytics module that a geofence has been entered
-    
     - parameter geofence: The geofence entered
     */
     func trackGeofenceEntered(geofence:Geofence) {
@@ -260,7 +260,6 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     
     /**
     Tracks via the analytics module that a geofence has been exited
-    
     - parameter geofence: The geofence exited
     */
     func trackGeofenceExited(geofence:Geofence) {
