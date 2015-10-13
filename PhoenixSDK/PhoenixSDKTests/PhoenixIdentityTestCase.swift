@@ -164,6 +164,12 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             response: getResponse(status, body: body ?? successfulResponseCreateIdentifier))
     }
     
+    func mockDeleteIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .DELETE,
+            response: getResponse(status, body: body ?? successfulResponseDeleteIdentifier))
+    }
+    
     // MARK:- Login/Logout
     
     func fakeLoggedIn(oauth: PhoenixOAuthProtocol) {
@@ -768,6 +774,67 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(tokenId == -1)
+            XCTAssert(error?.domain == RequestError.domain)
+            XCTAssert(error?.code == RequestError.ParseError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    
+    // MARK:- Delete Identifier
+    
+    func testDeleteIdentifierSuccess() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier()
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error == nil)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testDeleteIdentifierFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier(.BadRequest)
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(error?.domain == IdentityError.domain)
+            XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testDeleteIdentifierParseFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        mockDeleteIdentifier(.Success, body: badResponse)
+        
+        identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error != nil)
             XCTAssert(error?.domain == RequestError.domain)
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
             
