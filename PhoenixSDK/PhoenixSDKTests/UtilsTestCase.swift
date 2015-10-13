@@ -45,6 +45,94 @@ class UtilsTestCase: XCTestCase {
         }
     }
     
+    func testForEachInMainThreadFromSecondaryThread() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        dispatch_async(dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) { // 1
+            
+            // Assert that we are not in the main thread, but forEachInMainThread will run in the main thread.
+            XCTAssertFalse(NSThread.isMainThread())
+            
+            expectationsArray.forEachInMainThread {
+                // Assert that all runs in the main thread
+                XCTAssert(NSThread.isMainThread())
+                
+                // Fulfill all expectation so we can wait for them.
+                $0.fulfill()
+            }
+        }
+        
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+    
+    /**
+    Checks that if we call it from the main thread there is no deadlock.
+    */
+    func testForEachInMainThreadFromMainThread() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that all runs in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEachInMainThread {
+            // Assert that all runs in the main thread
+            XCTAssert(NSThread.isMainThread())
+            
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+
+    func testForEachInQueue() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that we run in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEach(asyncInQueue: dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) {
+            
+            // Assert that we are not in the main thread
+            XCTAssertFalse(NSThread.isMainThread())
+
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+    
     func testStringContains() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.

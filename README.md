@@ -573,17 +573,47 @@ The location module is responsible for managing a user's location in order to tr
 
 Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
 
-Furthermore, you will need to manage the request for permissions by implementing the following code:
+Developers are responsible to decide when is the most suitable time to start fetching geofences and monitoring the user, and also will need to request location permissions in order to be able to track the user's location by either adding the 'NSLocationAlwaysUsageDescription' or the 'NSLocationWhenInUseUsageDescription' to the Info.plist of their app. You can find documentation on those keys in https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18.
+
+In order to obtain permissions to track the user's location, follow Apple's documentation in:
+
+https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/#//apple_ref/doc/uid/TP40007125-CH3-SW62
+
+The location module is available via the location property in the Phoenix object.
+
+### Download Geofences ###
+
+The first step before tracking a user is to obtain a list of Geofences created in the Phoenix Dashboard.
+
+To do so, you'll have to provide a GeofenceQuery object defining how you want to retrieve the geofences. The query can take the following parameters:
+
+* **longitude: Double**. The latitude to calculate the distance from. Must be provided.
+    
+* **latitude: Double**. The longitude to calculate the distance to. Must be provided.
+    
+* **sortingDirection: GeofenceSortDirection**. Ascending or Descending. **Defaults to Ascending**
+    
+* **sortingCriteria: GeofenceSortCriteria?**. Sets how the geofences should be sorted. The available options are Distance, Id and Name. **Defaults to Distance**
+    
+* **radius: Double?**. The radius to filter geofences from.
+    
+* **pageSize: Int?**. The number of geofences per page loaded.
+    
+* **pageNumber: Int?**. The page to load.
+
+The next sample code shows how to initialize a sample query:
 
 *Swift:*
 
 ```
 #!swift
 
-// Request location access.
-if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
-    locationManager.requestAlwaysAuthorization()
-}
+let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 42, longitude: 2))
+query.radius = 1000
+query.pageSize = 10
+query.pageNumber = 0
+query.sortingDirection = .Ascending
+query.sortingCriteria = .Distance
 
 ```
 
@@ -592,11 +622,190 @@ if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
 ```
 #!objc
 
-// Request location access.
-if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
-    [self.locationManager requestAlwaysAuthorization];
+PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:42
+                                                          longitude:2];
+
+PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate];
+[query setRadius:1000];
+[query setPage:1];
+[query setPageSize:10];
+[query setSortingDirection:GeofenceSortDirectionAscending];
+[query setSortingCriteria:GeofenceSortCriteriaDistance];
+
+```
+
+Once the Geofence query is created and configured, you can retrieve the geofences you need by using the following snippet:
+
+*Swift:*
+
+```
+#!swift
+let phoenix:Phoenix = ...
+phoenix.location.downloadGeofences(geofenceQuery) { (geofences, error) in
+    // Geofences loaded!
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+Phoenix* phoenix = ...;
+[phoenix.location downloadGeofences:query callback:^(NSArray<PHXGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
+     // Geofences loaded!
+    
+}];
+
+```
+
+The downloadGeofences method can return as an error:
+
+* NSError with domain LocationError.domain ("LocationError"), and code DownloadGeofencesError (6001)
+
+### Start/Stop Monitoring Geofences ###
+
+Once you have Geofences you could start tracking the user's location and be notified of when a user enters or exits a given Geofence.
+
+When tracking a user's location, you have to keep in mind:
+
+* Privacy concerns.
+* Battery usage.
+* What value the user will receive when sacrificing the previous two.
+* When to stop tracking the user's location.
+
+The Phoenix SDK **won't** perform any tracking by default, since the developer is responsible to decide when is the best time to track the user for the user's benefit. For some apps, this will mean immediately after launching the app until it gets killed, for others it will be only when the user is performing a given action.
+
+Once all this is considered, and it has been decided when to start and stop tracking the user's location, you can start and stop the tracking by using the following code snippets:
+
+*Swift:*
+
+```
+#!swift
+
+// Start monitoring
+let geofences:[Geofence] = ...
+
+phoenix.location.startMonitoringGeofences(geofences)
+
+...
+
+// Stop monitoring
+phoenix.location.stopMonitoringGeofences()
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+// Start monitoring
+NSArray<PHXGeofence*>* geofences = ...;
+[phoenix.location startMonitoringGeofences:geofences];
+
+...
+
+// Stop monitoring
+[phoenix.location stopMonitoringGeofences];
+
+```
+
+Notice that when you start monitoring a given set of geofences, you'll stop monitoring the previous monitored geofences. Also, bear in mind that iOS has a limit of simultaneous geofences that you can be tracking at a time (20). If your app requires the use of several geofences, consider downloading more geofences when the user's location changes or every once in a while. However, this techniques come at an expense of battery and data draining for the user.
+
+#### Listen for Location Events ####
+
+Given that you have started monitoring the use location, your app will probably want to be aware of when a user enters or leaves a geofence.
+
+The location module provides a locationDelegate so you can be notified of events. The following snippet displays an example implementation and how to set your object as delegate. All methods in the PhoenixLocationDelegate protocol are optional, and thus you may only implement those that you need.
+
+*Swift:*
+
+```
+#!swift
+
+phoenix.location.locationDelegate = self
+        
+func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
+	print("Did enter a geofence")
+}
+
+func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
+	print("Did exit a geofence")
+}
+    
+func phoenixLocation(location:PhoenixLocation, didStartMonitoringGeofence:Geofence) {
+	print("Did start monitoring a given geofence")
+}
+
+func phoenixLocation(location:PhoenixLocation, didFailMonitoringGeofence:Geofence) {
+	print("Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.")
+}
+
+func phoenixLocation(location:PhoenixLocation, didStopMonitoringGeofence:Geofence) {
+	print("Did stop monitoring a geofence")
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+phoenix.location.locationDelegate = self;
+
+-(void)phoenixLocation:(id<PHXLocation>)location didEnterGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did enter a geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didExitGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did exit a geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didStartMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did start monitoring a given geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didFailMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didStopMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did stop monitoring a geofence");
 }
 
 ```
 
+#### Configuring Monitoring Accuracy ####
 
+Getting the user location is one of the most battery consuming action a mobile phone can perform. This can be alleviated by reducing the accuracy you use when getting the user position. This comes at the expense of missing some events or having false positives.
+
+When considering the accuracy to use, you have to consider what kind of regions are you working with. If your geofences represent a big region (a city, a country, 10km...) then you'll probably be fine with a lower accuracy.
+
+If, however, your geofences represent a small region (a street, a shop, 100m...) then you'll need to increase the accuracy in order to get a granular enough location to allow CoreLocation to detect the user entered the region.
+
+As a final note, consider checking the minimum radius of the geofences you are about to monitor and to set the location accuracy based on that.
+
+*Swift:*
+
+```
+#!swift
+
+phoenix.location.setLocationAccuracy(kCLLocationAccuracyBest)
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+[phoenix.location setLocationAccuracy:kCLLocationAccuracyBest];
+
+```
