@@ -566,6 +566,10 @@ Phoenix* phoenix = ...;
 
 ```
 
+The downloadGeofences method can return as an error:
+
+* NSError with domain LocationError.domain ("LocationError"), and code DownloadGeofencesError (6001)
+
 ### Start/Stop monitoring geofences ###
 
 Once you have Geofences you could start tracking the user's location and be notified of when a user enters or exits a given Geofence.
