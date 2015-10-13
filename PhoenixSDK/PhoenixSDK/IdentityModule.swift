@@ -15,8 +15,9 @@ public typealias UserCallback = (user:Phoenix.User?, error:NSError?) -> Void
 /// - Returns: Installation object and optional error.
 internal typealias InstallationCallback = (installation: Installation?, error: NSError?) -> Void
 
-/// A generic IdentifierCallback, developer is responsbile for storing the identifier
+/// Callback for Register Device Token method, developer is responsbile for managing the tokenId and calling unregister at appropriate times.
 public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -> Void
+/// Callback for Unregister Device Token method, an error may occur if tokenId was not registred or is registered against another user.
 public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
 
 private let InvalidDeviceTokenID = -1
@@ -46,8 +47,14 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     ///     - callback: Will be called with either an error or a user.
     func updateUser(user: Phoenix.User, callback: UserCallback)
     
+    /// Register a push notification token on the Phoenix platform.
+    /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.
+    /// - parameter callback: Callback to fire on completion, will contain error or token ID. Developer should store token ID and is responsible for managing the flow of registration for push.
     func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback)
     
+    /// Unregister a token ID in the backend, will fail if it was registered against another user.
+    /// - parameter tokenId: Previously registered token ID. Should be unregistered prior to logout if you have multiple accounts.
+    /// - parameter callback: Callback to fire on completion, error will be set if unable to unregister.
     func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback)
 }
 
