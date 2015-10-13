@@ -96,21 +96,23 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         
     // MARK:- Helpers
     
+    func mockDownloadGeofences(status: HTTPStatusCode = .Success, query: GeofenceQuery, body: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
+            method: .GET,
+            response: getResponse(status, body: body ?? geofencesResponse))
+    }
+    
+    
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
         query.setDefaultValues()
-        let oauth = mockOAuthProvider.sdkUserOAuth
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!
+        
+        mockDownloadGeofences(.Success, query: query)
         
         // Mock a valid token
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: geofencesResponse, statusCode: .Success, headers:nil))
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
         
         location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
@@ -124,18 +126,12 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
-
-        let oauth = mockOAuthProvider.sdkUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!
+        
+        mockDownloadGeofences(.Success, query: query, body: errorResponse)
         
         // Mock a valid token
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockResponseForURL(request,
-            method: "GET",
-            response: (data: errorResponse, statusCode: .Success, headers:nil))
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
         
         location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")
