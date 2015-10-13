@@ -75,6 +75,34 @@ class UtilsTestCase: XCTestCase {
         }
     }
     
+    func testForEachInQueue() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that we run in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEach(asyncInQueue: dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) {
+            
+            // Assert that we are not in the main thread
+            XCTAssertFalse(NSThread.isMainThread())
+
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+    
     func testStringContains() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
