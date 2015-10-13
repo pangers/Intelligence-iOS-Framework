@@ -14,6 +14,9 @@ let PhoenixDemoStoredDeviceTokenKey = "PhoenixDemoStoredDeviceTokenKey"
 class IdentityModuleViewController : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        defer {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        }
         let application = UIApplication.sharedApplication()
         let delegate = application.delegate as! AppDelegate
         let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
@@ -41,7 +44,6 @@ class IdentityModuleViewController : UITableViewController {
                 }
             })
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
 }

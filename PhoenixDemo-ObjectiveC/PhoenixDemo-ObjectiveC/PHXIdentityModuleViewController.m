@@ -20,6 +20,7 @@
         // Check if user defaults value is valid (non-zero).
         if (tokenId != 0) {
             [delegate alertWithMessage:@"Already Registered!"];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
             return;
         }
         [application registerForRemoteNotifications];
@@ -28,6 +29,7 @@
         // Check if user defaults value is invalid (zero).
         if (tokenId == 0) {
             [delegate alertWithMessage:@"Not Registered!"];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
             return;
         }
         [[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
