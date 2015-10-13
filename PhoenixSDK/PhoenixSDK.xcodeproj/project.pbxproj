@@ -17,18 +17,7 @@
 		BB3A10191BBD7E1F00DCF331 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A10181BBD7E1F00DCF331 /* LocationManager.swift */; settings = {ASSET_TAGS = (); }; };
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
-		BB77B9591BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9581BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift */; };
-		BB77B95B1BC3D95C00B53ABE /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; settings = {ASSET_TAGS = (); }; };
-		BB77B9691BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9681BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift */; settings = {ASSET_TAGS = (); }; };
-		BB77B97C1BC3DBBF00B53ABE /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
-		BB77B97D1BC3DBCF00B53ABE /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
-		BB77B97E1BC3DBEA00B53ABE /* MockSimpleStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF191B6A299300F5B9C1 /* MockSimpleStorage.swift */; };
-		BB77B9801BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B97F1BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift */; settings = {ASSET_TAGS = (); }; };
-		BB77B9821BC3F9EB00B53ABE /* MockCLLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */; settings = {ASSET_TAGS = (); }; };
 		BB77B9841BC40A5900B53ABE /* SequenceType+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9831BC40A5900B53ABE /* SequenceType+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
-		BB77B9861BC40FD400B53ABE /* PhoenixGeofenceTestcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A101F1BBD939800DCF331 /* PhoenixGeofenceTestcase.swift */; settings = {ASSET_TAGS = (); }; };
-		BB77B9881BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9871BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift */; settings = {ASSET_TAGS = (); }; };
-		BB77B98A1BC4197B00B53ABE /* MockAnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */; settings = {ASSET_TAGS = (); }; };
 		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
 		BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
 		BBA573781B692B6900685EFB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573771B692B6900685EFB /* String.swift */; };
@@ -43,8 +32,6 @@
 		BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF1B1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift */; };
 		BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */; };
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
-		BBEB9B431BC50E2100E7AC28 /* MockOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE11BC2C9D400F02701 /* MockOAuthProvider.swift */; settings = {ASSET_TAGS = (); }; };
-		BBEB9B4A1BC50F5000E7AC28 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; settings = {ASSET_TAGS = (); }; };
 		BBF417361B74B7A500AF2BFA /* UpdateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */; };
 		BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
 		BBFC3E581BBECF0D00B20C2D /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */; settings = {ASSET_TAGS = (); }; };
@@ -69,6 +56,13 @@
 		FE366D451B84760F00D4D6D2 /* ModuleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D441B84760F00D4D6D2 /* ModuleProtocol.swift */; };
 		FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */; };
 		FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */; };
+		FE3B01D41BCD0AB300B98622 /* PhoenixLocationBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9681BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D51BCD0AB500B98622 /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9581BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D61BCD0AB700B98622 /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B97F1BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D71BCD0AB900B98622 /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9871BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D81BCD0ABB00B98622 /* MockCLLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D91BCD0ABD00B98622 /* MockAnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01DA1BCD0AC100B98622 /* PhoenixGeofenceTestcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A101F1BBD939800DCF331 /* PhoenixGeofenceTestcase.swift */; settings = {ASSET_TAGS = (); }; };
 		FE4DB62B1BC5392E00D7C1C3 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */; settings = {ASSET_TAGS = (); }; };
 		FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */; settings = {ASSET_TAGS = (); }; };
 		FE65772E1B832C8400E02B03 /* AnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* AnalyticsModule.swift */; };
@@ -104,13 +98,6 @@
 
 /* Begin PBXContainerItemProxy section */
 		A07FACBC1B5D0C4200482BB7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A07FACA71B5D0C4200482BB7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A07FACAF1B5D0C4200482BB7;
-			remoteInfo = PhoenixSDK;
-		};
-		BB77B95C1BC3D95C00B53ABE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A07FACA71B5D0C4200482BB7 /* Project object */;
 			proxyType = 1;
@@ -170,7 +157,6 @@
 		BB3A101F1BBD939800DCF331 /* PhoenixGeofenceTestcase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhoenixGeofenceTestcase.swift; path = ../PhoenixSDKTests/PhoenixGeofenceTestcase.swift; sourceTree = "<group>"; };
 		BB653F711B5E59C40003C0C9 /* PhoenixError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
-		BB77B9561BC3D95B00B53ABE /* PhoenixLocationModuleSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixLocationModuleSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB77B9581BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixLocationDownloadGeofencesSDKTests.swift; sourceTree = "<group>"; };
 		BB77B95A1BC3D95C00B53ABE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB77B9681BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixLocationBaseTestCase.swift; sourceTree = "<group>"; };
@@ -266,15 +252,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BB77B9531BC3D95B00B53ABE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BB77B97C1BC3DBBF00B53ABE /* OHHTTPStubs.framework in Frameworks */,
-				BB77B95B1BC3D95C00B53ABE /* PhoenixSDK.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -293,7 +270,6 @@
 			children = (
 				A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */,
 				A07FACBA1B5D0C4200482BB7 /* PhoenixSDKTests.xctest */,
-				BB77B9561BC3D95B00B53ABE /* PhoenixLocationModuleSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -702,24 +678,6 @@
 			productReference = A07FACBA1B5D0C4200482BB7 /* PhoenixSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		BB77B9551BC3D95B00B53ABE /* PhoenixLocationModuleSDKTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BB77B9651BC3D95C00B53ABE /* Build configuration list for PBXNativeTarget "PhoenixLocationModuleSDKTests" */;
-			buildPhases = (
-				BB77B9521BC3D95B00B53ABE /* Sources */,
-				BB77B9531BC3D95B00B53ABE /* Frameworks */,
-				BB77B9541BC3D95B00B53ABE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BB77B95D1BC3D95C00B53ABE /* PBXTargetDependency */,
-			);
-			name = PhoenixLocationModuleSDKTests;
-			productName = PhoenixLocationModuleSDKTests;
-			productReference = BB77B9561BC3D95B00B53ABE /* PhoenixLocationModuleSDKTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -734,9 +692,6 @@
 						CreatedOnToolsVersion = 7.0;
 					};
 					A07FACB91B5D0C4200482BB7 = {
-						CreatedOnToolsVersion = 7.0;
-					};
-					BB77B9551BC3D95B00B53ABE = {
 						CreatedOnToolsVersion = 7.0;
 					};
 				};
@@ -761,7 +716,6 @@
 			targets = (
 				A07FACAF1B5D0C4200482BB7 /* PhoenixSDK */,
 				A07FACB91B5D0C4200482BB7 /* PhoenixSDKTests */,
-				BB77B9551BC3D95B00B53ABE /* PhoenixLocationModuleSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -819,14 +773,6 @@
 				BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */,
 				FE22F88C1B5FF71600711EBF /* config.json in Resources */,
 				BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB77B9541BC3D95B00B53ABE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BBEB9B4A1BC50F5000E7AC28 /* config.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,38 +849,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */,
+				FE3B01D41BCD0AB300B98622 /* PhoenixLocationBaseTestCase.swift in Sources */,
+				FE3B01D91BCD0ABD00B98622 /* MockAnalyticsModule.swift in Sources */,
 				FEB629181B820230008F7A9C /* PhoenixIdentityInstallationTestCase.swift in Sources */,
+				FE3B01D81BCD0ABB00B98622 /* MockCLLocationManager.swift in Sources */,
 				BB0A238F1B70F12600CE0C81 /* PhoenixURLRequestTestCase.swift in Sources */,
+				FE3B01DA1BCD0AC100B98622 /* PhoenixGeofenceTestcase.swift in Sources */,
+				FE3B01D61BCD0AB700B98622 /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */,
 				BBC0DFE31B5E30890077E39A /* PhoenixConfigurationTestCase.swift in Sources */,
 				BBD7AF1A1B6A299300F5B9C1 /* MockSimpleStorage.swift in Sources */,
 				FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */,
 				BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */,
+				FE3B01D71BCD0AB900B98622 /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */,
 				FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */,
 				BBD7AF1C1B6A2BDC00F5B9C1 /* PhoenixBaseTestCase.swift in Sources */,
 				BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */,
 				FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */,
 				FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */,
+				FE3B01D51BCD0AB500B98622 /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */,
 				FE3449611BC4269B00449445 /* PhoenixOAuthTestCase.swift in Sources */,
 				FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */,
 				FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */,
 				FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB77B9521BC3D95B00B53ABE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BB77B9801BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */,
-				BB77B98A1BC4197B00B53ABE /* MockAnalyticsModule.swift in Sources */,
-				BB77B97E1BC3DBEA00B53ABE /* MockSimpleStorage.swift in Sources */,
-				BB77B97D1BC3DBCF00B53ABE /* MockConfiguration.swift in Sources */,
-				BB77B9861BC40FD400B53ABE /* PhoenixGeofenceTestcase.swift in Sources */,
-				BB77B9821BC3F9EB00B53ABE /* MockCLLocationManager.swift in Sources */,
-				BB77B9881BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */,
-				BB77B9691BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift in Sources */,
-				BBEB9B431BC50E2100E7AC28 /* MockOAuthProvider.swift in Sources */,
-				BB77B9591BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,11 +881,6 @@
 			isa = PBXTargetDependency;
 			target = A07FACAF1B5D0C4200482BB7 /* PhoenixSDK */;
 			targetProxy = A07FACBC1B5D0C4200482BB7 /* PBXContainerItemProxy */;
-		};
-		BB77B95D1BC3D95C00B53ABE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A07FACAF1B5D0C4200482BB7 /* PhoenixSDK */;
-			targetProxy = BB77B95C1BC3D95C00B53ABE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1103,26 +1034,6 @@
 			};
 			name = Release;
 		};
-		BB77B95E1BC3D95C00B53ABE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = PhoenixLocationModuleSDKTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.phoenix.PhoenixLocationModuleSDKTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		BB77B95F1BC3D95C00B53ABE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = PhoenixLocationModuleSDKTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.phoenix.PhoenixLocationModuleSDKTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1149,15 +1060,6 @@
 			buildConfigurations = (
 				A07FACC81B5D0C4200482BB7 /* Debug */,
 				A07FACC91B5D0C4200482BB7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BB77B9651BC3D95C00B53ABE /* Build configuration list for PBXNativeTarget "PhoenixLocationModuleSDKTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BB77B95E1BC3D95C00B53ABE /* Debug */,
-				BB77B95F1BC3D95C00B53ABE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -164,10 +164,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
         
         pipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
-            guard let returnedPipeline = returnedOperation as? PhoenixOAuthPipeline else {
-                assertionFailure("Invalid operation returned")
-                return
-            }
+            let returnedPipeline = returnedOperation as! PhoenixOAuthPipeline
             
             // Clear password from memory.
             if oauth.tokenType == .LoggedInUser {

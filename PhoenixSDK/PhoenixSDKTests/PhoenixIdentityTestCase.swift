@@ -87,12 +87,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     
     // MARK: - Mock
     
-    func getResponse(status: HTTPStatusCode, body: String) -> MockResponse {
-        return MockResponse(data: status == .Success ? body : nil,
-            statusCode: status,
-            headers: nil)
-    }
-    
     func mockGetUserMe(status: HTTPStatusCode = .Success, body: String? = nil) {
         let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,

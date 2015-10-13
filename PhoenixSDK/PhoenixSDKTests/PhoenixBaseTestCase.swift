@@ -107,6 +107,11 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: - Authentication Mock
     
+    func getResponse(status: HTTPStatusCode, body: String) -> MockResponse {
+        return MockResponse(data: status == .Success ? body : nil,
+            statusCode: status,
+            headers: nil)
+    }
     
     func mockAuthenticationResponse(response: MockResponse) {
         mockAuthenticationResponses([response])

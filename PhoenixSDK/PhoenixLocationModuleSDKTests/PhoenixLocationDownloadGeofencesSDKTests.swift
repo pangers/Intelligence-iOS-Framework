@@ -101,10 +101,11 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
         query.setDefaultValues()
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!
+        let oauth = mockOAuthProvider.sdkUserOAuth
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!
         
         // Mock a valid token
-        mockValidTokenStorage()
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
         mockResponseForURL(request,
@@ -117,20 +118,19 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
             expectCallback.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
 
+        let oauth = mockOAuthProvider.sdkUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: configuration, network: network, query: query).URL!
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuth().sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!
         
         // Mock a valid token
-        mockValidTokenStorage()
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
         mockResponseForURL(request,
@@ -142,9 +142,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
             expectCallback.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (_:NSError?) -> Void in
-            // Wait for calls to be made and the callback to be notified
-        }
+        waitForExpectations()
     }
     
     /// Test loading the geofences with a missing json fails
