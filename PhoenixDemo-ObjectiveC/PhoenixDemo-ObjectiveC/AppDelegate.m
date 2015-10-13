@@ -56,6 +56,14 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
     [[PHXPhoenixManager phoenix] shutdown];
 }
 
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] pause];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] resume];
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     __weak __typeof(self) weakSelf = self;
     [[[PHXPhoenixManager phoenix] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
