@@ -573,11 +573,11 @@ The location module is responsible for managing a user's location in order to tr
 
 Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
 
-Developers are responsible to decide when is the most suitable time to start fetching geofences and monitoring the user, and also will need to request location permissions in order to be able to track the user's location by either adding the 'NSLocationAlwaysUsageDescription' or the 'NSLocationWhenInUseUsageDescription' to the Info.plist of their app. You can find documentation on those keys in https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18.
+Developers are responsible to decide when is the most suitable time to start fetching geofences and monitoring the user, and also will need to request location permissions in order to be able to track the user's location by either adding the 'NSLocationAlwaysUsageDescription' or the 'NSLocationWhenInUseUsageDescription' to the Info.plist of their app. You can find documentation on those keys in [Info Plist Key Reference](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18).
 
 In order to obtain permissions to track the user's location, follow Apple's documentation in:
 
-https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/#//apple_ref/doc/uid/TP40007125-CH3-SW62
+[CLLocationManager Class Reference](https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/#//apple_ref/doc/uid/TP40007125-CH3-SW62)
 
 The location module is available via the location property in the Phoenix object.
 
