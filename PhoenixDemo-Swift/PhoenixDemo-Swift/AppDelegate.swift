@@ -95,6 +95,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         }
     }
     
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        self.alert(withMessage: "Unable to Register for Push Notifications")
+    }
+    
     // MARK:- PhoenixDelegate
     
     func alert(withError error: NSError) {
@@ -109,7 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     
     func alert(withMessage message: String) {
         dispatch_async(dispatch_get_main_queue()) { [weak self] in
-            let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+            let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             self?.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
         }

@@ -73,6 +73,10 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
     }];
 }
 
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [self alertWithMessage:@"Unable to Register for Push Notifications"];
+}
+
 #pragma mark - Alert
 
 - (void)alertWithError:(NSError *)error {
@@ -85,7 +89,7 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
 
 - (void)alertWithMessage:(NSString*)message {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Phoenix Demo" message:message preferredStyle:UIAlertControllerStyleAlert];
         [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
         [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
     });
