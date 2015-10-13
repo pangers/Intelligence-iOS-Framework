@@ -136,10 +136,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     /// - parameter completion: Must be called on completion to notify caller of success/failure.
     internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
         let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-            guard let analyticsOperation = returnedOperation as? AnalyticsRequestOperation else {
-                assertionFailure("Unknown operation returned")
-                return
-            }
+            let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
             completion(error: analyticsOperation.output?.error)
         })
         

@@ -219,10 +219,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?) {
         let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) -> () in
-            guard let downloadGeofencesOperation = returnedOperation as? DownloadGeofencesRequestOperation else {
-                assertionFailure("Invalid operation")
-                return
-            }
+            let downloadGeofencesOperation = returnedOperation as! DownloadGeofencesRequestOperation
             let error = downloadGeofencesOperation.output?.error
             let geofences = downloadGeofencesOperation.geofences
             callback?(geofences: geofences, error: error)
