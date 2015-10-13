@@ -11,7 +11,7 @@ import XCTest
 import OHHTTPStubs
 
 typealias MockCallback = (()->Void)
-typealias MockResponse = (data:String?,statusCode:Int32,headers:[String:String]?)
+typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
 
 class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     
@@ -54,7 +54,7 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:Int32,headers:[String:String]?), expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
+    func mockResponseForURL(url:NSURL!, method:String?, response:(data:String?,statusCode:HTTPStatusCode,headers:[String:String]?), expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
         mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
     }
     
@@ -79,7 +79,10 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
                 callback?()
                 expectation.fulfill()
                 let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                return OHHTTPStubsResponse(data: stubData, statusCode:response.statusCode, headers:response.headers)
+                return OHHTTPStubsResponse(
+                    data: stubData,
+                    statusCode: Int32(response.statusCode.rawValue),
+                    headers:response.headers)
         })
     }
     
@@ -95,9 +98,9 @@ class PhoenixLocationBaseTestCase : XCTestCase, PhoenixInternalDelegate {
     }
     
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:Int32, anonymous: Bool? = true, callback:MockCallback? = nil) {
+    func mockResponseForAuthentication(statusCode: HTTPStatusCode, anonymous: Bool? = true, callback:MockCallback? = nil) {
         let successResponse = (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse)
-        let responseData = (statusCode == 200) ? successResponse : ""
+        let responseData = (statusCode == .Success) ? successResponse : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,

@@ -109,7 +109,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         // Mock
         mockResponseForURL(request,
             method: "GET",
-            response: (data: geofencesResponse, statusCode:200, headers:nil))
+            response: (data: geofencesResponse, statusCode: .Success, headers:nil))
         
         location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
@@ -135,7 +135,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         // Mock
         mockResponseForURL(request,
             method: "GET",
-            response: (data: errorResponse, statusCode:200, headers:nil))
+            response: (data: errorResponse, statusCode: .Success, headers:nil))
         
         location!.downloadGeofences(query) { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")

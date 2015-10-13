@@ -592,6 +592,7 @@ if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
 ```
 #!objc
 
+// Request location access.
 if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
     [self.locationManager requestAlwaysAuthorization];
 }

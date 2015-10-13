@@ -9,14 +9,14 @@
 import XCTest
 @testable import PhoenixSDK
 
+typealias MockCallback = (()->Void)
+typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
+
 import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
     
     let expectationTimeout:NSTimeInterval = 2
-    
-    typealias MockCallback = (()->Void)
-    typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
     
     var mockOAuthProvider: MockOAuthProvider!
     var mockDelegateWrapper: MockPhoenixDelegateWrapper!
