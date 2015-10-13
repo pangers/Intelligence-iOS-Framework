@@ -14,80 +14,11 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     
     // MARK:- Test data
     
-    let geofencesResponse = "{" +
-        "\"TotalRecords\": 2," +
-        "\"Data\": [{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5229702," +
-        "\"Longitude\": -0.1400708}," +
-        "\"Id\": 1005," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Fitzroy Square\"," +
-        "\"CreateDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"ModifyDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"Address\": \"6 Fitzroy Square, Kings Cross, London W1T 5HJ, UK\"," +
-        "\"Radius\": 61.62},{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5201001," +
-        "\"Longitude\": -0.1342616}," +
-        "\"Id\": 1004," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Tigerspike London\"," +
-        "\"CreateDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"ModifyDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"Address\": \"10-16 Goodge Street, Fitzrovia, London W1T 2QB, UK\"," +
-        "\"Radius\": 26.18}]" +
-    "}"
+    let geofencesResponse = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
-    let geofencesInvalidResponse = "{" +
-        "\"TotalRecords\": 2," +
-        "\"Data2\": [{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5229702," +
-        "\"Longitude\": -0.1400708}," +
-        "\"Id\": 1005," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Fitzroy Square\"," +
-        "\"CreateDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"ModifyDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"Address\": \"6 Fitzroy Square, Kings Cross, London W1T 5HJ, UK\"," +
-        "\"Radius\": 61.62},{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5201001," +
-        "\"Longitude\": -0.1342616}," +
-        "\"Id\": 1004," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Tigerspike London\"," +
-        "\"CreateDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"ModifyDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"Address\": \"10-16 Goodge Street, Fitzrovia, London W1T 2QB, UK\"," +
-        "\"Radius\": 26.18}]" +
-    "}"
+    let geofencesInvalidResponse = "{\"TotalRecords\":2,\"Data2\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
-    let geofencesInvalidResponseKey = "{" +
-        "\"TotalRecords\": 2," +
-        "\"Data\": [{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5229702," +
-        "\"Longitude\": -0.1400708}," +
-        "\"IdFailed\": 1005," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Fitzroy Square\"," +
-        "\"CreateDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"ModifyDate\": \"2015-07-08T08:05:23.55\"," +
-        "\"Address\": \"6 Fitzroy Square, Kings Cross, London W1T 5HJ, UK\"," +
-        "\"Radius\": 61.62},{" +
-        "\"Geolocation\": {" +
-        "\"Latitude\": 51.5201001," +
-        "\"Longitude\": -0.1342616}," +
-        "\"Id\": 1004," +
-        "\"ProjectId\": 2030," +
-        "\"Name\": \"Tigerspike London\"," +
-        "\"CreateDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"ModifyDate\": \"2015-07-08T08:04:48.403\"," +
-        "\"Address\": \"10-16 Goodge Street, Fitzrovia, London W1T 2QB, UK\"," +
-        "\"Radius\": 26.18}]" +
-    "}"
+    let geofencesInvalidResponseKey = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"IdFailed\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"IdFailed\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
     let errorResponse = "{" +
         "\"error\": \"invalid_request\"," +
