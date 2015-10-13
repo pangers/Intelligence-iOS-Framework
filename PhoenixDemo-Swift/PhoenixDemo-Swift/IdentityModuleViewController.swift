@@ -15,7 +15,9 @@ class IdentityModuleViewController : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         defer {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            if indexPath.row != 0 {
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
         }
         let application = UIApplication.sharedApplication()
         let delegate = application.delegate as! AppDelegate
