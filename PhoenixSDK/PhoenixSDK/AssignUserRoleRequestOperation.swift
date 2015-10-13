@@ -20,6 +20,11 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         if handleError(IdentityError.domain, code: IdentityError.UserRoleAssignmentError.rawValue) {
             return
         }
+        
+        guard let _ = outputArrayFirstDictionary() else {
+            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            return
+        }
         // For assign, we don't actually receive a user, lets return the user we sent so this method adheres to the Identity-type requests.
         user = sentUser
     }
