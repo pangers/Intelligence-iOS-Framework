@@ -15,12 +15,20 @@ internal var RFC3339DateFormatter: NSDateFormatter {
         static var token : dispatch_once_t = 0
     }
     dispatch_once(&Static.token) {
+        Static.instance = NSDateFormatter.RFC3339Formatter()
+    }
+    return Static.instance!
+}
+
+extension NSDateFormatter {
+    
+    class func RFC3339Formatter() -> NSDateFormatter {
         let dateFormatter = NSDateFormatter()
         dateFormatter.calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         dateFormatter.timeZone = NSTimeZone(name: "UTC")
         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS"
-        Static.instance = dateFormatter
+        return dateFormatter
     }
-    return Static.instance!
+    
 }

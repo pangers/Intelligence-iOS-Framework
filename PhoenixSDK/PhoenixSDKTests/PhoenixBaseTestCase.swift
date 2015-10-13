@@ -60,7 +60,11 @@ class PhoenixBaseTestCase : XCTestCase {
             XCTAssert(phoenix.modules[1] === phoenix.location)
             XCTAssert(phoenix.modules[2] === phoenix.analytics)
             
-            
+            let fakeModule = PhoenixModule(withDelegate: mockDelegateWrapper, network: mockNetwork, configuration: mockConfiguration)
+            fakeModule.startup { (success) in
+                XCTAssertTrue(success)
+            }
+            fakeModule.shutdown()
             
             // Test individual modules rather than calling startup here.
         }
