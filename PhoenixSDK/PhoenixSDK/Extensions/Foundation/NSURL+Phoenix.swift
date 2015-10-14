@@ -98,7 +98,7 @@ internal extension NSURL {
         if queryString.characters.count == 0 {
             return self
         }
-        let separator = query?.isEmpty == true ? "?" : "&"
+        let separator = (query?.isEmpty ?? true) ? "?" : "&"
         let URLString = "\(absoluteString)\(separator)\(queryString)"
         
         return NSURL(string: URLString)
