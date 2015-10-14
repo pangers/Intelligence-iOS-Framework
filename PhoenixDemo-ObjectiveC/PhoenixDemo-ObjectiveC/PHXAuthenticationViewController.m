@@ -22,28 +22,29 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 };
 
 @interface PHXAuthenticationViewController()
-@property (nonatomic, strong) PHXUser *loggedInUser;
-@property (nonatomic) PHXLoginMessage currentStatus;
-@property (nonatomic) BOOL isLoggedIn;
+
+
 @end
 
 
 @implementation PHXAuthenticationViewController
 
+static PHXUser *loggedInUser;
+static PHXLoginMessage currentStatus;
+
+-(BOOL) isLoggedIn {
+    return currentStatus == PHXLoggedIn;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:ViewUserSegue]) {
         PHXViewUserViewController *viewUser = segue.destinationViewController;
-        viewUser.user = self.loggedInUser;
-        self.loggedInUser = nil;
+        viewUser.user = loggedInUser;
     }
 }
 
 - (PHXLoginMessage)status {
-    if (self.isLoggedIn) {
-        return PHXLoggedIn;
-    } else {
-        return self.currentStatus;
-    }
+    return currentStatus;
 }
 
 - (NSString*)messageForStatus {
@@ -113,49 +114,70 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
 
 - (void)login {
     __weak typeof(self) weakSelf = self;
-    self.currentStatus = PHXLoggingIn;
+    currentStatus = PHXLoggingIn;
     [self.tableView reloadData];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter Details" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Username";
     }];
+    
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Password";
         textField.secureTextEntry = true;
     }];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        currentStatus = PHXLogin;
+        [self.tableView reloadData];
+    }]];
+    
     [alert addAction:[UIAlertAction actionWithTitle:@"Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
         NSString *username = alert.textFields.firstObject.text;
         NSString *password = alert.textFields.lastObject.text;
+        
         if (!(username.length != 0 && password.length != 0)) {
-            weakSelf.currentStatus = PHXLogin;
+            currentStatus = PHXLogin;
+            
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.tableView reloadData];
             }];
             return;
         }
+        
+        
         [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+            
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                strongSelf.isLoggedIn = error == nil;
-                strongSelf.currentStatus = strongSelf.isLoggedIn ? PHXLoggedIn : PHXLoginFailed;
+                
+                currentStatus = (error == nil) ? PHXLoggedIn : PHXLoginFailed;
+                
                 if (strongSelf.isLoggedIn) {
+                    
                     [strongSelf.tableView reloadData];
+                    
                     if (user) {
-                        strongSelf.loggedInUser = user;
+                        loggedInUser = user;
                         [strongSelf performSegueWithIdentifier:ViewUserSegue sender:strongSelf];
-                    } else {
+                    }
+                    else {
                         NSLog(@"Error : %@", error);
                     }
                 }
             }];
+            
         }];
     }]];
+    
     [self presentViewController:alert animated:true completion:nil];
 }
 
 - (void)logout {
-    self.currentStatus = PHXLogin;
+    currentStatus = PHXLogin;
     [PHXPhoenixManager.phoenix.identity logout];
     [self.tableView reloadData];
 }
