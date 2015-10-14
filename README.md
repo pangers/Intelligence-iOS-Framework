@@ -23,6 +23,12 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Phoeni
 
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
 
+### Platform Configuration ###
+
+In order to configure Phoenix you will need to login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
+
+You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
+
 ### Initialising Phoenix ###
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
@@ -210,14 +216,15 @@ Also, check the Phoenix.Configuration and Phoenix classes to learn about more in
 
 ### Configuration file format ###
 
-The configuration file is a JSON file with the following keys:
+All of these variables can be obtained from the Phoenix platform after you setup your application.
 
 1. "client_id" with a String value
 2. "client_secret" with a String value
 3. "application_id" with an Integer value
 4. "project_id" with an Integer value
 5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
-6. "sdk_user_role" an Integer value which needs to be configured in the Phoenix Intelligence platform with the correct rights in order to use this SDK.
+6. "company_id" with an Integer value
+7. "sdk_user_role" with an Integer value which needs to be configured in the Phoenix Intelligence platform with the correct rights in order to use this SDK.
 
 As an example, your configuration file will look like:
 
