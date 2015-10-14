@@ -285,6 +285,8 @@ The analytics module allows developers to effortlessly track several predefined 
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
 
+Developers are responsible for calling 'pause' and 'resume' when they enter the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix, so it is vital that they are called. 
+
 **How to track a Custom Event:**
 
 *Swift:*
