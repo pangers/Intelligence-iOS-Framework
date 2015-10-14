@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8166.2" systemVersion="14E46" minimumToolsVersion="Xcode 7.0">
+    <entity name="PHXGeofence" representedClassName="PHXGeofence" syncable="YES">
+        <attribute name="address" attributeType="String" syncable="YES"/>
+        <attribute name="createDate" attributeType="Date" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" indexed="YES" syncable="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" indexed="YES" syncable="YES"/>
+        <attribute name="modifyDate" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="projectId" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="radius" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="PHXGeofence" positionX="-63" positionY="-18" width="128" height="180"/>
+    </elements>
+</model>
