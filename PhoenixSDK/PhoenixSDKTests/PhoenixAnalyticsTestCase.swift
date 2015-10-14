@@ -57,7 +57,9 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         analytics.timeTracker = TimeTracker(storage: storage, callback: { (event) -> () in
         })
         
-        analytics.locationProvider = MockLocationProvider()
+        let locationProvider = MockLocationProvider()
+        
+        analytics.locationProvider = locationProvider
         
         sleep(1)
         analytics.pause()

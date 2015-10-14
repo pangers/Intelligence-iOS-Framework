@@ -61,10 +61,14 @@ class PhoenixBaseTestCase : XCTestCase {
             XCTAssert(phoenix.modules[2] === phoenix.analytics)
             
             let fakeModule = PhoenixModule(withDelegate: mockDelegateWrapper, network: mockNetwork, configuration: mockConfiguration)
+            
+            let expectation = expectationWithDescription("Immediate Expectation")
             fakeModule.startup { (success) in
                 XCTAssertTrue(success)
+                fakeModule.shutdown()
+                expectation.fulfill()
             }
-            fakeModule.shutdown()
+            waitForExpectations()
             
             // Test individual modules rather than calling startup here.
         }
