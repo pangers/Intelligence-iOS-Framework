@@ -122,6 +122,9 @@ internal enum AnalyticsError: Int, ErrorType {
     
     /// Sending analytics batch failed.
     case SendAnalyticsError = 5001
+    
+    /// Request contains outdated events.
+    case OldEventsError = 5002
 }
 
 /// These are internal errors thrown by the Location class.

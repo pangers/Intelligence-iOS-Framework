@@ -346,6 +346,29 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    /// Test an error
+    func testAnalyticsError400InvalidRequest() {
+        let analytics = phoenix.analytics as! Phoenix.Analytics
+        let failureResponse = "{ \"error\": \"invalid_request\", \"error_description\": \"Invalid parameter.\" }"
+        let URL = NSURLRequest.phx_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        
+        // Expect the analytics response.
+        let expectation = expectationWithDescription("Expected analytics callback")
+
+        // Mock the 400 response with error invalid_request.
+        mockResponseForURL(URL,
+            method: .POST,
+            response: (data: failureResponse, statusCode: .BadRequest, headers:nil))
+        
+        analytics.sendEvents([]) { (error) -> () in
+            // The operation should silence the error so that the events are normally drained.
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
     
     // MARK:- Event Queue
     
@@ -420,7 +443,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         (0...queue.maxEvents).forEach({ n -> Void in queue.enqueueEvent(eventJSON) })
         var remaining = queue.eventArray.count
-        XCTAssert(remaining == 101, "Expected 101 events to be saved")
+        XCTAssert(remaining == queue.maxEvents + 1, "Expected 101 events to be saved")
         queue.isPaused = false
         comparisonCount = remaining > queue.maxEvents ? queue.maxEvents : remaining
         queue.fire { (error) -> () in

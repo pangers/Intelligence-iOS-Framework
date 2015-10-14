@@ -14,6 +14,9 @@ typealias EventQueueCallback = (events: JSONDictionaryArray, completion: (error:
 
 internal class EventQueue: NSObject {
     
+    /// A private semaphore.
+    private let semaphore = NSObject()
+    
     /// Current events we have to send, stored to disk when changed and loaded on hard launch.
     internal lazy var eventArray = JSONDictionaryArray()
     
@@ -57,54 +60,57 @@ internal class EventQueue: NSObject {
     
     /// Clear contents of file at `jsonPath()` (only used for testing).
     internal func clearEvents() {
-        objc_sync_enter(self)
-        if let path = jsonPath() {
-            do { try NSFileManager.defaultManager().removeItemAtPath(path) }
-            catch { }
+        synced(semaphore) {
+            if let path = self.jsonPath() {
+                _ = try? NSFileManager.defaultManager().removeItemAtPath(path)
+            }
         }
-        objc_sync_exit(self)
     }
     
     /// Load events present in file at `jsonPath()`.
     internal func loadEvents() {
-        objc_sync_enter(self)
-        if let path = jsonPath(), data = NSData(contentsOfFile: path)?.phx_jsonDictionaryArray {
-            eventArray = data
+        synced(semaphore) {
+            if let path = self.jsonPath(), data = NSData(contentsOfFile: path)?.phx_jsonDictionaryArray {
+                self.eventArray = data
+            }
         }
-        objc_sync_exit(self)
     }
     
     /// Save events to file at `jsonPath()`.
+    /// The caller is responsible to sync the call.
     private func storeEvents() {
-        objc_sync_enter(self)
         // Store to disk.
-        if let path = jsonPath(), data = self.eventArray.phx_toJSONData() {
+        if let path = self.jsonPath(), data = self.eventArray.phx_toJSONData() {
             data.writeToFile(path, atomically: true)
         }
-        objc_sync_exit(self)
     }
-    
     
     // MARK:- Queueing
     
     /// Start queue if it was paused.
     func startQueue() {
-        objc_sync_enter(self)
-        if !isPaused { return }
-        isPaused = false
-        timer = NSTimer(timeInterval: eventInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
-        objc_sync_exit(self)
+        synced(semaphore) {
+            if !self.isPaused {
+                return
+            }
+            
+            self.isPaused = false
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(self.eventInterval, target: self, selector: Selector("runTimer"), userInfo: nil, repeats: true)
+            self.timer = NSTimer(timeInterval: self.eventInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
+            NSRunLoop.mainRunLoop().addTimer(self.timer!, forMode: NSRunLoopCommonModes)
+        }
     }
     
     /// Stop queue if it is currently running.
     func stopQueue() {
-        objc_sync_enter(self)
-        if isPaused { return }
-        isPaused = true
-        timer?.invalidate()
-        timer = nil
-        objc_sync_exit(self)
+        synced(semaphore) {
+            if self.isPaused {
+                return
+            }
+            self.isPaused = true
+            self.timer?.invalidate()
+            self.timer = nil
+        }
     }
     
     /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
@@ -114,12 +120,11 @@ internal class EventQueue: NSObject {
     
     /// Add the JSON representation of an Event to the queue.
     func enqueueEvent(event: JSONDictionary) {
-        objc_sync_enter(self)
-        // Add event
-        eventArray.append(event)
-        // Store our changed events array
-        storeEvents()
-        objc_sync_exit(self)
+        synced(semaphore) {
+            // Add event and store
+            self.eventArray.append(event)
+            self.storeEvents()
+        }
     }
     
     /// Attempt sending events to `callback` if possible.
@@ -127,33 +132,49 @@ internal class EventQueue: NSObject {
     /// - parameter completion: Returns optional error if request fails. If nil, assume successful.
     /// - returns: Returns True if queue is not paused/sending and contains items.
     internal func fire(withCompletion completion: ((error: NSError?) -> ())?) -> Bool {
-        objc_sync_enter(self)
-        // Ensure we aren't already sending, paused, and have events to send.
-        if isSending || isPaused || eventArray.count == 0 { return false }
-        // Calculate end index.
-        let endIndex = eventArray.endIndex > maxEvents ? maxEvents : eventArray.endIndex
-        // Store range, so we know what to remove.
-        let range = Range(start: eventArray.startIndex, end: endIndex)
-        // Set sending to true.
-        isSending = true
-        // Send events to function.
-        let eventsToSend = Array(eventArray.prefixUpTo(endIndex))
-        callback(events: eventsToSend) { [weak self] (error) in
-            guard let this = self else { return }
-            objc_sync_enter(this)
-            // If successful, remove this range.
-            if error == nil {
-                // Remove items in range we just sent.
-                this.eventArray.removeRange(range)
-                // Store remaining items.
-                this.storeEvents()
+        var result = false
+        
+        synced(semaphore) {
+            // Ensure we aren't already sending, paused, and have events to send.
+            if self.isSending || self.isPaused || self.eventArray.count == 0 {
+                return
             }
-            completion?(error: error)
-            // No longer sending items.
-            this.isSending = false
-            objc_sync_exit(this)
+            
+            result = true
+            
+            // Calculate end index.
+            let endIndex = self.eventArray.endIndex > self.maxEvents ? self.maxEvents : self.eventArray.endIndex
+            
+            // Store range, so we know what to remove.
+            let range = Range(start: self.eventArray.startIndex, end: endIndex)
+            
+            // Set sending to true.
+            self.isSending = true
+            
+            // Send events to function.
+            let eventsToSend = Array(self.eventArray.prefixUpTo(endIndex))
+            
+            self.callback(events: eventsToSend) { [weak self] (error) in
+                guard let this = self else {
+                    return
+                }
+                
+                synced(this.semaphore) {
+                    // If successful or outdated events, remove this range.
+                    if error == nil || error?.code == AnalyticsError.OldEventsError.rawValue {
+                        // Remove items in range we just sent and store again
+                        this.eventArray.removeRange(range)
+                        this.storeEvents()
+                    }
+                    
+                    completion?(error: error)
+                    
+                    // No longer sending items.
+                    this.isSending = false
+                }
+            }
         }
-        objc_sync_exit(self)
-        return true
+        
+        return result
     }
 }
