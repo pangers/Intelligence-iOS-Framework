@@ -149,7 +149,9 @@ class AuthenticationViewController: UITableViewController {
             })
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) {
+            reloadUI(.Login)
+        })
         
         presentViewController(alert, animated: true) { }
     }
