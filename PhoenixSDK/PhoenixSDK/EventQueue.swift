@@ -95,9 +95,7 @@ internal class EventQueue: NSObject {
             }
             
             self.isPaused = false
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(self.eventInterval, target: self, selector: Selector("runTimer"), userInfo: nil, repeats: true)
-            self.timer = NSTimer(timeInterval: self.eventInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
-            NSRunLoop.mainRunLoop().addTimer(self.timer!, forMode: NSRunLoopCommonModes)
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(self.eventInterval, target: self, selector: Selector("runTimer:"), userInfo: nil, repeats: true)
         }
     }
     
