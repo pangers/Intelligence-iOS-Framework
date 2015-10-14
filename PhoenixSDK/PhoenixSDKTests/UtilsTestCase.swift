@@ -178,6 +178,14 @@ class UtilsTestCase: XCTestCase {
         
     }
     
+    func testDateFormatter() {
+        let dateFormatter = RFC3339DateFormatter
+        XCTAssert(dateFormatter.dateFormat == "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS")
+        XCTAssert(dateFormatter.timeZone == NSTimeZone(name: "UTC"))
+        XCTAssert(dateFormatter.calendar == NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian))
+        XCTAssert(dateFormatter.locale == NSLocale(localeIdentifier: "en_US_POSIX"))
+    }
+    
     func testDataToJSONArray() {
         guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonArray else {
             XCTAssert(false,"Couldn't load an array from the NSData")

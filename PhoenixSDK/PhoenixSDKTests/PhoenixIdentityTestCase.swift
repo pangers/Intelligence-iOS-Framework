@@ -152,14 +152,22 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockAuthenticationResponses(responses)
     }
     
+    func mockCreateIdentifierURL() -> NSURL {
+        return NSURLRequest.phx_URLRequestForIdentifierCreation(fakeDeviceToken, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+    }
+    
     func mockCreateIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierCreation(fakeDeviceToken, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(mockCreateIdentifierURL(),
             method: .POST,
             response: getResponse(status, body: body ?? successfulResponseCreateIdentifier))
     }
     
+    func mockDeleteIdentifierURL() -> NSURL {
+        return NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+    }
+    
     func mockDeleteIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(mockDeleteIdentifierURL(),
             method: .DELETE,
             response: getResponse(status, body: body ?? successfulResponseDeleteIdentifier))
     }
@@ -388,12 +396,16 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         
         // Fake login
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
-        mockOAuthProvider.developerLoggedIn = true
         
         phoenix?.identity.logout()
         
         XCTAssert(mockOAuthProvider.developerLoggedIn == false)
         assertLoggedOut(mockOAuthProvider.loggedInUserOAuth)
+        
+        fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
+        XCTAssert(mockOAuthProvider.developerLoggedIn == true)
+        fakeLoggedOut(mockOAuthProvider.loggedInUserOAuth)
+        XCTAssert(mockOAuthProvider.developerLoggedIn == false)
     }
     
     func testUserConstants() {
@@ -714,6 +726,26 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    func testCreateIdentifierInvalidDeviceTokenError() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        assertURLNotCalled(mockCreateIdentifierURL())
+        
+        identity!.registerDeviceToken(NSData()) { (tokenId, error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(error?.code == IdentityError.DeviceTokenInvalidError.rawValue)
+            XCTAssert(error?.domain == IdentityError.domain)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
     func testCreateIdentifierFailure() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
@@ -808,6 +840,26 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockDeleteIdentifier(.BadRequest)
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
+            XCTAssert(error != nil)
+            XCTAssert(error?.domain == IdentityError.domain)
+            XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testDeleteIdentifierZeroIDFailure() {
+        let oauth = mockOAuthProvider.loggedInUserOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        assertURLNotCalled(mockDeleteIdentifierURL())
+        
+        identity!.unregisterDeviceToken(withId: 0) { (error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(error?.domain == IdentityError.domain)
             XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)

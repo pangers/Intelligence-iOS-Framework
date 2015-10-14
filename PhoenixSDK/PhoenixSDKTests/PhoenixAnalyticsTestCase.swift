@@ -48,6 +48,58 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(event.eventType == TrackEventType)
     }
     
+    func testAnalyticsModule() {
+        let analytics = phoenix.analytics as! AnalyticsModule
+        analytics.eventQueue = EventQueue { (events, completion) -> () in
+            completion(error: nil)
+        }
+        let storage = MockTimeTrackerStorage()
+        analytics.timeTracker = TimeTracker(storage: storage, callback: { (event) -> () in
+        })
+        
+        let locationProvider = MockLocationProvider()
+        
+        analytics.locationProvider = locationProvider
+        
+        sleep(1)
+        analytics.pause()
+        
+        XCTAssert(analytics.eventQueue?.isPaused == true)
+        
+        let seconds = analytics.timeTracker!.seconds
+        
+        XCTAssert(seconds > 0)
+        
+        analytics.resume()
+        sleep(1)
+        
+        XCTAssert(analytics.eventQueue?.isPaused == false)
+        
+        analytics.pause()
+        analytics.resume()
+        
+        XCTAssert(analytics.timeTracker!.seconds - seconds > 0)
+        
+        analytics.pause()
+        
+        analytics.eventQueue?.clearEvents()
+        
+        let testEvent = Event(withType: "TestType")
+        analytics.track(testEvent)
+        
+        XCTAssert(analytics.eventQueue?.eventArray.count == 1)
+        let dictionary = analytics.eventQueue!.eventArray.first as JSONDictionary!
+        ensureJSONIncludesMandatoryPopulatedData(dictionary)
+        
+        guard let rootGeo = dictionary[Event.GeolocationKey] as? JSONDictionary else {
+            XCTFail("Invalid event, expected user location")
+            return
+        }
+        
+        XCTAssert(rootGeo[Event.GeolocationLatitudeKey] as! Double == -70)
+        XCTAssert(rootGeo[Event.GeolocationLongitudeKey] as! Double == 40)
+    }
+    
     func testTimeTracker() {
         var expectCallbacks = [expectationWithDescription("Was expecting a callback to be notified"),
         expectationWithDescription("Was expecting a callback to be notified 2")]

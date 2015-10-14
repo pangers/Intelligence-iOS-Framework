@@ -225,11 +225,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         
         let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
             configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-                if let updateOperation = returnedOperation as? UpdateUserRequestOperation {
-                    callback(user: updateOperation.user, error: updateOperation.output?.error)
-                } else {
-                    assertionFailure("Invalid operation returned")
-                }
+                let updateOperation = returnedOperation as! UpdateUserRequestOperation
+                callback(user: updateOperation.user, error: updateOperation.output?.error)
         })
         
         // Execute the network operation
@@ -238,11 +235,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     internal func getMe(oauth: PhoenixOAuthProtocol, callback: UserCallback) {
         let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-            if let getMeOperation = returnedOperation as? GetUserMeRequestOperation {
-                callback(user: getMeOperation.user, error: getMeOperation.output?.error)
-            } else {
-                assertionFailure("Invalid operation returned")
-            }
+            let getMeOperation = returnedOperation as! GetUserMeRequestOperation
+            callback(user: getMeOperation.user, error: getMeOperation.output?.error)
         })
         
         // Execute the network operation
@@ -276,18 +270,12 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         
         // Create user operation.
         let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-            guard let createUserOperation = returnedOperation as? CreateUserRequestOperation else {
-                assertionFailure("Invalid operation returned")
-                return
-            }
+            let createUserOperation = returnedOperation as! CreateUserRequestOperation
             if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                 // On successful operation, lets assign users role.
                 // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
                 let assignOperation = AssignUserRoleRequestOperation(user: createUserOperation.user, oauth: createUserOperation.oauth!, configuration: createUserOperation.configuration!, network: createUserOperation.network!, callback: { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
-                    guard let assignRoleOperation = returnedOperation as? AssignUserRoleRequestOperation else {
-                        assertionFailure("Invalid operation returned")
-                        return
-                    }
+                    let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
                     // Execute original callback.
                     // If assign role fails, the user will exist but not have any access, there is nothing we can do
                     // if the developer is trying to assign a role that doesn't exist or the server changes in some
@@ -327,11 +315,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             network: network,
             callback: {
                 (returnedOperation: PhoenixOAuthOperation) -> () in
-                if let createIdentifierOperation = returnedOperation as? CreateIdentifierRequestOperation {
-                    callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
-                } else {
-                    assertionFailure("Invalid operation returned")
-                }
+                let createIdentifierOperation = returnedOperation as! CreateIdentifierRequestOperation
+                callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
         })
         
         // Execute the network operation
@@ -349,11 +334,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             network: network,
             callback: {
                 (returnedOperation: PhoenixOAuthOperation) -> () in
-                if let deleteIdentifierOperation = returnedOperation as? DeleteIdentifierRequestOperation {
-                    callback(error:deleteIdentifierOperation.output?.error)
-                } else {
-                    assertionFailure("Invalid operation returned")
-                }
+                let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
+                callback(error:deleteIdentifierOperation.output?.error)
         })
         
         // Execute the network operation
@@ -374,11 +356,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-            if let createInstallationOperation = returnedOperation as? CreateInstallationRequestOperation {
-                callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
-            } else {
-                assertionFailure("Invalid operation returned")
-            }
+            let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
+            callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
         })
         
         // Execute the network operation
@@ -396,11 +375,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         
         // If this call fails, it will retry again the next time we open the app.
         let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
-            if let updateInstallationOperation = returnedOperation as? UpdateInstallationRequestOperation {
-                callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
-            } else {
-                assertionFailure("Invalid operation returned")
-            }
+            let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
+            callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
         })
         
         // Execute the network operation
