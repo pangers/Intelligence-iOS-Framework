@@ -23,13 +23,7 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Phoeni
 
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
 
-### Platform Configuration ###
-
-In order to configure Phoenix you will need to login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
-
-You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
-
-### Initialising Phoenix ###
+### Importing SDK ###
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
 
@@ -53,7 +47,40 @@ import PhoenixSDK
 @import PhoenixSDK;
 ```
 
-### Configuration ###
+### Configuration File ###
+
+In order to configure Phoenix you will need to first login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
+
+You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
+
+All of these variables come from the Phoenix Platform and will need to be included in a JSON file bundled with your iOS App:
+
+1. "client_secret" (String): Only provided when you create a New Application, if you do not know this value you will need to get in contact with the Phoenix Platform team.
+3. "client_id" (String): Can be found on your configured Application.
+2. "application_id" (Integer): Can be found on your configured Application.
+4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
+5. "region" (String): "US", "EU", "AU" or "SG"
+6. "company_id" (Integer): Can be obtained from the Dashboard.
+7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
+
+As an example, your configuration file will look like:
+
+```
+#!JSON
+
+{
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "application_id": 10,
+    "project_id": 20,
+    "region": "EU",
+    "company_id" : 10,
+    "sdk_user_role" : 1000
+}
+
+```
+
+### Initialization ###
 
 The Phoenix SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
 
@@ -214,34 +241,6 @@ Consider that the Phoenix.Configuration can throw exceptions if you haven't conf
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
-### Configuration file format ###
-
-All of these variables can be obtained from the Phoenix platform after you setup your application.
-
-1. "client_id" with a String value
-2. "client_secret" with a String value
-3. "application_id" with an Integer value
-4. "project_id" with an Integer value
-5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
-6. "company_id" with an Integer value
-7. "sdk_user_role" with an Integer value which needs to be configured in the Phoenix Intelligence platform with the correct rights in order to use this SDK.
-
-As an example, your configuration file will look like:
-
-```
-#!JSON
-
-{
-    "client_id": "CLIENT_ID",
-    "client_secret": "CLIENT_SECRET",
-    "application_id": 10,
-    "project_id": 20,
-    "region": "EU",
-    "company_id" : 10,
-    "sdk_user_role" : 1000
-}
-
-```
 
 ### Startup ###
 
@@ -270,6 +269,35 @@ phoenix.startup { (success) -> () in
         
 ```
 
+### Shutdown ###
+
+When you app is terminated you should call the shutdown method in order for the SDK to do any cleanup and store anything relevant to the next session.
+
+*Swift:*
+```
+#!swift
+
+func applicationWillTerminate(application: UIApplication) {
+	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    PhoenixManager.phoenix.shutdown()
+}
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Shutdown Phoenix in the applicationWillTerminate method so Phoenix has time
+    // to teardown properly.
+    [[PHXPhoenixManager phoenix] shutdown];
+}
+        
+```
+
+
 
 # Phoenix Modules #
 
@@ -292,7 +320,7 @@ The analytics module allows developers to effortlessly track several predefined 
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
 
-Developers are responsible for calling the **pause** and **resume** methods when the app enters the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix. 
+### Tracking Events ###
 
 **How to track a Custom Event:**
 
@@ -343,6 +371,38 @@ phoenix.analytics.trackScreenViewed("Main Screen", viewingDuration: 5)
 
 ```
 
+
+
+### Pause/Resume Tracking ###
+
+Developers are responsible for calling the **pause** and **resume** methods when the app enters the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix. 
+
+*Swift:*
+```
+#!swift
+
+	func applicationDidEnterBackground(application: UIApplication) {
+        PhoenixManager.phoenix.analytics.pause()
+	}
+
+	func applicationWillEnterForeground(application: UIApplication) {
+        PhoenixManager.phoenix.analytics.resume()
+	}
+```
+
+*Objective-C:*
+```
+#!objc
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] pause];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] resume];
+}
+
+```
 
 ## Identity Module ##
 
