@@ -276,7 +276,7 @@ In addition to the errors specified by each individual module, you may also get 
 * RequestError.InternetOfflineError: Internet connectivity error, developer will need to wait until device has connected to the internet then try this request again.
 * RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
 
-These errors will be wrapped within an NSError using as domain RequestError.domain.
+These errors will be wrapped within an NSError using the domain: "RequestError".
 
 
 ## Analytics Module ##
@@ -285,7 +285,7 @@ The analytics module allows developers to effortlessly track several predefined 
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
 
-Developers are responsible for calling 'pause' and 'resume' when they enter the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix, so it is vital that they are called. 
+Developers are responsible for calling the **pause** and **resume** methods when the app enters the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix. 
 
 **How to track a Custom Event:**
 
