@@ -47,11 +47,13 @@ import PhoenixSDK
 @import PhoenixSDK;
 ```
 
-### Configuration File ###
+### Configuration ###
 
 In order to configure Phoenix you will need to first login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
 
 You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
+
+#### Configuration JSON File ####
 
 All of these variables come from the Phoenix Platform and will need to be included in a JSON file bundled with your iOS App:
 
@@ -63,7 +65,7 @@ All of these variables come from the Phoenix Platform and will need to be includ
 6. "company_id" (Integer): Can be obtained from the Dashboard.
 7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
 
-As an example, your configuration file will look like:
+As an example, your configuration file should look something like:
 
 ```
 #!JSON
