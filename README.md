@@ -53,6 +53,8 @@ In order to configure Phoenix you will need to first login/register on the Phoen
 
 You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
 
+![Screen Shot 2015-10-14 at 11.07.33.png](https://bitbucket.org/repo/4z6Eb8/images/2500708198-Screen%20Shot%202015-10-14%20at%2011.07.33.png)
+
 #### Configuration JSON File ####
 
 All of these variables come from the Phoenix Platform and will need to be included in a JSON file bundled with your iOS App:
