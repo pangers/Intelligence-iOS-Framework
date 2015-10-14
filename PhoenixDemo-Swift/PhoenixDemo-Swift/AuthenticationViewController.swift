@@ -10,7 +10,7 @@ import UIKit
 import PhoenixSDK
 
 // Valid messages
-private enum LoginMessages: String {
+private enum LoginMessage: String {
     case None = ""
     case LoggedIn = "Logged in"
     case LoggingIn = "Logging in..."
@@ -38,10 +38,10 @@ class AuthenticationViewController: UITableViewController {
 
     // Store your user login status. In this demo we just use a static variable for it.
     private static var loggedInUser: Phoenix.User?
-    private static var loginMessage: LoginMessages = .Login
+    private static var loginMessage: LoginMessage = .Login
 
     private var loggedIn:Bool {
-        return AuthenticationViewController.loginMessage == .LoggedIn
+        return self.dynamicType.loginMessage == .LoggedIn
     }
     
     private let ViewUserSegue = "LoginViewUser"
@@ -55,7 +55,7 @@ class AuthenticationViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == ViewUserSegue {
             if let viewUser = segue.destinationViewController as? ViewUserViewController {
-                viewUser.user = AuthenticationViewController.loggedInUser
+                viewUser.user = self.dynamicType.loggedInUser
             }
         }
     }
@@ -74,8 +74,8 @@ class AuthenticationViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         
         if indexPath.row == 0 {
-            cell.textLabel?.text = AuthenticationViewController.loginMessage.rawValue
-            cell.textLabel?.textColor = AuthenticationViewController.loginMessage.color()
+            cell.textLabel?.text = self.dynamicType.loginMessage.rawValue
+            cell.textLabel?.textColor = self.dynamicType.loginMessage.color()
             cell.userInteractionEnabled = !loggedIn
         }
         else {
@@ -105,8 +105,8 @@ class AuthenticationViewController: UITableViewController {
             return
         }
 
-        func reloadUI(message: LoginMessages) {
-            AuthenticationViewController.loginMessage = message
+        func reloadUI(message: LoginMessage) {
+            self.dynamicType.loginMessage = message
             if NSThread.isMainThread() {
                 tableView.reloadData()
             }
@@ -136,11 +136,11 @@ class AuthenticationViewController: UITableViewController {
                 return
             }
             
-            PhoenixManager.phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
+            PhoenixManager.phoenix.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
                 reloadUI(error == nil ? .LoggedIn : .LoginFailed)
                 
-                if AuthenticationViewController.loginMessage == .LoggedIn {
-                    AuthenticationViewController.loggedInUser = user
+                if self?.dynamicType.loginMessage == .LoggedIn {
+                    self?.dynamicType.loggedInUser = user
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
                         self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
@@ -149,15 +149,14 @@ class AuthenticationViewController: UITableViewController {
             })
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) {
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
             reloadUI(.Login)
         })
-        
         presentViewController(alert, animated: true) { }
     }
     
     func logout() {
-        AuthenticationViewController.loginMessage = .Login
+        self.dynamicType.loginMessage = .Login
         PhoenixManager.phoenix.identity.logout()
         tableView.reloadData()
     }

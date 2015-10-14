@@ -21,12 +21,6 @@ typedef NS_ENUM(NSUInteger, PHXLoginMessage) {
     PHXLoginFailed,
 };
 
-@interface PHXAuthenticationViewController()
-
-
-@end
-
-
 @implementation PHXAuthenticationViewController
 
 static PHXUser *loggedInUser;
@@ -43,12 +37,8 @@ static PHXLoginMessage currentStatus;
     }
 }
 
-- (PHXLoginMessage)status {
-    return currentStatus;
-}
-
 - (NSString*)messageForStatus {
-    switch ([self status]) {
+    switch (currentStatus) {
         case PHXLoggedIn:
             return @"Logged in";
         case PHXLogin:
@@ -63,7 +53,7 @@ static PHXLoginMessage currentStatus;
 }
 
 - (UIColor*)colorForStatus {
-    switch ([self status]) {
+    switch (currentStatus) {
         case PHXLoggingIn:
             return [UIColor purpleColor];
         case PHXLoggedIn:
