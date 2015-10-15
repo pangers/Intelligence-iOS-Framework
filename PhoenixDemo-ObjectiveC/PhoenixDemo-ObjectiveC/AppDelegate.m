@@ -26,6 +26,27 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
         // and generally indicate that something has gone wrong and needs to be resolved.
         NSLog(@"Error initialising Phoenix: %@", @(err.code));
+        if ([ConfigurationErrorDomain rangeOfString: err.domain].location != NSNotFound) {
+            switch (err.code) {
+                case ConfigurationErrorFileNotFoundError:
+                    // The file you specified does not exist!
+                    break;
+                case ConfigurationErrorInvalidFileError:
+                    // The file is invalid! Check that the JSON provided is correct.
+                    break;
+                case ConfigurationErrorMissingPropertyError:
+                    // You missed a property!
+                    break;
+                case ConfigurationErrorInvalidPropertyError:
+                    // There is an invalid property!
+                    break;
+                default:
+                    // Unknown initialization error!
+                    break;
+            }
+        } else {
+            // Unknown initialization error!
+        }
     }
     
     NSParameterAssert(err == nil && phoenix != nil);
