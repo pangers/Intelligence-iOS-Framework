@@ -47,10 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                             // Allow the user to retry to startup phoenix.
                             let message = "Phoenix was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Phoenix startup."
                             let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
-                            controller.addAction(UIAlertAction(title: "Retry", style: .Default, handler: { (action) -> Void in
+                            controller.addAction(UIAlertAction(title: "Retry", style: .Cancel, handler: { (action) -> Void in
                                 // Try again to start phoenix
                                 self.startupPhoenix()
-                                controller.dismissViewControllerAnimated(true, completion: nil)
                             }))
                             
                             self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
@@ -110,8 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     }
     
     func segueToDemo() {
-        guard let navigationController = self.window?.rootViewController as? UINavigationController,
-            let viewController = navigationController.viewControllers.last else {
+        guard let viewController = self.window?.rootViewController else {
             return;
         }
         

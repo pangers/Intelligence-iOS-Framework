@@ -18,6 +18,12 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self startupPhoenix];
+    
+    return YES;
+}
+
+-(void) startupPhoenix {
     // Attempt to instantiate Phoenix from file.
     NSError *err;
     Phoenix* phoenix = [[Phoenix alloc] initWithDelegate:self file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
@@ -26,48 +32,81 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
         // and generally indicate that something has gone wrong and needs to be resolved.
         if ([ConfigurationErrorDomain rangeOfString: err.domain].location != NSNotFound) {
+            
             switch (err.code) {
+                    
                 case ConfigurationErrorFileNotFoundError:
                     // The file you specified does not exist!
                     break;
+                    
                 case ConfigurationErrorInvalidFileError:
                     // The file is invalid! Check that the JSON provided is correct.
                     break;
+                    
                 case ConfigurationErrorMissingPropertyError:
                     // You missed a property!
                     break;
+                    
                 case ConfigurationErrorInvalidPropertyError:
                     // There is an invalid property!
                     break;
+                    
                 default:
                     // Unknown initialization error!
                     break;
             }
-        } else {
+        }
+        else {
             // Unknown initialization error!
         }
+
+        // If you get an error here, you should check your configuration file and
+        // how you initialize phoenix.
+        assert(false);
     }
-    
-    NSParameterAssert(err == nil && phoenix != nil);
-    
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     // Start phoenix, will throw a network error if something is configured incorrectly.
     [phoenix startup:^(BOOL success) {
-        NSAssert(success, @"An error occured while initializing Phoenix.");
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
+            if (success) {
+                // Setup phoenix
+                [PHXPhoenixManager setupPhoenix:phoenix];
 
-        // Track test event.
-        PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
-        [phoenix.analytics track:myTestEvent];
+                // Track test event.
+                PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
+                [phoenix.analytics track:myTestEvent];
 
-        // Setup phoenix
-        [PHXPhoenixManager setupPhoenix:phoenix];
-        dispatch_semaphore_signal(semaphore);
+                [self doSegueToDemo];
+            }
+            else {
+                [self didFailToStartupPhoenix];
+            }
+        }];
     }];
+}
+
+-(void) didFailToStartupPhoenix {
+    NSString* message = @"Phoenix was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Phoenix startup.";
+    UIAlertController* viewController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                            message:message
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
     
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    [viewController addAction:[UIAlertAction actionWithTitle:@"Retry"
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                         [self startupPhoenix];
+    }]];
     
-    return YES;
+    [self.window.rootViewController presentViewController:viewController
+                                                 animated:YES
+                                               completion:nil];
+}
+
+-(void) doSegueToDemo
+{
+    [self.window.rootViewController performSegueWithIdentifier:@"phoenixStartedUp" sender:self];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
