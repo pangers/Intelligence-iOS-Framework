@@ -96,11 +96,21 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
 }
 
 - (void)alertWithMessage:(NSString*)message {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Phoenix Demo" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-        [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
-    });
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(alertWithMessage:) withObject:message waitUntilDone:YES];
+        return;
+    }
+    UIViewController *presenterViewController = self.window.rootViewController;
+    if (presenterViewController == nil || presenterViewController.presentedViewController != nil) {
+        __weak __typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf alertWithMessage:message];
+        });
+        return;
+    }
+    UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Phoenix Demo" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self.window.rootViewController presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - PHXPhoenixDelegate

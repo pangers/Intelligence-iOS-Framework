@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             
             // Startup all modules.
             phoenix.startup { (success) -> () in
-                assert(success, "Phoenix could not startup")
+                assert(success, "An error occured while initializing Phoenix.")
                 
                 // Register test event.
                 let testEvent = Event(withType: "Phoenix.Test.Event.Type")
@@ -112,11 +112,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     }
     
     func alert(withMessage message: String) {
+        if !NSThread.isMainThread() {
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                self?.alert(withMessage: message)
+            })
+            return
+        }
         let presenterViewController = window?.rootViewController
-        if !NSThread.isMainThread() ||
-            presenterViewController?.canBecomeFirstResponder() == false ||
-            presenterViewController?.presentedViewController != nil {
-            dispatch_after(1, dispatch_get_main_queue(), { [weak self] () -> Void in
+        if  presenterViewController == nil || presenterViewController?.presentedViewController != nil {
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue(), { [weak self] () -> Void in
                 self?.alert(withMessage: message)
             })
             return
