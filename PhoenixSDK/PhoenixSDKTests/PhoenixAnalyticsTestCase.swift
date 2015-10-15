@@ -361,8 +361,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             response: (data: failureResponse, statusCode: .BadRequest, headers:nil))
         
         analytics.sendEvents([]) { (error) -> () in
-            // The operation should silence the error so that the events are normally drained.
-            XCTAssertNil(error)
+            // The operation should throw the error for the callback to handle.
+            XCTAssertNotNil(error)
             expectation.fulfill()
         }
         
