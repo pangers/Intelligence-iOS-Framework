@@ -32,12 +32,13 @@
         }
         else {
             [[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
-                if (error != nil) {
+                BOOL notRegisteredError = [IdentityErrorDomain rangeOfString:error.domain].location != NSNotFound && error.code == IdentityErrorDeviceTokenNotRegisteredError;
+                if (error != nil && !notRegisteredError) {
                     [delegate alertWithError: error];
                 } else {
-                    [delegate alertWithMessage: @"Unregister Succeeded!"];
                     [[NSUserDefaults standardUserDefaults] removeObjectForKey: PhoenixDemoStoredDeviceTokenKey];
                     [[NSUserDefaults standardUserDefaults] synchronize];
+                    [delegate alertWithMessage: @"Unregister Succeeded!"];
                 }
             }];
         }
