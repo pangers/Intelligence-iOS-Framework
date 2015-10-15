@@ -4,6 +4,41 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="36t-bm-V1e">
+            <objects>
+                <viewController id="9zR-DP-QGT" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="18U-AF-Tz8"/>
+                        <viewControllerLayoutGuide type="bottom" id="uVk-rQ-IPA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Xr1-YG-VW3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wait while we startup Phoenix..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qts-QB-auW">
+                                <rect key="frame" x="15" y="290" width="570" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Qts-QB-auW" firstAttribute="leading" secondItem="Xr1-YG-VW3" secondAttribute="leading" constant="15" id="7kJ-0M-bTY"/>
+                            <constraint firstAttribute="trailing" secondItem="Qts-QB-auW" secondAttribute="trailing" constant="15" id="cer-Jt-gqC"/>
+                            <constraint firstItem="Qts-QB-auW" firstAttribute="centerY" secondItem="Xr1-YG-VW3" secondAttribute="centerY" id="fWF-0d-DtO"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="eE2-Uk-eqI"/>
+                    <connections>
+                        <segue destination="4Zv-dv-08P" kind="show" identifier="phoenixStartedUp" id="4Ba-dp-f5h"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2k5-Br-UlC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="709" y="563"/>
+        </scene>
         <!--PhoenixSDK-->
         <scene sceneID="EvG-BA-6Mt">
             <objects>
@@ -108,12 +143,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="4Zv-dv-08P" kind="relationship" relationship="rootViewController" id="qID-Sw-Wd5"/>
+                        <segue destination="9zR-DP-QGT" kind="relationship" relationship="rootViewController" id="bFc-0Z-M3o"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kZO-ma-S8e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="576" y="563"/>
+            <point key="canvasLocation" x="1" y="563"/>
         </scene>
         <!--Identity-->
         <scene sceneID="vIV-JZ-MXl">

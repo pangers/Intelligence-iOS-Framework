@@ -16,24 +16,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
 	var window: UIWindow?
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        startupPhoenix()
+
+		return true
+	}
+    
+    func startupPhoenix() {
+        if PhoenixManager.phoenix != nil {
+            return
+        }
+        
         do {
             let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
-            let semaphore = dispatch_semaphore_create(0)
             
             // Startup all modules.
             phoenix.startup { (success) -> () in
-                assert(success, "An error occured while initializing Phoenix.")
                 
-                // Register test event.
-                let testEvent = Event(withType: "Phoenix.Test.Event.Type")
-                phoenix.analytics.track(testEvent)
-                
-                PhoenixManager.startupWithPhoenix(phoenix)
-                
-                dispatch_semaphore_signal(semaphore)
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+
+                    if success {
+                        // Register test event.
+                        let testEvent = Event(withType: "Phoenix.Test.Event.Type")
+                        phoenix.analytics.track(testEvent)
+                        PhoenixManager.startupWithPhoenix(phoenix)
+                        
+                        self.segueToDemo()
+                    }
+                    else {
+                            // Allow the user to retry to startup phoenix.
+                            let message = "Phoenix was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Phoenix startup."
+                            let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+                            controller.addAction(UIAlertAction(title: "Retry", style: .Default, handler: { (action) -> Void in
+                                // Try again to start phoenix
+                                self.startupPhoenix()
+                                controller.dismissViewControllerAnimated(true, completion: nil)
+                            }))
+                            
+                            self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+
+                    }
+                }
             }
-            
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
             // The file you specified does not exist!
@@ -50,32 +74,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         catch {
             // Treat the error with care!
         }
-        
-		return true
-	}
-
-	func applicationWillResignActive(application: UIApplication) {
-		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-		// Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
+    
 
 	func applicationDidEnterBackground(application: UIApplication) {
-		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         PhoenixManager.phoenix.analytics.pause()
 	}
 
 	func applicationWillEnterForeground(application: UIApplication) {
-		// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         PhoenixManager.phoenix.analytics.resume()
 	}
 
-	func applicationDidBecomeActive(application: UIApplication) {
-		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	}
-
 	func applicationWillTerminate(application: UIApplication) {
-		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         PhoenixManager.phoenix.shutdown()
 	}
 
@@ -99,7 +109,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         self.alert(withMessage: "Unable to Register for Push Notifications")
     }
     
-    // MARK:- PhoenixDelegate
+    func segueToDemo() {
+        guard let navigationController = self.window?.rootViewController as? UINavigationController,
+            let viewController = navigationController.viewControllers.last else {
+            return;
+        }
+        
+        viewController.performSegueWithIdentifier("phoenixStartedUp", sender: self)
+    }
     
     func alert(withError error: NSError) {
         if error.domain == IdentityError.domain {
@@ -115,7 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         if !NSThread.isMainThread() {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
                 self?.alert(withMessage: message)
-            })
+                })
             return
         }
         let presenterViewController = window?.rootViewController
@@ -123,13 +140,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue(), { [weak self] () -> Void in
                 self?.alert(withMessage: message)
-            })
+                })
             return
         }
         let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
         controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
         presenterViewController?.presentViewController(controller, animated: true, completion: nil)
     }
+    
+    // MARK:- PhoenixDelegate
     
     func userCreationFailedForPhoenix(phoenix: Phoenix) {
         alert(withMessage: "Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
