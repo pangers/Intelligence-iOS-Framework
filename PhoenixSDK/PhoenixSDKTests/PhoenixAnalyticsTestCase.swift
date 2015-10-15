@@ -348,7 +348,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test an error
     func testAnalyticsError400InvalidRequest() {
-        let analytics = phoenix.analytics as! Phoenix.Analytics
+        let analytics = phoenix.analytics as! AnalyticsModule
         let failureResponse = "{ \"error\": \"invalid_request\", \"error_description\": \"Invalid parameter.\" }"
         let URL = NSURLRequest.phx_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
@@ -361,8 +361,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             response: (data: failureResponse, statusCode: .BadRequest, headers:nil))
         
         analytics.sendEvents([]) { (error) -> () in
-            // The operation should silence the error so that the events are normally drained.
-            XCTAssertNil(error)
+            // The operation should throw the error for the callback to handle.
+            XCTAssertNotNil(error)
             expectation.fulfill()
         }
         
