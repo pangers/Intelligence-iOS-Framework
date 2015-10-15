@@ -7,12 +7,12 @@
 //
 
 import XCTest
+import OHHTTPStubs
+
 @testable import PhoenixSDK
 
 typealias MockCallback = (()->Void)
 typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [String:String]?)
-
-import OHHTTPStubs
 
 class PhoenixBaseTestCase : XCTestCase {
     

@@ -348,7 +348,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     
     /// Test an error
     func testAnalyticsError400InvalidRequest() {
-        let analytics = phoenix.analytics as! Phoenix.Analytics
+        let analytics = phoenix.analytics as! AnalyticsModule
         let failureResponse = "{ \"error\": \"invalid_request\", \"error_description\": \"Invalid parameter.\" }"
         let URL = NSURLRequest.phx_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
