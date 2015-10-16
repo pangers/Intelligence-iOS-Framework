@@ -72,6 +72,7 @@ class PhoenixLocationGeofenceQueryViewController: UIViewController {
             
         default:
             assert(false,"Should never have a row above the number of sort criteria")
+            return GeofenceSortCriteria.Distance
         }
     }
     
