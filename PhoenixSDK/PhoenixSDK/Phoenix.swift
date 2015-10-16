@@ -188,10 +188,12 @@ public final class Phoenix: NSObject {
         withDelegate delegate: PhoenixDelegate,
         configuration phoenixConfiguration: Phoenix.Configuration) throws
     {
+        let provider = PhoenixOAuthDefaultProvider()
         try self.init(
             withDelegate: delegate,
-            configuration: phoenixConfiguration,
-            oauthProvider: PhoenixOAuthDefaultProvider())
+            file:file,
+            inBundle:inBundle,
+            oauthProvider: provider)
     }
     
     /// Initialize Phoenix with a configuration file.
