@@ -194,8 +194,7 @@ public final class Phoenix: NSObject {
         let provider = PhoenixOAuthDefaultProvider()
         try self.init(
             withDelegate: delegate,
-            file:file,
-            inBundle:inBundle,
+            configuration:phoenixConfiguration,
             oauthProvider: provider)
     }
     
@@ -210,11 +209,15 @@ public final class Phoenix: NSObject {
         file: String,
         inBundle: NSBundle=NSBundle.mainBundle()) throws
     {
+        // This let is here to avoid the swift garbage collector from releasing
+        // this memory immediately after initialization, and before calling the
+        // self.init method. Seems to be a bug in Swift.
+        let provider = PhoenixOAuthDefaultProvider()
         try self.init(
             withDelegate: delegate,
             file:file,
             inBundle:inBundle,
-            oauthProvider: PhoenixOAuthDefaultProvider())
+            oauthProvider: provider)
     }
     
     /// Starts up the Phoenix SDK modules.
