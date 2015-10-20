@@ -37,12 +37,13 @@ class IdentityModuleViewController : UITableViewController {
                 return
             }
             PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
-                if error != nil {
+                let notRegisteredError = error?.domain == IdentityError.domain && error?.code == IdentityError.DeviceTokenNotRegisteredError.rawValue
+                if error != nil && !notRegisteredError {
                     delegate.alert(withError: error!)
                 } else {
-                    delegate.alert(withMessage: "Unregister Succeeded!")
                     NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
                     NSUserDefaults.standardUserDefaults().synchronize()
+                    delegate.alert(withMessage: "Unregister Succeeded!")
                 }
             })
         }

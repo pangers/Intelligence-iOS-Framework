@@ -11,7 +11,8 @@ import Foundation
 /// Enumeration that defines the possible errors that can occur during
 /// the initial setup of Phoenix's configuration.
 /// Refer to the Readme file to obtain further instructions on setup.
-public enum ConfigurationError: Int, ErrorType {
+@objc public enum ConfigurationError: Int, ErrorType {
+    public static var _NSErrorDomain = "ConfigurationError"
     
     /// The domain passed to NSErrors.
     public static let domain = "ConfigurationError"
@@ -31,7 +32,8 @@ public enum ConfigurationError: Int, ErrorType {
 }
 
 /// Enumeration to list the errors that can occur in the identity module.
-public enum IdentityError: Int, ErrorType {
+@objc public enum IdentityError: Int, ErrorType {
+    public static var _NSErrorDomain = "IdentityError"
     
     /// The domain passed to NSErrors.
     public static let domain = "IdentityError"
@@ -72,11 +74,12 @@ public enum IdentityError: Int, ErrorType {
 }
 
 /// Enumeration to list the errors that can occur in any request.
-public enum RequestError: Int, ErrorType {
+@objc public enum RequestError: Int, ErrorType {
+    public static var _NSErrorDomain = "RequestError"
     
     /// The domain passed to NSErrors.
     public static let domain = "RequestError"
-    
+
     /// Error to return when parsing JSON fails.
     case ParseError = 3001
     

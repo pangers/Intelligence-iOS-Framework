@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="uz2-1t-hDU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="l7e-5F-7gc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="zsi-TW-aev">
+            <objects>
+                <viewController id="l7e-5F-7gc" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ux1-EE-JoU"/>
+                        <viewControllerLayoutGuide type="bottom" id="wO5-mh-M8B"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AYk-Wr-CIr">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wait while we initialise Phoenix..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bNE-2Y-dA7">
+                                <rect key="frame" x="15" y="290" width="570" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bNE-2Y-dA7" firstAttribute="centerY" secondItem="AYk-Wr-CIr" secondAttribute="centerY" id="294-VN-xml"/>
+                            <constraint firstAttribute="trailing" secondItem="bNE-2Y-dA7" secondAttribute="trailing" constant="15" id="EtO-VH-9w5"/>
+                            <constraint firstItem="bNE-2Y-dA7" firstAttribute="leading" secondItem="AYk-Wr-CIr" secondAttribute="leading" constant="15" id="n67-JF-LdA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="AZc-Td-sNx"/>
+                    <connections>
+                        <segue destination="uz2-1t-hDU" kind="show" identifier="phoenixStartedUp" id="X5B-OO-8fx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BOT-RE-19x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-27" y="563"/>
+        </scene>
         <!--PhoenixSDK-->
         <scene sceneID="EvG-BA-6Mt">
             <objects>
@@ -108,12 +143,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="4Zv-dv-08P" kind="relationship" relationship="rootViewController" id="qID-Sw-Wd5"/>
+                        <segue destination="4Zv-dv-08P" kind="relationship" relationship="rootViewController" id="fyK-jL-h5I"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kZO-ma-S8e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="576" y="563"/>
+            <point key="canvasLocation" x="680" y="563"/>
         </scene>
         <!--Location-->
         <scene sceneID="Xov-Cr-26F">

@@ -21,6 +21,7 @@ public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -
 public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
 
 private let InvalidDeviceTokenID = -1
+private let CreateSDKUserRetries = 5
 
 /// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
 @objc(PHXIdentityModuleProtocol)
@@ -74,31 +75,97 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         self.installation = installation
     }
     
-    private func createSDKUserIfRequired(successBlock: () -> ()) {
+    private func createSDKUserIfRequired(completion: (Bool) -> ()) {
         var oauth = network.oauthProvider.sdkUserOAuth
-        if oauth.username == nil || oauth.password == nil {
-            // Need to create user first.
-            let sdkUser = Phoenix.User(companyId: configuration.companyId)
-            let password = sdkUser.password
-            createUser(sdkUser, callback: { [weak self] (serverUser, error) -> Void in
-                if serverUser != nil {
-                    // Store credentials in keychain.
-                    oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
-                    oauth.userId = serverUser?.userId
-                    
-                    // If we have a user, need to call get pipeline again.
-                    successBlock()
-                } else {
-                    // Pass error back to developer (special case, use delegate).
-                    // Probably means that user already exists, or perhaps Application is configured incorrectly
-                    // and cannot create users.
-                    self?.delegate?.userCreationFailed()
-                }
-                })
-        } else {
-            successBlock()
+        if oauth.username != nil && oauth.password != nil {
+                completion(true)
+                return
+        }
+        
+        // Need to create user first.
+        let sdkUser = Phoenix.User(companyId: configuration.companyId)
+        let password = sdkUser.password
+        
+        createUser(sdkUser) { [weak self] (serverUser, error) -> Void in
+            // defer the completion callback call.
+            defer {
+                completion(serverUser != nil)
+            }
+            
+            if serverUser != nil {
+                // Store credentials in keychain.
+                oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
+                oauth.userId = serverUser?.userId
+            }
+            else {
+                // Pass error back to developer (special case, use delegate).
+                // Probably means that user already exists, or perhaps Application is configured incorrectly
+                // and cannot create users.
+                self?.delegate?.userCreationFailed()
+            }
         }
     }
+    
+    /**
+    Creates an SDK user doing "counter" retries.
+    
+    It creates the user only if required, and makes sure to generate the OAuth calls
+    required to login using Network.getPipeline.
+    
+    - parameter counter:    The number of retries to perform.
+    - parameter completion: A callback to notify on success or failure.
+    */
+    private func createSDKUserRecursively(counter: Int, completion: (success: Bool) -> ()) {
+        if counter <= 1 {
+            completion(success: false)
+            return
+        }
+        
+        // Create user if their credentials are empty.
+        self.createSDKUserIfRequired({ [weak self] (success: Bool) -> () in
+            guard let identity = self else {
+                completion(success: false)
+                return
+            }
+            
+            if !success {
+                identity.createSDKUserRecursively(counter - 1, completion: completion)
+                return
+            }
+            
+            // Get pipeline if created or existing.
+            identity.network.getPipeline(forOAuth: identity.network.oauthProvider.sdkUserOAuth, configuration: identity.configuration) { [weak self] (sdkUserPipeline) -> () in
+                    
+                    guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
+                        // Should not happen (user created above)
+                        completion(success: false)
+                        return
+                    }
+                    
+                    identity.network.enqueueOperation(sdkUserPipeline)
+                    
+                    sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
+                        guard let identity = self else {
+                            completion(success: false)
+                            return
+                        }
+                        
+                        // Installation can succeed without a user id
+                        identity.createInstallation(nil)
+                        identity.updateInstallation(nil)
+                        
+                        // Grab our user ID.
+                        identity.getMe(identity.network.oauthProvider.sdkUserOAuth) { [weak identity] (user, error) -> Void in
+                            
+                            // Update user id for SDKUser
+                            identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
+                            completion(success: error == nil)
+                        }
+                    }
+            }
+        })
+    }
+
     
     override func startup(completion: (success: Bool) -> ()) {
         super.startup { [weak network, weak configuration] (success) -> () in
@@ -114,43 +181,20 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             // Get pipeline for grant_type 'client_credentials'.
             network.getPipeline(forOAuth: network.oauthProvider.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
                 guard let applicationPipeline = applicationPipeline, identity = self else {
-                    // Shouldn't happen.
-                    assertionFailure("Startup shouldn't be called multiple times")
+                    completion(success: false)
                     return
                 }
-                identity.network.enqueueOperation(applicationPipeline)
-                
-                applicationPipeline.callback = { (returnedOperation: PhoenixOAuthOperation) -> () in
-                    // Create user if their credentials are empty.
-                    identity.createSDKUserIfRequired({ () -> () in
-                        // Get pipeline if created or existing.
-                        identity.network.getPipeline(forOAuth: identity.network.oauthProvider.sdkUserOAuth, configuration: identity.configuration, completion: { [weak self] (sdkUserPipeline) -> () in
-                            guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
-                                // Should not happen (user created above)
-                                completion(success: false)
-                                return
-                            }
-                            
-                            identity.network.enqueueOperation(sdkUserPipeline)
-                            
-                            sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
-                                guard let identity = self else {
-                                    completion(success: false)
-                                    return
-                                }
-                                // Installation can succeed without a user id
-                                identity.createInstallation(nil)
-                                identity.updateInstallation(nil)
-                                // Grab our user ID.
-                                identity.getMe(identity.network.oauthProvider.sdkUserOAuth, callback: { [weak identity] (user, error) -> Void in
-                                    // Update user id for SDKUser
-                                    identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
-                                    completion(success: error == nil)
-                                })
-                            }
-                        })
-                    })
+
+                applicationPipeline.callback = { [weak self] (returnedOperation) in
+                    guard let identity = self else {
+                        completion(success: false)
+                        return
+                    }
+                    
+                    identity.createSDKUserRecursively(CreateSDKUserRetries,completion:completion)
                 }
+                
+                identity.network.enqueueOperation(applicationPipeline)
             }
         }
     }

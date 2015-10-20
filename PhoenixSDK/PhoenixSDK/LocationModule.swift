@@ -218,7 +218,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     // MARK:- Download geofences
     
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?) {
-        let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) -> () in
+        let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) in
             let downloadGeofencesOperation = returnedOperation as! DownloadGeofencesRequestOperation
             let error = downloadGeofencesOperation.output?.error
             let geofences = downloadGeofencesOperation.geofences

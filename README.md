@@ -114,13 +114,13 @@ catch {
 
 // Attempt to instantiate Phoenix using a JSON file.
 NSError *err;
-Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
 if (nil != err) {
 	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
 	// and generally indicate that something has gone wrong and needs to be resolved.
 	NSLog(@"Error initialising Phoenix: %zd", err.code);
 }
-NSParameterAssert(err == nil && instance != nil);
+NSParameterAssert(err == nil && phoenix != nil);
 
 ```
 
@@ -150,13 +150,13 @@ catch {
 // Attempt to instantiate Phoenix using a JSON file.
 NSError *err;
 PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, configuration:configuration error:&err];
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self configuration:configuration error:&err];
 if (nil != err) {
 	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
 	// and generally indicate that something has gone wrong and needs to be resolved.
 	NSLog(@"Error initialising Phoenix: %zd", err.code);
 }
-NSParameterAssert(err == nil && instance != nil);
+NSParameterAssert(err == nil && phoenix != nil);
         
 ```
 
@@ -229,13 +229,13 @@ PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"Phoen
 // Change region programmatically
 configuration.region = RegionEurope;
         
-Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self, configuration:configuration error:&err];
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self configuration:configuration error:&err];
 if (nil != err) {
 	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
 	// and generally indicate that something has gone wrong and needs to be resolved.
 	NSLog(@"Error initialising Phoenix: %zd", err.code);
 }
-NSParameterAssert(err == nil && instance != nil);
+NSParameterAssert(err == nil && phoenix != nil);
         
 
 ```
