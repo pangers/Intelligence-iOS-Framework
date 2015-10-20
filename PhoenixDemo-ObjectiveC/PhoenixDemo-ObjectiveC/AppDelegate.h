@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *const PhoenixDemoStoredDeviceTokenKey;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+- (void)alertWithError:(NSError *)error;
+- (void)alertWithMessage:(NSString*)message;
 
 @end
 

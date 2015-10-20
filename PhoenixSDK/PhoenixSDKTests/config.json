@@ -5,5 +5,5 @@
     "project_id": 20,
     "region": "EU",
     "company_id":10,
-    "use_geofences":true
+    "sdk_user_role": 1008
 }

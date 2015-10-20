@@ -10,8 +10,129 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class UtilsTestCase: PhoenixBaseTestCase {
+class UtilsTestCase: XCTestCase {
 
+    func testShuffle() {
+        
+        measureBlock { () -> Void in
+            var values = ["A"]
+            var original = values
+            values.shuffle()
+            XCTAssert(original == values)
+            
+            values.removeAll()
+            XCTAssert(values.count == 0)
+            values.shuffle()
+            XCTAssert(values.count == 0)
+            
+            values = ["A","B","C","D","E","F","G","H","I"]
+            original = values
+            while original == values {
+                values.shuffle()
+            }
+            XCTAssert(original != values)
+            XCTAssert(original == values.sort())
+            
+            let immutable = [1,2,3,4,5]
+            let originalNumbers = immutable
+            
+            while immutable.shuffle() == immutable {
+            }
+            
+            XCTAssert(immutable.sort() == originalNumbers)
+            
+            XCTAssert(true)
+        }
+    }
+    
+    func testForEachInMainThreadFromSecondaryThread() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        dispatch_async(dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) { // 1
+            
+            // Assert that we are not in the main thread, but forEachInMainThread will run in the main thread.
+            XCTAssertFalse(NSThread.isMainThread())
+            
+            expectationsArray.forEachInMainThread {
+                // Assert that all runs in the main thread
+                XCTAssert(NSThread.isMainThread())
+                
+                // Fulfill all expectation so we can wait for them.
+                $0.fulfill()
+            }
+        }
+        
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+    
+    /**
+    Checks that if we call it from the main thread there is no deadlock.
+    */
+    func testForEachInMainThreadFromMainThread() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that all runs in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEachInMainThread {
+            // Assert that all runs in the main thread
+            XCTAssert(NSThread.isMainThread())
+            
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+
+    func testForEachInQueue() {
+        let expectationsArray = [
+            expectationWithDescription("1"),
+            expectationWithDescription("2"),
+            expectationWithDescription("3"),
+            expectationWithDescription("4"),
+            expectationWithDescription("5"),
+            expectationWithDescription("6"),
+            expectationWithDescription("7")
+        ]
+        
+        // Assert that we run in the main thread
+        XCTAssert(NSThread.isMainThread())
+
+        expectationsArray.forEach(asyncInQueue: dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) {
+            
+            // Assert that we are not in the main thread
+            XCTAssertFalse(NSThread.isMainThread())
+
+            // Fulfill all expectation so we can wait for them.
+            $0.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(2) { (error) -> Void in
+            XCTAssertNil(error)
+        }
+    }
+    
     func testStringContains() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -21,7 +142,7 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(!"1".contains("123"), "A substring of the string contains the second string.")
         XCTAssert("123".contains("123"), "Two equal strings are contained.")
         XCTAssert("PADDING123PADDING".contains("123"), "Strings contain.")
-        
+        XCTAssert("123"[1] == "2")
         
         //  isContained
         XCTAssert(!"".isContained(""), "Empty strings are contained")
@@ -49,11 +170,20 @@ class UtilsTestCase: PhoenixBaseTestCase {
         XCTAssert(defaults[key] == nil ,"Didn't clear the user defaults.")
     }
     
-    func testTokenStorageNoDate() {
-        let storage = MockSimpleStorage()
-        storage.tokenExpirationDate = nil
+    func testDictionaryToJSONData() {
         
-        XCTAssert(storage.tokenExpirationDate == nil ,"Can clear the storage date correctly.")
+        var dict = [NSString: NSObject]()
+        dict["TEST"] = NSObject()
+        XCTAssert(dict.phx_toJSONData() == nil)
+        
+    }
+    
+    func testDateFormatter() {
+        let dateFormatter = RFC3339DateFormatter
+        XCTAssert(dateFormatter.dateFormat == "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS")
+        XCTAssert(dateFormatter.timeZone == NSTimeZone(name: "UTC"))
+        XCTAssert(dateFormatter.calendar == NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian))
+        XCTAssert(dateFormatter.locale == NSLocale(localeIdentifier: "en_US_POSIX"))
     }
     
     func testDataToJSONArray() {

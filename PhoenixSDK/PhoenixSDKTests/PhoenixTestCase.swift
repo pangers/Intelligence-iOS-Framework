@@ -12,8 +12,10 @@ import XCTest
 class PhoenixTestCase: PhoenixBaseTestCase {
     
     func testPhoenixInitializer() {
+        let delegateTester = MockPhoenixDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+        
         do {
-            let phoenix = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage, disableLocation: true)
+            let phoenix = try Phoenix(withDelegate: delegateTester, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), oauthProvider: mockOAuthProvider)
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -22,11 +24,12 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     }
     
     func testPhoenixConfigurationInitializer(){
+        let delegateTester = MockPhoenixDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         let bundle = NSBundle(forClass: PhoenixTestCase.self)
         
         do {
             let configuration = try Phoenix.Configuration(fromFile: "config", inBundle: bundle)
-            let phoenix = try Phoenix(withConfiguration: configuration, tokenStorage:storage, disableLocation: true)
+            let phoenix = try Phoenix(withDelegate: delegateTester, configuration: configuration, oauthProvider: mockOAuthProvider)
             XCTAssert(phoenix.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -36,13 +39,15 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     
     // Mock configuration fakes an invalid configuration
     func testPhoenixInitializerWithMockConfiguration() {
+        let delegateTester = MockPhoenixDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+        
         do {
             let config = MockConfiguration()
             config.mockInvalid = true
-            let _ = try Phoenix(withConfiguration: config, tokenStorage:storage, disableLocation: true)
+            let _ = try Phoenix(withDelegate:delegateTester, configuration: config, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
-        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
+        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
             // correct path
         }
         catch {
@@ -52,8 +57,10 @@ class PhoenixTestCase: PhoenixBaseTestCase {
     
     // Mock configuration fakes an invalid configuration
     func testPhoenixGetterSetterWorks() {
+        let delegateTester = MockPhoenixDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+        
         do {
-            _ = try Phoenix(withFile: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), withTokenStorage:storage, disableLocation: true)
+            _ = try Phoenix(withDelegate: delegateTester, file: "config", inBundle: NSBundle(forClass: PhoenixTestCase.self), oauthProvider: mockOAuthProvider)
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing phoenix.")

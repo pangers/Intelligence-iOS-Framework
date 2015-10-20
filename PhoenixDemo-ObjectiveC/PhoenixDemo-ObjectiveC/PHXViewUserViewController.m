@@ -9,7 +9,7 @@
 #import "PHXViewUserViewController.h"
 #import "PHXPhoenixManager.h"
 
-@interface PHXViewUserViewController () <UISearchBarDelegate>
+@interface PHXViewUserViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *idLabel;
 @property (weak, nonatomic) IBOutlet UITextField *username;
@@ -77,26 +77,8 @@
     });
 }
 
--(id<PhoenixIdentity>) phoenixIdentity {
+-(id<PHXIdentityModuleProtocol>) phoenixIdentity {
     return PHXPhoenixManager.phoenix.identity;
-}
-
--(void)searchBarSearchButtonClicked:(nonnull UISearchBar *)searchBar
-{
-    NSInteger userId = [[[NSNumberFormatter alloc] init] numberFromString:searchBar.text].integerValue;
-    [searchBar resignFirstResponder];
-    
-    [[self phoenixIdentity] getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-        if (user)
-        {
-            self.user = user;
-            [self showInformation:@" "];
-        }
-        else
-        {
-            [self showInformation:[NSString stringWithFormat:@"There was an error while getting the user: %@", error]];
-        }
-    }];
 }
 
 - (IBAction)didTapUpdateUser:(id)sender {

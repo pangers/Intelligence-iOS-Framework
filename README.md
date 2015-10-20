@@ -23,7 +23,7 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Phoeni
 
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
 
-### Initialising Phoenix ###
+### Importing SDK ###
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
 
@@ -47,9 +47,49 @@ import PhoenixSDK
 @import PhoenixSDK;
 ```
 
-### Configuration ###
+### Configuration ###
 
-The Phoenix SDK requires a few configuration properties in order to initialize itself. There are a few different ways of creating the configuration:
+In order to configure Phoenix you will need to first login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
+
+You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
+
+![Screen Shot 2015-10-14 at 11.07.33.png](https://bitbucket.org/repo/4z6Eb8/images/2500708198-Screen%20Shot%202015-10-14%20at%2011.07.33.png)
+
+#### Configuration JSON File ####
+
+All of these variables come from the Phoenix Platform and will need to be included in a JSON file bundled with your iOS App:
+
+1. "client_secret" (String): Only provided when you create a New Application, if you do not know this value you will need to get in contact with the Phoenix Platform team.
+3. "client_id" (String): Can be found on your configured Application.
+2. "application_id" (Integer): Can be found on your configured Application.
+4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
+5. "region" (String): "US", "EU", "AU" or "SG"
+6. "company_id" (Integer): Can be obtained from the Dashboard.
+7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
+
+As an example, your configuration file should look something like:
+
+```
+#!JSON
+
+{
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "application_id": 10,
+    "project_id": 20,
+    "region": "EU",
+    "company_id" : 10,
+    "sdk_user_role" : 1000
+}
+
+```
+
+### Initialization ###
+
+The Phoenix SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
+
+
+**There are a few different ways of providing configuration to the SDK:**
 
 1- Initialize Phoenix with a configuration file:
 
@@ -58,12 +98,12 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-            phoenix = try Phoenix(withFile: "PhoenixConfiguration")
-        }
-        catch {
-            // Treat the error with care!
-        }
+do {
+    phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
+}
+catch {
+    // Treat the error with care!
+}
 
 ```
 
@@ -72,15 +112,15 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        Phoenix *phoenix = [[Phoenix alloc] initWithFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self file:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && phoenix != nil);
 
 ```
 
@@ -92,13 +132,13 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-            let configuration = try Phoenix.Configuration(fromFile: "PhoenixConfiguration")
-            phoenix = try Phoenix(withConfiguration: configuration)
-        }
-        catch {
-            // Treat the error with care!
-        }
+do {
+	let configuration = try Phoenix.Configuration(fromFile: "PhoenixConfiguration")
+	phoenix = try Phoenix(withDelegate: self, configuration: configuration)
+}
+catch {
+	// Treat the error with care!
+}
 
 ```
 
@@ -107,16 +147,16 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self configuration:configuration error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && phoenix != nil);
         
 ```
 
@@ -127,27 +167,27 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        let configuration = Phoenix.Configuration()
-        configuration.clientID = "YOUR_CLIENT_ID"
-        configuration.clientSecret = "YOUR_CLIENT_SECRET"
-        configuration.projectID = 123456789
-        configuration.applicationID = 987654321
-        configuration.region = Phoenix.Region.Europe
-        configuration.useGeofences = true
+let configuration = Phoenix.Configuration()
+configuration.clientID = "YOUR_CLIENT_ID"
+configuration.clientSecret = "YOUR_CLIENT_SECRET"
+configuration.projectID = 123456789
+configuration.applicationID = 987654321
+configuration.region = Phoenix.Region.Europe
+configuration.sdk_user_role = 1000
 
 ```
-*Objective-C:**
+*Objective-C:*
 
 ```
 #!objc
 
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] init];
-        configuration.clientID = @"YOUR_CLIENT_ID";
-        configuration.clientSecret = @"YOUR_CLIENT_SECRET";
-        configuration.projectID = 123456789;
-        configuration.applicationID = 987654321;
-        configuration.region = RegionEurope;
-        configuration.useGeofences = YES;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] init];
+configuration.clientID = @"YOUR_CLIENT_ID";
+configuration.clientSecret = @"YOUR_CLIENT_SECRET";
+configuration.projectID = 123456789;
+configuration.applicationID = 987654321;
+configuration.region = RegionEurope;                
+configuration.sdk_user_role = 1000;
         
 
 ```
@@ -161,19 +201,19 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!swift
 
-        do {
-        	// Load from file
-            let configuration = try Phoenix.Configuration(fromFile: "config")
+do {
+	// Load from file
+	let configuration = try Phoenix.Configuration(fromFile: "config")
             
-            // Change region programmatically
-            configuration.region = Phoenix.Region.Europe
+	// Change region programmatically
+	configuration.region = Phoenix.Region.Europe
             
-            // Instantiate with hybrid configuration
-            phoenix = try Phoenix(withConfiguration: configuration)
-        }
-        catch {
-            // Treat the error with care!
-        }
+	// Instantiate with hybrid configuration
+	phoenix = try Phoenix(withDelegate: self, configuration: configuration)
+}
+catch {
+	// Treat the error with care!
+}
 
 ```
 
@@ -182,20 +222,20 @@ The Phoenix SDK requires a few configuration properties in order to initialize i
 ```
 #!objc
 
-        // Attempt to instantiate Phoenix using a JSON file.
-        NSError *err;
-        PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
+// Attempt to instantiate Phoenix using a JSON file.
+NSError *err;
+PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"PhoenixConfiguration" inBundle:[NSBundle mainBundle] error:&err];
         
-        // Change region programmatically
-        configuration.region = RegionEurope;
+// Change region programmatically
+configuration.region = RegionEurope;
         
-        Phoenix *phoenix = [[Phoenix alloc] initWithConfiguration:configuration error:&err];
-        if (nil != err) {
-            // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-            // and generally indicate that something has gone wrong and needs to be resolved.
-            NSLog(@"Error initialising Phoenix: %zd", err.code);
-        }
-        NSParameterAssert(err == nil && instance != nil);
+Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self configuration:configuration error:&err];
+if (nil != err) {
+	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+	// and generally indicate that something has gone wrong and needs to be resolved.
+	NSLog(@"Error initialising Phoenix: %zd", err.code);
+}
+NSParameterAssert(err == nil && phoenix != nil);
         
 
 ```
@@ -205,49 +245,20 @@ Consider that the Phoenix.Configuration can throw exceptions if you haven't conf
 
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
-### Configuration file format ###
-
-The configuration file is a JSON file with the following keys:
-
-1. "client_id" with a String value
-2. "client_secret" with a String value
-3. "application_id" with an Integer value
-4. "project_id" with an Integer value
-5. "region" with a String value which needs to be one of: "US","EU","AU" or "SG"
-6. "use_geofences" a Boolean value which needs to be true or false - this is an optional configuration, if not specified, the default value is true. Setting this value to false means the SDK will not attempt to download existing geofence data and use it to monitor geofences.
-
-As an example, your configuration file will look like:
-
-
-```
-#!JSON
-
-{
-    "client_id": "CLIENT_ID",
-    "client_secret": "CLIENT_SECRET",
-    "application_id": 10,
-    "project_id": 20,
-    "region": "EU",
-    "company_id" : 10,
-    "use_geofences" : true
-}
-
-```
 
 ### Startup ###
 
-Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. An error may occur at any time (usually due to networking) that cannot be handled by the SDK internally and will be surfaced through the error callback. These errors only really serve a purpose for developers to help with debugging.
-
+Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. You will receive a 'success' flag in the completion block, if this returns false, something is probably incorrectly configured. You should receive an error from one of the PhoenixDelegate methods.
 
 *Swift:*
 ```
 #!swift
         
-        // Startup all modules.
-        phoenix?.startup { (error) -> () in       
-            // Handle critical/network error.
-        }
-        
+// Startup all modules.
+phoenix.startup { (success) -> () in               
+	// Startup succeeded if success is true.
+}
+
 ```
 
 *Objective-C:*
@@ -255,17 +266,56 @@ Importantly, the 'startup' method is responsible to bootstrap the SDK, without i
 ```
 #!objc
 
-        // Startup the SDK...
-        [phoenix startupWithCallback:^(NSError *error) {        
-            // Handle critical/network error.
-        }];
+// Startup the SDK...
+[phoenix startup:^(BOOL success) {        
+	// Startup succeeded if success is true.
+}];
         
 ```
+
+### Shutdown ###
+
+When you app is terminated you should call the shutdown method in order for the SDK to do any cleanup and store anything relevant to the next session.
+
+*Swift:*
+```
+#!swift
+
+func applicationWillTerminate(application: UIApplication) {
+	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    PhoenixManager.phoenix.shutdown()
+}
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Shutdown Phoenix in the applicationWillTerminate method so Phoenix has time
+    // to teardown properly.
+    [[PHXPhoenixManager phoenix] shutdown];
+}
+        
+```
+
 
 
 # Phoenix Modules #
 
 The Phoenix SDK is composed of several modules which can be used as necessary by developers to perform specific functions. Each module is described below with sample code where necessary.
+
+Note: Developers are responsible for ensuring the callbacks are executed on the correct thread, i.e. anything related to the UI will need to be dispatched on the main thread.
+
+In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
+
+* RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Phoenix Platform are incorrectly configured. **Developer is responsible to fix these issues.**
+* RequestError.InternetOfflineError: Internet connectivity error, developer will need to wait until device has connected to the internet then try this request again.
+* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
+
+These errors will be wrapped within an NSError using the domain: "RequestError".
 
 
 ## Analytics Module ##
@@ -274,7 +324,9 @@ The analytics module allows developers to effortlessly track several predefined 
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Phoenix.
 
-How to track an Event:
+### Tracking Events ###
+
+**How to track a Custom Event:**
 
 *Swift:*
 Note: there are some optional fields in Swift that default to zero/nil if missing.
@@ -286,7 +338,7 @@ Note: there are some optional fields in Swift that default to zero/nil if missin
 let myTestEvent = Phoenix.Event(withType: "Phoenix.Test.Event.Type")
 
 // Send event to Analytics module
-phoenix?.analytics.track(myTestEvent)
+phoenix.analytics.track(myTestEvent)
 
 ```
 
@@ -302,109 +354,65 @@ PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Phoenix.Test.Event.Type
 
 ```
 
+**How to track a Screen View Event:**
+
+*Swift:*
+
+```
+#!swift
+
+// Duration is in seconds and can include fractional seconds
+phoenix.analytics.trackScreenViewed("Main Screen", viewingDuration: 5)
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+// Duration is in seconds and can include fractional seconds
+[phoenix.analytics trackScreenViewedWithScreenName:@"Main Screen", viewingDuration: 5];
+
+```
+
+
+
+### Pause/Resume Tracking ###
+
+Developers are responsible for calling the **pause** and **resume** methods when the app enters the background and foreground respectively. This will cause unexpected results if these methods are not called and skew the analytics gathered by Phoenix. 
+
+*Swift:*
+```
+#!swift
+
+	func applicationDidEnterBackground(application: UIApplication) {
+        PhoenixManager.phoenix.analytics.pause()
+	}
+
+	func applicationWillEnterForeground(application: UIApplication) {
+        PhoenixManager.phoenix.analytics.resume()
+	}
+```
+
+*Objective-C:*
+```
+#!objc
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] pause];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[[PHXPhoenixManager phoenix] analytics] resume];
+}
+
+```
+
 ## Identity Module ##
 
 This module provides methods for user management within the Phoenix platform. Allowing users to register, login, update, and retrieve information.
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
-
-In addition to the errors specified by each individual method, you may also get one of the following errors if the request fails:
-
-* RequestError.RequestFailedError: Unable to receive a response from the server, could be due to local connection or server issues.
-* RequestError.ParseError: Unable to parse the response of the call.
-
-These errors will be wrapped within an NSError using as domain RequestError.domain.
-
-
-
-#### Create User ####
-
-Register a user on the Phoenix platform.
-
-Calling this method does not also perform a login, it is a two-step process, developers must call the 'login' method afterward if they want to streamline their app experience.
-
-The code to create a user for each language is as follows:
-
-*Swift:*
-
-
-```
-#!swift
-    let user = Phoenix.User(companyId: companyId, username: usernameTxt,password: passwordTxt,
-        firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-        
-    phoenix?.identity.createUser(user, callback: { (user, error) -> Void in
-        // Treat the user and error appropriately. Notice that the callback might be performed
-        // In a background thread. Use dispatch_async to handle it in the main thread.
-    })
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-    PHXUser* user = [[PHXUser alloc] initWithCompanyId:companyID username:username password:password
-        firstName:firstname lastName:lastname avatarURL:avatarURL];
-
-    [phoenix.identity createUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
-        // Treat the user and error appropriately. Notice that the callback might be performed
-        // In a background thread. Use dispatch_async to handle it in the main thread.
-    }];
-
-```
-
-The 'createUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserCreationError : When there is an error while creating the user in the platform. This contains network errors and possible errors generated in the backend.
-* IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
-
-#### Get User ####
-
-Request the user information for a particular userId.
-
-The following code snippets illustrate how to request a user's information in Objective-C and Swift.
-
-*Swift:*
-
-
-```
-#!swift
-
-// Get the user via it's id
-phoenix?.identity.getUser(userId) { (user, error) -> Void in
-    // Get the user and treat the error
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-// Get the user via it's id
-[phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-    // Get the user and treat the error
-}];
-
-
-```
-
-The 'getUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the request can't be created with the provided user data (i.e. wrong userId, or authentication tokens).
-* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
-
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
-
-
 
 #### Login ####
 
@@ -415,7 +423,8 @@ If you have a registered account on the Phoenix platform you will be able to log
 #!swift
 
 phoenix.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-print("Logged in as: \(user)")
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 })
 
 ```
@@ -426,17 +435,15 @@ print("Logged in as: \(user)")
 #!objc
 
 [phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-NSLog(@"Logged in as: %@", user);
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 ```
 
 The 'login' method can return the following additional errors:
 
-* RequestError.AuthenticationFailedError: There was an issue that occurred during login, could be due to incorrect credentials.
-
-This error will be wrapped within an NSError using as domain RequestError.domain.
-
+* IdentityError.LoginFailed: There was an issue that occurred during login, could be due to incorrect credentials.
 
 
 #### Logout ####
@@ -462,6 +469,45 @@ phoenix.identity.logout()
 
 
 
+
+#### Get Me ####
+
+Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.
+
+The following code snippets illustrate how to request a user's information in Objective-C and Swift.
+
+*Swift:*
+
+
+```
+#!swift
+
+phoenix.identity.getMe { (user, error) -> Void in
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+[phoenix getMeWithCallback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+
+```
+
+The 'getMe' method can return the following additional errors:
+
+* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
+
+
 #### Update User ####
 
 The code to update a user for each language is as follows:
@@ -474,9 +520,9 @@ The code to update a user for each language is as follows:
 let user = Phoenix.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
 firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
 
-phoenix?.identity.updateUser(user, callback: { (user, error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// In a background thread. Use dispatch_async to handle it in the main thread.
+phoenix.identity.updateUser(user, callback: { (user, error) -> Void in
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 })
 ```
 
@@ -489,8 +535,8 @@ PHXUser* user = [[PHXUser alloc] initWithUserId:userID companyId:companyID usern
 firstName:firstname lastName:lastname avatarURL:avatarURL];
 
 [phoenix.identity updateUser:user callback:^(id<PHXUser> _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// In a background thread. Use dispatch_async to handle it in the main thread.
+	// Treat the user and error appropriately. Notice that the callback might be performed
+	// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 ```
@@ -501,29 +547,146 @@ The 'updateUser' method can return the following additional errors:
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
-These errors will be wrapped within an NSError using as domain IdentityError.domain.
+#### Register Device Token ####
+
+As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token, since you would not want to send it multiple times.
+
+An example of how to request the push notification token from Apple:
+```
+#!swift
+
+let application = UIApplication.sharedApplication()
+application.registerForRemoteNotifications()
+application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+
+```
+
+Here is an example of how to respond to the delegate method 'didRegisterForRemoteNotificationsWithDeviceToken':
+
+*Swift:*
+```
+#!swift
 
 
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+            if error != nil {
+                // Failed, handle error.
+            } else {
+				// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+            }
+        }
+    }
+
+```
+
+*Objective-C:*
+```
+#!objc
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[[PHXPhoenixManager phoenix] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+        if (error != nil) {
+            // Failed, handle error.
+        } else {
+		    // Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+        }
+    }];
+}
+
+
+```
+
+The 'registerDeviceToken' method can return the following additional errors:
+
+* IdentityError.DeviceTokenInvalidError: Invalid device token provided.
+* IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform. This may occur if you register the same token twice.
+
+
+#### Unregister Device Token ####
+
+The developer is responsible for unregistering device tokens, they can only be assigned to one user at a time, so if you forget to unregister from the previous user you will continue receiving push notifications meant for another user. In order to unregister you will need to store the tokenId returned by the 'registerDeviceToken' method then send this before logging out. If your app does not implement the login/logout functionality you will most likely never need to call this method.
+
+*Swift:*
+```
+#!swift
+
+PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
+    if error != nil {
+        // Failed, handle error.
+    } else {
+        // Successfully unregistered, clear anything stored in the keychain.
+    }
+})
+
+```
+
+*Objective-C:*
+```
+#!objc
+
+[[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+    if (error != nil) {
+        // Failed, handle error.
+    } else {
+        // Successfully unregistered, clear anything stored in the keychain.
+    }
+}];
+
+```
+
+The 'unregisterDeviceTokenWithId' method can return the follow additional errors:
+
+* IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Phoenix platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
+* IdentityError.DeviceTokenUnregistrationError: Unable to unregister token in Phoenix platform.
 
 ## Location Module ##
 
 The location module is responsible for managing a user's location in order to track entering/exiting geofences and add this information to analytics events. 
 
-Developers can disable geofences by setting 'use_geofences' to false in the Configuration file, however if they still want to include user's location in analytics they will still need to request permission for the users location.
-
 Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
 
-Furthermore, you will need to manage the request for permissions by implementing the following code:
+Developers are responsible to decide when is the most suitable time to start fetching geofences and monitoring the user, and also will need to request location permissions in order to be able to track the user's location by either adding the *NSLocationAlwaysUsageDescription* or the *NSLocationWhenInUseUsageDescription* to the Info.plist of their app. You can find documentation on those keys in [Info Plist Key Reference](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18).
+
+In order to obtain permissions to track the user's location, follow Apple's documentation in:
+
+[CLLocationManager Class Reference](https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/#//apple_ref/doc/uid/TP40007125-CH3-SW62)
+
+The location module is available via the location property in the Phoenix object.
+
+### Download Geofences ###
+
+The first step before tracking a user is to obtain a list of Geofences created in the Phoenix Dashboard.
+
+To do so, you'll have to provide a GeofenceQuery object defining how you want to retrieve the geofences. The query can take the following parameters:
+
+* **longitude: Double**. The latitude to calculate the distance from. Must be provided.
+    
+* **latitude: Double**. The longitude to calculate the distance to. Must be provided.
+    
+* **sortingDirection: GeofenceSortDirection**. Ascending or Descending. **Defaults to Ascending**
+    
+* **sortingCriteria: GeofenceSortCriteria?**. Sets how the geofences should be sorted. The available options are Distance, Id and Name. **Defaults to Distance**
+    
+* **radius: Double?**. The radius to filter geofences from.
+    
+* **pageSize: Int?**. The number of geofences per page loaded.
+    
+* **pageNumber: Int?**. The page to load.
+
+The next sample code shows how to initialize a sample query:
 
 *Swift:*
 
 ```
 #!swift
 
-    // Request location access.
-    if CLLocationManager.authorizationStatus() != .AuthorizedAlways {
-        locationManager.requestAlwaysAuthorization()
-    }
+let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 42, longitude: 2))
+query.radius = 1000
+query.pageSize = 10
+query.pageNumber = 0
+query.sortingDirection = .Ascending
+query.sortingCriteria = .Distance
 
 ```
 
@@ -532,10 +695,190 @@ Furthermore, you will need to manage the request for permissions by implementing
 ```
 #!objc
 
-    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
-        [self.locationManager requestAlwaysAuthorization];
-    }
+PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:42
+                                                          longitude:2];
+
+PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate];
+[query setRadius:1000];
+[query setPage:1];
+[query setPageSize:10];
+[query setSortingDirection:GeofenceSortDirectionAscending];
+[query setSortingCriteria:GeofenceSortCriteriaDistance];
 
 ```
 
+Once the Geofence query is created and configured, you can retrieve the geofences you need by using the following snippet:
 
+*Swift:*
+
+```
+#!swift
+let phoenix:Phoenix = ...
+phoenix.location.downloadGeofences(geofenceQuery) { (geofences, error) in
+    // Geofences loaded!
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+Phoenix* phoenix = ...;
+[phoenix.location downloadGeofences:query callback:^(NSArray<PHXGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
+     // Geofences loaded!
+    
+}];
+
+```
+
+The 'downloadGeofences' method can return the following additional errors:
+* LocationError.DownloadGeofencesError: An error occurred while downloading geofences.
+
+
+### Start/Stop Monitoring Geofences ###
+
+Once you have Geofences you could start tracking the user's location and be notified of when a user enters or exits a given Geofence.
+
+When tracking a user's location, you have to keep in mind:
+
+* Privacy concerns.
+* Battery usage.
+* What value the user will receive when sacrificing the previous two.
+* When to stop tracking the user's location.
+
+The Phoenix SDK **won't** perform any tracking by default, since the developer is responsible to decide when is the best time to track the user for the user's benefit. For some apps, this will mean immediately after launching the app until it gets killed, for others it will be only when the user is performing a given action.
+
+Once all this is considered, and it has been decided when to start and stop tracking the user's location, you can start and stop the tracking by using the following code snippets:
+
+*Swift:*
+
+```
+#!swift
+
+// Start monitoring
+let geofences:[Geofence] = ...
+
+phoenix.location.startMonitoringGeofences(geofences)
+
+...
+
+// Stop monitoring
+phoenix.location.stopMonitoringGeofences()
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+// Start monitoring
+NSArray<PHXGeofence*>* geofences = ...;
+[phoenix.location startMonitoringGeofences:geofences];
+
+...
+
+// Stop monitoring
+[phoenix.location stopMonitoringGeofences];
+
+```
+
+Notice that when you start monitoring a given set of geofences, you'll stop monitoring the previous monitored geofences. Also, bear in mind that iOS has a limit of simultaneous geofences that you can be tracking at a time (20). If your app requires the use of several geofences, consider downloading more geofences when the user's location changes or every once in a while. However, this techniques come at an expense of battery and data draining for the user.
+
+#### Listen for Location Events ####
+
+Given that you have started monitoring the use location, your app will probably want to be aware of when a user enters or leaves a geofence.
+
+The location module provides a locationDelegate so you can be notified of events. The following snippet displays an example implementation and how to set your object as delegate. All methods in the PhoenixLocationDelegate protocol are optional, and thus you may only implement those that you need.
+
+*Swift:*
+
+```
+#!swift
+
+phoenix.location.locationDelegate = self
+        
+func phoenixLocation(location:PhoenixLocation, didEnterGeofence geofence:Geofence) {
+	print("Did enter a geofence")
+}
+
+func phoenixLocation(location:PhoenixLocation, didExitGeofence geofence:Geofence) {
+	print("Did exit a geofence")
+}
+    
+func phoenixLocation(location:PhoenixLocation, didStartMonitoringGeofence:Geofence) {
+	print("Did start monitoring a given geofence")
+}
+
+func phoenixLocation(location:PhoenixLocation, didFailMonitoringGeofence:Geofence) {
+	print("Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.")
+}
+
+func phoenixLocation(location:PhoenixLocation, didStopMonitoringGeofence:Geofence) {
+	print("Did stop monitoring a geofence")
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+phoenix.location.locationDelegate = self;
+
+-(void)phoenixLocation:(id<PHXLocation>)location didEnterGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did enter a geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didExitGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did exit a geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didStartMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did start monitoring a given geofence");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didFailMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.");
+}
+
+-(void)phoenixLocation:(id<PHXLocation>)location didStopMonitoringGeofence:(PHXGeofence *)geofence {
+	NSLog(@"Did stop monitoring a geofence");
+}
+
+```
+
+#### Configuring Monitoring Accuracy ####
+
+Getting the user location is one of the most battery consuming action a mobile phone can perform. This can be alleviated by reducing the accuracy you use when getting the user position. This comes at the expense of missing some events or having false positives.
+
+When considering the accuracy to use, you have to consider what kind of regions are you working with. If your geofences represent a big region (a city, a country, 10km...) then you'll probably be fine with a lower accuracy.
+
+If, however, your geofences represent a small region (a street, a shop, 100m...) then you'll need to increase the accuracy in order to get a granular enough location to allow CoreLocation to detect the user entered the region.
+
+As a final note, consider checking the minimum radius of the geofences you are about to monitor and to set the location accuracy based on that.
+
+*Swift:*
+
+```
+#!swift
+
+phoenix.location.setLocationAccuracy(kCLLocationAccuracyBest)
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+[phoenix.location setLocationAccuracy:kCLLocationAccuracyBest];
+
+```

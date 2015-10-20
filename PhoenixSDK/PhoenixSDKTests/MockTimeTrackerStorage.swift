@@ -1,0 +1,27 @@
+//
+//  MockTimeTrackerStorage.swift
+//  PhoenixSDK
+//
+//  Created by Chris Nevin on 13/10/2015.
+//  Copyright © 2015 Tigerspike. All rights reserved.
+//
+
+import Foundation
+
+@testable import PhoenixSDK
+
+class MockTimeTrackerStorage: TimeTrackerStorageProtocol {
+    var duration: UInt64?
+    
+    func reset() {
+        duration = nil
+    }
+    
+    func update(seconds: UInt64) {
+        duration = seconds
+    }
+    
+    func seconds() -> UInt64? {
+        return duration
+    }
+}

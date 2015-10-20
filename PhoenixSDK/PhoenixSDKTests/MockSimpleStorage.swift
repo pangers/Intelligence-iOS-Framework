@@ -10,13 +10,14 @@ import Foundation
 
 @testable import PhoenixSDK
 
-class MockSimpleStorage: PhoenixSDK.TokenStorage {
+class MockSimpleStorage: PhoenixOAuthStorage {
     
-    private var storage:[String:AnyObject] = [:]
+    private var storage: [String: AnyObject?] = [:]
     
     @objc subscript(index: String) -> AnyObject? {
         get {
-            return storage[index]
+            guard let obj = storage[index] else { return nil }
+            return obj
         }
         set {
             storage[index] = newValue

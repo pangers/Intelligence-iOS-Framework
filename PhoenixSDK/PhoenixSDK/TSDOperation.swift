@@ -14,12 +14,12 @@ internal class TSDOperation <TInput, TOutput> : NSOperation {
     
     /// The input can be set from the caller. When running, the
     /// main method of the operation should read it.
-    var input:TInput?
+    var input: TInput?
     
     /// the output is only set by the class itself once it finishes.
-    internal(set) var output:TOutput?
+    internal(set) var output: TOutput?
     
     /// The error will be set by the operation if an error did occur.
-    internal(set) var error:NSError?
+    //internal(set) var error: NSError?
     
 }

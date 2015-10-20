@@ -10,7 +10,7 @@ import XCTest
 
 @testable import PhoenixSDK
 
-class PhoenixURLRequestTestCase: XCTestCase {
+class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
     
     func testCreateUserRequest() {
         let companyId = 1
@@ -22,9 +22,10 @@ class PhoenixURLRequestTestCase: XCTestCase {
         
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let user = Phoenix.User(companyId: companyId, username: username, password: password, firstName: firstname, lastName: lastname, avatarURL: avatarURL)
-        let request = NSURLRequest.phx_URLRequestForCreateUser(user, configuration: MockConfiguration())
-
-        XCTAssertEqual(request.URL!.absoluteString, "https://api.phoenixplatform.eu/identity/v1/projects/123/users")
+        
+        let request = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
+        
+        XCTAssertEqual(request.URL!.absoluteString, "\(mockConfiguration.region.baseURL())/identity/v1/projects/\(mockConfiguration.projectID)/users")
         
         guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")

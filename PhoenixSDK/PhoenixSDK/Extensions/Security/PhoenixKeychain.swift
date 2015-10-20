@@ -8,10 +8,10 @@
 
 import Foundation
 
-internal final class PhoenixKeychain: TSDKeychain, TokenStorage {
+internal final class PhoenixKeychain: TSDKeychain, PhoenixOAuthStorage {
     
-    init() {
-        super.init("PhoenixSDK", service: "com.tigerspike.PhoenixSDK")
+    init(account: String = "PhoenixSDK") {
+        super.init(account, service: "com.tigerspike.PhoenixSDK")
     }
     
     private func keyValues() -> NSMutableDictionary {
@@ -33,10 +33,6 @@ internal final class PhoenixKeychain: TSDKeychain, TokenStorage {
         let values = keyValues()
         values.removeObjectForKey(key)
         executeManagedRequest(.Update, keyValues: values)
-    }
-    
-    private func erase() {
-        executeManagedRequest(.Delete)
     }
     
     // Subscript implementation

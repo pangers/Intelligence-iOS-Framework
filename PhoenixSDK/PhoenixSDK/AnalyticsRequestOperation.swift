@@ -8,43 +8,49 @@
 
 import Foundation
 
-/// Success will be true if no errors are received and the expected amount of items in the 'Data' array is valid.
-internal typealias AnalyticsCallback = (error: NSError?) -> Void
-
 /// NSOperation that handles sending analytics.
-internal final class AnalyticsRequestOperation: PhoenixNetworkRequestOperation {
+internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying {
     
-    /// Callback to trigger on completion.
-    private let callback: AnalyticsCallback
+    private let eventsJSON: JSONDictionaryArray
     
-    /// Number of events included in this request.
-    private let eventCount: Int
+    private let InvalidRequestErrorCode = "invalid_request"
     
-    /// Default initializer. Requires a network and configuration class.
-    /// - parameter network:       Networking instance that manages queueing/sending of this operation.
-    /// - parameter configuration: Configuration instance used for setting up the request.
-    /// - parameter eventsJSON:    Body of the request.
-    /// - returns: Instance of Analytics Request Operation.
-    init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration, eventsJSON: JSONDictionaryArray, callback: AnalyticsCallback) {
-        assert(eventsJSON.count > 0)
+    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+        self.eventsJSON = json
+        super.init()
         self.callback = callback
-        eventCount = eventsJSON.count
-        let request = NSURLRequest.phx_URLRequestForAnalytics(configuration, json: eventsJSON)
-        super.init(withNetwork: network, request: request)
+        self.configuration = configuration
+        self.oauth = oauth
+        self.network = network
     }
     
     override func main() {
         super.main()
-        defer {
-            self.callback(error: error)
+        assert(network != nil && configuration != nil)
+        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
+        output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        
+        // Swallowing the invalid request so that the events sent are cleared.
+        // This error is not recoverable and we need to purge the data.
+        if let httpResponse = output?.response as? NSHTTPURLResponse {
+            if httpResponse.statusCode == 400 && outputErrorCode() == InvalidRequestErrorCode {
+                output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.OldEventsError.rawValue, userInfo: nil)
+                return
+            }
         }
-        if error != nil {
-            error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+
+        if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
             return
         }
-        if getDataArray()?.count != eventCount {
-            self.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+        
+        if outputArray()?.count != eventsJSON.count {
+            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            return
         }
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
     }
     
 }

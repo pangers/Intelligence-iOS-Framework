@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal protocol PhoenixInstallationStorageProtocol {
+internal protocol InstallationStorageProtocol {
     /// - Returns: Stored application version or nil.
     var phx_applicationVersion: String? {get}
     /// Store current app version.
@@ -33,11 +33,11 @@ internal protocol PhoenixInstallationStorageProtocol {
 }
 
 private let phoenixAppVersionKey = "PhoenixAppVersion"
-private let phoenixInstallationIDKey = "PhoenixInstallationID"
-private let phoenixInstallationCreateDateKey = "PhoenixInstallationCreateDate"
-private let phoenixInstallationRequestIDKey = "PhoenixInstallationRequestID"
+private let phoenixInstallationIDKey = "InstallationID"
+private let phoenixInstallationCreateDateKey = "InstallationCreateDate"
+private let phoenixInstallationRequestIDKey = "InstallationRequestID"
 
-extension NSUserDefaults: PhoenixInstallationStorageProtocol {
+extension NSUserDefaults: InstallationStorageProtocol {
     
     // MARK:- App Version
     var phx_applicationVersion: String? {

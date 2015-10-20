@@ -91,6 +91,28 @@ public extension Phoenix {
             self.avatarURL = avatarURL
         }
         
+        /// Convenience initializer to create a user with random details, intended to be used for the SDK user account
+        convenience public init(companyId:Int) {
+            let username = NSUUID().UUIDString
+            
+            let uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
+            let numbers = "0123456789"
+            
+            func selectRandomLetter(str: String) -> Character {
+                return str[Int(arc4random_uniform(UInt32(str.characters.count)))]
+            }
+            
+            let range = (0..<3)
+            let password = String(Array([
+                range.map({ _ in selectRandomLetter(uppercaseLetters) }),
+                range.map({ _ in selectRandomLetter(lowercaseLetters) }),
+                range.map({ _ in selectRandomLetter(numbers) })
+                ].flatten()).shuffle())
+            
+            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
+        }
+        
         /// Convenience initializer with no user id.
         convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
             self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
@@ -102,10 +124,11 @@ public extension Phoenix {
         /// - Parameters:
         ///     - withJSON: The json dictionary as obtained from the backend.
         ///     - configuration: The configuration that holds the company Id.
-        convenience internal init?(withJSON json:JSONDictionary, configuration:Phoenix.Configuration) {
-            guard let userId = json[idKey] as? Int,
-            let username = json[usernameKey] as? String,
-            let firstName = json[firstNameKey] as? String else {
+        convenience internal init?(withJSON json: JSONDictionary?, configuration: Phoenix.Configuration) {
+            guard let json = json,
+                userId = json[idKey] as? Int,
+                username = json[usernameKey] as? String,
+                firstName = json[firstNameKey] as? String else {
                     return nil
             }
             let lastName = json[lastNameKey] as? String

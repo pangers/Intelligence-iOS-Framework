@@ -16,7 +16,7 @@ private enum ConfigurationKey: String {
     case ProjectID = "project_id"
     case Region = "region"
     case CompanyId = "company_id"
-    case UseGeofences = "use_geofences"
+    case SDKUserRole = "sdk_user_role"
 }
 
 public extension Phoenix {
@@ -25,10 +25,7 @@ public extension Phoenix {
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Phoenix SDK.
     @objc(PHXConfiguration) public class Configuration: NSObject {
-        
-        /// Flag specifying whether or not to download geofences on launch.
-        public var useGeofences = true
-        
+
         /// The client ID
         public var clientID = ""
         
@@ -43,6 +40,9 @@ public extension Phoenix {
         
         /// The application ID
         public var applicationID = 0
+        
+        /// The role ID to assign to users the SDK creates
+        public var sdkUserRole = 0
         
         /// The region
         public var region:Region
@@ -78,13 +78,13 @@ public extension Phoenix {
         /// - Returns: A copy of the configuration object.
         public func clone() -> Configuration {
             let copy = Configuration()
-            copy.useGeofences = self.useGeofences
             copy.region = self.region
             copy.applicationID = self.applicationID
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
             copy.companyId = companyId
+            copy.sdkUserRole = sdkUserRole
             return copy
         }
         
@@ -115,18 +115,13 @@ public extension Phoenix {
             }
             
             // Fetch from the contents dictionary
-            do {
-                self.useGeofences = try value(forKey: .UseGeofences, inContents: contents)
-            }
-            catch {
-                self.useGeofences = true
-            }
             self.clientID = try value(forKey: .ClientID, inContents:contents)
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
+            self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
         }
         
         /// - Returns: True if the configuration is correct and can be used to initialize
@@ -139,7 +134,7 @@ public extension Phoenix {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == .NoRegion || companyId <= 0
+                applicationID <= 0 || region == .NoRegion || companyId <= 0 || sdkUserRole <= 0
         }
         
         /// - Returns: Optional base URL to call.

@@ -9,35 +9,39 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
-internal final class DownloadGeofencesRequestOperation: PhoenixNetworkRequestOperation {
+internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, NSCopying {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
-    
-    /// Default initializer. Requires a network and configuration class.
-    /// - Parameters:
-    ///     - network: The network that will be used.
-    ///     - configuration: The configuration class to use.
-    init(withNetwork network: Phoenix.Network, configuration: Phoenix.Configuration) {
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(configuration)
-        geofences = []
-        super.init(withNetwork: network, request: request)
+    let queryDetails: GeofenceQuery
+
+    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery, callback: PhoenixOAuthCallback) {
+        queryDetails = query
+        super.init()
+        self.callback = callback
+        self.oauth = oauth
+        self.configuration = configuration
+        self.network = network
     }
     
     override func main() {
         super.main()
-        if error != nil {
-            error = NSError(domain: RequestError.domain, code: RequestError.RequestFailedError.rawValue, userInfo: nil)
+        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!, query:queryDetails)
+        output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        
+        if handleError(LocationError.domain, code: LocationError.DownloadGeofencesError.rawValue) {
             return
         }
-        do {
-            if let dictionary = output?.data?.phx_jsonDictionary {
-                geofences = try Geofence.geofences(withJSON: dictionary)
-            }
-        } catch _ { // Suppress default 'error' let, so we can use our instance variable.
-            error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+        
+        guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.phx_jsonDictionary) else {
+            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
             return
         }
+        
+        geofences = downloaded
     }
     
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails, callback: callback!)
+    }
 }
