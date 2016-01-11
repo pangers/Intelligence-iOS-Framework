@@ -681,7 +681,7 @@ The next sample code shows how to initialize a sample query:
 ```
 #!swift
 
-let query = GeofenceQuery(location: PhoenixCoordinate(withLatitude: 42, longitude: 2))
+let query = GeofenceQuery(location: Coordinate(withLatitude: 42, longitude: 2))
 query.radius = 1000
 query.pageSize = 10
 query.pageNumber = 0
