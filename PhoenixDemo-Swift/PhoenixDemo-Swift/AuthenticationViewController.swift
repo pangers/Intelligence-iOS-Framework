@@ -143,7 +143,9 @@ class AuthenticationViewController: UITableViewController {
                     self?.dynamicType.loggedInUser = user
                     
                     NSOperationQueue.mainQueue().addOperationWithBlock() { [weak self] in
-                        self?.performSegueWithIdentifier(ViewUserSegue, sender: self)
+                        if let identifier = self?.ViewUserSegue {
+                            self?.performSegueWithIdentifier(identifier, sender: self)
+                        }
                     }
                 }
             })
