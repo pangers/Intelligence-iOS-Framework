@@ -4,6 +4,7 @@
     "application_id": 3152,
     "project_id": 2030,
     "region": "EU",
+    "enviroment": "production",
     "company_id" : 3,
     "sdk_user_role": 1008
 }

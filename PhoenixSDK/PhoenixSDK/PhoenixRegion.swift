@@ -30,19 +30,19 @@ public extension Phoenix {
         case NoRegion
         
         /// Asserts that it won't be called on .NoRegion.
-        /// - Returns: String to the base url to use (including protocol).
-        public func baseURL() -> String {
+        /// - Returns: domain as a String.
+        public func urlDomain() throws -> String {
             switch (self) {
             case .UnitedStates:
-                return "https://api.phoenixplatform.com"
+                return ".com"
             case .Australia:
-                return "https://api.phoenixplatform.com.au"
+                return ".com.au"
             case .Europe:
-                return "https://api.phoenixplatform.eu"
+                return ".eu"
             case .Singapore:
-                return "https://api.phoenixplatform.com.sg"
+                return ".com.sg"
             default:
-                assertionFailure("No base URL for no region")
+                assertionFailure("No domain for no region")
                 return ""
             }
         }

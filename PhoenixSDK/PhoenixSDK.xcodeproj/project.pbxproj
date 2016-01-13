@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		455D85E81BC2B39F00A64B96 /* ScreenViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		45500F5F1C467D240042B857 /* PhoenixEnviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45500F5E1C467D240042B857 /* PhoenixEnviroment.swift */; };
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
 		BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0A238B1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift */; };
@@ -144,6 +145,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		45500F5E1C467D240042B857 /* PhoenixEnviroment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEnviroment.swift; sourceTree = "<group>"; };
 		455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedEvent.swift; sourceTree = "<group>"; };
 		A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhoenixSDK.h; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 			children = (
 				BBC0DFE41B5E30DD0077E39A /* PhoenixConfiguration.swift */,
 				FE22F8891B5FF4A700711EBF /* PhoenixRegion.swift */,
+				45500F5E1C467D240042B857 /* PhoenixEnviroment.swift */,
 			);
 			name = Configuration;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				BBC46D5B1B6F78D000C8E418 /* IdentityModule.swift in Sources */,
 				FE18F91F1B84B23D00DCF2EF /* OpenApplicationEvent.swift in Sources */,
 				FEDE077F1B735692009BC6B6 /* DownloadGeofencesRequestOperation.swift in Sources */,
+				45500F5F1C467D240042B857 /* PhoenixEnviroment.swift in Sources */,
 				FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */,
 				FEAFBC9D1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift in Sources */,
 				FEB4714C1BBD708000640CD7 /* NSURL+Phoenix.swift in Sources */,
