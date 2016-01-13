@@ -149,15 +149,22 @@ public extension Phoenix {
         
         /// - Returns: Optional base URL to call.
         var baseURL: NSURL? {
-            do {
-                let enviroment = try self.enviroment.urlEnviroment()
-                let domain = try self.region.urlDomain()
-                
-                return NSURL(string: "https://api.\(enviroment).phoenixplatform\(domain)")
+            guard let enviroment = self.enviroment.urlEnviroment(),
+                let domain = self.region.urlDomain() else {
+                   return nil
             }
-            catch {
-                return nil
+            
+            
+            var url = "https://api."
+            
+            if (enviroment.characters.count > 0) {
+                url += "\(enviroment)."
             }
+            
+            // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)
+            url += "phoenixplatform\(domain)"
+            
+            return NSURL(string: url)
         }
     }
 }

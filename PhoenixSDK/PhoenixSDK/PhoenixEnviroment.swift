@@ -23,17 +23,15 @@ public extension Phoenix {
         /// when calling baseURL.
         case NoEnviroment
         
-        /// Asserts that it won't be called on .NoEnviroment.
-        /// - Returns: enviroment as a String
-        public func urlEnviroment() throws -> String {
+        /// - Returns: enviroment as a String, or nil if .NoEnviroment
+        public func urlEnviroment() -> String? {
             switch (self) {
             case .UAT:
                 return "uat"
             case .Production:
                 return ""
             default:
-                assertionFailure("No ennviroment")
-                return ""
+                return nil
             }
         }
         

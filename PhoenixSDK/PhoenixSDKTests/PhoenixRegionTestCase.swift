@@ -13,23 +13,23 @@ import XCTest
 class PhoenixRegionTestCase: PhoenixBaseTestCase {
         
     func testPSDK21Case1() {
-        XCTAssert(Phoenix.Region.UnitedStates.baseURL() == "https://api.phoenixplatform.com",
-            "United states url does not point to https://api.phoenixplatform.com")
+        XCTAssert(Phoenix.Region.UnitedStates.urlDomain() == ".com",
+            "United States domain is not .com")
     }
     
     func testPSDK21Case2() {
-        XCTAssert(Phoenix.Region.Europe.baseURL() == "https://api.phoenixplatform.eu",
-            "Europe url does not point to https://api.phoenixplatform.eu")
+        XCTAssert(Phoenix.Region.Europe.urlDomain() == ".eu",
+            "Europe domain is not .eu")
     }
     
     func testPSDK21Case3() {
-        XCTAssert(Phoenix.Region.Singapore.baseURL() == "https://api.phoenixplatform.com.sg",
-            "Singapore url does not point to https://api.phoenixplatform.com.sg")
+        XCTAssert(Phoenix.Region.Singapore.urlDomain() == ".com.sg",
+            "Singapore domain is not .com.sg")
     }
     
     func testPSDK21Case4() {
-        XCTAssert(Phoenix.Region.Australia.baseURL() == "https://api.phoenixplatform.com.au",
-            "Australia url does not point to https://api.phoenixplatform.com.au")
+        XCTAssert(Phoenix.Region.Australia.urlDomain() == ".com.au",
+            "Australia  domain is not .com.au")
     }
     
     func testRegionFromString() {
@@ -48,16 +48,16 @@ class PhoenixRegionTestCase: PhoenixBaseTestCase {
 
     }
     
-    func testRegionBaseURL(){
+    func testRegionDomain(){
         let correctAssignments:[Phoenix.Region: String] = [
-            .UnitedStates   : "https://api.phoenixplatform.com",
-            .Australia      : "https://api.phoenixplatform.com.au",
-            .Europe         : "https://api.phoenixplatform.eu",
-            .Singapore      : "https://api.phoenixplatform.com.sg"
+            .UnitedStates   : ".com",
+            .Australia      : ".com.au",
+            .Europe         : ".eu",
+            .Singapore      : ".com.sg"
         ]
         
         for (region, value) in correctAssignments {
-            XCTAssert(region.baseURL() == value, "Incorrect url value from region \(region)")
+            XCTAssert(region.urlDomain() == value, "Incorrect domain value from region \(region)")
         }
     }
     

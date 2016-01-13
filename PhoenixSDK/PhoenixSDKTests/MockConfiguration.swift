@@ -23,12 +23,14 @@ public class MockConfiguration: Phoenix.Configuration {
         self.applicationID = 123
         self.companyId = 12
         self.region = .Europe
+        self.enviroment = .UAT
     }
     
     /// - Returns: A copy of the configuration object.
     override public func clone() -> MockConfiguration {
         let copy = MockConfiguration()
         copy.region = self.region
+        copy.enviroment = self.enviroment
         copy.applicationID = self.applicationID
         copy.projectID = self.projectID
         copy.clientID = String(self.clientID)

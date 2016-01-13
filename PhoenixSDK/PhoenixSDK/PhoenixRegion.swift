@@ -29,9 +29,8 @@ public extension Phoenix {
         /// when calling baseURL.
         case NoRegion
         
-        /// Asserts that it won't be called on .NoRegion.
-        /// - Returns: domain as a String.
-        public func urlDomain() throws -> String {
+        /// - Returns: domain as a String, or nil if .NoRegion
+        public func urlDomain() -> String? {
             switch (self) {
             case .UnitedStates:
                 return ".com"
@@ -42,8 +41,7 @@ public extension Phoenix {
             case .Singapore:
                 return ".com.sg"
             default:
-                assertionFailure("No domain for no region")
-                return ""
+                return nil
             }
         }
         
