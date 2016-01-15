@@ -67,6 +67,14 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/assignrole")
     }
     
+    /// - Returns: NSURL with appended providers path.
+    func phx_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
+        if let providerId = providerId {
+            return URLByAppendingPathComponent("/providers/\(providerId)")
+        }
+        return URLByAppendingPathComponent("/providers")
+    }
+    
     /// - Returns: NSURL with appended companies path.
     func phx_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
         if let companyID = companyID {

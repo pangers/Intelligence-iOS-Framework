@@ -129,6 +129,7 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
+            .phx_URLByAppendingProviders(configuration.providerId)
             .phx_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
         

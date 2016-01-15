@@ -41,6 +41,9 @@ public extension Phoenix {
         /// The client secret
         public var clientSecret = ""
 
+        /// The provider Id
+        public let providerId = 300
+        
         /// The company Id
         public var companyId = 0
 
