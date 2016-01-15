@@ -160,17 +160,17 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     func testEmptyBaseUrlIfNoRegion(){
         let config = MockConfiguration()
         config.region = .NoRegion
-        XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
+        XCTAssert(config.baseURL(forModule: .NoModule) == nil, "The mock configuration with no region returned an unexpected base url")
     }
     
     func testEmptyBaseUrlIfNoEnviroment(){
         let config = MockConfiguration()
         config.enviroment = .NoEnviroment
-        XCTAssert(config.baseURL == nil, "The mock configuration with no enviroment returned an unexpected base url")
+        XCTAssert(config.baseURL(forModule: .NoModule) == nil, "The mock configuration with no enviroment returned an unexpected base url")
     }
     
     func testBaseUrl(){
         let config = MockConfiguration()
-        XCTAssertEqual(config.baseURL, NSURL(string: "https://api.uat.phoenixplatform.eu"), "The baseURL is not correct")
+        XCTAssertEqual(config.baseURL(forModule: .NoModule), NSURL(string: "https://api.uat.phoenixplatform.eu"), "The baseURL is not correct")
     }
 }

@@ -20,6 +20,14 @@ private enum ConfigurationKey: String {
     case SDKUserRole = "sdk_user_role"
 }
 
+enum Module : String {
+    case NoModule = ""
+    case Authentication = "authentication"
+    case Identity = "identity"
+    case Analytics = "analytics"
+    case Location = "location"
+}
+
 public extension Phoenix {
     
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
@@ -147,15 +155,41 @@ public extension Phoenix {
                 applicationID <= 0 || region == .NoRegion || enviroment == .NoEnviroment || companyId <= 0 || sdkUserRole <= 0
         }
         
+        /// - Returns: Optional base URL for the authentication module.
+        func authenticationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Authentication)
+        }
+        
+        /// - Returns: Optional base URL for the identity module.
+        func identityBaseURL() -> NSURL? {
+            return baseURL(forModule: .Identity)
+        }
+        
+        /// - Returns: Optional base URL for the anayltics module.
+        func analyticsBaseURL() -> NSURL? {
+            return baseURL(forModule: .Analytics)
+        }
+        
+        /// - Returns: Optional base URL for the location module.
+        func locationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Location)
+        }
+        
         /// - Returns: Optional base URL to call.
-        var baseURL: NSURL? {
+        func baseURL(forModule module: Module) -> NSURL? {
             guard let enviroment = self.enviroment.urlEnviroment(),
                 let domain = self.region.urlDomain() else {
                    return nil
             }
             
             
-            var url = "https://api."
+            var url = "https://"
+            
+            if (module.rawValue.characters.count > 0) {
+                url += "\(module)."
+            }
+            
+            url += "api."
             
             if (enviroment.characters.count > 0) {
                 url += "\(enviroment)."

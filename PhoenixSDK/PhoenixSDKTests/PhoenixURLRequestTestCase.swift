@@ -25,7 +25,7 @@ class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
         
         let request = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
         
-        let baseURL = mockConfiguration.baseURL!
+        let baseURL = mockConfiguration.indentityBaseURL()!
         XCTAssertEqual(request.URL!.absoluteString, "\(baseURL)/identity/v1/projects/\(mockConfiguration.projectID)/users")
         
         guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
