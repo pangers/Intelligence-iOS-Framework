@@ -186,7 +186,7 @@ public extension Phoenix {
             var url = "https://"
             
             if (module.rawValue.characters.count > 0) {
-                url += "\(module)."
+                url += "\(module.rawValue)."
             }
             
             url += "api."
@@ -196,7 +196,7 @@ public extension Phoenix {
             }
             
             // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)
-            url += "phoenixplatform\(domain)"
+            url += "phoenixplatform\(domain)/v2"
             
             return NSURL(string: url)
         }

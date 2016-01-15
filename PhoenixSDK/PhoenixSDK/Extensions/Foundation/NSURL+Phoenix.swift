@@ -8,7 +8,6 @@
 
 import Foundation
 
-private let phoenixIdentityAPIVersion = "identity/v1"
 private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
@@ -22,18 +21,14 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
     }
     
-    func phx_URLByAppendingRootIdentityPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixIdentityAPIVersion)")
-    }
-    
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/token")
+        return URLByAppendingPathComponent("/oauth/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/validate")
+        return URLByAppendingPathComponent("/oauth/validate")
     }
     
     /// - Returns: NSURL with appended applications path.
@@ -70,6 +65,14 @@ internal extension NSURL {
     /// - Returns: NSURL with append geofences path.
     func phx_URLByAppendingRoles() -> NSURL! {
         return URLByAppendingPathComponent("/roles")
+    }
+    
+    /// - Returns: NSURL with appended companies path.
+    func phx_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
+        if let companyID = companyID {
+            return URLByAppendingPathComponent("/companies/\(companyID)")
+        }
+        return URLByAppendingPathComponent("/companies")
     }
     
     /// - Returns: NSURL with appended projects path.

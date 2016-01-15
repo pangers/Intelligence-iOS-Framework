@@ -39,11 +39,10 @@ private let invalidUserId = Int.min
 private let strongPasswordCharacterCountThreshold = 8
 
 /// The user types that the SDK supports
-private enum UserType : String {
-    
-    /// Regular user
-    case User = "User"
-    
+private enum UserType : Int {
+    case Application = 5
+    case User = 6
+    case SuperUser = 7
 }
 
 public extension Phoenix {
@@ -147,7 +146,8 @@ public extension Phoenix {
         
         /// The reference will be empty and should be ignored by the developer
         var reference:String {
-            return ""
+            let lastnameInReference = lastName ?? ""
+            return firstName + "." + lastnameInReference
         }
         
         /// Is active is true. Developers should ignore this value
@@ -161,7 +161,7 @@ public extension Phoenix {
         }
         
         /// The user type will always be User.
-        var userTypeId: String {
+        var userTypeId: Int {
             return UserType.User.rawValue
         }
         
