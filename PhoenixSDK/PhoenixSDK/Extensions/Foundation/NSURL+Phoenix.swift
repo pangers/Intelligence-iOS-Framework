@@ -62,9 +62,9 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/geofences")
     }
     
-    /// - Returns: NSURL with append geofences path.
-    func phx_URLByAppendingRoles() -> NSURL! {
-        return URLByAppendingPathComponent("/roles")
+    /// - Returns: NSURL with append assign role path.
+    func phx_URLByAppendingAssignRole() -> NSURL! {
+        return URLByAppendingPathComponent("/assignrole")
     }
     
     /// - Returns: NSURL with appended companies path.
