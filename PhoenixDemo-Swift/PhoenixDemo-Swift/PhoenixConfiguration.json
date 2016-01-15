@@ -1,10 +1,10 @@
 {
-    "client_id": "iOSSDKApp_napmxilutp",
-    "client_secret": "Z4D1eCGO65pi45y5dewrmrgenndrfnzarnzdilrl",
-    "application_id": 3152,
-    "project_id": 2030,
-    "region": "EU",
-    "enviroment": "production",
-    "company_id" : 3,
-    "sdk_user_role": 1008
+    "client_id": "iOSIntelligenceSDKApp_n",
+    "client_secret": "jLmYC6Onq2MRM4y7755in6r127mmzchrvxqnuzul",
+    "application_id": 10068,
+    "project_id": 40002,
+    "region": "SG",
+    "enviroment": "uat",
+    "company_id" : 19017,
+    "sdk_user_role": 16017
 }
