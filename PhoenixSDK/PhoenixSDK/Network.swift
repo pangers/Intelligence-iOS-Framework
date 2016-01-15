@@ -30,7 +30,7 @@ internal enum HTTPStatusCode: Int {
 }
 
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
-internal final class Network {
+internal final class Network: NSObject, NSURLSessionDelegate {
     
     /// Delegate must be set before startup is called on modules.
     internal var delegate: PhoenixInternalDelegate!
@@ -39,7 +39,7 @@ internal final class Network {
     internal var oauthProvider: PhoenixOAuthProvider!
     
     /// NSURLSession with default session configuration.
-    internal private(set) lazy var sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+    internal private(set) var sessionManager : NSURLSession?
     internal let queue: NSOperationQueue
     
     // MARK: Initializers
@@ -50,6 +50,17 @@ internal final class Network {
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
         self.oauthProvider = oauthProvider
+        
+        super.init()
+        
+        self.sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: nil)
+    }
+    
+    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        // Trust the server
+        // This needs to be done as the server certifcate does not cover the current url format
+        // [module].api.[enviroment].phoenixplatform.[regionalDomain]
+        completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
