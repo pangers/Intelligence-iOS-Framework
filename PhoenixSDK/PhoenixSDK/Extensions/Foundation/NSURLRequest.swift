@@ -142,8 +142,8 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingUsers(user.userId)
+            .phx_URLByAppendingCompanies(configuration.companyId)
+            .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
