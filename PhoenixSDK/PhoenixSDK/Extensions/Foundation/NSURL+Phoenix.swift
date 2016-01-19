@@ -23,12 +23,12 @@ internal extension NSURL {
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return URLByAppendingPathComponent("/oauth/token")
+        return URLByAppendingPathComponent("/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return URLByAppendingPathComponent("/oauth/validate")
+        return URLByAppendingPathComponent("/validate")
     }
     
     /// - Returns: NSURL with appended applications path.
