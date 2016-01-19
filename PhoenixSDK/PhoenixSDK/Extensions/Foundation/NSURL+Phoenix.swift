@@ -8,7 +8,6 @@
 
 import Foundation
 
-private let phoenixIdentityAPIVersion = "identity/v1"
 private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
@@ -22,18 +21,14 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
     }
     
-    func phx_URLByAppendingRootIdentityPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixIdentityAPIVersion)")
-    }
-    
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/token")
+        return URLByAppendingPathComponent("/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/validate")
+        return URLByAppendingPathComponent("/validate")
     }
     
     /// - Returns: NSURL with appended applications path.

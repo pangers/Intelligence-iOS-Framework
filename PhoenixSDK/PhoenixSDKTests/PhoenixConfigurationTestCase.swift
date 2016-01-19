@@ -171,6 +171,6 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
     
     func testBaseUrl(){
         let config = MockConfiguration()
-        XCTAssertEqual(config.baseURL(forModule: .NoModule), NSURL(string: "https://api.uat.phoenixplatform.eu"), "The baseURL is not correct")
+        XCTAssertEqual(config.baseURL(forModule: .NoModule), NSURL(string: "https://api.uat.phoenixplatform.eu/v2"), "The baseURL is not correct")
     }
 }
