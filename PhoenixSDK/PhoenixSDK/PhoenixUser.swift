@@ -146,8 +146,9 @@ public extension Phoenix {
         
         /// The reference will be empty and should be ignored by the developer
         var reference:String {
-            let lastnameInReference = lastName ?? ""
-            return firstName + "." + lastnameInReference
+            let lastNameWithNoCharacters = (lastName == nil || lastName!.isEmpty)
+            let referenceSuffix = (lastNameWithNoCharacters ? "" : "." + lastName!)
+            return firstName + referenceSuffix
         }
         
         /// Is active is true. Developers should ignore this value
