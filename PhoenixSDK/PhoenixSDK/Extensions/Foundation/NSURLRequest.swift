@@ -8,15 +8,11 @@
 
 import Foundation
 
-private enum HTTPHeaderContentType : String {
-    case ApplicationJson = "application/json"
-    case ApplicationFormUrlEncoded = "application/x-www-form-urlencoded"
-}
-
 private let HTTPHeaderAcceptKey = "Accept"
 private let HTTPHeaderAuthorizationKey = "Authorization"
 private let HTTPHeaderContentTypeKey = "Content-Type"
 private let HTTPHeaderApplicationJson = "application/json"
+private let HTTPHeaderApplicationFormUrlEncoded = "application/x-www-form-urlencoded"
 
 private let HTTPBodyClientIDKey = "client_id"
 private let HTTPBodyClientSecretKey = "client_secret"
@@ -34,9 +30,8 @@ private let PHXIdentifierTypeDeviceToken = "iOS_Device_Token"
 // MARK: - OAuth
 
 internal extension NSURLRequest {
-    private class func phx_HTTPHeaders(contentType contentType: HTTPHeaderContentType,  bearerOAuth: PhoenixOAuthProtocol? = nil) -> [String: String] {
+    private class func phx_HTTPHeaders(bearerOAuth: PhoenixOAuthProtocol? = nil) -> [String: String] {
         var headers = [String: String]()
-        headers[HTTPHeaderContentTypeKey] = contentType.rawValue
         headers[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         if (bearerOAuth != nil && bearerOAuth?.accessToken != nil) {
             headers[HTTPHeaderAuthorizationKey] = "Bearer \(bearerOAuth!.accessToken!)"
@@ -52,7 +47,9 @@ internal extension NSURLRequest {
         let url = configuration.authenticationBaseURL()!.phx_URLByAppendingOAuthValidatePath()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationFormUrlEncoded, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         
         return request.copy() as! NSURLRequest
@@ -69,7 +66,9 @@ internal extension NSURLRequest {
         body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeRefreshToken
         body[HTTPBodyRefreshTokenKey] = oauth.refreshToken
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationFormUrlEncoded)
+        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = phx_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
@@ -90,7 +89,9 @@ internal extension NSURLRequest {
             body[HTTPBodyPasswordKey] = oauth.password!
         }
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationFormUrlEncoded)
+        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = phx_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
@@ -111,7 +112,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingQueryString("userid=\(user.userId)&roleid=\(configuration.sdkUserRole)")
         let request = NSMutableURLRequest(URL: url)
 
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         
         return request.copy() as! NSURLRequest
@@ -124,7 +127,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = [user.toJSON()].phx_toJSONData()
         
@@ -138,7 +143,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         
         return request.copy() as! NSURLRequest
@@ -151,7 +158,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
         request.HTTPBody = [user.toJSON()].phx_toJSONData()
         
@@ -172,7 +181,9 @@ internal extension NSURLRequest {
             "IsConfirmed":" false",
             "value": tokenString]]
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = json.phx_toJSONData()
         
@@ -186,7 +197,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingIdentifiers(tokenId)
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
         
         return request.copy() as! NSURLRequest
@@ -202,7 +215,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = [installation.toJSON()].phx_toJSONData()
         
@@ -218,7 +233,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
         request.HTTPBody = [installation.toJSON()].phx_toJSONData()
         
@@ -239,7 +256,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingEvents()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = json.phx_toJSONData()
         
@@ -263,7 +282,9 @@ internal extension NSURLRequest {
             .phx_URLByAppendingQueryString(query.urlQueryString())
         let request = NSMutableURLRequest(URL: url)
 
-        request.allHTTPHeaderFields = phx_HTTPHeaders(contentType: .ApplicationJson, bearerOAuth: oauth)
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         // TODO: Add filtering
         
