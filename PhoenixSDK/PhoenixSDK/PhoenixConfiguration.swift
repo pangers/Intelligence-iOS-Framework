@@ -15,7 +15,7 @@ private enum ConfigurationKey: String {
     case ApplicationID = "application_id"
     case ProjectID = "project_id"
     case Region = "region"
-    case Enviroment = "enviroment"
+    case Environment = "environment"
     case CompanyId = "company_id"
     case SDKUserRole = "sdk_user_role"
 }
@@ -48,15 +48,15 @@ public extension Phoenix {
         /// The region
         public var region:Region
         
-        /// The enviroment to connect to
-        public var enviroment:Enviroment
+        /// The environment to connect to
+        public var environment:Environment
         
         /// Default initializer.
         /// Sets region to .NoRegion so we can notice that the region is invalid.
-        /// Sets enviroment to .NoEnviroment so we can notice that the enviroment is invalid.
+        /// Sets environment to .NoEnvironment so we can notice that the environment is invalid.
         public override init() {
             self.region = .NoRegion
-            self.enviroment = .NoEnviroment
+            self.environment = .NoEnvironment
             
             super.init()
         }
@@ -87,7 +87,7 @@ public extension Phoenix {
         public func clone() -> Configuration {
             let copy = Configuration()
             copy.region = self.region
-            copy.enviroment = self.enviroment
+            copy.environment = self.environment
             copy.applicationID = self.applicationID
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
@@ -129,7 +129,7 @@ public extension Phoenix {
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
-            self.enviroment = try Phoenix.Enviroment(code: value(forKey: .Enviroment, inContents:contents))
+            self.environment = try Phoenix.Environment(code: value(forKey: .Environment, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
             self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
         }
@@ -144,12 +144,12 @@ public extension Phoenix {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == .NoRegion || enviroment == .NoEnviroment || companyId <= 0 || sdkUserRole <= 0
+                applicationID <= 0 || region == .NoRegion || environment == .NoEnvironment || companyId <= 0 || sdkUserRole <= 0
         }
         
         /// - Returns: Optional base URL to call.
         var baseURL: NSURL? {
-            guard let enviroment = self.enviroment.urlEnviroment(),
+            guard let environment = self.environment.urlEnvironment(),
                 let domain = self.region.urlDomain() else {
                    return nil
             }
@@ -157,8 +157,8 @@ public extension Phoenix {
             
             var url = "https://api."
             
-            if (enviroment.characters.count > 0) {
-                url += "\(enviroment)."
+            if (environment.characters.count > 0) {
+                url += "\(environment)."
             }
             
             // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)

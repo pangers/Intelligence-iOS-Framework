@@ -22,7 +22,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
             XCTAssert(config.clientID == cfg.clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == cfg.clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == cfg.region, "The region is incorrect")
-            XCTAssert(config.enviroment == cfg.enviroment, "The enviroment is incorrect")
+            XCTAssert(config.environment == cfg.environment, "The environment is incorrect")
             XCTAssert(config.applicationID == cfg.applicationID , "The application Id is incorrect")
             XCTAssert(config.projectID == cfg.projectID, "The project Id is incorrect")
             XCTAssert(config.sdkUserRole == cfg.sdkUserRole, "User role not read correctly")
@@ -38,7 +38,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         configuration.clientID = "CLIENT_ID" // as in file
         configuration.clientSecret = "CLIENT_SECRET" // as in file
         configuration.region = .Europe
-        configuration.enviroment = .Production
+        configuration.environment = .Production
         
         configuration.applicationID = 10
         configuration.projectID = 20
@@ -153,7 +153,7 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.enviroment = .NoEnviroment
+        cfg.environment = .NoEnvironment
         testConfigurationMissingPropertyError(cfg)
     }
     
@@ -163,10 +163,10 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         XCTAssert(config.baseURL == nil, "The mock configuration with no region returned an unexpected base url")
     }
     
-    func testEmptyBaseUrlIfNoEnviroment(){
+    func testEmptyBaseUrlIfNoEnvironment(){
         let config = MockConfiguration()
-        config.enviroment = .NoEnviroment
-        XCTAssert(config.baseURL == nil, "The mock configuration with no enviroment returned an unexpected base url")
+        config.environment = .NoEnvironment
+        XCTAssert(config.baseURL == nil, "The mock configuration with no environment returned an unexpected base url")
     }
     
     func testBaseUrl(){

@@ -1,5 +1,5 @@
 //
-//  PhoenixEnviroment.swift
+//  PhoenixEnvironment.swift
 //  PhoenixSDK
 //
 //  Created by Michael Lake on 13/01/2016.
@@ -10,21 +10,21 @@ import Foundation
 
 public extension Phoenix {
     
-    /// An enum with the enviroments to which the SDK can be pointing to.
-    @objc public enum Enviroment : Int {
+    /// An enum with the environments to which the SDK can be pointing to.
+    @objc public enum Environment : Int {
         
-        /// UAT Enviroment
+        /// UAT Environment
         case UAT
         
-        /// Production Enviroment
+        /// Production Environment
         case Production
         
-        /// NoEnviroment in case a non optional enviroment needs to be initialized. Will fail
+        /// NoEnvironment in case a non optional environment needs to be initialized. Will fail
         /// when calling baseURL.
-        case NoEnviroment
+        case NoEnvironment
         
-        /// - Returns: enviroment as a String, or nil if .NoEnviroment
-        public func urlEnviroment() -> String? {
+        /// - Returns: environment as a String, or nil if .NoEnvironment
+        public func urlEnvironment() -> String? {
             switch (self) {
             case .UAT:
                 return "uat"
@@ -35,8 +35,8 @@ public extension Phoenix {
             }
         }
         
-        /// - Returns: The enviroment that a specific code represents. Returns nil if the
-        /// code does not match any enviroment.
+        /// - Returns: The environment that a specific code represents. Returns nil if the
+        /// code does not match any environment.
         init(code: String) {
             switch code {
             case "uat":
@@ -44,7 +44,7 @@ public extension Phoenix {
             case "production":
                 self = .Production
             default:
-                self = .NoEnviroment
+                self = .NoEnvironment
             }
         }
     }
