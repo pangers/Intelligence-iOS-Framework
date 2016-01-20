@@ -35,8 +35,9 @@ public extension Phoenix {
             }
         }
         
-        /// - Returns: The environment that a specific code represents. Returns nil if the
-        /// code does not match any environment.
+        /// This init method should be used to extract the environment from a configuration file and turn it into an enum value
+        /// The values that should be used are "uat" and "production"
+        /// If another value is used we will create the .NoEnviroment enum value
         init(code: String) {
             switch code {
             case "uat":
