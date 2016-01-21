@@ -33,13 +33,13 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
         "\"Id\": 6016," +
-        "\"UserTypeId\": \"User\"," +
+        "\"UserTypeId\": 6," +
         "\"CompanyId\": 3," +
         "\"Username\": \"test20\"," +
         "\"FirstName\": \"t\"," +
         "\"LastName\": \"t\"," +
         "\"LockingCount\": 0," +
-        "\"Reference\": \"\"," +
+        "\"Reference\": \"t.t\"," +
         "\"IsActive\": true," +
         "\"CreateDate\": \"2015-08-04T08:13:02.8004593Z\"," +
         "\"ModifyDate\": \"2015-08-04T08:13:02.8004593Z\"," +
@@ -52,13 +52,13 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
         "\"Id\": 6016," +
-        "\"UserTypeId\": \"User\"," +
+        "\"UserTypeId\": 6," +
         "\"CompanyId\": 3," +
         "\"Username\": \"test20\"," +
         "\"FirstName\": \"t\"," +
         "\"LastName\": \"t\"," +
         "\"LockingCount\": 0," +
-        "\"Reference\": \"\"," +
+        "\"Reference\": \"t.t\"," +
         "\"IsActive\": true," +
         "\"LastLoginDate\": \"2015-08-05T14:29:01.657\"," +
         "\"CreateDate\": \"2015-08-04T08:13:02.8004593Z\"," +
@@ -411,10 +411,9 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testUserConstants() {
         let fake = fakeUser
         XCTAssert(fake.lockingCount == 0, "Locking count must be zero")
-        XCTAssert(fake.reference == "", "Reference must be empty")
         XCTAssert(fake.isActive == true, "Active must be true")
         XCTAssert(fake.metadata == "", "Metadata must be empty")
-        XCTAssert(fake.userTypeId == "User", "Type ID must be user")
+        XCTAssert(fake.userTypeId == 6, "Type ID must be 6 (User)")
     }
     
 
@@ -663,7 +662,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testUpdateUserConditions() {
         XCTAssertFalse(Phoenix.User(userId: mockUserID, companyId: 0, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No company allows to create user")
         XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: "", password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No username allows to create user")
-        XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: "", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No password allows to create user")
         XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: "", lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No firstname allows to create user")
         XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: "", avatarURL: mockAvatarURL).isValidToUpdate, "No lastname allows to create user")
         XCTAssertFalse(Phoenix.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "").isValidToUpdate, "No Avatar blocks to create user")

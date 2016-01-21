@@ -32,7 +32,6 @@ private let PHXIdentifierTypeDeviceToken = "iOS_Device_Token"
 internal extension NSURLRequest {
     private class func phx_HTTPHeaders(bearerOAuth: PhoenixOAuthProtocol? = nil) -> [String: String] {
         var headers = [String: String]()
-        headers[HTTPHeaderContentTypeKey] = HTTPHeaderApplicationFormUrlEncoded
         headers[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         if (bearerOAuth != nil && bearerOAuth?.accessToken != nil) {
             headers[HTTPHeaderAuthorizationKey] = "Bearer \(bearerOAuth!.accessToken!)"
@@ -49,6 +48,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         
         return request.copy() as! NSURLRequest
@@ -66,6 +67,8 @@ internal extension NSURLRequest {
         body[HTTPBodyRefreshTokenKey] = oauth.refreshToken
         
         request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = phx_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
@@ -87,6 +90,8 @@ internal extension NSURLRequest {
         }
         
         request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = phx_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
@@ -103,13 +108,14 @@ internal extension NSURLRequest {
     class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
             .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingUsers(user.userId)
-            .phx_URLByAppendingRoles()
+            .phx_URLByAppendingAssignRole()
+            .phx_URLByAppendingQueryString("userid=\(user.userId)&roleid=\(configuration.sdkUserRole)")
         let request = NSMutableURLRequest(URL: url)
 
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = [configuration.sdkUserRole].phx_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -117,11 +123,13 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
-            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingCompanies(configuration.companyId)
             .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = [user.toJSON()].phx_toJSONData()
         
@@ -131,10 +139,13 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
+            .phx_URLByAppendingProviders(configuration.providerId)
             .phx_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         
         return request.copy() as! NSURLRequest
@@ -143,11 +154,13 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingUsers(user.userId)
+            .phx_URLByAppendingCompanies(configuration.companyId)
+            .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
         request.HTTPBody = [user.toJSON()].phx_toJSONData()
         
@@ -169,6 +182,8 @@ internal extension NSURLRequest {
             "value": tokenString]]
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = json.phx_toJSONData()
         
@@ -183,6 +198,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
         
         return request.copy() as! NSURLRequest
@@ -199,6 +216,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = [installation.toJSON()].phx_toJSONData()
         
@@ -215,6 +234,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
         request.HTTPBody = [installation.toJSON()].phx_toJSONData()
         
@@ -236,6 +257,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
         request.HTTPBody = json.phx_toJSONData()
         
@@ -260,6 +283,8 @@ internal extension NSURLRequest {
         let request = NSMutableURLRequest(URL: url)
 
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
         // TODO: Add filtering
         
