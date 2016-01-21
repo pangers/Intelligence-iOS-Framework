@@ -44,7 +44,7 @@ class PhoenixBaseTestCase : XCTestCase {
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
-            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage)
+            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
             
             try phoenix = Phoenix(
                 withDelegate: mockDelegateWrapper.mockDelegate,

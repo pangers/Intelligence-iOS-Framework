@@ -22,7 +22,6 @@ class VersionClass: PhoenixApplicationVersionProtocol {
 // MARK: - Fake Storage Object
 
 class InstallationStorage: InstallationStorageProtocol {
-    static let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
     var dictionary = [String: AnyObject]()
     var phx_applicationVersion: String? {
         return dictionary["appVer"] as? String
@@ -38,7 +37,7 @@ class InstallationStorage: InstallationStorageProtocol {
         return version != stored // Assumption: any version change is considered an update
     }
     var phx_installationID: String? {
-        return dictionary["installID"] as? String ?? InstallationStorage.phoenixInstallationDefaultCreateID
+        return dictionary["installID"] as? String
     }
     func phx_storeInstallationID(newID: String?) {
         dictionary["installID"] = newID
@@ -68,11 +67,10 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         "\"ApplicationId\": 10," +
         "\"InstalledVersion\": \"1.0.1\"," +
         "\"InstallationId\": \"bc1512a8-f0d3-4f91-a9c3-53af39667431\"," +
-        "\"DeviceTypeId\": \"Smartphone\"," +
-        "\"CreateDate\": \"2015-08-14T10:06:13.3850765Z\"," +
-        "\"ModifyDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"DeviceTypeId\": 1," +
+        "\"DateCreated\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"DateUpdated\": \"2015-08-14T10:06:13.3850765Z\"," +
         "\"OperatingSystemVersion\": \"9.0\"," +
-        "\"ModelReference\": \"iPhone\"" +
         "}]" +
     "}"
     
@@ -85,11 +83,10 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         "\"ApplicationId\": 10," +
         "\"InstalledVersion\": \"1.0.2\"," +
         "\"InstallationId\": \"bc1512a8-f0d3-4f91-a9c3-53af39667431\"," +
-        "\"DeviceTypeId\": \"Smartphone\"," +
-        "\"CreateDate\": \"2015-08-14T10:06:13.3850765Z\"," +
-        "\"ModifyDate\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"DeviceTypeId\": 1," +
+        "\"DateCreated\": \"2015-08-14T10:06:13.3850765Z\"," +
+        "\"DateUpdated\": \"2015-08-14T10:06:13.3850765Z\"," +
         "\"OperatingSystemVersion\": \"9.0\"," +
-        "\"ModelReference\": \"iPhone\"" +
         "}]" +
     "}"
     
@@ -120,20 +117,14 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             }
             if let projectID = json[Installation.ProjectId] as? Int,
                 appID = json[Installation.ApplicationId] as? Int,
-                installationID = json[Installation.InstallationId] as? String,
-                id = json[Installation.RequestId] as? Int,
-                createDate = json[Installation.CreateDate] as? String,
-                modelRef = json[Installation.ModelReference] as? String,
+                id = json[Installation.Id] as? Int,
                 installed = json[Installation.InstalledVersion] as? String,
                 OSVer = json[Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
                     OSVer == UIDevice.currentDevice().systemVersion &&
-                    installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == UIDevice.currentDevice().model &&
                     installed == "1.0.1" &&
-                    id == 1054 &&
-                    createDate == "2015-08-14T10:06:13.3850765Z" {
+                    id == 1054 {
                         XCTAssert(true)
             } else {
                 XCTAssert(false)
@@ -160,7 +151,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.CreateInstallationError.rawValue, "Expected wrapped 4001 error")
+            XCTAssert(error!.code == InstallationError.CreateInstallationError.rawValue, "Expected wrapped 4001 error")
             expectation.fulfill()
         }
         
@@ -210,7 +201,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.AlreadyInstalledError.rawValue, "Expected create error")
+            XCTAssert(error!.code == InstallationError.AlreadyInstalledError.rawValue, "Expected create error")
         }
     }
     
@@ -223,13 +214,11 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
         XCTAssert(installation.toJSON()[Installation.ProjectId] as! Int == mockConfiguration.projectID, "Project ID must match configuration")
         XCTAssert(installation.toJSON()[Installation.ApplicationId] as! Int == mockConfiguration.applicationID, "Application ID must match configuration")
-        XCTAssert(installation.toJSON()[Installation.InstallationId] as! String == InstallationStorage.phoenixInstallationDefaultCreateID, "Installation ID must match default ID")
-        XCTAssert(installation.toJSON()[Installation.RequestId] as? String == nil, "Request ID must be nil")
+        XCTAssert(installation.toJSON()[Installation.Id] as? String == nil, "ID must be nil")
         XCTAssert(installation.toJSON()[Installation.CreateDate] as? String == nil, "Create date must be nil")
         XCTAssert(installation.toJSON()[Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
-        XCTAssert(installation.toJSON()[Installation.DeviceTypeId] as? String == "Smartphone", "Device type must be Smartphone")
+        XCTAssert(installation.toJSON()[Installation.DeviceTypeId] as? Int == 1, "Device type must be 1 (Smartphone)")
         XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
-        XCTAssert(installation.toJSON()[Installation.ModelReference] as? String == UIDevice.currentDevice().model, "Device type must be \(UIDevice.currentDevice().model)")
     }
     
     func mockPrepareForUpdateInstallation() {
@@ -243,10 +232,9 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         (installation.applicationVersion as? VersionClass)?.fakeVersion = "1.0.2"
-        installation = Installation(configuration: mockConfiguration, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage)
+        installation = Installation(configuration: mockConfiguration, applicationVersion: installation.applicationVersion, installationStorage: installation.installationStorage, oauthProvider: installation.oauthProvider)
         XCTAssert(installation.isUpdatedInstallation == true, "Should be updated version")
-        XCTAssert(installation.toJSON()[Installation.CreateDate] != nil, "Create date must be set")
-        XCTAssert(installation.toJSON()[Installation.RequestId] != nil, "Request ID must be set")
+        XCTAssert(installation.toJSON()[Installation.Id] != nil, "ID must be set")
         XCTAssert(installation.isValidToUpdate)
     }
     
@@ -270,20 +258,14 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             let json = self.mockInstallation.toJSON()
             if let projectID = json[Installation.ProjectId] as? Int,
                 appID = json[Installation.ApplicationId] as? Int,
-                installationID = json[Installation.InstallationId] as? String,
-                id = json[Installation.RequestId] as? Int,
-                createDate = json[Installation.CreateDate] as? String,
-                modelRef = json[Installation.ModelReference] as? String,
+                id = json[Installation.Id] as? Int,
                 installed = json[Installation.InstalledVersion] as? String,
                 OSVer = json[Installation.OperatingSystemVersion] as? String
                 where projectID == 20 &&
                     appID == 10 &&
                     OSVer == UIDevice.currentDevice().systemVersion &&
-                    installationID == "bc1512a8-f0d3-4f91-a9c3-53af39667431" &&
-                    modelRef == UIDevice.currentDevice().model &&
                     installed == "1.0.2" &&
-                    id == 1054 &&
-                    createDate == "2015-08-14T10:06:13.3850765Z" {
+                    id == 1054 {
                         XCTAssert(true)
             } else {
                 XCTAssert(false)
@@ -312,7 +294,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.UpdateInstallationError.rawValue, "Expected wrapped 4002 error")
+            XCTAssert(error!.code == InstallationError.UpdateInstallationError.rawValue, "Expected wrapped 4002 error")
             expectation.fulfill()
         }
         
@@ -335,7 +317,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            XCTAssert(error!.code == RequestError.ParseError.rawValue, "Expected parse error")
             expectation.fulfill()
         }
         

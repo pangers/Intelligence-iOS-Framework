@@ -8,18 +8,34 @@
 
 import Foundation
 
+private enum ApplicationType : Int {
+    case AppleiOS = 1
+    case GoogleAndroid = 2
+    case HTML5 = 3
+    case DotNet = 4
+}
+
+private enum DeviceType : Int {
+    case Smartphone = 1
+    case Tablet = 2
+    case Desktop = 3
+    case SmartTV = 4
+    case Wearable = 5
+}
+
 /// Manager used for Installation requests.
 internal struct Installation {
     // MARK:- Keys
     static let InstallationId = "InstallationId"
-    static let RequestId = "Id"
+    static let Id = "Id"
     static let ProjectId = "ProjectId"
     static let ApplicationId = "ApplicationId"
-    static let CreateDate = "CreateDate"
+    static let CreateDate = "DateCreated"
+    static let ApplicationTypeId = "ApplicationTypeId"
     static let InstalledVersion = "InstalledVersion"
     static let DeviceTypeId = "DeviceTypeId"
     static let OperatingSystemVersion = "OperatingSystemVersion"
-    static let ModelReference = "ModelReference"
+    static let UserId = "UserId"
     
     // MARK:- Storage
     /// Configuration to use for configuring the installation request.
@@ -28,18 +44,18 @@ internal struct Installation {
     let applicationVersion: PhoenixApplicationVersionProtocol
     /// User defaults to store response data for update installation request.
     let installationStorage: InstallationStorageProtocol
+    /// PhoenixOAuthProvider to determine the user making the request.
+    let oauthProvider: PhoenixOAuthProvider
     
     // MARK:- Parameters used in requests
-    private let phoenixInstallationDefaultCreateID = "00000000-0000-0000-0000-000000000000"
     private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
-    private var modelReference: String { return UIDevice.currentDevice().model }
-    private var deviceTypeId: String { return "Smartphone" }
-    private var installationId: String { return installationStorage.phx_installationID ?? phoenixInstallationDefaultCreateID }
+    private var deviceTypeId: DeviceType { return .Smartphone }
     private var installedVersion: String { return applicationVersion.phx_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
+    private var applicationTypeId: ApplicationType { return .AppleiOS }
     private var projectId: Int { return configuration.projectID }
+    private var userId: Int? { return oauthProvider.sdkUserOAuth.userId }
     private var requestId: Int? { return installationStorage.phx_installationRequestID }
-    private var createDate: String? { return installationStorage.phx_installationCreateDateString }
     
     /// - Returns: True if valid to send an update with this object.
     var isValidToUpdate: Bool {
@@ -61,18 +77,19 @@ internal struct Installation {
         var json: JSONDictionary = [
             Installation.ProjectId: projectId,
             Installation.ApplicationId: applicationId,
-            Installation.InstallationId: installationId,
+            Installation.ApplicationTypeId: applicationTypeId.rawValue,
             Installation.InstalledVersion: installedVersion,
-            Installation.DeviceTypeId: deviceTypeId,
-            Installation.OperatingSystemVersion: systemVersion,
-            Installation.ModelReference: modelReference]
+            Installation.DeviceTypeId: deviceTypeId.rawValue,
+            Installation.OperatingSystemVersion: systemVersion]
+        
+        // Pass the userId if it is valid
+        if userId != nil {
+            json[Installation.UserId] = userId!
+        }
+        
         // Update Installation requires the Id of the previous Create Installation request.
         if requestId != nil {
-            json[Installation.RequestId] = requestId!
-        }
-        // Currently, if we don't send the CreateDate the Phoenix backend will overwrite it with the ModifyDate.
-        if createDate != nil {
-            json[Installation.CreateDate] = createDate!
+            json[Installation.Id] = requestId!
         }
         return json
     }
@@ -83,7 +100,7 @@ internal struct Installation {
         if let
             json = json,
             installation = json[Installation.InstallationId] as? String,
-            id = json[Installation.RequestId] as? Int,
+            id = json[Installation.Id] as? Int,
             installedVersion = json[Installation.InstalledVersion] as? String,
             createDate = json[Installation.CreateDate] as? String {
                 installationStorage.phx_storeInstallationID(installation)
