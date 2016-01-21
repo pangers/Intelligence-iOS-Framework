@@ -262,7 +262,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             return
         }
         
-        if !user.isPasswordSecure() {
+        // The password can be nil due to the fact that getting a user does not retrieve the password
+        if user.password != nil && !user.isPasswordSecure() {
             callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
             return
         }

@@ -20,6 +20,14 @@ private enum ConfigurationKey: String {
     case SDKUserRole = "sdk_user_role"
 }
 
+enum Module : String {
+    case NoModule = ""
+    case Authentication = "authentication"
+    case Identity = "identity"
+    case Analytics = "analytics"
+    case Location = "location"
+}
+
 public extension Phoenix {
     
     /// This class holds the data to configure the phoenix SDK. It provides initialisers to
@@ -33,6 +41,9 @@ public extension Phoenix {
         /// The client secret
         public var clientSecret = ""
 
+        /// The provider Id
+        public let providerId = 300
+        
         /// The company Id
         public var companyId = 0
 
@@ -147,22 +158,48 @@ public extension Phoenix {
                 applicationID <= 0 || region == .NoRegion || environment == .NoEnvironment || companyId <= 0 || sdkUserRole <= 0
         }
         
+        /// - Returns: Optional base URL for the authentication module.
+        func authenticationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Authentication)
+        }
+        
+        /// - Returns: Optional base URL for the identity module.
+        func identityBaseURL() -> NSURL? {
+            return baseURL(forModule: .Identity)
+        }
+        
+        /// - Returns: Optional base URL for the anayltics module.
+        func analyticsBaseURL() -> NSURL? {
+            return baseURL(forModule: .Analytics)
+        }
+        
+        /// - Returns: Optional base URL for the location module.
+        func locationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Location)
+        }
+        
         /// - Returns: Optional base URL to call.
-        var baseURL: NSURL? {
+        func baseURL(forModule module: Module) -> NSURL? {
             guard let environment = self.environment.urlEnvironment(),
                 let domain = self.region.urlDomain() else {
                    return nil
             }
             
             
-            var url = "https://api."
+            var url = "https://"
+            
+            if (module.rawValue.characters.count > 0) {
+                url += "\(module.rawValue)."
+            }
+            
+            url += "api."
             
             if (environment.characters.count > 0) {
                 url += "\(environment)."
             }
             
             // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)
-            url += "phoenixplatform\(domain)"
+            url += "phoenixplatform\(domain)/v2"
             
             return NSURL(string: url)
         }

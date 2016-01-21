@@ -74,8 +74,6 @@ class ViewUserViewController : UIViewController {
     
     @IBAction func updateUser() {
         guard let user = self.user else { return }
-        user.username = username.text ?? ""
-        user.password = password.text
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
