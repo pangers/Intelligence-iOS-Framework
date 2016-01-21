@@ -49,7 +49,7 @@ import PhoenixSDK
 
 ## Create & Configure your Account ##
 
-Before using the SDK you will need a Phoenix account. Instructions for creating and configuring this account can be found in [Intellegence - Getting Started](tgrs.pk/m9lq5).
+Before using the SDK you will need a Phoenix account. Instructions for creating and configuring this account can be found in [Intellegence - Getting Started](http://tgrs.pk/m9lq5).
 
 ## Configuration JSON File ##
 
