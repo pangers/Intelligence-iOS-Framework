@@ -47,13 +47,9 @@ import PhoenixSDK
 @import PhoenixSDK;
 ```
 
-## Create Account ##
+## Create & Configure your Account ##
 
-In order to configure Phoenix you will need to first login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
-
-You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
-
-![Screen Shot 2015-10-14 at 11.07.33.png](https://bitbucket.org/repo/4z6Eb8/images/2500708198-Screen%20Shot%202015-10-14%20at%2011.07.33.png)
+Before using the SDK you will need a Phoenix account. Instructions for creating and configuring this account can be found in [Intellegence - Getting Started](tgrs.pk/m9lq5).
 
 ## Configuration JSON File ##
 
