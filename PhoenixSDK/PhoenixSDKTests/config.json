@@ -6,5 +6,6 @@
     "region": "EU",
     "environment": "production",
     "company_id":10,
-    "sdk_user_role": 1008
+    "sdk_user_role": 1008,
+    "certificate_trust": "any"
 }

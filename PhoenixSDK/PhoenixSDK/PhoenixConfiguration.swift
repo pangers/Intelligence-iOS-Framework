@@ -18,6 +18,7 @@ private enum ConfigurationKey: String {
     case Environment = "environment"
     case CompanyId = "company_id"
     case SDKUserRole = "sdk_user_role"
+    case CertificateTrust = "certificate_trust"
 }
 
 enum Module : String {
@@ -26,6 +27,28 @@ enum Module : String {
     case Identity = "identity"
     case Analytics = "analytics"
     case Location = "location"
+}
+
+@objc public enum CertificateTrust: Int {
+    case Valid /// Apple will validate all certifcates, the default value
+    case Any /// We will trust all certificates, regarless of if the are valid or not (eg: self signed, expired, etc)
+    case AnyNonProduction /// Apple will validate Production certificates, we will trust all other certifcates
+    
+    /// This init method should be used to extract certificate_trust from a configuration file (if it exists) and turn it into an enum value
+    /// The values that should be used are "valid", "any" and "any_non_production"
+    /// If another value is used we will create the .Valid enum value (which is the default value)
+    init(key: String) {
+        switch key {
+            case "valid":
+                self = .Valid
+            case "any":
+                self = .Any
+            case "any_non_production":
+                self = .AnyNonProduction
+            default:
+                self = .Valid
+        }
+    }
 }
 
 public extension Phoenix {
@@ -55,6 +78,10 @@ public extension Phoenix {
         
         /// The role ID to assign to users the SDK creates
         public var sdkUserRole = 0
+        
+        /// The level of trust to apply to certifcates from the server
+        /// By default we will only trust valid certificates
+        public var certificateTrust = CertificateTrust.Valid
         
         /// The region
         public var region:Region
@@ -105,6 +132,7 @@ public extension Phoenix {
             copy.clientSecret = String(self.clientSecret)
             copy.companyId = companyId
             copy.sdkUserRole = sdkUserRole
+            copy.certificateTrust = self.certificateTrust
             return copy
         }
         
@@ -143,6 +171,13 @@ public extension Phoenix {
             self.environment = try Phoenix.Environment(code: value(forKey: .Environment, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
             self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
+            
+            
+            let certificateTrustKey = contents[ConfigurationKey.CertificateTrust.rawValue] as? String
+            
+            if let certificateTrustKey = certificateTrustKey {
+                self.certificateTrust = CertificateTrust(key: certificateTrustKey)
+            }
         }
         
         /// - Returns: True if the configuration is correct and can be used to initialize

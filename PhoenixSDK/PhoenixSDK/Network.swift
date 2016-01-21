@@ -38,6 +38,9 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     /// Provider responsible for serving OAuth information.
     internal var oauthProvider: PhoenixOAuthProvider!
     
+    /// The level we will trust the server's certificates
+    internal let certificateTrust: CertificateTrust
+    
     /// NSURLSession with default session configuration.
     internal private(set) var sessionManager : NSURLSession?
     internal let queue: NSOperationQueue
@@ -45,11 +48,12 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     // MARK: Initializers
     
     /// Initialize new instance of Phoenix Networking class
-    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider) {
+    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider, certificateTrust: CertificateTrust) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
         self.oauthProvider = oauthProvider
+        self.certificateTrust = certificateTrust
         
         super.init()
         
@@ -57,10 +61,28 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     }
     
     func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        // Trust the server
-        // This needs to be done as the server certifcate does not cover the current url format
-        // [module].api.[enviroment].phoenixplatform.[regionalDomain]
-        completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+        switch self.certificateTrust {
+            case .Valid:
+                // Use the default handling
+                completionHandler(.PerformDefaultHandling, nil)
+            case .AnyNonProduction:
+//                if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+//                    // Trust the server
+//                    completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+//                }
+//                else {
+//                    completionHandler(.PerformDefaultHandling, nil)
+//                }
+                break
+            case .Any:
+                if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                    // Trust the server
+                    completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+                }
+                else {
+                    completionHandler(.PerformDefaultHandling, nil)
+                }
+        }
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
