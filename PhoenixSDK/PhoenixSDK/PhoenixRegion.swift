@@ -29,26 +29,25 @@ public extension Phoenix {
         /// when calling baseURL.
         case NoRegion
         
-        /// Asserts that it won't be called on .NoRegion.
-        /// - Returns: String to the base url to use (including protocol).
-        public func baseURL() -> String {
+        /// - Returns: domain as a String, or nil if .NoRegion
+        public func urlDomain() -> String? {
             switch (self) {
             case .UnitedStates:
-                return "https://api.phoenixplatform.com"
+                return ".com"
             case .Australia:
-                return "https://api.phoenixplatform.com.au"
+                return ".com.au"
             case .Europe:
-                return "https://api.phoenixplatform.eu"
+                return ".eu"
             case .Singapore:
-                return "https://api.phoenixplatform.com.sg"
+                return ".com.sg"
             default:
-                assertionFailure("No base URL for no region")
-                return ""
+                return nil
             }
         }
         
-        /// - Returns: The region that a specific code represents. Returns nil if the
-        /// code does not match any region.
+        /// This init method should be used to extract the region from a configuration file and turn it into an enum value
+        /// The values that should be used are "US", "AU", "EU" and "SG"
+        /// If another value is used we will create the .NoRegion enum value
         init(code: String) {
             switch code {
             case "US":

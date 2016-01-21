@@ -39,11 +39,10 @@ private let invalidUserId = Int.min
 private let strongPasswordCharacterCountThreshold = 8
 
 /// The user types that the SDK supports
-private enum UserType : String {
-    
-    /// Regular user
-    case User = "User"
-    
+private enum UserType : Int {
+    case Application = 5
+    case User = 6
+    case SuperUser = 7
 }
 
 public extension Phoenix {
@@ -147,7 +146,9 @@ public extension Phoenix {
         
         /// The reference will be empty and should be ignored by the developer
         var reference:String {
-            return ""
+            let lastNameWithNoCharacters = (lastName == nil || lastName!.isEmpty)
+            let referenceSuffix = (lastNameWithNoCharacters ? "" : "." + lastName!)
+            return firstName + referenceSuffix
         }
         
         /// Is active is true. Developers should ignore this value
@@ -161,7 +162,7 @@ public extension Phoenix {
         }
         
         /// The user type will always be User.
-        var userTypeId: String {
+        var userTypeId: Int {
             return UserType.User.rawValue
         }
         
@@ -208,9 +209,14 @@ public extension Phoenix {
         /// - Returns: true if the user is valid to be updated. The requirements
         /// are the same as in isValidToCreate, but we also need to provide a valid userId.
         var isValidToUpdate:Bool {
+            let hasCompanyId = companyId > 0
+            let hasUsername = !username.isEmpty
+            let hasFirstName = !firstName.isEmpty
             let hasLastName = lastName?.isEmpty == false
             let hasAvatarURL = avatarURL?.isEmpty == false
-            return (isValidToCreate && userId != invalidUserId && hasLastName && hasAvatarURL)
+            
+            return (userId != invalidUserId && hasCompanyId &&
+                hasUsername && hasFirstName && hasLastName && hasAvatarURL)
         }
         
         /// A password is considered secure if it has at least 8 characters, and uses
