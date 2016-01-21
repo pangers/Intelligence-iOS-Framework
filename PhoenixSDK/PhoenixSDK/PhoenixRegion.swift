@@ -45,8 +45,9 @@ public extension Phoenix {
             }
         }
         
-        /// - Returns: The region that a specific code represents. Returns nil if the
-        /// code does not match any region.
+        /// This init method should be used to extract the region from a configuration file and turn it into an enum value
+        /// The values that should be used are "US", "AU", "EU" and "SG"
+        /// If another value is used we will create the .NoRegion enum value
         init(code: String) {
             switch code {
             case "US":
