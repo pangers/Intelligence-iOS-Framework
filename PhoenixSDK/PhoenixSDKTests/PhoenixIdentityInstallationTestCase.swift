@@ -102,37 +102,23 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForCreateInstallation()
         
-        let request = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork)
+        guard let json = mockInstallation?.toJSON() else {
+            XCTFail()
+            return
+        }
         
-        mockResponseForURL(request.URL,
-            method: .POST,
-            response: (data: successfulInstallationResponse, statusCode: .Success, headers:nil))
-        
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.createInstallation({ (installation, error) -> Void in
-            XCTAssert(error == nil, "Unexpected error")
-            guard let json = installation?.toJSON() else {
-                XCTFail()
-                return
-            }
-            if let projectID = json[Installation.ProjectId] as? Int,
-                appID = json[Installation.ApplicationId] as? Int,
-                id = json[Installation.Id] as? Int,
-                installed = json[Installation.InstalledVersion] as? String,
-                OSVer = json[Installation.OperatingSystemVersion] as? String
-                where projectID == 20 &&
-                    appID == 10 &&
-                    OSVer == UIDevice.currentDevice().systemVersion &&
-                    installed == "1.0.1" &&
-                    id == 1054 {
-                        XCTAssert(true)
-            } else {
-                XCTAssert(false)
-            }
-            expectation.fulfill()
-        })
-        
-        waitForExpectations()
+        if let projectID = json[Installation.ProjectId] as? Int,
+            appID = json[Installation.ApplicationId] as? Int,
+            installed = json[Installation.InstalledVersion] as? String,
+            OSVer = json[Installation.OperatingSystemVersion] as? String
+            where projectID == 20 &&
+                appID == 10 &&
+                OSVer == UIDevice.currentDevice().systemVersion &&
+                installed == "1.0.1" {
+                    XCTAssert(true)
+        } else {
+            XCTAssert(false)
+        }
     }
     
     func testCreateInstallationFailure() {
@@ -256,14 +242,10 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             XCTAssert(error == nil, "Unexpected error")
             
             let json = self.mockInstallation.toJSON()
-            if let projectID = json[Installation.ProjectId] as? Int,
-                appID = json[Installation.ApplicationId] as? Int,
-                id = json[Installation.Id] as? Int,
+            if let id = json[Installation.Id] as? Int,
                 installed = json[Installation.InstalledVersion] as? String,
                 OSVer = json[Installation.OperatingSystemVersion] as? String
-                where projectID == 20 &&
-                    appID == 10 &&
-                    OSVer == UIDevice.currentDevice().systemVersion &&
+                where OSVer == UIDevice.currentDevice().systemVersion &&
                     installed == "1.0.2" &&
                     id == 1054 {
                         XCTAssert(true)

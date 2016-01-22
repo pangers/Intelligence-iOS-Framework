@@ -8,13 +8,6 @@
 
 import Foundation
 
-private enum ApplicationType : Int {
-    case AppleiOS = 1
-    case GoogleAndroid = 2
-    case HTML5 = 3
-    case DotNet = 4
-}
-
 private enum DeviceType : Int {
     case Smartphone = 1
     case Tablet = 2
@@ -31,7 +24,6 @@ internal struct Installation {
     static let ProjectId = "ProjectId"
     static let ApplicationId = "ApplicationId"
     static let CreateDate = "DateCreated"
-    static let ApplicationTypeId = "ApplicationTypeId"
     static let InstalledVersion = "InstalledVersion"
     static let DeviceTypeId = "DeviceTypeId"
     static let OperatingSystemVersion = "OperatingSystemVersion"
@@ -52,7 +44,6 @@ internal struct Installation {
     private var deviceTypeId: DeviceType { return .Smartphone }
     private var installedVersion: String { return applicationVersion.phx_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
-    private var applicationTypeId: ApplicationType { return .AppleiOS }
     private var projectId: Int { return configuration.projectID }
     private var userId: Int? { return oauthProvider.sdkUserOAuth.userId }
     private var requestId: Int? { return installationStorage.phx_installationRequestID }
@@ -75,22 +66,25 @@ internal struct Installation {
     /// - Returns: JSON Dictionary representation used in Installation requests.
     func toJSON() -> JSONDictionary {
         var json: JSONDictionary = [
-            Installation.ProjectId: projectId,
-            Installation.ApplicationId: applicationId,
-            Installation.ApplicationTypeId: applicationTypeId.rawValue,
             Installation.InstalledVersion: installedVersion,
             Installation.DeviceTypeId: deviceTypeId.rawValue,
             Installation.OperatingSystemVersion: systemVersion]
+        
+        if requestId == nil {
+            // Create Installation
+            json[Installation.ProjectId] = projectId
+            json[Installation.ApplicationId] = applicationId
+        }
+        else {
+            // Update installation (with previous installions id)
+            json[Installation.Id] = requestId!
+        }
         
         // Pass the userId if it is valid
         if userId != nil {
             json[Installation.UserId] = userId!
         }
         
-        // Update Installation requires the Id of the previous Create Installation request.
-        if requestId != nil {
-            json[Installation.Id] = requestId!
-        }
         return json
     }
     
