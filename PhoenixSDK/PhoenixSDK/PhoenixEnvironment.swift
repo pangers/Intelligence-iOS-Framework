@@ -23,17 +23,6 @@ public extension Phoenix {
         /// when calling baseURL.
         case NoEnvironment
         
-        /// - Returns: environment as a String, or nil if .NoEnvironment
-        public func urlEnvironment() -> String? {
-            switch (self) {
-            case .UAT:
-                return "uat"
-            case .Production:
-                return ""
-            default:
-                return nil
-            }
-        }
         
         /// This init method should be used to extract the environment from a configuration file and turn it into an enum value
         /// The values that should be used are "uat" and "production"

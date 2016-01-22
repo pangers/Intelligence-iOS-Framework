@@ -25,17 +25,4 @@ class PhoenixEnvironmentTestCase: PhoenixBaseTestCase {
         
         XCTAssert(Phoenix.Environment(code:"Wrong code") == .NoEnvironment, "Incorrect enum value from string")
     }
-    
-    func testURLDomain(){
-        let correctAssignments:[Phoenix.Environment: String] = [
-            .UAT        : "uat",
-            .Production : "",
-        ]
-        
-        for (environment, value) in correctAssignments {
-            XCTAssert(environment.urlEnvironment() == value, "Incorrect value from environment \(environment)")
-        }
-        
-        XCTAssert(Phoenix.Environment.NoEnvironment.urlEnvironment() == nil, "Incorrect value from .NoEnvironment")
-    }
 }

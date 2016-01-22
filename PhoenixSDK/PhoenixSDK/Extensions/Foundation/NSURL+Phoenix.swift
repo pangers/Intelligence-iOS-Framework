@@ -11,8 +11,105 @@ import Foundation
 private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
+enum Module : String {
+    case NoModule = ""
+    case Authentication = "authentication"
+    case Identity = "identity"
+    case Analytics = "analytics"
+    case Location = "location"
+}
+
+private extension Phoenix.Environment {
+    private func urlComponent() -> String? {
+        switch (self) {
+            case .UAT:
+                return "uat" + "."
+            case .Production:
+                return ""
+            default:
+                return nil
+        }
+    }
+    
+    private init(key: String) {
+        if key == Phoenix.Environment.UAT.urlComponent()! {
+            self = .UAT
+        }
+        else if key == Phoenix.Environment.Production.urlComponent()! {
+            self = .Production
+        }
+        else {
+            self = .NoEnvironment
+        }
+    }
+}
+
+private extension Phoenix.Region {
+    private func urlComponent() -> String? {
+        switch (self) {
+            case .UnitedStates:
+                return ".com"
+            case .Australia:
+                return ".com.au"
+            case .Europe:
+                return ".eu"
+            case .Singapore:
+                return ".com.sg"
+            default:
+                return nil
+        }
+    }
+}
+
 /// This extension is intended to provide all the various path components required to compose urls for enpoints.
 internal extension NSURL {
+    convenience init?(module: Module, configuration: Phoenix.Configuration) {
+        self.init(module: module, environment: configuration.environment, region: configuration.region)
+    }
+    
+    convenience init?(module: Module, environment: Phoenix.Environment, region: Phoenix.Region) {
+        let moduleInURL : String
+        
+        if (module.rawValue.characters.count > 0) {
+            moduleInURL = "\(module.rawValue)."
+        }
+        else {
+            moduleInURL = ""
+        }
+        
+        
+        guard let environmentInURL = environment.urlComponent() else {
+            return nil
+        }
+        
+        guard let regionInURL = region.urlComponent() else {
+            return nil
+        }
+        
+        
+        let url = String(format: "https://\(moduleInURL)api.\(environmentInURL)phoenixplatform\(regionInURL)/v2",
+            arguments: [moduleInURL, environmentInURL, regionInURL])
+        
+        self.init(string: url)
+    }
+    
+    func environment() -> Phoenix.Environment {
+        guard let rangeOfPrefix = self.absoluteString.rangeOfString("api.") else {
+            return .NoEnvironment
+        }
+        
+        guard let rangeOfSuffix = self.absoluteString.rangeOfString("phoenixplatform") else {
+            return .NoEnvironment
+        }
+        
+        let rangeOfEnviroment = Range<String.Index>(start: rangeOfPrefix.endIndex,
+            end: rangeOfSuffix.startIndex)
+        
+        let envrionment = self.absoluteString.substringWithRange(rangeOfEnviroment)
+        
+        return Phoenix.Environment(key: envrionment)
+    }
+    
     
     func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
         return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
