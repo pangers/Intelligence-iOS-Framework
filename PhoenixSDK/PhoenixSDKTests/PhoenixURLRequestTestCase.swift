@@ -25,9 +25,6 @@ class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
         
         let request = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
         
-        let baseURL = mockConfiguration.identityBaseURL()!
-        XCTAssertEqual(request.URL!.absoluteString, "\(baseURL)/companies/\(mockConfiguration.companyId)/users")
-        
         guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")
             return

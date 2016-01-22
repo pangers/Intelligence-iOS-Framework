@@ -44,7 +44,7 @@ internal extension NSURLRequest {
     }
     
     class func phx_URLRequestForValidate(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.authenticationBaseURL()!.phx_URLByAppendingOAuthValidatePath()
+        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthValidatePath()
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
@@ -57,7 +57,7 @@ internal extension NSURLRequest {
     
     class func phx_URLRequestForRefresh(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         assert(oauth.refreshToken != nil)
-        let url = configuration.authenticationBaseURL()!.phx_URLByAppendingOAuthTokenPath()
+        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
         var body = [String: String]()
@@ -75,7 +75,7 @@ internal extension NSURLRequest {
     }
     
     class func phx_URLRequestForLogin(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.authenticationBaseURL()!.phx_URLByAppendingOAuthTokenPath()
+        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
         var body = [String: String]()
@@ -106,7 +106,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to assign a role to a given user.
     class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingAssignRole()
             .phx_URLByAppendingQueryString("userid=\(user.userId)&roleid=\(configuration.sdkUserRole)")
@@ -122,7 +122,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingCompanies(configuration.companyId)
             .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
@@ -138,7 +138,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProviders(configuration.providerId)
             .phx_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
@@ -153,7 +153,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingCompanies(configuration.companyId)
             .phx_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
@@ -170,7 +170,7 @@ internal extension NSURLRequest {
     // MARK: Identifiers
     
     class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingUsers(oauth.userId)
             .phx_URLByAppendingIdentifiers()
@@ -191,7 +191,7 @@ internal extension NSURLRequest {
     }
     
     class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingUsers(oauth.userId)
             .phx_URLByAppendingIdentifiers(tokenId)
@@ -209,7 +209,7 @@ internal extension NSURLRequest {
     
     /// - Returns: An NSURLRequest to create a given installation.
     class func phx_URLRequestForInstallationCreate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingApplications(configuration.applicationID)
             .phx_URLByAppendingInstallations()
@@ -227,7 +227,7 @@ internal extension NSURLRequest {
 
     /// - returns: An NSURLRequest to update a given installation.
     class func phx_URLRequestForInstallationUpdate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.identityBaseURL()!
+        let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingApplications(configuration.applicationID)
             .phx_URLByAppendingInstallations()
@@ -250,7 +250,7 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
-        let url = configuration.analyticsBaseURL()!
+        let url = NSURL(module: .Analytics, configuration: configuration)!
             .phx_URLByAppendingRootAnalyticsPath()
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingEvents()
@@ -275,7 +275,7 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to download geofences.
     class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
-        let url = configuration.locationBaseURL()!
+        let url = NSURL(module: .Location, configuration: configuration)!
             .phx_URLByAppendingRootLocationPath()
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingGeofences()
