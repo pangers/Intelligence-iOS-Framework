@@ -61,27 +61,25 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     }
     
     func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        
+        if challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust {
+            completionHandler(.PerformDefaultHandling, nil)
+            return
+        }
+        
         switch self.certificateTrust {
             case .Valid:
                 // Use the default handling
                 completionHandler(.PerformDefaultHandling, nil)
+            case .AnyNonProduction where NSURL(string: challenge.protectionSpace.host)?.environment() == .Production:
+                // Use the default handling
+                completionHandler(.PerformDefaultHandling, nil)
             case .AnyNonProduction:
-//                if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-//                    // Trust the server
-//                    completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
-//                }
-//                else {
-//                    completionHandler(.PerformDefaultHandling, nil)
-//                }
-                break
+                // Trust the server
+                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
             case .Any:
-                if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-                    // Trust the server
-                    completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
-                }
-                else {
-                    completionHandler(.PerformDefaultHandling, nil)
-                }
+                // Trust the server
+                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
         }
     }
     
