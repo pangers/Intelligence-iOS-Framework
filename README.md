@@ -19,11 +19,11 @@ Client Secret (Android): OCN20qleymuqjlqbfcwbcwnjdwphdgoxpocrpxvp
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
 
-## Getting Started ##
+# Getting Started #
 
 In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
 
-### Importing SDK ###
+## Importing SDK ##
 
 First of all, create a new Workspace to embed both your project and the PhoenixSDK framework project.
 
@@ -47,15 +47,11 @@ import PhoenixSDK
 @import PhoenixSDK;
 ```
 
-### Configuration ###
+## Create & Configure your Account ##
 
-In order to configure Phoenix you will need to first login/register on the Phoenix Platform in the appropriate region then setup an iOS Application. This should provide you with the client ID, client secret, project ID, and application ID. 
+Before using the SDK you will need a Phoenix account. Instructions for creating and configuring this account can be found in [Intellegence - Getting Started](http://tgrs.pk/m9lq5).
 
-You will also need to setup a user role in order for the SDK to be able communicate with the platform. The SDK user role should be able to track analytics, call update user, get user, register/unregister device tokens (identifiers), and get geofences.
-
-![Screen Shot 2015-10-14 at 11.07.33.png](https://bitbucket.org/repo/4z6Eb8/images/2500708198-Screen%20Shot%202015-10-14%20at%2011.07.33.png)
-
-#### Configuration JSON File ####
+## Configuration JSON File ##
 
 All of these variables come from the Phoenix Platform and will need to be included in a JSON file bundled with your iOS App:
 
@@ -86,7 +82,7 @@ As an example, your configuration file should look something like:
 
 ```
 
-### Initialization ###
+## Initialization ##
 
 The Phoenix SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
 
@@ -256,7 +252,7 @@ Consider that the Phoenix.Configuration can throw exceptions if you haven't conf
 Also, check the Phoenix.Configuration and Phoenix classes to learn about more initializers available for you.
 
 
-### Startup ###
+## Startup ##
 
 Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Phoenix object is initialised, but it can be deferred until a more convenient time. You will receive a 'success' flag in the completion block, if this returns false, something is probably incorrectly configured. You should receive an error from one of the PhoenixDelegate methods.
 
@@ -283,7 +279,7 @@ phoenix.startup { (success) -> () in
         
 ```
 
-### Shutdown ###
+## Shutdown ##
 
 When you app is terminated you should call the shutdown method in order for the SDK to do any cleanup and store anything relevant to the next session.
 
@@ -424,7 +420,7 @@ This module provides methods for user management within the Phoenix platform. Al
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
 
-#### Login ####
+### Login ###
 
 If you have a registered account on the Phoenix platform you will be able to login to that account using the 'login' method:
 
@@ -456,7 +452,7 @@ The 'login' method can return the following additional errors:
 * IdentityError.LoginFailed: There was an issue that occurred during login, could be due to incorrect credentials.
 
 
-#### Logout ####
+### Logout ###
 
 Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method:
 
@@ -480,7 +476,7 @@ phoenix.identity.logout()
 
 
 
-#### Get Me ####
+### Get Me ###
 
 Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.
 
@@ -518,7 +514,7 @@ The 'getMe' method can return the following additional errors:
 * IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
 
 
-#### Update User ####
+### Update User ###
 
 The code to update a user for each language is as follows:
 
@@ -559,7 +555,7 @@ The 'updateUser' method can return the following additional errors:
 
 Please note that you can not update the ''username' or the 'password' of a user
 
-#### Register Device Token ####
+### Register Device Token ###
 
 As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token, since you would not want to send it multiple times.
 
@@ -615,7 +611,7 @@ The 'registerDeviceToken' method can return the following additional errors:
 * IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform. This may occur if you register the same token twice.
 
 
-#### Unregister Device Token ####
+### Unregister Device Token ###
 
 The developer is responsible for unregistering device tokens, they can only be assigned to one user at a time, so if you forget to unregister from the previous user you will continue receiving push notifications meant for another user. In order to unregister you will need to store the tokenId returned by the 'registerDeviceToken' method then send this before logging out. If your app does not implement the login/logout functionality you will most likely never need to call this method.
 
