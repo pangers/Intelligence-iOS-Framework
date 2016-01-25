@@ -60,8 +60,9 @@ All of these variables come from the Phoenix Platform and will need to be includ
 2. "application_id" (Integer): Can be found on your configured Application.
 4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
 5. "region" (String): "US", "EU", "AU" or "SG"
-6. "company_id" (Integer): Can be obtained from the Dashboard.
-7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
+6. "environment" (String): "uat" or "production"
+7. "company_id" (Integer): Can be obtained from the Dashboard.
+8. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
 
 As an example, your configuration file should look something like:
 
@@ -74,6 +75,7 @@ As an example, your configuration file should look something like:
     "application_id": 10,
     "project_id": 20,
     "region": "EU",
+    "environment": "production",
     "company_id" : 10,
     "sdk_user_role" : 1000
 }
@@ -169,6 +171,7 @@ configuration.clientSecret = "YOUR_CLIENT_SECRET"
 configuration.projectID = 123456789
 configuration.applicationID = 987654321
 configuration.region = Phoenix.Region.Europe
+configuration.environment = Phoenix.Environment.Production
 configuration.sdk_user_role = 1000
 
 ```
@@ -183,6 +186,7 @@ configuration.clientSecret = @"YOUR_CLIENT_SECRET";
 configuration.projectID = 123456789;
 configuration.applicationID = 987654321;
 configuration.region = RegionEurope;                
+configuration.environment = EnvironmentProduction;
 configuration.sdk_user_role = 1000;
         
 
@@ -203,6 +207,9 @@ do {
             
 	// Change region programmatically
 	configuration.region = Phoenix.Region.Europe
+
+    // Change environment programmatically
+    configuration.environment = Phoenix.Environment.Production
             
 	// Instantiate with hybrid configuration
 	phoenix = try Phoenix(withDelegate: self, configuration: configuration)
@@ -224,6 +231,9 @@ PHXConfiguration *configuration = [[PHXConfiguration alloc] initFromFile:@"Phoen
         
 // Change region programmatically
 configuration.region = RegionEurope;
+
+// Change environment programmatically
+configuration.environment = EnvironmentProduction;
         
 Phoenix *phoenix = [[Phoenix alloc] initWithDelegate: self configuration:configuration error:&err];
 if (nil != err) {
@@ -542,6 +552,8 @@ The 'updateUser' method can return the following additional errors:
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
 * IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
+
+Please note that you can not update the ''username' or the 'password' of a user
 
 ### Register Device Token ###
 

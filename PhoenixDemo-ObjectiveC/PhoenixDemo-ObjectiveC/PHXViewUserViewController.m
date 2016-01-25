@@ -82,8 +82,6 @@
 }
 
 - (IBAction)didTapUpdateUser:(id)sender {
-    self.user.username = self.username.text;
-    self.user.password = self.password.text;
     self.user.firstName = self.firstname.text;
     self.user.lastName = self.lastname.text;
     self.user.avatarURL = self.avatarURL.text;

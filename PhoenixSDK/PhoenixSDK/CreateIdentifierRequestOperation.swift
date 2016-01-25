@@ -29,7 +29,7 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
     override func main() {
         super.main()
         let request = NSURLRequest.phx_URLRequestForIdentifierCreation(tokenString, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager.phx_executeSynchronousDataTaskWithRequest(request)
+        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
         if handleError(IdentityError.domain, code: IdentityError.DeviceTokenRegistrationError.rawValue) {
             return

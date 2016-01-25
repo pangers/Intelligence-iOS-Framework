@@ -8,10 +8,10 @@
 
 import Foundation
 
-private let phoenixIdentityAPIVersion = "identity/v1"
 private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
+/// This extension is intended to provide all the various path components required to compose urls for enpoints.
 internal extension NSURL {
     
     func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
@@ -22,18 +22,14 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
     }
     
-    func phx_URLByAppendingRootIdentityPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixIdentityAPIVersion)")
-    }
-    
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/token")
+        return URLByAppendingPathComponent("/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return URLByAppendingPathComponent("\(phoenixIdentityAPIVersion)/oauth/validate")
+        return URLByAppendingPathComponent("/validate")
     }
     
     /// - Returns: NSURL with appended applications path.
@@ -67,9 +63,25 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/geofences")
     }
     
-    /// - Returns: NSURL with append geofences path.
-    func phx_URLByAppendingRoles() -> NSURL! {
-        return URLByAppendingPathComponent("/roles")
+    /// - Returns: NSURL with append assign role path.
+    func phx_URLByAppendingAssignRole() -> NSURL! {
+        return URLByAppendingPathComponent("/assignrole")
+    }
+    
+    /// - Returns: NSURL with appended providers path.
+    func phx_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
+        if let providerId = providerId {
+            return URLByAppendingPathComponent("/providers/\(providerId)")
+        }
+        return URLByAppendingPathComponent("/providers")
+    }
+    
+    /// - Returns: NSURL with appended companies path.
+    func phx_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
+        if let companyID = companyID {
+            return URLByAppendingPathComponent("/companies/\(companyID)")
+        }
+        return URLByAppendingPathComponent("/companies")
     }
     
     /// - Returns: NSURL with appended projects path.

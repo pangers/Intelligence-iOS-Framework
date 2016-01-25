@@ -25,7 +25,8 @@ class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
         
         let request = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
         
-        XCTAssertEqual(request.URL!.absoluteString, "\(mockConfiguration.region.baseURL())/identity/v1/projects/\(mockConfiguration.projectID)/users")
+        let baseURL = mockConfiguration.identityBaseURL()!
+        XCTAssertEqual(request.URL!.absoluteString, "\(baseURL)/companies/\(mockConfiguration.companyId)/users")
         
         guard let userDictionary = request.HTTPBody?.phx_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")
@@ -41,11 +42,11 @@ class PhoenixURLRequestTestCase: PhoenixBaseTestCase {
         XCTAssertEqual(userDictionary["AvatarUrl"] as? String, avatarURL)
 
         // Fixed by SDK
-        XCTAssertEqual(userDictionary["UserTypeId"] as? String, "User")
+        XCTAssertEqual(userDictionary["UserTypeId"] as? Int, 6)
         XCTAssertEqual(userDictionary["MetaData"] as? String, "")
         XCTAssertEqual(userDictionary["LockingCount"] as? Int, 0)
-        XCTAssertEqual(userDictionary["IsActive"] as? Int, 1)
-        XCTAssertEqual(userDictionary["Reference"] as? String, "")
+        XCTAssertEqual(userDictionary["IsActive"] as? Bool, true)
+        XCTAssertEqual(userDictionary["Reference"] as? String, firstname + "." + lastname)
         
     }
     

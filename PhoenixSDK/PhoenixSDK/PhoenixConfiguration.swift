@@ -15,8 +15,17 @@ private enum ConfigurationKey: String {
     case ApplicationID = "application_id"
     case ProjectID = "project_id"
     case Region = "region"
+    case Environment = "environment"
     case CompanyId = "company_id"
     case SDKUserRole = "sdk_user_role"
+}
+
+enum Module : String {
+    case NoModule = ""
+    case Authentication = "authentication"
+    case Identity = "identity"
+    case Analytics = "analytics"
+    case Location = "location"
 }
 
 public extension Phoenix {
@@ -32,6 +41,9 @@ public extension Phoenix {
         /// The client secret
         public var clientSecret = ""
 
+        /// The provider Id
+        public let providerId = 300
+        
         /// The company Id
         public var companyId = 0
 
@@ -47,9 +59,16 @@ public extension Phoenix {
         /// The region
         public var region:Region
         
-        /// Default initializer. Sets region to .NoRegion so we can notice that the region is invalid.
+        /// The environment to connect to
+        public var environment:Environment
+        
+        /// Default initializer.
+        /// Sets region to .NoRegion so we can notice that the region is invalid.
+        /// Sets environment to .NoEnvironment so we can notice that the environment is invalid.
         public override init() {
             self.region = .NoRegion
+            self.environment = .NoEnvironment
+            
             super.init()
         }
 
@@ -79,6 +98,7 @@ public extension Phoenix {
         public func clone() -> Configuration {
             let copy = Configuration()
             copy.region = self.region
+            copy.environment = self.environment
             copy.applicationID = self.applicationID
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
@@ -120,6 +140,7 @@ public extension Phoenix {
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
             self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
+            self.environment = try Phoenix.Environment(code: value(forKey: .Environment, inContents:contents))
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
             self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
         }
@@ -134,17 +155,53 @@ public extension Phoenix {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == .NoRegion || companyId <= 0 || sdkUserRole <= 0
+                applicationID <= 0 || region == .NoRegion || environment == .NoEnvironment || companyId <= 0 || sdkUserRole <= 0
+        }
+        
+        /// - Returns: Optional base URL for the authentication module.
+        func authenticationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Authentication)
+        }
+        
+        /// - Returns: Optional base URL for the identity module.
+        func identityBaseURL() -> NSURL? {
+            return baseURL(forModule: .Identity)
+        }
+        
+        /// - Returns: Optional base URL for the anayltics module.
+        func analyticsBaseURL() -> NSURL? {
+            return baseURL(forModule: .Analytics)
+        }
+        
+        /// - Returns: Optional base URL for the location module.
+        func locationBaseURL() -> NSURL? {
+            return baseURL(forModule: .Location)
         }
         
         /// - Returns: Optional base URL to call.
-        var baseURL: NSURL? {
-            // nil on no region
-            if region == .NoRegion {
-                return nil
+        func baseURL(forModule module: Module) -> NSURL? {
+            guard let environment = self.environment.urlEnvironment(),
+                let domain = self.region.urlDomain() else {
+                   return nil
             }
             
-            return NSURL(string: self.region.baseURL())
+            
+            var url = "https://"
+            
+            if (module.rawValue.characters.count > 0) {
+                url += "\(module.rawValue)."
+            }
+            
+            url += "api."
+            
+            if (environment.characters.count > 0) {
+                url += "\(environment)."
+            }
+            
+            // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)
+            url += "phoenixplatform\(domain)/v2"
+            
+            return NSURL(string: url)
         }
     }
 }
