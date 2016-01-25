@@ -38,8 +38,8 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     /// Provider responsible for serving OAuth information.
     internal var oauthProvider: PhoenixOAuthProvider!
     
-    /// The level we will trust the server's certificates
-    internal let certificateTrust: CertificateTrust
+    /// The trust policy for the server's certificates
+    internal let certificateTrustPolicy: CertificateTrustPolicy
     
     /// NSURLSession with default session configuration.
     internal private(set) var sessionManager : NSURLSession?
@@ -48,12 +48,12 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     // MARK: Initializers
     
     /// Initialize new instance of Phoenix Networking class
-    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider, certificateTrust: CertificateTrust) {
+    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider, certificateTrustPolicy: CertificateTrustPolicy) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
         self.oauthProvider = oauthProvider
-        self.certificateTrust = certificateTrust
+        self.certificateTrustPolicy = certificateTrustPolicy
         
         super.init()
         
@@ -67,7 +67,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
             return
         }
         
-        switch self.certificateTrust {
+        switch self.certificateTrustPolicy {
             case .Valid:
                 // Use the default handling
                 completionHandler(.PerformDefaultHandling, nil)

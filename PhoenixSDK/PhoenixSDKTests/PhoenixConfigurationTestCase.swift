@@ -149,11 +149,11 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.region = .NoRegion
+        cfg.region = nil
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.environment = .NoEnvironment
+        cfg.environment = nil
         testConfigurationMissingPropertyError(cfg)
     }
 }

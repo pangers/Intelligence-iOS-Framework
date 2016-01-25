@@ -25,15 +25,11 @@ public extension Phoenix {
         /// SG Region
         case Singapore
         
-        /// NoRegion in case a non optional region needs to be initialized. Will fail 
-        /// when calling baseURL.
-        case NoRegion
-        
         
         /// This init method should be used to extract the region from a configuration file and turn it into an enum value
         /// The values that should be used are "US", "AU", "EU" and "SG"
-        /// If another value is used we will create the .NoRegion enum value
-        init(code: String) {
+        /// If another value is used this will return nil
+        init?(code: String) {
             switch code {
             case "US":
                 self = .UnitedStates
@@ -44,7 +40,7 @@ public extension Phoenix {
             case "SG":
                 self = .Singapore
             default:
-                self = .NoRegion
+                return nil
             }
         }
     }

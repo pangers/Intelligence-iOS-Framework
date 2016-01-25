@@ -26,12 +26,10 @@ private extension Phoenix.Environment {
                 return "uat" + "."
             case .Production:
                 return ""
-            default:
-                return nil
         }
     }
     
-    private init(key: String) {
+    private init?(key: String) {
         if key == Phoenix.Environment.UAT.urlComponent()! {
             self = .UAT
         }
@@ -39,7 +37,7 @@ private extension Phoenix.Environment {
             self = .Production
         }
         else {
-            self = .NoEnvironment
+            return nil
         }
     }
 }
@@ -55,8 +53,6 @@ private extension Phoenix.Region {
                 return ".eu"
             case .Singapore:
                 return ".com.sg"
-            default:
-                return nil
         }
     }
 }
@@ -67,7 +63,7 @@ internal extension NSURL {
         self.init(module: module, environment: configuration.environment, region: configuration.region)
     }
     
-    convenience init?(module: Module, environment: Phoenix.Environment, region: Phoenix.Region) {
+    convenience init?(module: Module, environment: Phoenix.Environment?, region: Phoenix.Region?) {
         let moduleInURL : String
         
         if (module.rawValue.characters.count > 0) {
@@ -78,11 +74,11 @@ internal extension NSURL {
         }
         
         
-        guard let environmentInURL = environment.urlComponent() else {
+        guard let environmentInURL = environment?.urlComponent() else {
             return nil
         }
         
-        guard let regionInURL = region.urlComponent() else {
+        guard let regionInURL = region?.urlComponent() else {
             return nil
         }
         
@@ -93,13 +89,13 @@ internal extension NSURL {
         self.init(string: url)
     }
     
-    func environment() -> Phoenix.Environment {
+    func environment() -> Phoenix.Environment? {
         guard let rangeOfPrefix = self.absoluteString.rangeOfString("api.") else {
-            return .NoEnvironment
+            return nil
         }
         
         guard let rangeOfSuffix = self.absoluteString.rangeOfString("phoenixplatform") else {
-            return .NoEnvironment
+            return nil
         }
         
         let rangeOfEnviroment = Range<String.Index>(start: rangeOfPrefix.endIndex,
