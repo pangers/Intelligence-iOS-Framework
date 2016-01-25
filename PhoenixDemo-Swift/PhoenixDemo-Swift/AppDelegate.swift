@@ -133,17 +133,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 })
             return
         }
-        let presenterViewController = window?.rootViewController
-        if  presenterViewController == nil || presenterViewController?.presentedViewController != nil {
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue(), { [weak self] () -> Void in
-                self?.alert(withMessage: message)
-                })
-            return
+        
+        var presenterViewController = window?.rootViewController
+        
+        while let presentedViewController = presenterViewController?.presentedViewController {
+            presenterViewController = presentedViewController
         }
-        let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
-        controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        presenterViewController?.presentViewController(controller, animated: true, completion: nil)
+        
+        print(presenterViewController)
+        
+        if let presenterViewController = presenterViewController {
+            let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+            presenterViewController.presentViewController(controller, animated: true, completion: nil)
+        }
+        else {
+            print("Unable to raise alert: " + message)
+        }
     }
     
     // MARK:- PhoenixDelegate

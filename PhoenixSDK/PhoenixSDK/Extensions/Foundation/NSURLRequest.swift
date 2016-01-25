@@ -25,7 +25,14 @@ private let HTTPBodyGrantTypeClientCredentials = "client_credentials"
 private let HTTPBodyGrantTypePassword = "password"
 private let HTTPBodyGrantTypeRefreshToken = "refresh_token"
 
-private let PHXIdentifierTypeDeviceToken = "iOS_Device_Token"
+private enum IdentifierType : Int {
+    case Email = 1
+    case Msisdn = 2
+    case iOSDeviceToken = 3
+    case AndroidRegistrationID = 4
+    case WindowsRegistrationID = 5
+}
+
 
 // MARK: - OAuth
 
@@ -172,20 +179,26 @@ internal extension NSURLRequest {
     class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
             .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingUsers(oauth.userId)
             .phx_URLByAppendingIdentifiers()
         let request = NSMutableURLRequest(URL: url)
         
-        let json = [["ProjectId": "\(configuration.projectID)",
-            "IdentifierTypeId": PHXIdentifierTypeDeviceToken,
-            "IsConfirmed":" false",
-            "value": tokenString]]
+        var json : [String : AnyObject] = ["ApplicationId": configuration.applicationID,
+            "IdentifierTypeId": IdentifierType.iOSDeviceToken.rawValue,
+            "IsConfirmed": true,
+            "Value": tokenString]
+        
+        if let userId = network.oauthProvider.loggedInUserOAuth.userId {
+            json["UserId"] = userId
+        }
+        else if let userId = network.oauthProvider.sdkUserOAuth.userId {
+            json["UserId"] = userId
+        }
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = json.phx_toJSONData()
+        request.HTTPBody = [json].phx_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -193,7 +206,6 @@ internal extension NSURLRequest {
     class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
             .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingUsers(oauth.userId)
             .phx_URLByAppendingIdentifiers(tokenId)
         let request = NSMutableURLRequest(URL: url)
         
