@@ -672,15 +672,11 @@ To do so, you'll have to provide a GeofenceQuery object defining how you want to
     
 * **latitude: Double**. The longitude to calculate the distance to. Must be provided.
     
-* **sortingDirection: GeofenceSortDirection**. Ascending or Descending. **Defaults to Ascending**
-    
-* **sortingCriteria: GeofenceSortCriteria?**. Sets how the geofences should be sorted. The available options are Distance, Id and Name. **Defaults to Distance**
-    
-* **radius: Double?**. The radius to filter geofences from.
+* **radius: Double?**. The radius (in meters) to filter geofences from. Must be provided.
     
 * **pageSize: Int?**. The number of geofences per page loaded.
     
-* **pageNumber: Int?**. The page to load.
+* **pageNumber: Int?**. The page to load (starting at 0).
 
 The next sample code shows how to initialize a sample query:
 
@@ -689,12 +685,9 @@ The next sample code shows how to initialize a sample query:
 ```
 #!swift
 
-let query = GeofenceQuery(location: Coordinate(withLatitude: 42, longitude: 2))
-query.radius = 1000
-query.pageSize = 10
+let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000)
+query.pageSize = 100
 query.pageNumber = 0
-query.sortingDirection = .Ascending
-query.sortingCriteria = .Distance
 
 ```
 
@@ -703,15 +696,12 @@ query.sortingCriteria = .Distance
 ```
 #!objc
 
-PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:42
-                                                          longitude:2];
+PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:51.5200395
+                                                          longitude:-0.1341359];
 
-PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate];
-[query setRadius:1000];
-[query setPage:1];
-[query setPageSize:10];
-[query setSortingDirection:GeofenceSortDirectionAscending];
-[query setSortingCriteria:GeofenceSortCriteriaDistance];
+PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:40075000];
+[query setPageSize:100];
+[query setPage:0];
 
 ```
 
