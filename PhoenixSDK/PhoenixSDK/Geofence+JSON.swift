@@ -22,9 +22,9 @@ internal enum GeofenceKey: String {
     /// Radius key within a data object.
     case RadiusKey = "Radius"
     /// Modify date key within a data object.
-    case ModifyDateKey = "ModifyDate"
+    case DateUpdatedKey = "DateUpdated"
     /// Create date key within a data object.
-    case CreateDateKey = "CreateDate"
+    case DateCreatedKey = "DateCreated"
     /// Geolocation key within a data object.
     case GeolocationKey = "Geolocation"
     /// Latitude key within a geolocation object.
@@ -91,8 +91,8 @@ internal extension Geofence {
     /// - parameter json: Optional JSONDictionary object.
     internal class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
-            let createDate: String = try geoValue(forKey: .CreateDateKey, dictionary: json)
-            let modifyDate: String = try geoValue(forKey: .ModifyDateKey, dictionary: json)
+            let createDate: String = try geoValue(forKey: .DateCreatedKey, dictionary: json)
+            let modifyDate: String = try geoValue(forKey: .DateUpdatedKey, dictionary: json)
             let geolocation: JSONDictionary = try geoValue(forKey: .GeolocationKey, dictionary: json)
             let geofence = Geofence()
             geofence.latitude = try geoValue(forKey: .LatitudeKey, dictionary: geolocation)
