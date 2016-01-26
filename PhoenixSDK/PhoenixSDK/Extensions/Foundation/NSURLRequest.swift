@@ -211,7 +211,6 @@ internal extension NSURLRequest {
     class func phx_URLRequestForInstallationCreate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
             .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingApplications(configuration.applicationID)
             .phx_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         
@@ -229,7 +228,6 @@ internal extension NSURLRequest {
     class func phx_URLRequestForInstallationUpdate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.identityBaseURL()!
             .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingApplications(configuration.applicationID)
             .phx_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         

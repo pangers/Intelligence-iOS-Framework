@@ -32,14 +32,6 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/validate")
     }
     
-    /// - Returns: NSURL with appended applications path.
-    func phx_URLByAppendingApplications(applicationID: Int? = nil) -> NSURL! {
-        if let applicationID = applicationID {
-            return URLByAppendingPathComponent("/applications/\(applicationID)")
-        }
-        return URLByAppendingPathComponent("/applications")
-    }
-    
     /// - Returns: NSURL with append identifiers path.
     func phx_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
         if let tokenID = tokenID {
