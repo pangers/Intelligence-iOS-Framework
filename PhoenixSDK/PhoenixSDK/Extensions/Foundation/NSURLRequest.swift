@@ -249,7 +249,6 @@ internal extension NSURLRequest {
     
     class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = configuration.analyticsBaseURL()!
-            .phx_URLByAppendingRootAnalyticsPath()
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingEvents()
         let request = NSMutableURLRequest(URL: url)
