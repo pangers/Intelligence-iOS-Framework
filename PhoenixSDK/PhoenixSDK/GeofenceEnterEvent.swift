@@ -12,7 +12,7 @@ import Foundation
 internal class GeofenceEnterEvent: Event {
     
     init(geofence: Geofence) {
-        super.init(withType: "Phoenix.Location.Geofence.Enter", value: 0, targetId: String(geofence.id), metadata: nil)
+        super.init(withType: Event.GeofenceEnteredEventType, value: 0, targetId: String(geofence.id), metadata: nil)
     }
     
 }

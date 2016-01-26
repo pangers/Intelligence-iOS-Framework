@@ -250,7 +250,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     - parameter geofence: The geofence entered
     */
     func trackGeofenceEntered(geofence:Geofence) {
-        let geofenceEvent = Event(withType: "Phoenix.Location.Geofence.Enter")
+        let geofenceEvent = Event(withType: Event.GeofenceEnteredEventType)
         geofenceEvent.targetId = String(geofence.id)
         analytics?.track(geofenceEvent)
     }
@@ -260,7 +260,7 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     - parameter geofence: The geofence exited
     */
     func trackGeofenceExited(geofence:Geofence) {
-        let geofenceEvent = Event(withType: "Phoenix.Location.Geofence.Exit")
+        let geofenceEvent = Event(withType: Event.GeofenceExitedEventType)
         geofenceEvent.targetId = String(geofence.id)
         analytics?.track(geofenceEvent)
     }

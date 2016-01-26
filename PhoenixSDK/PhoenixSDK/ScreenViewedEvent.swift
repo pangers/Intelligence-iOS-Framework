@@ -12,7 +12,7 @@ import Foundation
 internal class ScreenViewedEvent: Event {
     
     init(screenName: String, viewingDuration: NSTimeInterval) {
-        super.init(withType: "Phoenix.Identity.Application.ScreenViewed", value:viewingDuration, targetId:screenName, metadata:nil)
+        super.init(withType: Event.ApplicationScreenViewedEventType, value:viewingDuration, targetId: screenName, metadata:nil)
     }
     
 }

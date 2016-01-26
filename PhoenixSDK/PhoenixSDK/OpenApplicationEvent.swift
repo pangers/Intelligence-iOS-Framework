@@ -12,7 +12,7 @@ import Foundation
 internal class OpenApplicationEvent: Event {
     
     init() {
-        super.init(withType: "Phoenix.Identity.Application.Opened")
+        super.init(withType: Event.ApplicationOpenedEventType)
     }
     
 }
