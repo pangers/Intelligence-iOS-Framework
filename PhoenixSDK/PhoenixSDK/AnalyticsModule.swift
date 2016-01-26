@@ -111,6 +111,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     internal func prepareEvent(event: Event) -> JSONDictionary {
         var dictionary = event.toJSON()
         
+        dictionary[Event.ProjectIdKey] = configuration.projectID
         dictionary[Event.ApplicationIdKey] = configuration.applicationID
         dictionary[Event.DeviceTypeKey] = UIDevice.currentDevice().model
         dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion

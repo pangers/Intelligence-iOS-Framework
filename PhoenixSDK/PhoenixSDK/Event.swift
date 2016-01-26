@@ -33,9 +33,9 @@ public class Event: NSObject {
     internal static let InstallationIdKey = "PhoenixIdentity_InstallationId"
     internal static let ApplicationIdKey = "PhoenixIdentity_ApplicationId"
     internal static let ApplicationVersionKey = "ApplicationVersion"
+    internal static let ProjectIdKey = "ProjectId"
     internal static let DeviceTypeKey = "DeviceType"
-    internal static let OperationSystemVersionKey = "OperatingSystem"
-    internal static let MetadataTimestampKey = "Timestamp"
+    internal static let OperationSystemVersionKey = "OperatingSystemVersion"
     
     /// Type of Event we are trying to log.
     internal var eventType: String
@@ -70,10 +70,6 @@ public class Event: NSObject {
         
         // Set keys with optional values.
         dictionary <-? (Event.TargetIdKey, targetId)
-        if metadata == nil {
-            metadata = [String: AnyObject]()
-        }
-        // Add timestamp
         dictionary <-? (Event.MetadataKey, metadata)
         
         return dictionary
