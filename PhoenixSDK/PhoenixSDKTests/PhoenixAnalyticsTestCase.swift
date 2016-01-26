@@ -22,8 +22,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         "\"Id\": 2005," +
         "\"ProjectId\": 2030," +
         "\"Name\": \"DeskChriss\"," +
-        "\"CreateDate\": \"2015-08-04T08:13:02.8004593Z\"," +
-        "\"ModifyDate\": \"2015-08-04T08:13:02.8004593Z\"," +
+        "\"DateCreated\": \"2015-08-04T08:13:02.8004593Z\"," +
+        "\"DateUpdated\": \"2015-08-04T08:13:02.8004593Z\"," +
         "\"Address\": \"65 Tottenham Court Road, Fitzrovia, London W1T 2EU, UK\"," +
         "\"Radius\": 3.09" +
         "}]" +
