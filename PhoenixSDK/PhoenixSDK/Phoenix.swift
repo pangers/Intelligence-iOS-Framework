@@ -112,7 +112,7 @@ public final class Phoenix: NSObject {
         delegateWrapper.delegate = delegate
         delegateWrapper.phoenix = self
         
-        let network = network ?? Network(delegate: delegateWrapper, oauthProvider: oauthProvider)
+        let network = network ?? Network(delegate: delegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: configuration), oauthProvider: oauthProvider)
         
         if phoenixConfiguration.hasMissingProperty {
             throw ConfigurationError.MissingPropertyError

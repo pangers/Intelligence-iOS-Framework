@@ -29,11 +29,18 @@ internal enum HTTPStatusCode: Int {
     case NotFound = 404
 }
 
+/// Delegate for handling Authentication Challenges during URLSessions
+internal protocol AuthenticationChallengeDelegate {
+    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void)
+}
+
 /// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
 internal final class Network: NSObject, NSURLSessionDelegate {
     
     /// Delegate must be set before startup is called on modules.
     internal var delegate: PhoenixInternalDelegate!
+    
+    internal let authenticationChallengeDelegate: AuthenticationChallengeDelegate
     
     /// Provider responsible for serving OAuth information.
     internal var oauthProvider: PhoenixOAuthProvider!
@@ -45,10 +52,11 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     // MARK: Initializers
     
     /// Initialize new instance of Phoenix Networking class
-    init(delegate: PhoenixInternalDelegate, oauthProvider: PhoenixOAuthProvider) {
+    init(delegate: PhoenixInternalDelegate, authenticationChallengeDelegate: AuthenticationChallengeDelegate, oauthProvider: PhoenixOAuthProvider) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
+        self.authenticationChallengeDelegate = authenticationChallengeDelegate;
         self.oauthProvider = oauthProvider
         
         super.init()
@@ -57,10 +65,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     }
     
     func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        // Trust the server
-        // This needs to be done as the server certifcate does not cover the current url format
-        // [module].api.[enviroment].phoenixplatform.[regionalDomain]
-        completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+        self.authenticationChallengeDelegate.URLSession(session, didReceiveChallenge: challenge, completionHandler: completionHandler)
     }
     
     /// Return all queued OAuth operations (excluding pipeline operations).
