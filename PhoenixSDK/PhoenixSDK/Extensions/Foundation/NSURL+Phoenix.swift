@@ -19,6 +19,7 @@ enum Module : String {
     case Location = "location"
 }
 
+/// This extension is used to map the enum to the url, not for any other purpose
 private extension Phoenix.Environment {
     private func urlComponent() -> String? {
         switch (self) {
@@ -28,20 +29,9 @@ private extension Phoenix.Environment {
                 return ""
         }
     }
-    
-    private init?(key: String) {
-        if key == Phoenix.Environment.UAT.urlComponent()! {
-            self = .UAT
-        }
-        else if key == Phoenix.Environment.Production.urlComponent()! {
-            self = .Production
-        }
-        else {
-            return nil
-        }
-    }
 }
 
+/// This extension is used to map the enum to the url, not for any other purpose
 private extension Phoenix.Region {
     private func urlComponent() -> String? {
         switch (self) {
@@ -88,24 +78,6 @@ internal extension NSURL {
         
         self.init(string: url)
     }
-    
-    func environment() -> Phoenix.Environment? {
-        guard let rangeOfPrefix = self.absoluteString.rangeOfString("api.") else {
-            return nil
-        }
-        
-        guard let rangeOfSuffix = self.absoluteString.rangeOfString("phoenixplatform") else {
-            return nil
-        }
-        
-        let rangeOfEnviroment = Range<String.Index>(start: rangeOfPrefix.endIndex,
-            end: rangeOfSuffix.startIndex)
-        
-        let envrionment = self.absoluteString.substringWithRange(rangeOfEnviroment)
-        
-        return Phoenix.Environment(key: envrionment)
-    }
-    
     
     func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
         return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
