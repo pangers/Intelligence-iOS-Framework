@@ -9,11 +9,11 @@
 import Foundation
 
 /// Event that the developer can fire once a screen has been viewed
-internal class ScreenViewedEvent: Event {
+@objc(PHXScreenViewedEvent) public class ScreenViewedEvent: Event {
     
     static let EventType = "Phoenix.Identity.Application.ScreenViewed"
     
-    init(screenName: String, viewingDuration: NSTimeInterval) {
+    @objc public init(screenName: String, viewingDuration: NSTimeInterval) {
         super.init(withType: ScreenViewedEvent.EventType, value:viewingDuration, targetId: screenName, metadata:nil)
     }
     

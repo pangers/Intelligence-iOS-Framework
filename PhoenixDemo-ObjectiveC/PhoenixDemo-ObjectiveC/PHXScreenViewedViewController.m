@@ -110,7 +110,9 @@
 - (void)sendAnalytics {
 	NSTimeInterval viewingDuration = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
 	
-	[PHXPhoenixManager.phoenix.analytics trackScreenViewed:self.title viewingDuration:viewingDuration];
+    PHXEvent *event = [[PHXScreenViewedEvent alloc] initWithScreenName:self.title viewingDuration:viewingDuration];
+    
+    [PHXPhoenixManager.phoenix.analytics track:event];
 }
 
 @end

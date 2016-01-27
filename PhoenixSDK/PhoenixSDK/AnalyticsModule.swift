@@ -21,11 +21,6 @@ public protocol AnalyticsModuleProtocol : ModuleProtocol {
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
     func track(event: Event)
-    
-	/// Track user engagement and behavioral insight.
-	/// - parameter screenName: An identifier for the screen.
-	/// - parameter viewingDuration: The time (in seconds) spent on the screen.
-	func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval)
 }
 
 internal protocol LocationModuleProvider:class {
@@ -93,11 +88,6 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     
     func track(event: Event) {
         eventQueue?.enqueueEvent(prepareEvent(event))
-    }
-    
-    /// Track screen viewed event (externally managed).
-    func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
-        track(ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration))
     }
     
     // MARK: Internal
