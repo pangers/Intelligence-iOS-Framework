@@ -112,9 +112,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
         var dictionary = event.toJSON()
         
         if let eventType = dictionary[Event.EventTypeKey] as? String {
-            let typeIsApplication = (eventType == Event.ApplicationInstalledEventType ||
-                eventType == Event.ApplicationOpenedEventType ||
-                eventType == Event.ApplicationUpdatedEventType)
+            let typeIsApplication = (eventType == OpenApplicationEvent.EventType)
             
             if dictionary[Event.TargetIdKey] == nil && typeIsApplication {
                 dictionary[Event.TargetIdKey] = configuration.applicationID

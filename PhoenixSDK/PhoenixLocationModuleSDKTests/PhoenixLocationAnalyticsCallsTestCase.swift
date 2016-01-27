@@ -34,14 +34,14 @@ class PhoenixLocationAnalyticsCallsTestCase: PhoenixLocationBaseTestCase {
     func testEnterRegion() {
         (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
-            return $0.eventType == Event.GeofenceEnteredEventType && $0.targetId == String(geofence.id)
+            return $0.eventType == GeofenceEnterEvent.EventType && $0.targetId == String(geofence.id)
         }.count == 1
     }
     
     func testExitRegion() {
         (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
-            return $0.eventType == Event.GeofenceExitedEventType && $0.targetId == String(geofence.id)
+            return $0.eventType == GeofenceExitEvent.EventType && $0.targetId == String(geofence.id)
         }.count == 1
     }
     

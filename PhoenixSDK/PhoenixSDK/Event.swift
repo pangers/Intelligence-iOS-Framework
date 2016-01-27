@@ -13,15 +13,6 @@ import CoreLocation
 @objc(PHXEvent)
 public class Event: NSObject {
     internal static let EventTypeKey = "EventType"
-    
-    public static let ApplicationInstalledEventType = "Phoenix.Identity.Application.Installed"
-    public static let ApplicationOpenedEventType = "Phoenix.Identity.Application.Opened"
-    public static let ApplicationUpdatedEventType = "Phoenix.Identity.Application.Updated"
-    public static let ApplicationScreenViewedEventType = "Phoenix.Identity.Application.ScreenViewed"
-    public static let ApplicationTimeEventType = "Phoenix.Analytics.Application.Time"
-    public static let GeofenceEnteredEventType = "Phoenix.Location.Geofence.Entered"
-    public static let GeofenceExitedEventType = "Phoenix.Location.Geofence.Exited"
-    
     internal static let EventValueKey = "EventValue"
     internal static let EventDateKey = "EventDate"
     internal static let TargetIdKey = "TargetId"

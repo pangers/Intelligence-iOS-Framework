@@ -11,8 +11,10 @@ import Foundation
 /// Event that gets fired when a monitored geofence is entered.
 internal class GeofenceEnterEvent: Event {
     
+    static let EventType = "Phoenix.Location.Geofence.Entered"
+    
     init(geofence: Geofence) {
-        super.init(withType: Event.GeofenceEnteredEventType, value: 0, targetId: String(geofence.id), metadata: nil)
+        super.init(withType: GeofenceEnterEvent.EventType, value: 0, targetId: String(geofence.id), metadata: nil)
     }
     
 }

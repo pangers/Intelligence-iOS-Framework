@@ -45,7 +45,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testAppTimeEvent() {
         let event = TrackApplicationTimeEvent(withSeconds: 10)
         XCTAssert(event.value == Double(10))
-        XCTAssert(event.eventType == Event.ApplicationTimeEventType)
+        XCTAssert(event.eventType == TrackApplicationTimeEvent.EventType)
     }
     
     func testAnalyticsModule() {
@@ -109,7 +109,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             if expectCallbacks.count == 2 {
                 XCTAssert(event.value == 10)
             }
-            XCTAssert(event.eventType == Event.ApplicationTimeEventType)
+            XCTAssert(event.eventType == TrackApplicationTimeEvent.EventType)
             expectCallbacks.first?.fulfill()
             expectCallbacks.removeFirst()
         })
@@ -193,7 +193,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
         let event = GeofenceEnterEvent(geofence: geofence)
-        XCTAssert(event.eventType == Event.GeofenceEnteredEventType)
+        XCTAssert(event.eventType == GeofenceEnterEvent.EventType)
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
@@ -215,7 +215,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
         let event = GeofenceExitEvent(geofence: geofence)
-        XCTAssert(event.eventType == Event.GeofenceExitedEventType)
+        XCTAssert(event.eventType == GeofenceExitEvent.EventType)
         XCTAssert(event.targetId == String(geofence.id))
         XCTAssert(event.value == 0)
         
@@ -238,7 +238,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         
         // Create event, avoiding queueing/storage system.
         let event = OpenApplicationEvent()
-        XCTAssert(event.eventType == Event.ApplicationOpenedEventType)
+        XCTAssert(event.eventType == OpenApplicationEvent.EventType)
         XCTAssertNil(event.targetId)
         XCTAssert(event.value == 0)
         
@@ -263,7 +263,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
 		let screenName = "Unit Test Screen"
 		let viewingDuration = 42.0
 		let event = ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration)
-		XCTAssert(event.eventType == Event.ApplicationScreenViewedEventType)
+		XCTAssert(event.eventType == ScreenViewedEvent.EventType)
 		XCTAssert(event.targetId == screenName)
 		XCTAssert(event.value == viewingDuration)
 		
