@@ -286,7 +286,6 @@ internal extension NSURLRequest {
     /// - returns: An NSURLRequest to download geofences.
     class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
         let url = configuration.locationBaseURL()!
-            .phx_URLByAppendingRootLocationPath()
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingGeofences()
             .phx_URLByAppendingQueryString(query.urlQueryString())

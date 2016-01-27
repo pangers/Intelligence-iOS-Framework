@@ -8,7 +8,6 @@
 
 import Foundation
 
-private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
 /// This extension is intended to provide all the various path components required to compose urls for enpoints.
@@ -16,10 +15,6 @@ internal extension NSURL {
     
     func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
         return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
-    }
-    
-    func phx_URLByAppendingRootLocationPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
     }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.

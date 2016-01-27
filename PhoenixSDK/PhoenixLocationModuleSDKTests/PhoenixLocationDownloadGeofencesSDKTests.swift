@@ -14,11 +14,11 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     
     // MARK:- Test data
     
-    let geofencesResponse = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
+    let geofencesResponse = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"DateCreated\":\"2015-10-08T01:07:11.167\",\"DateUpdated\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"DateCreated\":\"2015-10-07T11:31:17.93\",\"DateUpdated\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
-    let geofencesInvalidResponse = "{\"TotalRecords\":2,\"Data2\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
+    let geofencesInvalidResponse = "{\"TotalRecords\":2,\"Data2\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"Id\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"DateCreated\":\"2015-10-08T01:07:11.167\",\"DateUpdated\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"DateCreated\":\"2015-10-07T11:31:17.93\",\"DateUpdated\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
-    let geofencesInvalidResponseKey = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"IdFailed\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"CreateDate\":\"2015-10-08T01:07:11.167\",\"ModifyDate\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"CreateDate\":\"2015-10-07T11:31:17.93\",\"ModifyDate\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
+    let geofencesInvalidResponseKey = "{\"TotalRecords\":2,\"Data\":[{\"Geolocation\":{\"Latitude\":51.5143512775593,\"Longitude\":-0.131894946098328},\"IdFailed\":2015,\"ProjectId\":2030,\"Name\":\"test region\",\"DateCreated\":\"2015-10-08T01:07:11.167\",\"DateUpdated\":\"2015-10-08T01:07:11.167\",\"Address\":\"6 Frith St, Soho, London W1D 3JA, UK\",\"Radius\":31.262409258152896,\"IsActive\":true},{\"Geolocation\":{\"Latitude\":51.513687,\"Longitude\":-0.1303285},\"Id\":2012,\"ProjectId\":2030,\"Name\":\"[Phoenix SDK Test Project_1]\",\"DateCreated\":\"2015-10-07T11:31:17.93\",\"DateUpdated\":\"2015-10-07T11:32:27.927\",\"Address\":\"18 Old Compton St, Soho, London W1D 4TN, UK\",\"Radius\":32.78}]}"
     
     let errorResponse = "{" +
         "\"error\": \"invalid_request\"," +
@@ -37,8 +37,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
-        query.setDefaultValues()
+        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
         
         mockDownloadGeofences(.Success, query: query)
         
@@ -56,7 +55,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
     
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
-        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2))
+        let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
         mockDownloadGeofences(.Success, query: query, body: errorResponse)
