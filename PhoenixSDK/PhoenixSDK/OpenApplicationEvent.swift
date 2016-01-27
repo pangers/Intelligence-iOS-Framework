@@ -13,8 +13,8 @@ internal class OpenApplicationEvent: Event {
     
     static let EventType = "Phoenix.Identity.Application.Opened"
     
-    init() {
-        super.init(withType: OpenApplicationEvent.EventType)
+    init(applicationID: Int) {
+        super.init(withType: OpenApplicationEvent.EventType, targetId: String(applicationID))
     }
     
 }

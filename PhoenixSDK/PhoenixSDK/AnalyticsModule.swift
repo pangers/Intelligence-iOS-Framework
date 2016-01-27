@@ -65,7 +65,9 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
             }
             this.eventQueue = EventQueue(withCallback: this.sendEvents)
             this.eventQueue?.startQueue()
-            this.trackApplicationOpened()
+            
+            this.track(OpenApplicationEvent(applicationID: this.configuration.applicationID))
+            
             this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: NSUserDefaults.standardUserDefaults()), callback: { [weak self] (event) -> () in
                 self?.track(event)
                 })
@@ -100,24 +102,11 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     
     // MARK: Internal
     
-    /// Track application open event (internally managed).
-    internal func trackApplicationOpened() {
-        track(OpenApplicationEvent())
-    }
-    
     /// Add automatically populated fields to dictionary.
     /// - parameter event: Event to prepare for sending.
     /// - returns: JSONDictionary representation of Event including populated fields.
     internal func prepareEvent(event: Event) -> JSONDictionary {
         var dictionary = event.toJSON()
-        
-        if let eventType = dictionary[Event.EventTypeKey] as? String {
-            let typeIsApplication = (eventType == OpenApplicationEvent.EventType)
-            
-            if dictionary[Event.TargetIdKey] == nil && typeIsApplication {
-                dictionary[Event.TargetIdKey] = configuration.applicationID
-            }
-        }
         
         dictionary[Event.ProjectIdKey] = configuration.projectID
         dictionary[Event.ApplicationIdKey] = configuration.applicationID

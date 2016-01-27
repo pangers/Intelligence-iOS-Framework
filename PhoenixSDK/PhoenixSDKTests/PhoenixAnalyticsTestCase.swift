@@ -237,9 +237,9 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
         // Create event, avoiding queueing/storage system.
-        let event = OpenApplicationEvent()
+        let event = OpenApplicationEvent(applicationID: mockConfiguration.applicationID)
         XCTAssert(event.eventType == OpenApplicationEvent.EventType)
-        XCTAssertNil(event.targetId)
+        XCTAssert(event.targetId == String(mockConfiguration.applicationID))
         XCTAssert(event.value == 0)
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
