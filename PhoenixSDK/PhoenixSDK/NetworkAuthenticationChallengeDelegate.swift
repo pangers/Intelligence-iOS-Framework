@@ -8,14 +8,14 @@
 
 import Foundation
 
-class NetworkAuthenticationChallengeDelegate : AuthenticationChallengeDelegate {
+internal class NetworkAuthenticationChallengeDelegate : NSObject, NSURLSessionDelegate {
     let configuration: Phoenix.Configuration
     
     init(configuration: Phoenix.Configuration) {
         self.configuration = configuration
     }
     
-    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+    @objc func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
         // Trust the server
         // This needs to be done as the server certifcate does not cover the current url format
         // [module].api.[enviroment].phoenixplatform.[regionalDomain]
