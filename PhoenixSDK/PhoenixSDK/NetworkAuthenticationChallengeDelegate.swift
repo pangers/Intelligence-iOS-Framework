@@ -8,14 +8,14 @@
 
 import Foundation
 
-class NetworkAuthenticationChallengeDelegate : AuthenticationChallengeDelegate {
+internal class NetworkAuthenticationChallengeDelegate : NSObject, NSURLSessionDelegate {
     let configuration: Phoenix.Configuration
     
     init(configuration: Phoenix.Configuration) {
         self.configuration = configuration
     }
     
-    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+    @objc func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust {
             completionHandler(.PerformDefaultHandling, nil)
             return
