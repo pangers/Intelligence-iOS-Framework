@@ -8,7 +8,8 @@
 
 import Foundation
 
-/// - Returns: Date formatter capable of parsing dates formatted like: '2015-07-08T08:04:48.403'
+/// - Returns: Date formatter capable of parsing dates formatted like: '2015-07-08T08:04:48.403Z'
+/// See https://www.ietf.org/rfc/rfc3339.txt
 internal var RFC3339DateFormatter: NSDateFormatter {
     struct Static {
         static var instance : NSDateFormatter? = nil
