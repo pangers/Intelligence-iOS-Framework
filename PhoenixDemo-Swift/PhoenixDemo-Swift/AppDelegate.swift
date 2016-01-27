@@ -140,8 +140,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             presenterViewController = presentedViewController
         }
         
-        print(presenterViewController)
-        
         if let presenterViewController = presenterViewController {
             let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
