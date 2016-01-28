@@ -23,6 +23,6 @@ class PhoenixEnvironmentTestCase: PhoenixBaseTestCase {
             XCTAssert(Phoenix.Environment(code:code) == value, "Incorrect enum value from string")
         }
         
-        XCTAssert(Phoenix.Environment(code:"Wrong code") == .NoEnvironment, "Incorrect enum value from string")
+        XCTAssertNil(Phoenix.Environment(code:"Wrong code"), "Incorrect enum value from string")
     }
 }

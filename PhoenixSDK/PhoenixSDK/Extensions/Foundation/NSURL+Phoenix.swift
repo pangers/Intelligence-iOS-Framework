@@ -26,8 +26,6 @@ private extension Phoenix.Environment {
                 return "uat" + "."
             case .Production:
                 return ""
-            default:
-                return nil
         }
     }
 }
@@ -44,8 +42,6 @@ private extension Phoenix.Region {
                 return ".eu"
             case .Singapore:
                 return ".com.sg"
-            default:
-                return nil
         }
     }
 }
@@ -56,7 +52,7 @@ internal extension NSURL {
         self.init(module: module, environment: configuration.environment, region: configuration.region)
     }
     
-    convenience init?(module: Module, environment: Phoenix.Environment, region: Phoenix.Region) {
+    convenience init?(module: Module, environment: Phoenix.Environment?, region: Phoenix.Region?) {
         let moduleInURL : String
         
         if (module.rawValue.characters.count > 0) {
@@ -67,11 +63,11 @@ internal extension NSURL {
         }
         
         
-        guard let environmentInURL = environment.urlComponent() else {
+        guard let environmentInURL = environment?.urlComponent() else {
             return nil
         }
         
-        guard let regionInURL = region.urlComponent() else {
+        guard let regionInURL = region?.urlComponent() else {
             return nil
         }
         

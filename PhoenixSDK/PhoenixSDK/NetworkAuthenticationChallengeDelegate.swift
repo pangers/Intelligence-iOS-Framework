@@ -16,9 +16,24 @@ internal class NetworkAuthenticationChallengeDelegate : NSObject, NSURLSessionDe
     }
     
     @objc func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        // Trust the server
-        // This needs to be done as the server certifcate does not cover the current url format
-        // [module].api.[enviroment].phoenixplatform.[regionalDomain]
-        completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+        if challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust {
+            completionHandler(.PerformDefaultHandling, nil)
+            return
+        }
+        
+        switch self.configuration.certificateTrustPolicy {
+            case .Valid:
+                // Use the default handling
+                completionHandler(.PerformDefaultHandling, nil)
+            case .AnyNonProduction where self.configuration.environment == .Production:
+                // Use the default handling
+                completionHandler(.PerformDefaultHandling, nil)
+            case .AnyNonProduction:
+                // Trust the server
+                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+            case .Any:
+                // Trust the server
+                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+        }
     }
 }
