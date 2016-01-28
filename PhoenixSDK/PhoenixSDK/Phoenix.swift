@@ -156,7 +156,8 @@ public final class Phoenix: NSObject {
             oauthProvider: oauthProvider,
             installation: Installation(configuration: phoenixConfiguration.clone(),
             applicationVersion: NSBundle.mainBundle(),
-            installationStorage: NSUserDefaults()),
+            installationStorage: NSUserDefaults(),
+            oauthProvider: oauthProvider),
             locationManager: LocationManager())
     }
     

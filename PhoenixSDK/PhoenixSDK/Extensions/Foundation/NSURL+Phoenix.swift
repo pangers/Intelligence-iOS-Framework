@@ -8,7 +8,6 @@
 
 import Foundation
 
-private let phoenixLocationAPIVersion = "location/v1"
 private let phoenixAnalyticsAPIVersion = "analytics/v1"
 
 enum Module : String {
@@ -87,10 +86,6 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
     }
     
-    func phx_URLByAppendingRootLocationPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixLocationAPIVersion)")
-    }
-    
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
         return URLByAppendingPathComponent("/token")
@@ -99,14 +94,6 @@ internal extension NSURL {
     /// - Returns: NSURL for validation of current OAuth token.
     func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
         return URLByAppendingPathComponent("/validate")
-    }
-    
-    /// - Returns: NSURL with appended applications path.
-    func phx_URLByAppendingApplications(applicationID: Int? = nil) -> NSURL! {
-        if let applicationID = applicationID {
-            return URLByAppendingPathComponent("/applications/\(applicationID)")
-        }
-        return URLByAppendingPathComponent("/applications")
     }
     
     /// - Returns: NSURL with append identifiers path.
