@@ -12,13 +12,10 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
     
     var tokenId: Int?
     
-    internal var tokenString: String {
-        return tokenData.hexString()
-    }
-    private let tokenData: NSData
+    private let tokenString: String
     
-    required init(tokenData: NSData, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
-        self.tokenData = tokenData
+    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+        self.tokenString = token
         super.init()
         self.callback = callback
         self.configuration = configuration
@@ -44,7 +41,7 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(tokenData: tokenData, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        return self.dynamicType.init(token: tokenString, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
     }
     
 }
