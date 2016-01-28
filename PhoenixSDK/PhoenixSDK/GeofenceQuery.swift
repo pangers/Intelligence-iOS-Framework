@@ -75,6 +75,7 @@ private extension String {
     /// '?parameterName=parameterValue' if this is first parameter or
     /// '&parameterName=parameterValue' if not first parameter.
     mutating func appendUrlQueryParameter(parameterName: String, parameterValue: AnyObject, isFirst: Bool = false) {
-        self += ((isFirst ? "" : "&") + "\(parameterName)=\(parameterValue)")
+        let urlEncodedParameterValue = String(parameterValue).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        self += ((isFirst ? "" : "&") + "\(parameterName)=\(urlEncodedParameterValue)")
     }
 }
