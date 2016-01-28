@@ -42,7 +42,7 @@ class PhoenixBaseTestCase : XCTestCase {
             mockConfiguration.region = .Europe
             mockOAuthProvider = MockOAuthProvider()
             mockDelegateWrapper = MockPhoenixDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
-            mockNetwork = Network(delegate: mockDelegateWrapper, oauthProvider: mockOAuthProvider)
+            mockNetwork = Network(delegate: mockDelegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: mockConfiguration), oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
             mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
             
