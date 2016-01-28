@@ -113,10 +113,13 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to assign a role to a given user.
     class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(configuration.sdkUserRole).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingAssignRole()
-            .phx_URLByAppendingQueryString("userid=\(user.userId)&roleid=\(configuration.sdkUserRole)")
+            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
         let request = NSMutableURLRequest(URL: url)
 
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
