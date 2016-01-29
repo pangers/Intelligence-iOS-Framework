@@ -60,6 +60,11 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                     let error = data["error"] as? String
                     let errorDescription = data["error_description"] as? String
                     
+                    // We are reading the errorDescription and comparing it to plain text sentances
+                    // that have been defined. It is noted that this is not an ideal way to detect errors.
+                    // If the descriptions are changed on the server without updating the client then these issues
+                    // will not be detected.
+                    
                     if error == "Authentication failed." {
                         if errorDescription == "Credentials incorrect." {
                             output?.error = NSError(code: AuthenticationError.CredentialError.rawValue)

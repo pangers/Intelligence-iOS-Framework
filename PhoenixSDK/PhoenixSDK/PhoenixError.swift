@@ -8,8 +8,11 @@
 
 import Foundation
 
+/// NSError extension to standardise domain and httpStatusCode insertion/extraction
 extension NSError {
     
+    /// Convience method to create an NSError with a code, and optionally a httpStatusCode.
+    /// The domain will be set to the SDK's bundleIdentifier, and the httpStatusCode will be added as the userInfo.
     convenience init(code: Int, httpStatusCode: Int? = nil) {
         let domain = NSBundle(forClass: Phoenix.self).bundleIdentifier!
         
@@ -25,6 +28,8 @@ extension NSError {
         self.init(domain: domain, code: code, userInfo: userInfo)
     }
     
+    /// Retrieve the httpStatusCode from an NSError.
+    /// Returns the code if it is in the userInfo in the style init(code:httpStatusCode:) added it, or nil if it is not.
     func httpStatusCode() -> Int? {
         if let userInfo = self.userInfo as? [String : Int] {
             return userInfo["httpStatusCode"]
