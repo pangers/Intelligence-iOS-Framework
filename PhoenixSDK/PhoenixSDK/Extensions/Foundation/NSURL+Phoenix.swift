@@ -8,8 +8,6 @@
 
 import Foundation
 
-private let phoenixAnalyticsAPIVersion = "analytics/v1"
-
 enum Module : String {
     case NoModule = ""
     case Authentication = "authentication"
@@ -76,10 +74,6 @@ internal extension NSURL {
             arguments: [moduleInURL, environmentInURL, regionInURL])
         
         self.init(string: url)
-    }
-    
-    func phx_URLByAppendingRootAnalyticsPath() -> NSURL! {
-        return URLByAppendingPathComponent("/\(phoenixAnalyticsAPIVersion)")
     }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.

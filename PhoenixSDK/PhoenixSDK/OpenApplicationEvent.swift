@@ -11,8 +11,10 @@ import Foundation
 /// Event that gets fired on `startup()` of SDK.
 internal class OpenApplicationEvent: Event {
     
-    init() {
-        super.init(withType: "Phoenix.Identity.Application.Opened")
+    static let EventType = "Phoenix.Identity.Application.Opened"
+    
+    init(applicationID: Int) {
+        super.init(withType: OpenApplicationEvent.EventType, targetId: String(applicationID))
     }
     
 }

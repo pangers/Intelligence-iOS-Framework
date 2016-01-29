@@ -8,11 +8,12 @@
 
 import Foundation
 
-let TrackEventType = "Phoenix.Analytics.Application.Time"
-
 class TrackApplicationTimeEvent: Event {
+    
+    static let EventType = "Phoenix.Analytics.Application.Time"
+    
     init(withSeconds seconds: UInt64) {
-        super.init(withType: TrackEventType)
+        super.init(withType: TrackApplicationTimeEvent.EventType)
         self.value = Double(seconds)
     }
 }

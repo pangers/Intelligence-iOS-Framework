@@ -111,6 +111,7 @@ class ScreenViewedViewController : UIViewController {
 	internal func sendAnalytics() {
 		let viewingDuration = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
 		
-		PhoenixManager.phoenix?.analytics.trackScreenViewed(self.title!, viewingDuration: viewingDuration)
+        let event = ScreenViewedEvent(screenName: self.title!, viewingDuration: viewingDuration)
+		PhoenixManager.phoenix?.analytics.track(event)
 	}
 }

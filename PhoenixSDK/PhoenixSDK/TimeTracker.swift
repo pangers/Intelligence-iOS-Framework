@@ -8,6 +8,8 @@
 
 import Foundation
 
+let TrackEventType = "Phoenix.Analytics.Application.Time"
+
 typealias TimeTrackerCallback = (event: TrackApplicationTimeEvent) -> ()
 
 protocol TimeTrackerStorageProtocol {

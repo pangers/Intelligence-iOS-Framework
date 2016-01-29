@@ -21,11 +21,6 @@ public protocol AnalyticsModuleProtocol : ModuleProtocol {
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
     func track(event: Event)
-    
-	/// Track user engagement and behavioral insight.
-	/// - parameter screenName: An identifier for the screen.
-	/// - parameter viewingDuration: The time (in seconds) spent on the screen.
-	func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval)
 }
 
 internal protocol LocationModuleProvider:class {
@@ -65,7 +60,9 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
             }
             this.eventQueue = EventQueue(withCallback: this.sendEvents)
             this.eventQueue?.startQueue()
-            this.trackApplicationOpened()
+            
+            this.track(OpenApplicationEvent(applicationID: this.configuration.applicationID))
+            
             this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: NSUserDefaults.standardUserDefaults()), callback: { [weak self] (event) -> () in
                 self?.track(event)
                 })
@@ -93,17 +90,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
         eventQueue?.enqueueEvent(prepareEvent(event))
     }
     
-    /// Track screen viewed event (externally managed).
-    func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
-        track(ScreenViewedEvent(screenName: screenName, viewingDuration: viewingDuration))
-    }
-    
     // MARK: Internal
-    
-    /// Track application open event (internally managed).
-    internal func trackApplicationOpened() {
-        track(OpenApplicationEvent())
-    }
     
     /// Add automatically populated fields to dictionary.
     /// - parameter event: Event to prepare for sending.
@@ -111,6 +98,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     internal func prepareEvent(event: Event) -> JSONDictionary {
         var dictionary = event.toJSON()
         
+        dictionary[Event.ProjectIdKey] = configuration.projectID
         dictionary[Event.ApplicationIdKey] = configuration.applicationID
         dictionary[Event.DeviceTypeKey] = UIDevice.currentDevice().model
         dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
