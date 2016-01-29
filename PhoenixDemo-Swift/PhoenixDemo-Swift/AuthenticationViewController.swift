@@ -160,6 +160,8 @@ class AuthenticationViewController: UITableViewController {
     func logout() {
         self.dynamicType.loginMessage = .Login
         PhoenixManager.phoenix.identity.logout()
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
         tableView.reloadData()
     }
 }

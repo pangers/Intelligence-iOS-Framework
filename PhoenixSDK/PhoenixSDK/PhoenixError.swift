@@ -69,8 +69,11 @@ import Foundation
     /// Unregistering the device token failed, incorrect user?
     case DeviceTokenUnregistrationError = 2010
     
+    /// Unregistering the device token (on behalf) failed
+    case DeviceTokenUnregistrationOnBehalfError = 2011
+    
     /// Device token has not been registered yet.
-    case DeviceTokenNotRegisteredError = 2011
+    case DeviceTokenNotRegisteredError = 2012
 }
 
 /// Enumeration to list the errors that can occur in any request.

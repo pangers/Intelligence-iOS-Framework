@@ -25,7 +25,7 @@ private let HTTPBodyGrantTypeClientCredentials = "client_credentials"
 private let HTTPBodyGrantTypePassword = "password"
 private let HTTPBodyGrantTypeRefreshToken = "refresh_token"
 
-private enum IdentifierType : Int {
+internal enum IdentifierType : Int {
     case Email = 1
     case Msisdn = 2
     case iOSDeviceToken = 3
@@ -113,10 +113,13 @@ internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to assign a role to a given user.
     class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(configuration.sdkUserRole).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingAssignRole()
-            .phx_URLByAppendingQueryString("userid=\(user.userId)&roleid=\(configuration.sdkUserRole)")
+            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
         let request = NSMutableURLRequest(URL: url)
 
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
@@ -207,6 +210,25 @@ internal extension NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
             .phx_URLByAppendingIdentifiers(tokenId)
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
+        request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    class func phx_URLRequestForIdentifierDeletionOnBehalf(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let applicationId = String(configuration.applicationID).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let identifierValue = token.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let identifierTypeId = String(IdentifierType.iOSDeviceToken.rawValue).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
+        let url = NSURL(module: .Identity, configuration: configuration)!
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingIdentifiers()
+            .phx_URLByAppendingQueryString("applicationId=\(applicationId)&identifierValue=\(identifierValue)&identifierTypeId=\(identifierTypeId)")
         let request = NSMutableURLRequest(URL: url)
         
         request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)

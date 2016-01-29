@@ -19,6 +19,8 @@ internal typealias InstallationCallback = (installation: Installation?, error: N
 public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -> Void
 /// Callback for Unregister Device Token method, an error may occur if tokenId was not registred or is registered against another user.
 public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
+/// Callback for Unregister Device Token (On Befalf) method
+public typealias UnregisterDeviceTokenOnBehalfCallback = (error: NSError?) -> Void
 
 private let InvalidDeviceTokenID = -1
 private let CreateSDKUserRetries = 5
@@ -350,11 +352,19 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     // MARK:- Identifiers
     
     func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback) {
-        if data.length == 0 || data.hexString().lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
+        let token = data.hexString()
+        
+        unregisterDeviceTokenOnBehalf(token) { [weak self] (error) -> Void in
+            self?.registerDeviceToken(token, callback: callback)
+        }
+    }
+    
+    private func registerDeviceToken(token: String, callback: RegisterDeviceTokenCallback) {
+        if token.characters.count == 0 || token.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
             callback(tokenId: InvalidDeviceTokenID, error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenInvalidError.rawValue, userInfo: nil))
             return
         }
-        let operation = CreateIdentifierRequestOperation(tokenData: data,
+        let operation = CreateIdentifierRequestOperation(token: token,
             oauth: network.oauthProvider.bestPasswordGrantOAuth,
             configuration: configuration,
             network: network,
@@ -381,6 +391,25 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                 (returnedOperation: PhoenixOAuthOperation) -> () in
                 let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
                 callback(error:deleteIdentifierOperation.output?.error)
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
+    
+    private func unregisterDeviceTokenOnBehalf(token: String, callback: UnregisterDeviceTokenOnBehalfCallback) {
+        if token.characters.count == 0 {
+            callback(error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationOnBehalfError.rawValue, userInfo: nil))
+            return
+        }
+        let operation = DeleteIdentifierOnBehalfRequestOperation(token: token,
+            oauth: network.oauthProvider.applicationOAuth,
+            configuration: configuration,
+            network: network,
+            callback: {
+                (returnedOperation: PhoenixOAuthOperation) -> () in
+                let deleteIdentifierOnBehalfOperation = returnedOperation as! DeleteIdentifierOnBehalfRequestOperation
+                callback(error:deleteIdentifierOnBehalfOperation.output?.error)
         })
         
         // Execute the network operation

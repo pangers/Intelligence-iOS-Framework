@@ -7,6 +7,7 @@
 //
 
 #import "PHXAuthenticationViewController.h"
+#import "AppDelegate.h"
 #import "PHXPhoenixManager.h"
 #import "PHXViewUserViewController.h"
 
@@ -169,6 +170,8 @@ static PHXLoginMessage currentStatus;
 - (void)logout {
     currentStatus = PHXLogin;
     [PHXPhoenixManager.phoenix.identity logout];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey: PhoenixDemoStoredDeviceTokenKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [self.tableView reloadData];
 }
 
