@@ -403,7 +403,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             return
         }
         let operation = DeleteIdentifierOnBehalfRequestOperation(token: token,
-            oauth: network.oauthProvider.bestPasswordGrantOAuth,
+            oauth: network.oauthProvider.applicationOAuth,
             configuration: configuration,
             network: network,
             callback: {
