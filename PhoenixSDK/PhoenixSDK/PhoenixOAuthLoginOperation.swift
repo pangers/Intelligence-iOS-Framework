@@ -27,7 +27,7 @@ internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else
         {
             if output?.error == nil {
-                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                output?.error = NSError(code: RequestError.ParseError.rawValue)
             }
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
             return

@@ -38,107 +38,64 @@ extension NSError {
 /// the initial setup of Phoenix's configuration.
 /// Refer to the Readme file to obtain further instructions on setup.
 @objc public enum ConfigurationError: Int, ErrorType {
-    public static var _NSErrorDomain = "ConfigurationError"
-    
-    /// The domain passed to NSErrors.
-    public static let domain = "ConfigurationError"
-    
     /// Configuration file does not exist.
     case FileNotFoundError = 1001
     
     /// A property is invalid.
-    case InvalidPropertyError = 1002
+    case InvalidPropertyError
     
     /// Configuration file is invalid
     /// (Couldn't parse into a JSON or had an issue while reading it)
-    case InvalidFileError = 1003
+    case InvalidFileError
     
     /// There is a missing property in the configuration.
-    case MissingPropertyError = 1004
-}
-
-/// Enumeration to list the errors that can occur in the identity module.
-@objc public enum IdentityError: Int, ErrorType {
-    public static var _NSErrorDomain = "IdentityError"
-    
-    /// The domain passed to NSErrors.
-    public static let domain = "IdentityError"
-
-    /// The user creation request couldn't complete successfully.
-    case UserCreationError = 2001
-    
-    /// The user is invalid.
-    case InvalidUserError = 2002
-    
-    /// The password provided is too weak. See `Phoenix.User` password field to see
-    /// the security requirements of the password.
-    case WeakPasswordError = 2003
-
-    /// The user retrieval request was unsuccessful.
-    case GetUserError = 2004
-    
-    /// The user update request was not finished successfully.
-    case UserUpdateError = 2005
-    
-    /// Login failed.
-    case LoginFailed = 2006
-
-    /// The user role assignment operation failed.
-    case UserRoleAssignmentError = 2007
-    
-    /// The device token is invalid (zero length).
-    case DeviceTokenInvalidError = 2008
-    
-    /// Registering the device token failed.
-    case DeviceTokenRegistrationError = 2009
-    
-    /// Unregistering the device token failed, incorrect user?
-    case DeviceTokenUnregistrationError = 2010
-    
-    /// Unregistering the device token (on behalf) failed
-    case DeviceTokenUnregistrationOnBehalfError = 2011
-    
-    /// Device token has not been registered yet.
-    case DeviceTokenNotRegisteredError = 2012
+    case MissingPropertyError
 }
 
 /// Enumeration to list the errors that can occur in any request.
 @objc public enum RequestError: Int, ErrorType {
-    public static var _NSErrorDomain = "RequestError"
-    
-    /// The domain passed to NSErrors.
-    public static let domain = "RequestError"
-
     /// Error to return when parsing JSON fails.
-    case ParseError = 3001
+    case ParseError = 2001
     
     /// Error to return if user doesn't have access to a particular API.
-    case AccessDeniedError = 3002
+    case AccessDeniedError
     
     /// Error to return if user is offline.
-    case InternetOfflineError = 3003
+    case InternetOfflineError
+    
+    /// Error to return if the user is not authenticated.
+    case Unauthorized
+    
+    /// Error to return if the user's role does not grant them access to this method.
+    case Forbidden
     
     /// Error to return if an error occurs that we can not handle.
-    case UnhandledError = 3004
+    case UnhandledError
 }
 
+/// Enumeration to list the errors that can occur in the identity module.
+@objc public enum IdentityError: Int, ErrorType {
+    /// The user is invalid.
+    case InvalidUserError = 4001
+    
+    /// The password provided is too weak. See `Phoenix.User` password field to see
+    /// the security requirements of the password.
+    case WeakPasswordError
+    
+    /// The device token is invalid (zero length).
+    case DeviceTokenInvalidError
+    
+    /// Device token has not been registered yet.
+    case DeviceTokenNotRegisteredError
+}
 
 /// Enumeration to list the errors that can occur in the installation module
 internal enum InstallationError: Int, ErrorType {
-    /// The domain passed to NSErrors.
-    static let domain = "InstallationError"
-    
-    /// Unable to execute create installation, server returned an error.
-    case CreateInstallationError = 4001
-    
-    /// Unable to execute update installation, server returned an error.
-    case UpdateInstallationError = 4002
-    
     /// Called 'create' method unnecessarily.
-    case AlreadyInstalledError = 4003
+    case AlreadyInstalledError = 5001
     
     /// Called 'update' method unnecessarily.
-    case AlreadyUpdatedError = 4004
+    case AlreadyUpdatedError
 }
 
 /// These are internal errors thrown by the Geofence class.
@@ -146,27 +103,11 @@ internal enum GeofenceError: ErrorType {
     
     /// Error to return when we have a property error. Internal use only.
     case InvalidPropertyError(GeofenceKey)
-    
-    /// Error, use_geofences in Configuration file is set to false.
-    case CannotRequestGeofencesWhenDisabled
 }
 
 /// These are internal errors thrown by the Analytics class.
 internal enum AnalyticsError: Int, ErrorType {
-    static let domain = "AnalyticsError"
-    
-    /// Sending analytics batch failed.
-    case SendAnalyticsError = 5001
-    
     /// Request contains outdated events.
-    case OldEventsError = 5002
-}
-
-/// These are internal errors thrown by the Location class.
-internal enum LocationError: Int, ErrorType {
-    static let domain = "LocationError"
-    
-    /// Download geofences failed.
-    case DownloadGeofencesError = 6001
+    case OldEventsError = 6001
 }
 

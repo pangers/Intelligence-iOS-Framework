@@ -33,7 +33,7 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         }
         
         guard let data = outputArrayFirstDictionary(), returnedId = data["Id"] as? Int else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
         

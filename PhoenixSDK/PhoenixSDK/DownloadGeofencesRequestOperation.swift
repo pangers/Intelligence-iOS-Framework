@@ -34,7 +34,7 @@ internal final class DownloadGeofencesRequestOperation: PhoenixOAuthOperation, N
         }
         
         guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.phx_jsonDictionary) else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
         

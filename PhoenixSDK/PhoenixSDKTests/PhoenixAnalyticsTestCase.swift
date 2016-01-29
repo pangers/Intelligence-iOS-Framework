@@ -304,7 +304,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
         
@@ -322,7 +321,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
         

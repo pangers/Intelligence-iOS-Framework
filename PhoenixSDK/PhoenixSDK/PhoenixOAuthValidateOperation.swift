@@ -31,7 +31,7 @@ internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
                 output?.data?.phx_jsonDictionary?[OAuthAccessTokenKey] != nil else
         {
             if output?.error == nil {
-                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                output?.error = NSError(code: RequestError.ParseError.rawValue)
             }
             print("\(oauth!.tokenType) Validate Token Failed \(output?.error)")
             self.shouldBreak = true

@@ -432,7 +432,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.InvalidUserError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             
             expectation.fulfill()
         }
@@ -498,7 +497,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.createUser(sdkUser) { (user, error) -> Void in
             XCTAssert(user == nil, "User not found")
             XCTAssert(error != nil, "Error occured while parsing a success request")
-            XCTAssert(error?.domain == RequestError.domain)
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
             expectCallback.fulfill()
         }
@@ -542,7 +540,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == RequestError.domain, "Unexpected error type raised")
             
             expectCallback.fulfill()
         }
@@ -562,7 +559,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             
             expectCallback.fulfill()
         }
@@ -630,7 +626,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == RequestError.domain, "Unexpected error type raised")
             
             expectCallback.fulfill()
         }
@@ -681,7 +676,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
             
             expectCallback.fulfill()
         }
@@ -736,7 +730,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.registerDeviceToken(NSData()) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(error?.code == IdentityError.DeviceTokenInvalidError.rawValue)
-            XCTAssert(error?.domain == IdentityError.domain)
             
             expectCallback.fulfill()
         }
@@ -777,7 +770,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(tokenId == -1)
-            XCTAssert(error?.domain == RequestError.domain)
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
             
             expectCallback.fulfill()
@@ -798,7 +790,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(tokenId == -1)
-            XCTAssert(error?.domain == RequestError.domain)
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
             
             expectCallback.fulfill()
@@ -859,8 +850,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         
         identity!.unregisterDeviceToken(withId: 0) { (error) -> Void in
             XCTAssert(error != nil)
-            XCTAssert(error?.domain == IdentityError.domain)
-            XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)
+            XCTAssert(error?.code == IdentityError.DeviceTokenInvalidError.rawValue)
             
             expectCallback.fulfill()
         }
@@ -879,7 +869,6 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
             XCTAssert(error != nil)
-            XCTAssert(error?.domain == RequestError.domain)
             XCTAssert(error?.code == RequestError.ParseError.rawValue)
             
             expectCallback.fulfill()

@@ -31,7 +31,7 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
                 oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else
         {
             if output?.error == nil {
-                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                output?.error = NSError(code: RequestError.ParseError.rawValue)
             }
             print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             self.shouldBreak = true

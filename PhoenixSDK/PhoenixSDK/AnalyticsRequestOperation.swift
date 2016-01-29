@@ -34,7 +34,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         // This error is not recoverable and we need to purge the data.
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.BadRequest.rawValue && outputErrorCode() == InvalidRequestErrorCode {
-                output?.error = NSError(domain: AnalyticsError.domain, code: AnalyticsError.OldEventsError.rawValue, userInfo: nil)
+                output?.error = NSError(code: AnalyticsError.OldEventsError.rawValue)
                 return
             }
         }
@@ -44,7 +44,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         }
         
         if outputArray()?.count != eventsJSON.count {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
     }
