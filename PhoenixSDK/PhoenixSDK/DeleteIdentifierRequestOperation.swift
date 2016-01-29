@@ -35,10 +35,13 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        guard let returnedId = self.output?.data?.phx_jsonDictionary?["Id"] as? Int where returnedId == tokenId else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
-            return
-        }
+        guard let jsonDictionary = self.output?.data?.phx_jsonDictionary,
+            let data = jsonDictionary["Data"],
+            let dataObject = data.lastObject,
+            let returnedId = dataObject?["Id"] as? Int where returnedId == tokenId else {
+                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                return
+            }
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {

@@ -18,14 +18,33 @@ private enum ConfigurationKey: String {
     case Environment = "environment"
     case CompanyId = "company_id"
     case SDKUserRole = "sdk_user_role"
+    case CertificateTrustPolicy = "certificate_trust_policy"
 }
 
-enum Module : String {
-    case NoModule = ""
-    case Authentication = "authentication"
-    case Identity = "identity"
-    case Analytics = "analytics"
-    case Location = "location"
+/// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
+/// Certificate validity is defined by iOS and not by the SDK.
+/// When receiving a certificate challenge from iOS, the SDK will apply the selected policy.
+@objc public enum CertificateTrustPolicy: Int {
+    case Valid /// Trust only certificates that are considered valid by iOS. This is the default value
+    case Any /// Trust any certificate, independently of iOS considering it valid or invalid
+    case AnyNonProduction /// Trust only non-production certificates, which implies that the certificates in the production server will need to be considered valid by iOS and any other will be trusted
+
+    
+    /// This init method should be used to extract certificate_trust_policy from a configuration file (if it exists) and turn it into an enum value
+    /// The values that should be used are "valid", "any" and "any_non_production"
+    /// If another value is used we will return nil
+    init?(key: String) {
+        switch key {
+            case "valid":
+                self = .Valid
+            case "any":
+                self = .Any
+            case "any_non_production":
+                self = .AnyNonProduction
+            default:
+                return nil
+        }
+    }
 }
 
 public extension Phoenix {
@@ -56,21 +75,15 @@ public extension Phoenix {
         /// The role ID to assign to users the SDK creates
         public var sdkUserRole = 0
         
+        /// The trust policy to apply to server certificates.
+        /// By default we will only trust valid certificates.
+        public var certificateTrustPolicy = CertificateTrustPolicy.Valid
+        
         /// The region
-        public var region:Region
+        public var region:Region?
         
         /// The environment to connect to
-        public var environment:Environment
-        
-        /// Default initializer.
-        /// Sets region to .NoRegion so we can notice that the region is invalid.
-        /// Sets environment to .NoEnvironment so we can notice that the environment is invalid.
-        public override init() {
-            self.region = .NoRegion
-            self.environment = .NoEnvironment
-            
-            super.init()
-        }
+        public var environment:Environment?
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -105,6 +118,7 @@ public extension Phoenix {
             copy.clientSecret = String(self.clientSecret)
             copy.companyId = companyId
             copy.sdkUserRole = sdkUserRole
+            copy.certificateTrustPolicy = self.certificateTrustPolicy
             return copy
         }
         
@@ -139,10 +153,28 @@ public extension Phoenix {
             self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
             self.projectID = try value(forKey: .ProjectID, inContents:contents)
             self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
-            self.region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents))
-            self.environment = try Phoenix.Environment(code: value(forKey: .Environment, inContents:contents))
+            
+            guard let region = try Phoenix.Region(code: value(forKey: .Region, inContents:contents)) else {
+                throw ConfigurationError.InvalidPropertyError
+            }
+            
+            self.region = region
+            
+            guard let environment = try Phoenix.Environment(code: value(forKey: .Environment, inContents:contents)) else {
+                throw ConfigurationError.InvalidPropertyError
+            }
+            
+            self.environment = environment
+            
             self.companyId = try value(forKey: .CompanyId, inContents:contents)
             self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
+            
+            guard let certificateTrustPolicyKey = contents[ConfigurationKey.CertificateTrustPolicy.rawValue] as? String,
+                let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
+                    throw ConfigurationError.InvalidPropertyError
+            }
+            
+            self.certificateTrustPolicy = certificateTrustPolicy
         }
         
         /// - Returns: True if the configuration is correct and can be used to initialize
@@ -155,53 +187,7 @@ public extension Phoenix {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                applicationID <= 0 || region == .NoRegion || environment == .NoEnvironment || companyId <= 0 || sdkUserRole <= 0
-        }
-        
-        /// - Returns: Optional base URL for the authentication module.
-        func authenticationBaseURL() -> NSURL? {
-            return baseURL(forModule: .Authentication)
-        }
-        
-        /// - Returns: Optional base URL for the identity module.
-        func identityBaseURL() -> NSURL? {
-            return baseURL(forModule: .Identity)
-        }
-        
-        /// - Returns: Optional base URL for the anayltics module.
-        func analyticsBaseURL() -> NSURL? {
-            return baseURL(forModule: .Analytics)
-        }
-        
-        /// - Returns: Optional base URL for the location module.
-        func locationBaseURL() -> NSURL? {
-            return baseURL(forModule: .Location)
-        }
-        
-        /// - Returns: Optional base URL to call.
-        func baseURL(forModule module: Module) -> NSURL? {
-            guard let environment = self.environment.urlEnvironment(),
-                let domain = self.region.urlDomain() else {
-                   return nil
-            }
-            
-            
-            var url = "https://"
-            
-            if (module.rawValue.characters.count > 0) {
-                url += "\(module.rawValue)."
-            }
-            
-            url += "api."
-            
-            if (environment.characters.count > 0) {
-                url += "\(environment)."
-            }
-            
-            // If domain happended to have 0 characters it would not affet the url (as the domain contains the .)
-            url += "phoenixplatform\(domain)/v2"
-            
-            return NSURL(string: url)
+                applicationID <= 0 || region == nil || environment == nil || companyId <= 0 || sdkUserRole <= 0
         }
     }
 }

@@ -25,30 +25,11 @@ public extension Phoenix {
         /// SG Region
         case Singapore
         
-        /// NoRegion in case a non optional region needs to be initialized. Will fail 
-        /// when calling baseURL.
-        case NoRegion
-        
-        /// - Returns: domain as a String, or nil if .NoRegion
-        public func urlDomain() -> String? {
-            switch (self) {
-            case .UnitedStates:
-                return ".com"
-            case .Australia:
-                return ".com.au"
-            case .Europe:
-                return ".eu"
-            case .Singapore:
-                return ".com.sg"
-            default:
-                return nil
-            }
-        }
         
         /// This init method should be used to extract the region from a configuration file and turn it into an enum value
         /// The values that should be used are "US", "AU", "EU" and "SG"
-        /// If another value is used we will create the .NoRegion enum value
-        init(code: String) {
+        /// If another value is used this will return nil
+        init?(code: String) {
             switch code {
             case "US":
                 self = .UnitedStates
@@ -59,7 +40,7 @@ public extension Phoenix {
             case "SG":
                 self = .Singapore
             default:
-                self = .NoRegion
+                return nil
             }
         }
     }

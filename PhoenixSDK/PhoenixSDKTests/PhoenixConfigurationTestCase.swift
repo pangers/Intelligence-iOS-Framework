@@ -149,28 +149,11 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.region = .NoRegion
+        cfg.region = nil
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.environment = .NoEnvironment
+        cfg.environment = nil
         testConfigurationMissingPropertyError(cfg)
-    }
-    
-    func testEmptyBaseUrlIfNoRegion(){
-        let config = MockConfiguration()
-        config.region = .NoRegion
-        XCTAssert(config.baseURL(forModule: .NoModule) == nil, "The mock configuration with no region returned an unexpected base url")
-    }
-    
-    func testEmptyBaseUrlIfNoEnvironment(){
-        let config = MockConfiguration()
-        config.environment = .NoEnvironment
-        XCTAssert(config.baseURL(forModule: .NoModule) == nil, "The mock configuration with no environment returned an unexpected base url")
-    }
-    
-    func testBaseUrl(){
-        let config = MockConfiguration()
-        XCTAssertEqual(config.baseURL(forModule: .NoModule), NSURL(string: "https://api.uat.phoenixplatform.eu/v2"), "The baseURL is not correct")
     }
 }

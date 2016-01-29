@@ -8,8 +8,73 @@
 
 import Foundation
 
+enum Module : String {
+    case NoModule = ""
+    case Authentication = "authentication"
+    case Identity = "identity"
+    case Analytics = "analytics"
+    case Location = "location"
+}
+
+/// This extension is used to map the enum to the url, not for any other purpose
+private extension Phoenix.Environment {
+    private func urlComponent() -> String? {
+        switch (self) {
+            case .UAT:
+                return "uat" + "."
+            case .Production:
+                return ""
+        }
+    }
+}
+
+/// This extension is used to map the enum to the url, not for any other purpose
+private extension Phoenix.Region {
+    private func urlComponent() -> String? {
+        switch (self) {
+            case .UnitedStates:
+                return ".com"
+            case .Australia:
+                return ".com.au"
+            case .Europe:
+                return ".eu"
+            case .Singapore:
+                return ".com.sg"
+        }
+    }
+}
+
 /// This extension is intended to provide all the various path components required to compose urls for enpoints.
 internal extension NSURL {
+    convenience init?(module: Module, configuration: Phoenix.Configuration) {
+        self.init(module: module, environment: configuration.environment, region: configuration.region)
+    }
+    
+    convenience init?(module: Module, environment: Phoenix.Environment?, region: Phoenix.Region?) {
+        let moduleInURL : String
+        
+        if (module.rawValue.characters.count > 0) {
+            moduleInURL = "\(module.rawValue)."
+        }
+        else {
+            moduleInURL = ""
+        }
+        
+        
+        guard let environmentInURL = environment?.urlComponent() else {
+            return nil
+        }
+        
+        guard let regionInURL = region?.urlComponent() else {
+            return nil
+        }
+        
+        
+        let url = String(format: "https://\(moduleInURL)api.\(environmentInURL)phoenixplatform\(regionInURL)/v2",
+            arguments: [moduleInURL, environmentInURL, regionInURL])
+        
+        self.init(string: url)
+    }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
