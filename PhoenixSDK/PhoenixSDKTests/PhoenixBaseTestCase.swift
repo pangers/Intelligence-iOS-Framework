@@ -84,11 +84,11 @@ class PhoenixBaseTestCase : XCTestCase {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, response:MockResponse, expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
-        mockResponseForURL(url, method: method, responses: [response], callbacks: [callback], expectations: [expectation])
+    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, response:MockResponse, identifier: String? = nil, expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
+        mockResponseForURL(url, method: method, responses: [response], identifier: identifier, expectations: [expectation], callbacks: [callback])
     }
     
-    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, responses:[MockResponse], callbacks: [MockCallback?]? = nil, expectations:[XCTestExpectation?]? = nil) {
+    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, responses:[MockResponse], identifier: String? = nil, expectations:[XCTestExpectation?]? = nil, callbacks: [MockCallback?]? = nil) {
         
         print("Mock URL: \(url)")
         
@@ -98,7 +98,7 @@ class PhoenixBaseTestCase : XCTestCase {
             runs += [ (callbacks?[i], responses[i], expectations?[i] ??
                 expectationWithDescription("mock \(url) iteration \(i)")) ]
         }
-        OHHTTPStubs.stubRequestsPassingTest(
+        let stub = OHHTTPStubs.stubRequestsPassingTest(
             { request in
                 if let method = method?.rawValue where method != request.HTTPMethod {
                     return false
@@ -118,6 +118,10 @@ class PhoenixBaseTestCase : XCTestCase {
                     statusCode: Int32(response.statusCode.rawValue),
                     headers:response.headers)
         })
+        
+        if identifier != nil {
+            stub.name = identifier
+        }
     }
     
     // MARK: - Authentication Mock

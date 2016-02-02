@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import OHHTTPStubs
 
 @testable import PhoenixSDK
 
@@ -100,10 +101,10 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             response: getResponse(status, body: body ?? validValidate))
     }
     
-    func mockUserCreation(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockUserCreation(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
-            response: getResponse(status, body: body ?? successfulResponseCreateUser))
+            response: getResponse(status, body: body ?? successfulResponseCreateUser), identifier: identifier)
     }
     
     func mockUserUpdateURL() -> NSURL {
@@ -128,10 +129,10 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         return responses
     }
     
-    func mockUserAssignRole(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockUserAssignRole(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
-            response: getResponse(status, body: body ?? successfulAssignRoleResponse))
+            response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
     }
     
     func mockRefreshAndLogin(status: HTTPStatusCode? = nil,
