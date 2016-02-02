@@ -57,8 +57,8 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                 let data = self.output?.data?.phx_jsonDictionary
                 
                 if let data = data {
-                    let error = data["error"] as? String
-                    let errorDescription = data["error_description"] as? String
+                    let error = data[BodyError] as? String
+                    let errorDescription = data[BodyErrorDescription] as? String
                     
                     // We are reading the errorDescription and comparing it to plain text sentences
                     // that have been defined. It is noted that this is not an ideal way to detect errors.
