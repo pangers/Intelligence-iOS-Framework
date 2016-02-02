@@ -393,7 +393,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     private func unregisterDeviceTokenOnBehalf(token: String, callback: UnregisterDeviceTokenOnBehalfCallback) {
         if token.characters.count == 0 {
-            callback(error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationOnBehalfError.rawValue, userInfo: nil))
+            callback(error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
             return
         }
         let operation = DeleteIdentifierOnBehalfRequestOperation(token: token,
