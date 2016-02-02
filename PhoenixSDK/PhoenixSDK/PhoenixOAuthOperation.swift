@@ -13,7 +13,6 @@ typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error
 // Returned operation will be different than operation in some circumstances where tokens expire.
 typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
 
-private let AccessDeniedErrorCode = "access_denied"
 private let BodyData = "Data"
 private let BodyErrorDescription = "error_description"
 private let BodyError = "error"
@@ -38,12 +37,6 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     }
     
     func handleError() -> Bool {
-        if let error = outputErrorCode() {
-            if error == AccessDeniedErrorCode {
-                output?.error = NSError(code: RequestError.AccessDeniedError.rawValue)
-                return true
-            }
-        }
         if output?.error != nil {
             if output?.error?.code == OfflineErrorCode {
                 output?.error = NSError(code: RequestError.InternetOfflineError.rawValue)
