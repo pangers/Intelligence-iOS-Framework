@@ -302,8 +302,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     /// The developer is responsible to dispatch the callback to the main thread using dispatch_async if necessary.
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
-    /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
-    /// The NSError domain is IdentityError.domain
+    /// user is invalid, or one of the RequestError errors.
     internal func createUser(user: Phoenix.User, callback: UserCallback? = nil) {
         if !user.isValidToCreate {
             callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )

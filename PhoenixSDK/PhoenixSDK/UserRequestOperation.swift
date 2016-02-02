@@ -30,8 +30,8 @@ class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     /// Parse.
-    func parse(withErrorCode errorCode: Int) {
-        if handleError(IdentityError.domain, code: errorCode) {
+    func parse() {
+        if handleError() {
             return
         }
         

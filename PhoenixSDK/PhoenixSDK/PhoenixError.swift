@@ -8,6 +8,32 @@
 
 import Foundation
 
+extension NSError {
+    
+    convenience init(code: Int, httpStatusCode: Int? = nil) {
+        let domain = NSBundle(forClass: Phoenix.self).bundleIdentifier!
+        
+        let userInfo : [NSObject : AnyObject]?
+        
+        if httpStatusCode != nil {
+            userInfo = ["httpStatusCode": httpStatusCode!]
+        }
+        else {
+            userInfo = nil
+        }
+        
+        self.init(domain: domain, code: code, userInfo: userInfo)
+    }
+    
+    func httpStatusCode() -> Int? {
+        if let userInfo = self.userInfo as? [String : Int] {
+            return userInfo["httpStatusCode"]
+        }
+        
+        return nil
+    }
+}
+
 /// Enumeration that defines the possible errors that can occur during
 /// the initial setup of Phoenix's configuration.
 /// Refer to the Readme file to obtain further instructions on setup.
@@ -91,6 +117,9 @@ import Foundation
     
     /// Error to return if user is offline.
     case InternetOfflineError = 3003
+    
+    /// Error to return if an error occurs that we can not handle.
+    case UnhandledError = 3004
 }
 
 

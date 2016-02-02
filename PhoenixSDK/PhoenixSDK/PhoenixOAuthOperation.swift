@@ -37,7 +37,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
         callback?(returnedOperation: self)
     }
     
-    func handleError(domain: String, code: Int) -> Bool {
+    func handleError() -> Bool {
         if let error = outputErrorCode() {
             if error == AccessDeniedErrorCode {
                 output?.error = NSError(domain: RequestError.domain, code: RequestError.AccessDeniedError.rawValue, userInfo: nil)
@@ -56,7 +56,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
         }
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode / 100 != 2 {
-                output?.error = NSError(domain: domain, code: code, userInfo: nil)
+                output?.error = NSError(code: RequestError.UnhandledError.rawValue, httpStatusCode:httpResponse.statusCode)
                 return true
             }
         }

@@ -20,7 +20,7 @@ internal class PhoenixOAuthValidateOperation : PhoenixOAuthOperation {
         let request = NSURLRequest.phx_URLRequestForValidate(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.LoginFailed.rawValue) {
+        if handleError() {
             print("\(oauth!.tokenType) Validate Failed \(output?.error)")
             return
         }

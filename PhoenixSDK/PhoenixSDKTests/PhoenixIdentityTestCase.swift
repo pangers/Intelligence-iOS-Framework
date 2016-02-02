@@ -519,8 +519,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.UserCreationError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.BadRequest.rawValue, "Expected a BadRequest (400) error")
             
             expectCallback.fulfill()
         }
@@ -607,8 +607,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.UserUpdateError.rawValue, "Unexpected error type raised")
-            XCTAssert(error?.domain == IdentityError.domain, "Unexpected error type raised")
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.BadRequest.rawValue, "Expected a BadRequest (400) error")
             
             expectCallback.fulfill()
         }
@@ -756,8 +756,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
             XCTAssert(tokenId == -1)
-            XCTAssert(error?.domain == IdentityError.domain)
-            XCTAssert(error?.code == IdentityError.DeviceTokenRegistrationError.rawValue)
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
             
             expectCallback.fulfill()
         }
@@ -839,8 +839,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
             XCTAssert(error != nil)
-            XCTAssert(error?.domain == IdentityError.domain)
-            XCTAssert(error?.code == IdentityError.DeviceTokenUnregistrationError.rawValue)
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.BadRequest.rawValue, "Expected a BadRequest (400) error")
             
             expectCallback.fulfill()
         }

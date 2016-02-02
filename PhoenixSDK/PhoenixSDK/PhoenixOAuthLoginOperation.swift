@@ -16,7 +16,7 @@ internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
         let request = NSURLRequest.phx_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.LoginFailed.rawValue) {
+        if handleError() {
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
             return
         }

@@ -31,7 +31,7 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
             return
         }
         
-        if handleError(IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationError.rawValue) {
+        if handleError() {
             return
         }
         

@@ -25,8 +25,8 @@ class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
         super.main()
     }
     
-    func parse(withErrorCode errorCode: Int) {
-        if handleError(InstallationError.domain, code: errorCode) {
+    func parse() {
+        if handleError() {
             return
         }
         

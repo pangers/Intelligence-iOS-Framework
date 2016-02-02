@@ -39,7 +39,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
             }
         }
 
-        if handleError(AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue) {
+        if handleError() {
             return
         }
         

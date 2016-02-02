@@ -17,7 +17,7 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.UserRoleAssignmentError.rawValue) {
+        if handleError() {
             return
         }
         
