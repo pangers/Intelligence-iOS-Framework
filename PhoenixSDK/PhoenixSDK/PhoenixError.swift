@@ -8,6 +8,9 @@
 
 import Foundation
 
+/// The key to use in an NSError userInfo dictionary to retrieve the HTTP status code
+public let HTTPStatusCodeNSErrorUserInfoKey = "httpStatusCode"
+
 /// NSError extension to standardise domain and httpStatusCode insertion/extraction
 extension NSError {
     
@@ -19,7 +22,7 @@ extension NSError {
         let userInfo : [NSObject : AnyObject]?
         
         if httpStatusCode != nil {
-            userInfo = ["httpStatusCode": httpStatusCode!]
+            userInfo = [HTTPStatusCodeNSErrorUserInfoKey: httpStatusCode!]
         }
         else {
             userInfo = nil
@@ -32,7 +35,7 @@ extension NSError {
     /// Returns the code if it is in the userInfo in the style init(code:httpStatusCode:) added it, or nil if it is not.
     func httpStatusCode() -> Int? {
         if let userInfo = self.userInfo as? [String : Int] {
-            return userInfo["httpStatusCode"]
+            return userInfo[HTTPStatusCodeNSErrorUserInfoKey]
         }
         
         return nil
