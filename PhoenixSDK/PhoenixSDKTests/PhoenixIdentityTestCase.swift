@@ -461,6 +461,44 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         waitForExpectations()
     }
     
+    func testCreateUserCallsCreateUserAndAssignRole() {
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        let expectCreateUser = expectationWithDescription("Was expecting the createUser callback to be notified")
+        let expectAssignRole = expectationWithDescription("Was expecting the assignRole callback to be notified")
+        
+        let createUserKey = "createUser"
+        let assignRoleKey = "assignRole"
+        
+        // Mock auth
+        mockOAuthProvider.fakeAccessToken(oauth)
+        
+        OHHTTPStubs.onStubActivation() { request, stub in
+            guard let name = stub.name else {
+                return
+            }
+            
+            switch name {
+                case createUserKey:
+                    expectCreateUser.fulfill()
+                case assignRoleKey:
+                    expectAssignRole.fulfill()
+                default: break
+            }
+        }
+        
+        // Create
+        mockUserCreation(.Success, identifier: createUserKey)
+        mockUserAssignRole(.Success, identifier: assignRoleKey)
+        
+        identity!.createUser(fakeUser) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+        }
+        
+        waitForExpectations()
+    }
+    
     func testCreateUserSuccessAssignRoleFailure() {
         let oauth = mockOAuthProvider.applicationOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
