@@ -62,8 +62,8 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                     
                     // We are reading the errorDescription and comparing it to plain text sentences
                     // that have been defined. It is noted that this is not an ideal way to detect errors.
-                    // If the descriptions are changed on the server without updating the client then these issues
-                    // will not be detected.
+                    // If the descriptions are changed on the server without updating the client then these
+                    // errors will not be detected.
                     
                     if error == "Authentication failed." {
                         if errorDescription == "Credentials incorrect." {
