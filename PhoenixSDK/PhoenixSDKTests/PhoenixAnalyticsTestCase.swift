@@ -304,7 +304,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
         
@@ -322,7 +321,6 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
             XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            XCTAssert(error?.domain == RequestError.domain, "Expected RequestError domain")
             expectCallback.fulfill()
         })
         
@@ -338,8 +336,8 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
             event: genericEvent(),
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == AnalyticsError.SendAnalyticsError.rawValue, "Expected analytics error")
-            XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
             expectCallback.fulfill()
         })
         
@@ -411,7 +409,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
     func testEventsQueueFireFailed() {
         let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
-            completion(error: NSError(domain: AnalyticsError.domain, code: AnalyticsError.SendAnalyticsError.rawValue, userInfo: nil))
+            completion(error: NSError(code: RequestError.UnhandledError.rawValue))
         }
         let analytics = (phoenix?.analytics as! AnalyticsModule)
         let eventJSON = analytics.prepareEvent(genericEvent())
@@ -422,8 +420,7 @@ class PhoenixAnalyticsTestCase: PhoenixBaseTestCase {
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
             XCTAssertNotNil(error, "Expected error")
-            XCTAssert(error?.code == AnalyticsError.SendAnalyticsError.rawValue, "Expected SendAnalyticsError error code")
-            XCTAssert(error?.domain == AnalyticsError.domain, "Expected AnalyticsError domain")
+            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in array")
             queue.loadEvents()
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in file")

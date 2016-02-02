@@ -317,11 +317,14 @@ Note: Developers are responsible for ensuring the callbacks are executed on the 
 
 In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
 
+* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
 * RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Phoenix Platform are incorrectly configured. **Developer is responsible to fix these issues.**
 * RequestError.InternetOfflineError: Internet connectivity error, developer will need to wait until device has connected to the internet then try this request again.
-* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
+* RequestError.Unauthorized: The credentials are not authenicaticated for this call.
+* RequestError.Forbidden: The role provided is forbidden from accessing this call.
+* RequestError.UnhandledError: The SDK could not handle this error. If the error came from the server an HTTP status code can be retrieved
 
-These errors will be wrapped within an NSError using the domain: "RequestError".
+These errors will be wrapped within an NSError.
 
 
 ## Analytics Module ##
@@ -447,11 +450,6 @@ phoenix.identity.login(withUsername: username, password: password, callback: { (
 
 ```
 
-The 'login' method can return the following additional errors:
-
-* IdentityError.LoginFailed: There was an issue that occurred during login, could be due to incorrect credentials.
-
-
 ### Logout ###
 
 Once you are logged in, you may want to give a user the ability to logout in which case you can call the 'logout' method:
@@ -472,9 +470,6 @@ phoenix.identity.logout()
 [phoenix.identity logout];
 
 ```
-
-
-
 
 ### Get Me ###
 
@@ -508,11 +503,6 @@ phoenix.identity.getMe { (user, error) -> Void in
 
 
 ```
-
-The 'getMe' method can return the following additional errors:
-
-* IdentityError.GetUserError : When there is an error while retrieving the user from the Phoenix platform, or no user is retrieved.
-
 
 ### Update User ###
 
@@ -550,10 +540,9 @@ firstName:firstname lastName:lastname avatarURL:avatarURL];
 The 'updateUser' method can return the following additional errors:
 
 * IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.UserUpdateError : When there is an error while updating the user in the platform. This contains network errors and possible errors generated in the backend.
 * IdentityError.WeakPasswordError : When the password provided does not meet Phoenix security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
 
-Please note that you can not update the ''username' or the 'password' of a user
+Please note that you can not update the 'username' or the 'password' of a user
 
 ### Register Device Token ###
 
@@ -608,8 +597,6 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 The 'registerDeviceToken' method can return the following additional errors:
 
 * IdentityError.DeviceTokenInvalidError: Invalid device token provided.
-* IdentityError.DeviceTokenRegistrationError: An error occured while registering the token in the Phoenix platform. This may occur if you register the same token twice.
-
 
 ### Unregister Device Token ###
 
@@ -646,7 +633,6 @@ PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: id, callback: { (e
 The 'unregisterDeviceTokenWithId' method can return the follow additional errors:
 
 * IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Phoenix platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
-* IdentityError.DeviceTokenUnregistrationError: Unable to unregister token in Phoenix platform.
 
 ## Location Module ##
 
@@ -731,10 +717,6 @@ Phoenix* phoenix = ...;
 }];
 
 ```
-
-The 'downloadGeofences' method can return the following additional errors:
-* LocationError.DownloadGeofencesError: An error occurred while downloading geofences.
-
 
 ### Start/Stop Monitoring Geofences ###
 

@@ -91,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
             if error != nil {
-                self.alert(withError: error!)
+                self.alert(withMessage: "Failed with error: \(error!.code)")
             } else {
                 // Store token id for unregistration. For this example I have stored it in user defaults.
                 // However, this should be stored in the keychain as the app may be uninstalled and reinstalled
@@ -114,16 +114,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         }
         
         viewController.performSegueWithIdentifier("phoenixStartedUp", sender: self)
-    }
-    
-    func alert(withError error: NSError) {
-        if error.domain == IdentityError.domain {
-            alert(withMessage: "Failed: \(IdentityError(rawValue: error.code)!)")
-        } else if error.domain == RequestError.domain {
-            alert(withMessage: "Failed: \(RequestError(rawValue: error.code)!)")
-        } else {
-            alert(withMessage: "Unknown Error Occurred")
-        }
     }
     
     func alert(withMessage message: String) {

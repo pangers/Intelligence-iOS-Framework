@@ -137,7 +137,8 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == InstallationError.CreateInstallationError.rawValue, "Expected wrapped 4001 error")
+            XCTAssert(error!.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error!.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
             expectation.fulfill()
         }
         
@@ -276,7 +277,8 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         let expectation = expectationWithDescription("Was expecting a callback to be notified")
         identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == InstallationError.UpdateInstallationError.rawValue, "Expected wrapped 4002 error")
+            XCTAssert(error!.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error!.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
             expectation.fulfill()
         }
         

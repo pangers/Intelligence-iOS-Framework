@@ -16,7 +16,7 @@ internal final class UpdateInstallationRequestOperation : InstallationRequestOpe
         super.main()
         let request = NSURLRequest.phx_URLRequestForInstallationUpdate(installation, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
-        parse(withErrorCode: InstallationError.UpdateInstallationError.rawValue)
+        parse()
     }
     
 }

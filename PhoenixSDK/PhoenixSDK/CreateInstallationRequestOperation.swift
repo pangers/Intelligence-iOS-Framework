@@ -16,7 +16,7 @@ internal final class CreateInstallationRequestOperation : InstallationRequestOpe
         super.main()
         let request = NSURLRequest.phx_URLRequestForInstallationCreate(installation, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
-        parse(withErrorCode: InstallationError.CreateInstallationError.rawValue)
+        parse()
     }
     
 }

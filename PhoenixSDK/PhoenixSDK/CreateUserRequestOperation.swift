@@ -16,7 +16,7 @@ internal final class CreateUserRequestOperation : UserRequestOperation {
         assert(sentUser != nil)
         let request = NSURLRequest.phx_URLRequestForUserCreation(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
-        parse(withErrorCode: IdentityError.UserCreationError.rawValue)
+        parse()
     }
     
 }

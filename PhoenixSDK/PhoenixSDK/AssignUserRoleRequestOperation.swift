@@ -17,12 +17,12 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.UserRoleAssignmentError.rawValue) {
+        if handleError() {
             return
         }
         
         guard let _ = outputArrayFirstDictionary() else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
         // For assign, we don't actually receive a user, lets return the user we sent so this method adheres to the Identity-type requests.

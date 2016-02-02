@@ -25,13 +25,13 @@ class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
         super.main()
     }
     
-    func parse(withErrorCode errorCode: Int) {
-        if handleError(InstallationError.domain, code: errorCode) {
+    func parse() {
+        if handleError() {
             return
         }
         
         if installation.updateWithJSON(outputArrayFirstDictionary()) == false {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
     }
