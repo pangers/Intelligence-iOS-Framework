@@ -37,12 +37,12 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
     }
     
     func handleError() -> Bool {
-        if output?.error != nil {
-            if output?.error?.code == OfflineErrorCode {
-                output?.error = NSError(code: RequestError.InternetOfflineError.rawValue)
-                return true
-            }
+        // This is NSURLSession's reponse code if we are offline
+        if output?.error?.code == OfflineErrorCode {
+            output?.error = NSError(code: RequestError.InternetOfflineError.rawValue)
+            return true
         }
+        
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue {
                 output?.error = NSError(code: RequestError.Unauthorized.rawValue)
