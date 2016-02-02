@@ -34,6 +34,10 @@ class PhoenixLocationBaseTestCase : PhoenixBaseTestCase, PhoenixInternalDelegate
     }
     
     // MARK:- PhoenixInternalDelegate
+    func credentialsIncorrect() {}
+    func accountDisabled() {}
+    func accountLocked() {}
+    func tokenInvalidOrExpired() {}
     func userCreationFailed() {}
     func userLoginRequired() {}
     func userRoleAssignmentFailed() {}

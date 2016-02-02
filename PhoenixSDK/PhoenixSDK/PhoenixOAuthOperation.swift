@@ -51,7 +51,36 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             }
         }
         if let httpResponse = output?.response as? NSHTTPURLResponse {
-            if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
+            if httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue {
+                output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                
+                let data = self.output?.data?.phx_jsonDictionary
+                
+                if let data = data {
+                    let error = data["error"] as? String
+                    let errorDescription = data["error_description"] as? String
+                    
+                    if error == "Authentication failed." {
+                        if errorDescription == "Credentials incorrect." {
+                            output?.error = NSError(code: AuthenticationError.CredentialError.rawValue)
+                        }
+                        else if errorDescription == "Account disabled." {
+                            output?.error = NSError(code: AuthenticationError.AccountDisabledError.rawValue)
+                        }
+                        else if errorDescription == "Account locked." {
+                            output?.error = NSError(code: AuthenticationError.AccountLockedError.rawValue)
+                        }
+                    }
+                    else if error == "Invalid token." {
+                        if errorDescription == "Token invalid or expired." {
+                            output?.error = NSError(code: AuthenticationError.TokenInvalidOrExpired.rawValue)
+                        }
+                    }
+                }
+                
+                return true
+            }
+            else if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
                 output?.error = NSError(code: RequestError.Forbidden.rawValue)
                 return true
             }

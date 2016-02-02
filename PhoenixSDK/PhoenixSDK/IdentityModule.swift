@@ -152,6 +152,23 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                             return
                         }
                         
+                        if let error = returnedOperation.output?.error {
+                            switch error.code {
+                                case AuthenticationError.CredentialError.rawValue:
+                                    identity.delegate.credentialsIncorrect()
+                                case AuthenticationError.AccountDisabledError.rawValue:
+                                    identity.delegate.accountDisabled()
+                                case AuthenticationError.AccountLockedError.rawValue:
+                                    identity.delegate.accountLocked()
+                                case AuthenticationError.TokenInvalidOrExpired.rawValue:
+                                    identity.delegate.tokenInvalidOrExpired()
+                                default: break
+                            }
+                            
+                            completion(success: false)
+                            return
+                        }
+                    
                         // Installation can succeed without a user id
                         identity.createInstallation(nil)
                         identity.updateInstallation(nil)
@@ -189,6 +206,23 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
 
                 applicationPipeline.callback = { [weak self] (returnedOperation) in
                     guard let identity = self else {
+                        completion(success: false)
+                        return
+                    }
+                    
+                    if let error = returnedOperation.output?.error {
+                        switch error.code {
+                            case AuthenticationError.CredentialError.rawValue:
+                                identity.delegate.credentialsIncorrect()
+                            case AuthenticationError.AccountDisabledError.rawValue:
+                                identity.delegate.accountDisabled()
+                            case AuthenticationError.AccountLockedError.rawValue:
+                                identity.delegate.accountLocked()
+                            case AuthenticationError.TokenInvalidOrExpired.rawValue:
+                                identity.delegate.tokenInvalidOrExpired()
+                            default: break
+                        }
+                        
                         completion(success: false)
                         return
                     }

@@ -142,6 +142,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     
     // MARK:- PhoenixDelegate
     
+    func credentialsIncorrectForPhoenix(phoenix: Phoenix) {
+        alert(withMessage: "Unrecoverable error occurred during login, check credentials for Phoenix Intelligence accounts.")
+    }
+    
+    func accountDisabledForPhoenix(phoenix: Phoenix) {
+        alert(withMessage: "Unrecoverable error occurred during login, the Phoenix Intelligence account is disabled.")
+    }
+    
+    func accountLockedForPhoenix(phoenix: Phoenix) {
+        alert(withMessage: "Unrecoverable error occurred during login, the Phoenix Intelligence account is locked. Contact a Phoenix Intelligence Administrator")
+    }
+    
+    func tokenInvalidOrExpiredForPhoenix(phoenix: Phoenix) {
+        alert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Phoenix Intelligence accounts.")
+    }
+    
     func userCreationFailedForPhoenix(phoenix: Phoenix) {
         alert(withMessage: "Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
     }

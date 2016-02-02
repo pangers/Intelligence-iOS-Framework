@@ -73,6 +73,22 @@ extension NSError {
     case UnhandledError
 }
 
+/// Enumeration to list the errors that can occur in the authentication module.
+@objc public enum AuthenticationError: Int, ErrorType {
+    /// The client or user credentials are incorrect.
+    case CredentialError = 3001
+    
+    /// The account has been disabled.
+    case AccountDisabledError
+    
+    /// The account has been locked due to multiple authentication failures.
+    /// An Administration is required to unlock.
+    case AccountLockedError
+    
+    /// The token is invalid or has expired.
+    case TokenInvalidOrExpired
+}
+
 /// Enumeration to list the errors that can occur in the identity module.
 @objc public enum IdentityError: Int, ErrorType {
     /// The user is invalid.

@@ -177,6 +177,26 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
 
 #pragma mark - PHXPhoenixDelegate
 
+/// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
+- (void)credentialsIncorrectForPhoenix:(Phoenix * __nonnull)phoenix {
+    [self alertWithMessage:@"Unrecoverable error occurred during login, check credentials for Phoenix Intelligence accounts."];
+}
+
+/// Account has been disabled and no longer active. Credentials are no longer valid.
+- (void)accountDisabledForPhoenix:(Phoenix * __nonnull)phoenix {
+    [self alertWithMessage:@"Unrecoverable error occurred during login, the Phoenix Intelligence account is disabled."];
+}
+
+/// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
+- (void)accountLockedForPhoenix:(Phoenix * __nonnull)phoenix {
+    [self alertWithMessage:@"Unrecoverable error occurred during login, the Phoenix Intelligence account is locked. Contact a Phoenix Intelligence Administrator."];
+}
+
+/// Token is invalid or expired, this may occur if your Application is configured incorrectly.
+- (void)tokenInvalidOrExpiredForPhoenix:(Phoenix * __nonnull)phoenix {
+    [self alertWithMessage:@"Unrecoverable error occurred during user creation, check credentials for Phoenix Intelligence accounts."];
+}
+
 /// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
 - (void)userCreationFailedForPhoenix:(Phoenix * __nonnull)phoenix {
     [self alertWithMessage:@"Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly."];
