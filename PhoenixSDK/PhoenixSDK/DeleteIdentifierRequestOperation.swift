@@ -26,7 +26,7 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         let request = NSURLRequest.phx_URLRequestForIdentifierDeletion(tokenId, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if outputErrorCode() == "object_notfound" {
+        if errorInData() == "object_notfound" {
             output?.error = NSError(code: IdentityError.DeviceTokenNotRegisteredError.rawValue)
             return
         }

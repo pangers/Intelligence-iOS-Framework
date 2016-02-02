@@ -33,7 +33,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         // Swallowing the invalid request so that the events sent are cleared.
         // This error is not recoverable and we need to purge the data.
         if let httpResponse = output?.response as? NSHTTPURLResponse {
-            if httpResponse.statusCode == HTTPStatusCode.BadRequest.rawValue && outputErrorCode() == InvalidRequestErrorCode {
+            if httpResponse.statusCode == HTTPStatusCode.BadRequest.rawValue && errorInData() == InvalidRequestErrorCode {
                 output?.error = NSError(code: AnalyticsError.OldEventsError.rawValue)
                 return
             }

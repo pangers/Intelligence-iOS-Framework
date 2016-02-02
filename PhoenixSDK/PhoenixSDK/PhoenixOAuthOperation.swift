@@ -97,13 +97,9 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
         return false
     }
     
-    /// Returns error code if response contains some sort of error code in the body.
-    func outputErrorCode() -> String? {
-        guard let error = self.output?.data?.phx_jsonDictionary?[BodyError] as? String else {
-            return nil
-        }
-        print("Server Error:", error, self.output?.data?.phx_jsonDictionary?[BodyErrorDescription] ?? "")
-        return error
+    /// Returns error if response contains an error in the data.
+    func errorInData() -> String? {
+        return self.output?.data?.phx_jsonDictionary?[BodyError] as? String
     }
     
     /// Returns all dictionaries in the 'Data' array of the output.
