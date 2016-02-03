@@ -170,6 +170,16 @@ internal final class Network: NSObject, NSURLSessionDelegate {
                             }
                             network?.queue.addOperation(copiedOperation)
                         } else {
+                            let operationIsAuthentication = operation.isMemberOfClass(PhoenixOAuthLoginOperation.self) || operation.isMemberOfClass(PhoenixOAuthRefreshOperation.self) || operation.isMemberOfClass(PhoenixOAuthValidateOperation.self)
+                            
+                            // If the original operation was also an authentication operation then we can call its completion block after niling out its error (as if it initaling succeeded)
+                            if operationIsAuthentication {
+                                operation.output?.error = nil
+                                operation.complete()
+                                
+                                return
+                            }
+                            
                             assertionFailure("Tried to enqueue uncopyable operation")
                         }
                     } else {
