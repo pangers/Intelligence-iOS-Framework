@@ -28,12 +28,12 @@ class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         let request = NSURLRequest.phx_URLRequestForIdentifierCreation(tokenString, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.DeviceTokenRegistrationError.rawValue) {
+        if handleError() {
             return
         }
         
         guard let data = outputArrayFirstDictionary(), returnedId = data["Id"] as? Int else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
         

@@ -28,7 +28,7 @@ class DeleteIdentifierOnBehalfRequestOperation : PhoenixOAuthOperation, NSCopyin
         let request = NSURLRequest.phx_URLRequestForIdentifierDeletionOnBehalf(token, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if handleError(IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationOnBehalfError.rawValue) {
+        if handleError() {
             return
         }
     }

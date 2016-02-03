@@ -30,13 +30,13 @@ class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     /// Parse.
-    func parse(withErrorCode errorCode: Int) {
-        if handleError(IdentityError.domain, code: errorCode) {
+    func parse() {
+        if handleError() {
             return
         }
         
         guard let receivedUser = Phoenix.User(withJSON: outputArrayFirstDictionary(), configuration: configuration!) else {
-            output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+            output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
         user = receivedUser

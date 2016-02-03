@@ -17,7 +17,7 @@ internal final class UpdateUserRequestOperation: UserRequestOperation {
         assert(sentUser != nil)
         let request = NSURLRequest.phx_URLRequestForUserUpdate(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
-        parse(withErrorCode: IdentityError.UserUpdateError.rawValue)
+        parse()
     }
 
 }

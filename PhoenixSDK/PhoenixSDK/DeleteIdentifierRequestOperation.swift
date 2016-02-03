@@ -27,11 +27,11 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
         if outputErrorCode() == "object_notfound" {
-            output?.error = NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenNotRegisteredError.rawValue, userInfo: nil)
+            output?.error = NSError(code: IdentityError.DeviceTokenNotRegisteredError.rawValue)
             return
         }
         
-        if handleError(IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationError.rawValue) {
+        if handleError() {
             return
         }
         
@@ -39,7 +39,7 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
             let data = jsonDictionary["Data"],
             let dataObject = data.lastObject,
             let returnedId = dataObject?["Id"] as? Int where returnedId == tokenId else {
-                output?.error = NSError(domain: RequestError.domain, code: RequestError.ParseError.rawValue, userInfo: nil)
+                output?.error = NSError(code: RequestError.ParseError.rawValue)
                 return
             }
     }

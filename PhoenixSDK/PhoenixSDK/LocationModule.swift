@@ -73,12 +73,11 @@ The Phoenix Location module protocol. Provides geofence downloading and tracking
 public protocol LocationModuleProtocol : ModuleProtocol {
     
     /**
-    Downloads a list of geofences using the given query details. Can return an DownloadGeofencesError with LocationError.domain as domain
+    Downloads a list of geofences using the given query details.
     
     - parameter queryDetails: The geofence query to retrieve.
     - parameter callback:     The callback that will be notified upon success/error.
-    The callback receives either an array of geofences or an NSError. Apart from generic errors, the NSError can
-    have as errorcode DownloadGeofencesError (6001) and as domain LocationError.domain ("LocationError").
+    The callback receives either an array of geofences or an NSError.
     */
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?)
     

@@ -226,11 +226,6 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             
             if returnedPipeline.output?.error != nil {
                 // Failed, tell developer!
-                guard let domain = returnedPipeline.output?.error?.domain where domain == IdentityError.domain || domain == RequestError.domain else {
-                    // Wrap again
-                    callback(user: nil, error: NSError(domain: IdentityError.domain, code: IdentityError.LoginFailed.rawValue, userInfo: nil))
-                    return
-                }
                 callback(user: nil, error: returnedPipeline.output?.error)
             } else {
                 // Get user me.
@@ -260,13 +255,13 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     @objc func updateUser(user: Phoenix.User, callback: UserCallback) {
         if !user.isValidToUpdate {
-            callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+            callback(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
             return
         }
         
         // The password can be nil due to the fact that getting a user does not retrieve the password
         if user.password != nil && !user.isPasswordSecure() {
-            callback(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+            callback(user:nil, error: NSError(code: IdentityError.WeakPasswordError.rawValue) )
             return
         }
         
@@ -302,16 +297,15 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     /// The developer is responsible to dispatch the callback to the main thread using dispatch_async if necessary.
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
-    /// user is invalid, and IdentityError.UserCreationError when there is an error while creating it.
-    /// The NSError domain is IdentityError.domain
+    /// user is invalid, or one of the RequestError errors.
     internal func createUser(user: Phoenix.User, callback: UserCallback? = nil) {
         if !user.isValidToCreate {
-            callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.InvalidUserError.rawValue, userInfo: nil) )
+            callback?(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
             return
         }
         
         if !user.isPasswordSecure() {
-            callback?(user:nil, error: NSError(domain:IdentityError.domain, code: IdentityError.WeakPasswordError.rawValue, userInfo: nil) )
+            callback?(user:nil, error: NSError(code: IdentityError.WeakPasswordError.rawValue) )
             return
         }
         
@@ -361,7 +355,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     private func registerDeviceToken(token: String, callback: RegisterDeviceTokenCallback) {
         if token.characters.count == 0 || token.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
-            callback(tokenId: InvalidDeviceTokenID, error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenInvalidError.rawValue, userInfo: nil))
+            callback(tokenId: InvalidDeviceTokenID, error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
             return
         }
         let operation = CreateIdentifierRequestOperation(token: token,
@@ -380,7 +374,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback) {
         if tokenId < 1 {
-            callback(error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationError.rawValue, userInfo: nil))
+            callback(error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
             return
         }
         let operation = DeleteIdentifierRequestOperation(tokenId: tokenId,
@@ -399,7 +393,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     private func unregisterDeviceTokenOnBehalf(token: String, callback: UnregisterDeviceTokenOnBehalfCallback) {
         if token.characters.count == 0 {
-            callback(error: NSError(domain: IdentityError.domain, code: IdentityError.DeviceTokenUnregistrationOnBehalfError.rawValue, userInfo: nil))
+            callback(error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
             return
         }
         let operation = DeleteIdentifierOnBehalfRequestOperation(token: token,
@@ -425,7 +419,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     ///     - callback: Optionally provide a callback to fire on completion.
     internal func createInstallation(callback: InstallationCallback? = nil) {
         if !installation.isNewInstallation {
-            callback?(installation: installation, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyInstalledError.rawValue, userInfo: nil))
+            callback?(installation: installation, error: NSError(code: InstallationError.AlreadyInstalledError.rawValue))
             return
         }
         
@@ -443,7 +437,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     ///     - callback: Optionally provide a callback to fire on completion.
     internal func updateInstallation(callback: InstallationCallback? = nil) {
         if !installation.isUpdatedInstallation {
-            callback?(installation: installation, error: NSError(domain: InstallationError.domain, code: InstallationError.AlreadyUpdatedError.rawValue, userInfo: nil))
+            callback?(installation: installation, error: NSError(code: InstallationError.AlreadyUpdatedError.rawValue))
             return
         }
         
