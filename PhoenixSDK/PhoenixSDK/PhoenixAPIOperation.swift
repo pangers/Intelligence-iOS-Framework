@@ -17,6 +17,12 @@ private let BodyData = "Data"
 private let BodyError = "error"
 private let OfflineErrorCode = -1009
 
+/// PhoenixAPIOperation is the abstract base class for any Phoenix API network operation, built on top of TSDOperation.
+///
+/// Inheritors should define their own main method, which should do the following:
+/// - execute the call to the API endpoint
+/// - call handleError so the deafult error handling behavior is executed
+/// - optionally, you can execute custom loginc or additional error handling
 internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIResponse> {
     var shouldBreak: Bool = false
     
@@ -38,6 +44,10 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIR
         callback?(returnedOperation: self)
     }
     
+    /// This function replaces the current output?.error with a sanitized error and is intended to be called
+    /// by subclasses after the network request completes.
+    /// When the network request returns a 401 status code, the handling is delegated to the handleUnauthorizedError function.
+    /// Please read the handleUnauthorizedError documentation for a full explanation of the default behavior.
     func handleError() -> Bool {
         // This is NSURLSession's reponse code if we are offline
         if output?.error?.code == OfflineErrorCode {
@@ -62,6 +72,10 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIR
         return false
     }
     
+    /// This function is called when handleError recieves a 401.
+    /// This function attempts to reauthenticate and then call the current operation again.
+    /// If authentication fails the function completes.
+    /// This cycle will continue until the current operation succeds or timesToRetry reaches 0.
     func handleUnauthorizedError() {
         let semaphore = dispatch_semaphore_create(0)
         
