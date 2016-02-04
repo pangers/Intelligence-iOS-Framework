@@ -44,8 +44,6 @@ internal final class DownloadGeofencesRequestOperation: PhoenixAPIOperation, NSC
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails, callback: callback!)
         
-        copy.timesToRetry = timesToRetry
-        
         return copy
     }
 }

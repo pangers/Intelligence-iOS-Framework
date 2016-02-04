@@ -13,8 +13,6 @@ typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error
 // Returned operation will be different than operation in some circumstances where tokens expire.
 typealias PhoenixAPICallback = (returnedOperation: PhoenixAPIOperation) -> ()
 
-private let DefaultTimesToRetry: UInt = 2
-
 private let BodyData = "Data"
 private let BodyError = "error"
 private let OfflineErrorCode = -1009
@@ -23,7 +21,7 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
     var shouldBreak: Bool = false
     
     // Times to try, excluding the inital try
-    var timesToRetry: UInt = DefaultTimesToRetry
+    private var timesToRetry = UInt(2)
     
     // Contextually relevant information to pass between operations.
     var callback: PhoenixAPICallback?
@@ -80,7 +78,12 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
             
             pipeline.callback = { [weak self, weak pipeline] (returnedOperation: PhoenixAPIOperation) in
                 if pipeline?.output?.error == nil {
-                    if self?.timesToRetry == 0 {
+                    guard let timesToRetry = self?.timesToRetry else {
+                        dispatch_semaphore_signal(semaphore)
+                        return
+                    }
+                    
+                    if timesToRetry == 0 {
                         dispatch_semaphore_signal(semaphore)
                         return
                     }
@@ -93,7 +96,7 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
                     self?.completionBlock = nil
                     
                     // Take off this try
-                    copiedOperation.timesToRetry -= 1
+                    copiedOperation.timesToRetry = timesToRetry - 1
                     
                     copiedOperation.completionBlock = { [weak copiedOperation] in
                         copiedOperation?.complete()
