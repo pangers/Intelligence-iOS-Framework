@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal class PhoenixOAuthRefreshOperation : PhoenixAPIOperation {
+internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
     
     override func main() {
         super.main()
@@ -41,4 +41,13 @@ internal class PhoenixOAuthRefreshOperation : PhoenixAPIOperation {
         print("\(oauth!.tokenType) Refresh Token Passed")
     }
     
+    override func handleUnauthroizedError() {
+        if self.oauth?.tokenType == .LoggedInUser {
+            // Token is no longer valid and cannot be refreshed without user input.
+            // Do not try again. Alert developer.
+            network?.delegate?.userLoginRequired()
+        }
+        
+        super.handleUnauthroizedError()
+    }
 }

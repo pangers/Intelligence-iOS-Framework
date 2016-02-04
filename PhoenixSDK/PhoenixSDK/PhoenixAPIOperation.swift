@@ -16,7 +16,6 @@ typealias PhoenixAPICallback = (returnedOperation: PhoenixAPIOperation) -> ()
 private let DefaultTimesToRetry: UInt = 2
 
 private let BodyData = "Data"
-private let BodyErrorDescription = "error_description"
 private let BodyError = "error"
 private let OfflineErrorCode = -1009
 
@@ -50,43 +49,7 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
         
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue {
-                output?.error = NSError(code: RequestError.Unauthorized.rawValue)
-                
-                let data = self.output?.data?.phx_jsonDictionary
-                
-                if let data = data {
-                    let error = data[BodyError] as? String
-                    let errorDescription = data[BodyErrorDescription] as? String
-                    
-                    // We are reading the errorDescription and comparing it to plain text sentences
-                    // that have been defined. It is noted that this is not an ideal way to detect errors.
-                    // If the descriptions are changed on the server without updating the client then these
-                    // errors will not be detected.
-                    
-                    if error == "Authentication failed." {
-                        if errorDescription == "Credentials incorrect." {
-                            output?.error = NSError(code: AuthenticationError.CredentialError.rawValue)
-                        }
-                        else if errorDescription == "Account disabled." {
-                            output?.error = NSError(code: AuthenticationError.AccountDisabledError.rawValue)
-                        }
-                        else if errorDescription == "Account locked." {
-                            output?.error = NSError(code: AuthenticationError.AccountLockedError.rawValue)
-                        }
-                    }
-                    else if error == "Invalid token." {
-                        if errorDescription == "Token invalid or expired." {
-                            output?.error = NSError(code: AuthenticationError.TokenInvalidOrExpired.rawValue)
-                        }
-                    }
-                    else {
-                        handleUnauthroizedError()
-                    }
-                }
-                else {
-                    handleUnauthroizedError()
-                }
-                
+                handleUnauthroizedError()
                 return true
             }
             else if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
@@ -102,24 +65,12 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
     }
     
     func handleUnauthroizedError() {
-        guard let network = network else {
-            return
-        }
-        
-        if self.oauth?.tokenType == .LoggedInUser {
-            // Token is no longer valid and cannot be refreshed without user input.
-            // This will occur if refreshToken fails.
-            // Do not try again. Alert developer.
-            network.delegate?.userLoginRequired()
-            return
-        }
-        
         let semaphore = dispatch_semaphore_create(0)
         
         // Attempt to get the pipeline for our OAuth token type.
         // Then execute the login pipeline before trying us again.
         // Shouldn't validate here, our token has expired.
-        network.getPipeline(forOAuth: self.oauth!, configuration: self.configuration!, shouldValidate: false, completion: { (pipeline) -> () in
+        network?.getPipeline(forOAuth: self.oauth!, configuration: self.configuration!, shouldValidate: false, completion: { (pipeline) -> () in
             
             // Pipeline will be nil if it already exists in the queue.
             guard let pipeline = pipeline else {
