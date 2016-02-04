@@ -51,11 +51,11 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIR
                 return true
             }
             else if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
-                output?.error = NSError(code: RequestError.Forbidden.rawValue)
+                handleForbbiddenError()
                 return true
             }
             else if httpResponse.statusCode / 100 != 2 {
-                output?.error = NSError(code: RequestError.UnhandledError.rawValue, httpStatusCode:httpResponse.statusCode)
+                handleUnhandledError(httpResponse.statusCode)
                 return true
             }
         }
@@ -118,6 +118,14 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIR
         })
         
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+    }
+    
+    private func handleForbbiddenError() {
+        output?.error = NSError(code: RequestError.Forbidden.rawValue)
+    }
+    
+    private func handleUnhandledError(httpStatusCode: Int) {
+        output?.error = NSError(code: RequestError.UnhandledError.rawValue, httpStatusCode:httpStatusCode)
     }
     
     /// Returns error if response contains an error in the data.
