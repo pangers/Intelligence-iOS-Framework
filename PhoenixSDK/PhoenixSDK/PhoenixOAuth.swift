@@ -33,7 +33,7 @@ protocol PhoenixOAuthProtocol {
 }
 
 
-/// This class supports the PhoenixOAuthPipeline
+/// This class supports the PhoenixAPIPipeline
 internal class PhoenixOAuth: PhoenixOAuthProtocol {
     
     var storage: PhoenixOAuthStorage

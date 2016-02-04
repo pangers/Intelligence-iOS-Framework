@@ -146,7 +146,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                     
                     identity.network.enqueueOperation(sdkUserPipeline)
                     
-                    sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
+                    sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
                         guard let identity = self else {
                             completion(success: false)
                             return
@@ -248,10 +248,10 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         
         network.oauthProvider.developerLoggedIn = false
         
-        let pipeline = PhoenixOAuthPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
+        let pipeline = PhoenixAPIPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
         
-        pipeline.callback = { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
-            let returnedPipeline = returnedOperation as! PhoenixOAuthPipeline
+        pipeline.callback = { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
+            let returnedPipeline = returnedOperation as! PhoenixAPIPipeline
             
             // Clear password from memory.
             if oauth.tokenType == .LoggedInUser {
@@ -300,7 +300,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
                 let updateOperation = returnedOperation as! UpdateUserRequestOperation
                 callback(user: updateOperation.user, error: updateOperation.output?.error)
         })
@@ -310,7 +310,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     }
     
     internal func getMe(oauth: PhoenixOAuthProtocol, callback: UserCallback) {
-        let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+        let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
             let getMeOperation = returnedOperation as! GetUserMeRequestOperation
             callback(user: getMeOperation.user, error: getMeOperation.output?.error)
         })
@@ -344,12 +344,12 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // Create user operation.
-        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
             let createUserOperation = returnedOperation as! CreateUserRequestOperation
             if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                 // On successful operation, lets assign users role.
                 // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
-                let assignOperation = AssignUserRoleRequestOperation(user: createUserOperation.user, oauth: createUserOperation.oauth!, configuration: createUserOperation.configuration!, network: createUserOperation.network!, callback: { [weak self] (returnedOperation: PhoenixOAuthOperation) -> () in
+                let assignOperation = AssignUserRoleRequestOperation(user: createUserOperation.user, oauth: createUserOperation.oauth!, configuration: createUserOperation.configuration!, network: createUserOperation.network!, callback: { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
                     let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
                     // Execute original callback.
                     // If assign role fails, the user will exist but not have any access, there is nothing we can do
@@ -397,7 +397,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixOAuthOperation) -> () in
+                (returnedOperation: PhoenixAPIOperation) -> () in
                 let createIdentifierOperation = returnedOperation as! CreateIdentifierRequestOperation
                 callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
         })
@@ -416,7 +416,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixOAuthOperation) -> () in
+                (returnedOperation: PhoenixAPIOperation) -> () in
                 let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
                 callback(error:deleteIdentifierOperation.output?.error)
         })
@@ -435,7 +435,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixOAuthOperation) -> () in
+                (returnedOperation: PhoenixAPIOperation) -> () in
                 let deleteIdentifierOnBehalfOperation = returnedOperation as! DeleteIdentifierOnBehalfRequestOperation
                 callback(error:deleteIdentifierOnBehalfOperation.output?.error)
         })
@@ -457,7 +457,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             return
         }
         
-        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
             let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
             callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
         })
@@ -476,7 +476,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // If this call fails, it will retry again the next time we open the app.
-        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
             let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
             callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
         })

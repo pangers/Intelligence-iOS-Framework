@@ -8,13 +8,13 @@
 
 import Foundation
 
-class CreateIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
+class CreateIdentifierRequestOperation : PhoenixAPIOperation, NSCopying {
     
     var tokenId: Int?
     
     private let tokenString: String
     
-    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.tokenString = token
         super.init()
         self.callback = callback

@@ -8,11 +8,11 @@
 
 import Foundation
 
-class DeleteIdentifierOnBehalfRequestOperation : PhoenixOAuthOperation, NSCopying {
+class DeleteIdentifierOnBehalfRequestOperation : PhoenixAPIOperation, NSCopying {
     
     let token: String
     
-    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.token = token
         
         super.init()

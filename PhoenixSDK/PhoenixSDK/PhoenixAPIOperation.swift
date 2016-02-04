@@ -1,5 +1,5 @@
 //
-//  PhoenixOAuthOperation.swift
+//  PhoenixAPIOperation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 01/10/2015.
@@ -11,7 +11,7 @@ import Foundation
 typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
 
 // Returned operation will be different than operation in some circumstances where tokens expire.
-typealias PhoenixOAuthCallback = (returnedOperation: PhoenixOAuthOperation) -> ()
+typealias PhoenixAPICallback = (returnedOperation: PhoenixAPIOperation) -> ()
 
 private let DefaultTimesToRetry: UInt = 2
 
@@ -20,14 +20,14 @@ private let BodyErrorDescription = "error_description"
 private let BodyError = "error"
 private let OfflineErrorCode = -1009
 
-internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
+internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
     var shouldBreak: Bool = false
     
     // Times to try, excluding the inital try
     var timesToRetry: UInt = DefaultTimesToRetry
     
     // Contextually relevant information to pass between operations.
-    var callback: PhoenixOAuthCallback?
+    var callback: PhoenixAPICallback?
     var oauth: PhoenixOAuthProtocol?
     var configuration: Phoenix.Configuration?
     var network: Network?
@@ -127,7 +127,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                 return
             }
             
-            pipeline.callback = { [weak self, weak pipeline] (returnedOperation: PhoenixOAuthOperation) in
+            pipeline.callback = { [weak self, weak pipeline] (returnedOperation: PhoenixAPIOperation) in
                 if pipeline?.output?.error == nil {
                     if self?.timesToRetry == 0 {
                         dispatch_semaphore_signal(semaphore)
@@ -135,7 +135,7 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                     }
                     
                     // Add us again, should be called after pipeline succeeds.
-                    let copiedOperation = self?.copy() as! PhoenixOAuthOperation
+                    let copiedOperation = self?.copy() as! PhoenixAPIOperation
                     
                     // Remove the current operations completion block
                     // Only the copiedOperation should complete

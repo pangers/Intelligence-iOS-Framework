@@ -8,7 +8,7 @@
 
 import Foundation
 
-class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
+class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     
     /// Once successful, this will contain the user provided by the backend.
     var user: Phoenix.User?
@@ -16,7 +16,7 @@ class UserRequestOperation : PhoenixOAuthOperation, NSCopying {
     let sentUser: Phoenix.User?
     
     /// Create new User request.
-    required init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.sentUser = user
         super.init()
         self.callback = callback

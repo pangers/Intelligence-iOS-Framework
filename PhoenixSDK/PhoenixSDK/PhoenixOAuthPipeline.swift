@@ -8,11 +8,11 @@
 
 import Foundation
 
-internal class PhoenixOAuthPipeline: PhoenixOAuthOperation {
+internal class PhoenixAPIPipeline: PhoenixAPIOperation {
     
-    var operations: [PhoenixOAuthOperation]
+    var operations: [PhoenixAPIOperation]
     
-    init(withOperations operations: [PhoenixOAuthOperation],
+    init(withOperations operations: [PhoenixAPIOperation],
         oauth: PhoenixOAuthProtocol? = nil,
         configuration: Phoenix.Configuration,
         network: Network)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal class PhoenixOAuthLoginOperation : PhoenixOAuthOperation {
+internal class PhoenixOAuthLoginOperation : PhoenixAPIOperation {
     
     override func main() {
         super.main()

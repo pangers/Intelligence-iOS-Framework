@@ -9,13 +9,13 @@
 import Foundation
 
 /// NSOperation that handles sending analytics.
-internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying {
+internal final class AnalyticsRequestOperation: PhoenixAPIOperation, NSCopying {
     
     private let eventsJSON: JSONDictionaryArray
     
     private let InvalidRequestErrorCode = "invalid_request"
     
-    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.eventsJSON = json
         super.init()
         self.callback = callback
