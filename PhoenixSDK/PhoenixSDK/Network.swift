@@ -22,7 +22,6 @@ internal enum HTTPRequestMethod : String {
 
 internal enum HTTPStatusCode: Int {
     case Success = 200
-    case MultipleChoices = 300
     case BadRequest = 400
     case Unauthorized = 401
     case Forbidden = 403
