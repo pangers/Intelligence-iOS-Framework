@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias PhoenixOAuthResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
+typealias PhoenixAPIResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
 
 // Returned operation will be different than operation in some circumstances where tokens expire.
 typealias PhoenixAPICallback = (returnedOperation: PhoenixAPIOperation) -> ()
@@ -17,7 +17,7 @@ private let BodyData = "Data"
 private let BodyError = "error"
 private let OfflineErrorCode = -1009
 
-internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOAuthResponse> {
+internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIResponse> {
     var shouldBreak: Bool = false
     
     // Times to try, excluding the inital try

@@ -19,7 +19,7 @@ internal class PhoenixAPIPipeline: PhoenixAPIOperation {
     {
         self.operations = operations
         super.init()
-        self.input = operations.first!.input as PhoenixOAuthResponse!
+        self.input = operations.first!.input as PhoenixAPIResponse!
         self.oauth = oauth
         self.configuration = configuration
         self.network = network
@@ -29,7 +29,7 @@ internal class PhoenixAPIPipeline: PhoenixAPIOperation {
     }
     
     override func main() {
-        var previousOutput: PhoenixOAuthResponse? = nil
+        var previousOutput: PhoenixAPIResponse? = nil
         while let operation = operations.first {
             if previousOutput != nil {
                 operation.input = previousOutput
