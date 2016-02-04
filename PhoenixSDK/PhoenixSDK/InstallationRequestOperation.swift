@@ -37,7 +37,11 @@ class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        copy.timesToRetry = timesToRetry
+        
+        return copy
     }
     
 }

@@ -34,6 +34,10 @@ class DeleteIdentifierOnBehalfRequestOperation : PhoenixOAuthOperation, NSCopyin
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(token: token, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = self.dynamicType.init(token: token, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        copy.timesToRetry = timesToRetry
+        
+        return copy
     }
 }
