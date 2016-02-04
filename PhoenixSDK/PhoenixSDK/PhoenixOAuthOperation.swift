@@ -74,6 +74,12 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
                             output?.error = NSError(code: AuthenticationError.TokenInvalidOrExpired.rawValue)
                         }
                     }
+                    else {
+                        handleUnauthroizedError()
+                    }
+                }
+                else {
+                    handleUnauthroizedError()
                 }
                 
                 return true
@@ -88,6 +94,63 @@ internal class PhoenixOAuthOperation: TSDOperation<PhoenixOAuthResponse, Phoenix
             }
         }
         return false
+    }
+    
+    func handleUnauthroizedError() {
+        guard let network = network else {
+            return
+        }
+        
+        if self.oauth?.tokenType == .LoggedInUser {
+            // Token is no longer valid and cannot be refreshed without user input.
+            // This will occur if refreshToken fails.
+            // Do not try again. Alert developer.
+            network.delegate?.userLoginRequired()
+            return
+        }
+        
+        let semaphore = dispatch_semaphore_create(0)
+        
+        // Attempt to get the pipeline for our OAuth token type.
+        // Then execute the login pipeline before trying us again.
+        // Shouldn't validate here, our token has expired.
+        network.getPipeline(forOAuth: self.oauth!, configuration: self.configuration!, shouldValidate: false, completion: { (pipeline) -> () in
+            
+            // Pipeline will be nil if it already exists in the queue.
+            guard let pipeline = pipeline else {
+                dispatch_semaphore_signal(semaphore)
+                return
+            }
+            
+            pipeline.callback = { [weak self, weak pipeline] (returnedOperation: PhoenixOAuthOperation) in
+                if pipeline?.output?.error == nil {
+                    // Add us again, should be called after pipeline succeeds.
+                    let copiedOperation = self?.copy() as! PhoenixOAuthOperation
+                    
+                    // Remove the current operations completion block
+                    // Only the copiedOperation should complete
+                    self?.completionBlock = nil
+                    
+                    copiedOperation.completionBlock = { [weak copiedOperation] in
+                        copiedOperation?.complete()
+                        
+                        dispatch_semaphore_signal(semaphore)
+                    }
+                    
+                    copiedOperation.start()
+                }
+                else {
+                    // Call completion block for current operation.
+                    self?.complete()
+                    
+                    dispatch_semaphore_signal(semaphore)
+                }
+            }
+            
+           pipeline.start()
+        })
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
     }
     
     /// Returns error if response contains an error in the data.
