@@ -47,7 +47,7 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
         
         if let httpResponse = output?.response as? NSHTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue {
-                handleUnauthroizedError()
+                handleUnauthorizedError()
                 return true
             }
             else if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
@@ -62,7 +62,7 @@ internal class PhoenixAPIOperation: TSDOperation<PhoenixOAuthResponse, PhoenixOA
         return false
     }
     
-    func handleUnauthroizedError() {
+    func handleUnauthorizedError() {
         let semaphore = dispatch_semaphore_create(0)
         
         // Attempt to get the pipeline for our OAuth token type.

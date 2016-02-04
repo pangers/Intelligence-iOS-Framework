@@ -12,7 +12,7 @@ private let BodyError = "error"
 private let BodyErrorDescription = "error_description"
 
 class PhoenixOAuthOperation : PhoenixAPIOperation {
-    override func handleUnauthroizedError() {
+    override func handleUnauthorizedError() {
         let data = self.output?.data?.phx_jsonDictionary
         
         if let data = data {
