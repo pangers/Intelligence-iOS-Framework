@@ -43,15 +43,9 @@ class IdentityModuleViewController : UITableViewController {
             
             alertController.addAction(UIAlertAction(title: "Get User", style: .Default) { [weak self] (action) -> Void in
                 
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                guard let userString = alertController.textFields?.first?.text else {
-                    return
-                }
-                
-                guard let userId = Int(userString) else {
+                guard let strongSelf = self,
+                    userString = alertController.textFields?.first?.text,
+                    userId = Int(userString) else {
                     return
                 }
                 
