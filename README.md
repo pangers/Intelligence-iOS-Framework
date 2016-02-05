@@ -471,6 +471,39 @@ phoenix.identity.logout()
 
 ```
 
+### Get User ###
+
+Request information for a specific user (by userId). The user calling this method must have a role with the permission to see other users.
+
+The following code snippets illustrate how to request a user's information in Objective-C and Swift.
+
+*Swift:*
+
+
+```
+#!swift
+
+phoenix.identity.getUser(userId) { (user, error) -> Void in
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+}
+
+
+```
+
+*Objective-C:*
+
+```
+#!objc
+
+[phoenix getUser:userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+
+```
+
 ### Get Me ###
 
 Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.

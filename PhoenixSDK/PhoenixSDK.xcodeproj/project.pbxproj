@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		455D85E81BC2B39F00A64B96 /* ScreenViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		45017DDF1C62461300A34966 /* GetUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45017DDE1C62461200A34966 /* GetUserRequestOperation.swift */; };
 		451C61071C46BE3B006D9ED1 /* PhoenixEnvironmentTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C61061C46BE3B006D9ED1 /* PhoenixEnvironmentTestCase.swift */; };
 		45500F5F1C467D240042B857 /* PhoenixEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45500F5E1C467D240042B857 /* PhoenixEnvironment.swift */; };
 		456E281D1C638E4200983B19 /* PhoenixOAuthOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E281C1C638E4200983B19 /* PhoenixOAuthOperation.swift */; };
@@ -149,6 +150,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		45017DDE1C62461200A34966 /* GetUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserRequestOperation.swift; sourceTree = "<group>"; };
 		451C61061C46BE3B006D9ED1 /* PhoenixEnvironmentTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEnvironmentTestCase.swift; sourceTree = "<group>"; };
 		45500F5E1C467D240042B857 /* PhoenixEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEnvironment.swift; sourceTree = "<group>"; };
 		455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedEvent.swift; sourceTree = "<group>"; };
@@ -567,6 +569,7 @@
 				FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */,
 				BBC46D5F1B6F8D9000C8E418 /* CreateUserRequestOperation.swift */,
 				BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */,
+				45017DDE1C62461200A34966 /* GetUserRequestOperation.swift */,
 				FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */,
 			);
 			name = Requests;
@@ -839,6 +842,7 @@
 				BBC46D591B6F71DF00C8E418 /* PhoenixUser.swift in Sources */,
 				FEDE079E1B73A797009BC6B6 /* Geofence+JSON.swift in Sources */,
 				FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */,
+				45017DDF1C62461300A34966 /* GetUserRequestOperation.swift in Sources */,
 				BBA573781B692B6900685EFB /* String.swift in Sources */,
 				FEB4714A1BBD6A5C00640CD7 /* InstallationRequestOperation.swift in Sources */,
 				456E281D1C638E4200983B19 /* PhoenixOAuthOperation.swift in Sources */,

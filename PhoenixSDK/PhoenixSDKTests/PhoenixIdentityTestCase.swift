@@ -87,6 +87,17 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     
     
     // MARK: - Mock
+
+    func mockGetUser(userId: Int? = nil, status: HTTPStatusCode = .Success, body: String? = nil) {
+        guard let userId = userId else {
+            return
+        }
+        
+        let guURL = NSURLRequest.phx_URLRequestForGetUser(userId, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        mockResponseForURL(guURL,
+            method: .GET,
+            response: getResponse(status, body: body ?? successfulResponseGetUser))
+    }
     
     func mockGetUserMe(status: HTTPStatusCode = .Success, body: String? = nil) {
         let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
@@ -418,6 +429,30 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     }
     
 
+    // MARK:- Get User
+    
+    func testGetUserSuccess() {
+        let oauth = mockOAuthProvider.applicationOAuth
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        
+        // Mock auth
+        mockOAuthProvider.fakeAccessToken(oauth)
+        
+        let userId = fakeUser.userId
+        
+        // Create
+        mockGetUser(userId)
+        
+        identity!.getUser(userId) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    
     // MARK:- Create User
     
     // Assures that when the user is not valid to create, an error is returned.

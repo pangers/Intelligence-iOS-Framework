@@ -57,18 +57,21 @@ class ViewUserViewController : UIViewController {
     func displayUser() {
         guard let user = self.user else { return }
         NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
-            if user.userId != 0 {
-                self.idLabel.text = "User Id: \(user.userId)"
+            self.idLabel.text = "\(user.userId)"
+            self.username.text = user.username
+            
+            // should be empty
+            if let password = user.password {
+                self.password.text = password
             }
-            else {
-                self.idLabel.text = "User Id: --"
+            
+            self.firstname.text = user.firstName
+            self.lastname.text = user.lastName
+            
+            // normally empty
+            if let avatarURL = user.avatarURL {
+                self.avatarURL.text = avatarURL
             }
-            self.idLabel.text = "\(self.user!.userId)"
-            self.username.text = self.user!.username
-            self.password.text = self.user!.password    // should be empty
-            self.firstname.text = self.user!.firstName
-            self.lastname.text = self.user!.lastName
-            self.avatarURL.text = self.user!.avatarURL
         }))
     }
     
