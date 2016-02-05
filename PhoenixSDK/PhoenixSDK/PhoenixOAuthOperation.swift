@@ -16,7 +16,7 @@ class PhoenixOAuthOperation : PhoenixAPIOperation {
         let data = self.output?.data?.phx_jsonDictionary
         
         if let data = data {
-            let error = data[""] as? String
+            let error = data[BodyError] as? String
             let errorDescription = data[BodyErrorDescription] as? String
             
             // We are reading the errorDescription and comparing it to plain text sentences
