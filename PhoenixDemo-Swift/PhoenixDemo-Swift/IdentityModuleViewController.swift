@@ -15,19 +15,13 @@ class IdentityModuleViewController : UITableViewController {
     
     private let ViewUserSegue = "GetAndViewUser"
     
-    private var userId: Int? = nil
+    private var user: Phoenix.User? = nil
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == ViewUserSegue {
-            guard let userId = userId else {
-                return
+            if let viewUser = segue.destinationViewController as? ViewUserViewController {
+                viewUser.user = user
             }
-            
-            PhoenixManager.phoenix.identity.getUser(userId, callback: { (user, error) -> () in
-                if let viewUser = segue.destinationViewController as? ViewUserViewController {
-                    viewUser.user = user
-                }
-            })
         }
     }
     
@@ -62,10 +56,16 @@ class IdentityModuleViewController : UITableViewController {
                     return
                 }
                 
-                strongSelf.userId = userId
-                
-                strongSelf.performSegueWithIdentifier(strongSelf.ViewUserSegue, sender: strongSelf)
-                
+                PhoenixManager.phoenix.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
+                    dispatch_async(dispatch_get_main_queue()) {
+                        guard let strongSelf = strongSelf else {
+                            return
+                        }
+                        
+                        strongSelf.user = user
+                        strongSelf.performSegueWithIdentifier(strongSelf.ViewUserSegue, sender: strongSelf)
+                    }
+                    })
                 })
             
             presentViewController(alertController, animated: true) { }

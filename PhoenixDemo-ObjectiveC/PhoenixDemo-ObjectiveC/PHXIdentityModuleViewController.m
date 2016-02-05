@@ -11,11 +11,11 @@
 #import "PHXPhoenixManager.h"
 #import "PHXViewUserViewController.h"
 
-static NSString * const GetAndViewUser = @"GetAndViewUser";
+static NSString * const PHXGetAndViewUser = @"GetAndViewUser";
 
 @interface PHXIdentityModuleViewController()
 
-@property (nonatomic, assign) NSInteger userId;
+@property (nonatomic, strong) PHXUser *user;
 
 @end
 
@@ -23,11 +23,9 @@ static NSString * const GetAndViewUser = @"GetAndViewUser";
 @implementation PHXIdentityModuleViewController
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:GetAndViewUser]) {
-            [PHXPhoenixManager.phoenix.identity getUser:self.userId callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
-            PHXViewUserViewController *viewUser = segue.destinationViewController;
-            viewUser.user = user;
-        }];
+    if ([segue.identifier isEqualToString:PHXGetAndViewUser]) {
+        PHXViewUserViewController *viewUser = segue.destinationViewController;
+        viewUser.user = self.user;
     }
 }
 
@@ -47,15 +45,24 @@ static NSString * const GetAndViewUser = @"GetAndViewUser";
                                                               [self.tableView reloadData];
                                                           }]];
         
+        __weak typeof(self) weakSelf = self;
         [alertController addAction:[UIAlertAction actionWithTitle:@"Get User"
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
                                                               
                                                               NSString *userId = alertController.textFields.firstObject.text;
                                                               
-                                                              self.userId = [userId integerValue];
-                                                              
-                                                              [self performSegueWithIdentifier:GetAndViewUser sender:self];
+                                                              [PHXPhoenixManager.phoenix.identity getUser:[userId integerValue] callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                                      
+                                                                      if (user != nil && strongSelf != nil) {
+                                                                          strongSelf.user = user;
+                                                                          
+                                                                          [strongSelf performSegueWithIdentifier:PHXGetAndViewUser sender:strongSelf];
+                                                                      }
+                                                                  });
+                                                              }];
                                                           }]];
         
         [self presentViewController:alertController animated:true completion:nil];
