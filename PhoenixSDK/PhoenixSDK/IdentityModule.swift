@@ -39,6 +39,11 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
+
+    /// Get details about a user.
+    /// - parameter userId: The id of the user to retrieve details for.
+    /// - parameter callback: Will be called with either an error or a user.
+    func getUser(userId: Int, callback: UserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
@@ -269,6 +274,16 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
                 let updateOperation = returnedOperation as! UpdateUserRequestOperation
                 callback(user: updateOperation.user, error: updateOperation.output?.error)
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
+    
+    @objc func getUser(userId: Int, callback: UserCallback) {
+        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.loggedInUserOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+            let getUserOperation = returnedOperation as! GetUserRequestOperation
+            callback(user: getUserOperation.user, error: getUserOperation.output?.error)
         })
         
         // Execute the network operation

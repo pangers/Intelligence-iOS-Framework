@@ -147,6 +147,21 @@ internal extension NSURLRequest {
     }
     
     /// - returns: An NSURLRequest to get the user with the used credentials.
+    class func phx_URLRequestForGetUser(userId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let url = NSURL(module: .Identity, configuration: configuration)!
+            .phx_URLByAppendingCompanies(configuration.companyId)
+            .phx_URLByAppendingUsers(userId)
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
+        request.HTTPMethod = HTTPRequestMethod.GET.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProviders(configuration.providerId)
