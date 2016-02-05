@@ -473,7 +473,7 @@ phoenix.identity.logout()
 
 ### Get User ###
 
-Request information for a specific user (by userId). The user calling this method must have a suffiently permissioned role to see other users.
+Request information for a specific user (by userId). The user calling this method must have a role with the permission to see other users.
 
 The following code snippets illustrate how to request a user's information in Objective-C and Swift.
 
