@@ -38,8 +38,7 @@ class IdentityModuleViewController : UITableViewController {
                 textField.placeholder = "UserId"
             }
             
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { [weak self] (action) -> Void in
-                self?.tableView.reloadData()
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
                 })
             
             alertController.addAction(UIAlertAction(title: "Get User", style: .Default) { [weak self] (action) -> Void in

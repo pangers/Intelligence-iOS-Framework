@@ -42,7 +42,6 @@ static NSString * const PHXGetAndViewUser = @"GetAndViewUser";
         [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                             style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * _Nonnull action) {
-                                                              [self.tableView reloadData];
                                                           }]];
         
         __weak typeof(self) weakSelf = self;
