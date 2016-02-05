@@ -1,5 +1,5 @@
 //
-//  CreateUserRequestOperation.swift
+//  CreateInstallationRequestOperation.swift
 //  PhoenixSDK
 //
 //  Created by Josep Rodriguez on 03/08/2015.

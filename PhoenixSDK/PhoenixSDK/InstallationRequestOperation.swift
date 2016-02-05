@@ -8,11 +8,11 @@
 
 import Foundation
 
-class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
+class InstallationRequestOperation : PhoenixAPIOperation, NSCopying {
     
     var installation: Installation!
     
-    required init(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         super.init()
         self.callback = callback
         self.configuration = configuration
@@ -37,7 +37,9 @@ class InstallationRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
     }
     
 }

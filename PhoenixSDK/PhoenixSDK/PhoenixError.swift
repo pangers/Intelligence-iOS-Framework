@@ -8,15 +8,21 @@
 
 import Foundation
 
+/// The key to use in an NSError userInfo dictionary to retrieve the HTTP status code
+public let HTTPStatusCodeNSErrorUserInfoKey = "httpStatusCode"
+
+/// NSError extension to standardise domain and httpStatusCode insertion/extraction
 extension NSError {
     
+    /// Convenience method to create an NSError with a code, and optionally a httpStatusCode.
+    /// The domain will be set to the SDK's bundleIdentifier, and the httpStatusCode will be added as the userInfo.
     convenience init(code: Int, httpStatusCode: Int? = nil) {
         let domain = NSBundle(forClass: Phoenix.self).bundleIdentifier!
         
         let userInfo : [NSObject : AnyObject]?
         
         if httpStatusCode != nil {
-            userInfo = ["httpStatusCode": httpStatusCode!]
+            userInfo = [HTTPStatusCodeNSErrorUserInfoKey: httpStatusCode!]
         }
         else {
             userInfo = nil
@@ -25,9 +31,11 @@ extension NSError {
         self.init(domain: domain, code: code, userInfo: userInfo)
     }
     
+    /// Retrieve the httpStatusCode from an NSError.
+    /// Returns the code if it is in the userInfo in the style init(code:httpStatusCode:) added it, or nil if it is not.
     func httpStatusCode() -> Int? {
         if let userInfo = self.userInfo as? [String : Int] {
-            return userInfo["httpStatusCode"]
+            return userInfo[HTTPStatusCodeNSErrorUserInfoKey]
         }
         
         return nil
@@ -71,6 +79,22 @@ extension NSError {
     
     /// Error to return if an error occurs that we can not handle.
     case UnhandledError
+}
+
+/// Enumeration to list the errors that can occur in the authentication module.
+@objc public enum AuthenticationError: Int, ErrorType {
+    /// The client or user credentials are incorrect.
+    case CredentialError = 3001
+    
+    /// The account has been disabled.
+    case AccountDisabledError
+    
+    /// The account has been locked due to multiple authentication failures.
+    /// An Administration is required to unlock.
+    case AccountLockedError
+    
+    /// The token is invalid or has expired.
+    case TokenInvalidOrExpired
 }
 
 /// Enumeration to list the errors that can occur in the identity module.

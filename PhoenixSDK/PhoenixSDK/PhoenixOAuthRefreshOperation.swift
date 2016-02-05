@@ -41,4 +41,13 @@ internal class PhoenixOAuthRefreshOperation : PhoenixOAuthOperation {
         print("\(oauth!.tokenType) Refresh Token Passed")
     }
     
+    override func handleUnauthorizedError() {
+        if self.oauth?.tokenType == .LoggedInUser {
+            // Token is no longer valid and cannot be refreshed without user input.
+            // Do not try again. Alert developer.
+            network?.delegate?.userLoginRequired()
+        }
+        
+        super.handleUnauthorizedError()
+    }
 }

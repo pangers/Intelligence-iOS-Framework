@@ -8,11 +8,11 @@
 
 import Foundation
 
-class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
+class DeleteIdentifierRequestOperation : PhoenixAPIOperation, NSCopying {
     
     let tokenId: Int
     
-    required init(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.tokenId = tokenId
         super.init()
         self.callback = callback
@@ -26,7 +26,7 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
         let request = NSURLRequest.phx_URLRequestForIdentifierDeletion(tokenId, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
-        if outputErrorCode() == "object_notfound" {
+        if errorInData() == "object_notfound" {
             output?.error = NSError(code: IdentityError.DeviceTokenNotRegisteredError.rawValue)
             return
         }
@@ -45,6 +45,8 @@ class DeleteIdentifierRequestOperation : PhoenixOAuthOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(tokenId: tokenId, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = self.dynamicType.init(tokenId: tokenId, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
     }
 }

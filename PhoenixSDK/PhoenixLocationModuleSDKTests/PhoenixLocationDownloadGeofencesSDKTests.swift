@@ -116,8 +116,6 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
             switch err {
             case .InvalidPropertyError(_):
                 XCTAssert(true)
-            default:
-                XCTAssert(false)
             }
         }
         catch {

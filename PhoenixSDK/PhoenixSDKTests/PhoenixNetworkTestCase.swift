@@ -12,11 +12,11 @@ import XCTest
 
 class PhoenixNetworkTestCase : PhoenixBaseTestCase {
     
-    func testQueuedOAuthOperations() {
+    func testQueuedOperations() {
         let expectation = expectationWithDescription("Queue Test Expectation")
         
-        XCTAssert(mockNetwork.queuedOAuthOperations().count == 0)
-        XCTAssert(mockNetwork.queuedOAuthPipelines().count == 0)
+        XCTAssert(mockNetwork.queuedOperations().count == 0)
+        XCTAssert(mockNetwork.queuedPipelines().count == 0)
         
         mockNetwork.queue.suspended = true
         
@@ -24,7 +24,7 @@ class PhoenixNetworkTestCase : PhoenixBaseTestCase {
             XCTAssertNotNil(pipeline, "Cannot be nil")
             
             mockNetwork?.enqueueOperation(pipeline!)
-            XCTAssert(mockNetwork?.queuedOAuthPipelines().count == 1)
+            XCTAssert(mockNetwork?.queuedPipelines().count == 1)
             
             
             mockNetwork?.getPipeline(forOAuth: self!.mockOAuthProvider.applicationOAuth, configuration: self!.mockConfiguration) { (pipeline) -> () in
@@ -36,7 +36,7 @@ class PhoenixNetworkTestCase : PhoenixBaseTestCase {
                     XCTAssert(false)
                 })
                 self!.mockNetwork.enqueueOperation(operation)
-                XCTAssert(self!.mockNetwork.queuedOAuthOperations().count == 1)
+                XCTAssert(self!.mockNetwork.queuedOperations().count == 1)
                 
                 mockNetwork?.getPipeline(forOAuth: self!.mockOAuthProvider.sdkUserOAuth, configuration: self!.mockConfiguration) { (pipeline) -> () in
                     XCTAssertNotNil(pipeline, "Different type of pipeline should succeed")
@@ -48,7 +48,4 @@ class PhoenixNetworkTestCase : PhoenixBaseTestCase {
         
         waitForExpectations()
     }
-    
-    
-    
 }

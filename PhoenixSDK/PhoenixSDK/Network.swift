@@ -62,27 +62,27 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         self.authenticationChallengeDelegate.URLSession?(session, didReceiveChallenge: challenge, completionHandler: completionHandler)
     }
     
-    /// Return all queued OAuth operations (excluding pipeline operations).
-    internal func queuedOAuthOperations() -> [PhoenixOAuthOperation] {
+    /// Return all queued operations (excluding pipeline operations).
+    internal func queuedOperations() -> [PhoenixAPIOperation] {
         return queue.operations.filter({
-            $0.isMemberOfClass(PhoenixOAuthPipeline.self) == false &&
-                $0.isKindOfClass(PhoenixOAuthOperation.self) == true })
-            .map({ $0 as! PhoenixOAuthOperation })
+            $0.isMemberOfClass(PhoenixAPIPipeline.self) == false &&
+                $0.isKindOfClass(PhoenixAPIOperation.self) == true })
+            .map({ $0 as! PhoenixAPIOperation })
     }
     
-    /// Return all queued OAuth operations (excluding pipeline operations).
-    internal func queuedOAuthPipelines() -> [PhoenixOAuthPipeline] {
+    /// Return all queued operations (excluding pipeline operations).
+    internal func queuedPipelines() -> [PhoenixAPIPipeline] {
         return queue.operations.filter({
-            $0.isMemberOfClass(PhoenixOAuthPipeline.self) == true })
-            .map({ $0 as! PhoenixOAuthPipeline })
+            $0.isMemberOfClass(PhoenixAPIPipeline.self) == true })
+            .map({ $0 as! PhoenixAPIPipeline })
     }
     
     // MARK: Interception of responses
     
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
-    /// - returns: Return PhoenixOAuthPipeline for given token type.
-    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, shouldValidate: Bool = true, completion: (PhoenixOAuthPipeline?) -> ()) {
+    /// - returns: Return PhoenixAPIPipeline for given token type.
+    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, shouldValidate: Bool = true, completion: (PhoenixAPIPipeline?) -> ()) {
         if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
             assertionFailure("User should have been created in startup()")
             completion(nil)
@@ -90,7 +90,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         }
         
         // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
-        if self.queuedOAuthPipelines()
+        if self.queuedPipelines()
             .filter({ $0.oauth != nil && $0.oauth?.tokenType == oauth.tokenType })
             .count > 0
         {
@@ -105,14 +105,14 @@ internal final class Network: NSObject, NSURLSessionDelegate {
             operations.insert(PhoenixOAuthValidateOperation(), atIndex: 0)
         }
         
-        let pipeline = PhoenixOAuthPipeline(withOperations: operations,
+        let pipeline = PhoenixAPIPipeline(withOperations: operations,
             oauth: oauth, configuration: configuration, network: self)
         
-        // Iterate all queued OAuth operations (excluding pipeline operations).
-        queuedOAuthOperations().forEach({ (oauthOp) -> () in
+        // Iterate all queued operations (excluding pipeline operations).
+        queuedOperations().forEach({ (op) -> () in
             // Make each operation dependant on this new pipeline if the token types match.
-            if oauthOp.oauth != nil && oauthOp.oauth?.tokenType == oauth.tokenType {
-                oauthOp.addDependency(pipeline)
+            if op.oauth != nil && op.oauth?.tokenType == oauth.tokenType {
+                op.addDependency(pipeline)
             }
         })
         
@@ -122,67 +122,13 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         completion(pipeline)
     }
     
-    internal func enqueueOperation(operation: PhoenixOAuthOperation) {
-        // This method will enqueue an operation and override the completion handler
-        // to cover the case that we require reauthentication (HTTP 401). It will then
+    internal func enqueueOperation(operation: PhoenixAPIOperation) {
+        // This method will enqueue an operation and
         // execute the initial completion block when appropriate.
-        operation.completionBlock = { [weak self, weak operation] in
-            guard let operation = operation else { return }
-            // Check if our request failed.
-            guard let httpResponse = operation.output?.response as? NSHTTPURLResponse
-                where httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue else
-            {
-                // Cannot be handled as an unauthorized error.
-                // Call completion block for original operation.
-                operation.complete()
-                return
-            }
-            guard let network = self else {
-                return
-            }
-            
-            if operation.oauth?.tokenType == .LoggedInUser && operation.isMemberOfClass(PhoenixOAuthPipeline.self) {
-                // Token is no longer valid and cannot be refreshed without user input.
-                // This will occur if refreshToken fails.
-                // Do not try again. Alert developer.
-                network.delegate?.userLoginRequired()
-                return
-            }
-            
-            // Attempt to get the pipeline for this operation's OAuth token type.
-            // Then execute the login pipeline before trying this operation again.
-            // Shouldn't validate here, our token has expired.
-            network.getPipeline(forOAuth: operation.oauth!, configuration: operation.configuration!, shouldValidate: false, completion: { (pipeline) -> () in
-                // Pipeline will be nil if it already exists in the queue.
-                guard let pipeline = pipeline else { return }
-                
-                pipeline.callback = { [weak pipeline, weak network] (returnedOperation: PhoenixOAuthOperation) in
-                    if pipeline?.output?.error == nil {
-                        if operation.conformsToProtocol(NSCopying) {
-                            // Add original operation again, should be called after pipeline succeeds.
-                            // Explicitly enqueue here, rather than calling enqueueOperation again (which would result in loop).
-                            let copiedOperation = operation.copy() as! PhoenixOAuthOperation
-                            copiedOperation.completionBlock = { [weak copiedOperation] in
-                                // Always call complete in this case, there is no special logic since we avoid the
-                                // enqueueOperation: method.
-                                copiedOperation?.complete()
-                            }
-                            network?.queue.addOperation(copiedOperation)
-                        } else {
-                            assertionFailure("Tried to enqueue uncopyable operation")
-                        }
-                    } else {
-                        // Call completion block for original operation.
-                        operation.complete()
-                    }
-                }
-                
-                // Add explicitly to queue here, rather than calling enqueueOperation again (which would result in loop).
-                network.queue.addOperation(pipeline)
-            })
+        operation.completionBlock = { [weak operation] in
+            operation?.complete()
         }
         
-        // Enqueue original operation.
         self.queue.addOperation(operation)
     }
 }

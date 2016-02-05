@@ -9,13 +9,13 @@
 import Foundation
 
 /// NSOperation that handles sending analytics.
-internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying {
+internal final class AnalyticsRequestOperation: PhoenixAPIOperation, NSCopying {
     
     private let eventsJSON: JSONDictionaryArray
     
     private let InvalidRequestErrorCode = "invalid_request"
     
-    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixOAuthCallback) {
+    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.eventsJSON = json
         super.init()
         self.callback = callback
@@ -33,7 +33,7 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
         // Swallowing the invalid request so that the events sent are cleared.
         // This error is not recoverable and we need to purge the data.
         if let httpResponse = output?.response as? NSHTTPURLResponse {
-            if httpResponse.statusCode == HTTPStatusCode.BadRequest.rawValue && outputErrorCode() == InvalidRequestErrorCode {
+            if httpResponse.statusCode == HTTPStatusCode.BadRequest.rawValue && errorInData() == InvalidRequestErrorCode {
                 output?.error = NSError(code: AnalyticsError.OldEventsError.rawValue)
                 return
             }
@@ -50,7 +50,9 @@ internal final class AnalyticsRequestOperation: PhoenixOAuthOperation, NSCopying
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        return self.dynamicType.init(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = self.dynamicType.init(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
     }
     
 }

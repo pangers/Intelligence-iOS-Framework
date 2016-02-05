@@ -11,6 +11,22 @@ import Foundation
 /// Mandatory public protocol developers must implement in order to respond to events correctly.
 @objc(PHXDelegate)
 public protocol PhoenixDelegate {
+    /// Credentials provided are incorrect.
+    /// Will not distinguish between incorrect client or user credentials.
+    func credentialsIncorrectForPhoenix(phoenix: Phoenix)
+    
+    /// Account has been disabled and no longer active.
+    /// Credentials are no longer valid.
+    func accountDisabledForPhoenix(phoenix: Phoenix)
+    
+    /// Account has failed to authentication multiple times and is now locked.
+    /// Requires an administrator to unlock the account.
+    func accountLockedForPhoenix(phoenix: Phoenix)
+    
+    /// This error and description is only returned from the Validate endpoint
+    /// if providing an invalid or expired token.
+    func tokenInvalidOrExpiredForPhoenix(phoenix: Phoenix)
+    
     /// Unable to create SDK user, this may occur if a user with the randomized
     /// credentials already exists (highly unlikely) or your Application is
     /// configured incorrectly and has the wrong permissions.
@@ -29,6 +45,14 @@ public protocol PhoenixDelegate {
 
 /// Wrapping protocol used by modules to pass back errors to Phoenix.
 internal protocol PhoenixInternalDelegate {
+    // Implementation will call credentialsIncorrectForPhoenix
+    func credentialsIncorrect()
+    // Implementation will call accountDisabledForPhoenix
+    func accountDisabled()
+    // Implementation will call accountLockedForPhoenix
+    func accountLocked()
+    // Implementation will call invalidOrExpiredTokenForPhoenix
+    func tokenInvalidOrExpired()
     // Implementation will call PhoenixDelegate.userCreationFailedForPhoenix
     func userCreationFailed()
     // Implementation will call PhoenixDelegate.userLoginRequiredForPhoenix
@@ -43,6 +67,22 @@ internal class PhoenixDelegateWrapper: PhoenixInternalDelegate {
     var delegate: PhoenixDelegate!
     
     // MARK:- PhoenixInternalDelegate
+
+    internal func credentialsIncorrect() {
+        delegate.credentialsIncorrectForPhoenix(phoenix)
+    }
+    
+    internal func accountDisabled() {
+        delegate.accountDisabledForPhoenix(phoenix)
+    }
+    
+    internal func accountLocked() {
+        delegate.accountLockedForPhoenix(phoenix)
+    }
+    
+    internal func tokenInvalidOrExpired() {
+        delegate.tokenInvalidOrExpiredForPhoenix(phoenix)
+    }
     
     internal func userCreationFailed() {
         delegate.userCreationFailedForPhoenix(phoenix)

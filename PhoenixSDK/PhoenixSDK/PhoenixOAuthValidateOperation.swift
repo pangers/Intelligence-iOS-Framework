@@ -1,5 +1,5 @@
 //
-//  PhoenixOAuthOperation.swift
+//  PhoenixOAuthValidateOperation.swift
 //  PhoenixSDK
 //
 //  Created by Chris Nevin on 01/10/2015.
