@@ -59,19 +59,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             }
         }
         catch PhoenixSDK.ConfigurationError.FileNotFoundError {
-            // The file you specified does not exist!
+            self.alert(withMessage: "The file you specified does not exist!")
         }
         catch PhoenixSDK.ConfigurationError.InvalidFileError {
-            // The file is invalid! Check that the JSON provided is correct.
+            self.alert(withMessage: "The file is invalid! Check that the JSON provided is correct.")
         }
         catch PhoenixSDK.ConfigurationError.MissingPropertyError {
-            // You missed a property!
+            self.alert(withMessage: "You missed a property!")
         }
         catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
-            // There is an invalid property!
+            self.alert(withMessage: "There is an invalid property!")
         }
         catch {
-            // Treat the error with care!
+            self.alert(withMessage: "Treat the error with care!")
         }
     }
     
@@ -131,6 +131,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         }
         
         if let presenterViewController = presenterViewController {
+            guard let _ = presenterViewController.view.window else {
+                // presenterViewController in not yet atttached to the window
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { [weak self] in
+                    self?.alert(withMessage: message)
+                    })
+                return
+            }
+            
             let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presenterViewController.presentViewController(controller, animated: true, completion: nil)
