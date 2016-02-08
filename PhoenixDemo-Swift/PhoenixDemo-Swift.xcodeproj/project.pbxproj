@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
-		455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */; };
+		455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */; };
 		7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */; };
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
@@ -17,10 +17,10 @@
 		BB2FD4691B6B9D46000E8070 /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = BB2FD4681B6B9D46000E8070 /* PhoenixConfiguration.json */; };
 		BB3534871B6FAB5800C67500 /* PhoenixManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* PhoenixManager.swift */; };
 		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
-		BB61731E1BC2D58D005D4C5B /* PhoenixLocationGeofenceQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB61731D1BC2D58D005D4C5B /* PhoenixLocationGeofenceQueryViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		BBBB63571BC27AE800802EF9 /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBB63551BC27AE800802EF9 /* Location.storyboard */; settings = {ASSET_TAGS = (); }; };
+		BB61731E1BC2D58D005D4C5B /* PhoenixLocationGeofenceQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB61731D1BC2D58D005D4C5B /* PhoenixLocationGeofenceQueryViewController.swift */; };
+		BBBB63571BC27AE800802EF9 /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBB63551BC27AE800802EF9 /* Location.storyboard */; };
 		BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBBB63591BC27BF700802EF9 /* MapKit.framework */; };
-		BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		BBBB635E1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* PhoenixLocationModuleViewController.swift */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE1674781B70FB870085BEC8 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674771B70FB870085BEC8 /* AuthenticationViewController.swift */; };
 		FEF4A7531B7A28E100CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7521B7A28E100CD8603 /* PhoenixSDK.framework */; };
