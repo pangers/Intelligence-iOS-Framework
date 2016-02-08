@@ -704,7 +704,7 @@ The next sample code shows how to initialize a sample query:
 ```
 #!swift
 
-let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000)
+let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000) // The circumference of the Earth
 query.pageSize = 100
 query.pageNumber = 0
 
@@ -718,7 +718,7 @@ query.pageNumber = 0
 PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:51.5200395
                                                           longitude:-0.1341359];
 
-PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:40075000];
+PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:40075000]; // The circumference of the Earth
 [query setPageSize:100];
 [query setPage:0];
 
