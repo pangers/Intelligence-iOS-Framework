@@ -162,11 +162,7 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
     
     UIViewController *presenterViewController = self.window.rootViewController;
     
-    while (YES) {
-        if (presenterViewController.presentedViewController == nil) {
-            break;
-        }
-        
+    while (presenterViewController.presentedViewController != nil) {
         presenterViewController = presenterViewController.presentedViewController;
     }
     
