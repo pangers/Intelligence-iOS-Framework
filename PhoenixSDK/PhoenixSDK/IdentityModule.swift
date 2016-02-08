@@ -45,6 +45,8 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - parameter callback: Will be called with either an error or a user.
     func getUser(userId: Int, callback: UserCallback)
     
+    func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback)
+    
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
     func getMe(callback: UserCallback)
@@ -291,6 +293,17 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     
     // MARK: - User Management
+    
+    @objc func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback) {
+        let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
+            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+                let updateOperation = returnedOperation as! RevokeUserRoleRequestOperation
+                callback(user: updateOperation.user, error: updateOperation.output?.error)
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
     
     @objc func updateUser(user: Phoenix.User, callback: UserCallback) {
         if !user.isValidToUpdate {

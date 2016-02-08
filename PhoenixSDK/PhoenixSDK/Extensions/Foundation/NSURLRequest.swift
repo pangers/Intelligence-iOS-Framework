@@ -130,6 +130,25 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// - returns: An NSURLRequest to revoke a role from a given user.
+    class func phx_URLRequestForUserRoleRevoke(roleId: Int, user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
+        let url = NSURL(module: .Identity, configuration: configuration)!
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingRevokeRole()
+            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
+        request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!

@@ -30,6 +30,12 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
 
     let successfulAssignRoleResponse = "{\"TotalRecords\":1,\"Data\":[{\"Id\":1132,\"UserId\":6161,\"RoleId\":1008,\"ProviderId\":6,\"CompanyId\":3,\"ProjectId\":2030,\"CreateDate\":\"2015-10-06T11:55:40.5245055Z\",\"ModifyDate\":\"2015-10-06T11:55:40.5245055Z\"}]}"
     
+    let fakeRoleId = 1008
+    let successfulRevokeRoleResponse = "{\"TotalRecords\":1,\"Data\":[{\"Id\":1132,\"UserId\":6161,\"RoleId\":1008,\"CreateDate\":\"2015-10-06T11:55:40.5245055Z\",\"ModifyDate\":\"2015-10-06T11:55:40.5245055Z\"}]}"
+    
+    let invalidRoleId = 1
+    let failureRevokeRoleResponse = "{\"Message\": \"SUCCESS\", \"TotalCount\": 0, \"Data\": []}"
+    
     let successfulResponseCreateUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -144,6 +150,16 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
             response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
+    }
+    
+    func mockUserRevokeRole(roleId: Int, user: Phoenix.User, shouldFail: Bool = false, var body: String? = nil, identifier: String? = nil) {
+        if body == nil {
+            body = shouldFail ? failureRevokeRoleResponse : successfulRevokeRoleResponse
+        }
+        
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .DELETE,
+            response: getResponse(.Success, body: body!))
     }
     
     func mockRefreshAndLogin(status: HTTPStatusCode? = nil,
@@ -683,6 +699,48 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
             XCTAssert(error != nil, "No error raised")
             XCTAssert(error?.code == IdentityError.WeakPasswordError.rawValue, "Unexpected error type raised")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    // MARK:- Role
+    
+    func testRevokeRoleSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        // Mock
+        mockUserRevokeRole(fakeRoleId, user: fakeUser)
+        
+        identity!.revokeRole(fakeRoleId, user: fakeUser) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testRevokeInvalidRoleFailure() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        // Mock
+        mockUserRevokeRole(invalidRoleId, user: fakeUser, shouldFail: true)
+        
+        identity!.revokeRole(invalidRoleId, user: fakeUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
             
             expectCallback.fulfill()
         }

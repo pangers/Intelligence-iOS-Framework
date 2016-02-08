@@ -114,6 +114,11 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/assignrole")
     }
     
+    /// - Returns: NSURL with append revoke role path.
+    func phx_URLByAppendingRevokeRole() -> NSURL! {
+        return URLByAppendingPathComponent("/revokerole")
+    }
+    
     /// - Returns: NSURL with appended providers path.
     func phx_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
         if let providerId = providerId {
