@@ -19,11 +19,28 @@ enum Module : String {
 /// This extension is used to map the enum to the url, not for any other purpose
 private extension Phoenix.Environment {
     private func urlComponent() -> String? {
+        let urlComponent: String
+        
         switch (self) {
+            case .Local:
+                urlComponent = "local"
+            case .Development:
+                urlComponent = "dev"
+            case .Integration:
+                urlComponent = "Int"
             case .UAT:
-                return "uat" + "."
+                urlComponent = "uat"
+            case .Staging:
+                urlComponent = "staging"
             case .Production:
-                return ""
+                urlComponent = ""
+        }
+        
+        if urlComponent.characters.count > 0 {
+            return "-" + urlComponent
+        }
+        else {
+            return urlComponent
         }
     }
 }
@@ -51,15 +68,7 @@ internal extension NSURL {
     }
     
     convenience init?(module: Module, environment: Phoenix.Environment?, region: Phoenix.Region?) {
-        let moduleInURL : String
-        
-        if (module.rawValue.characters.count > 0) {
-            moduleInURL = "\(module.rawValue)."
-        }
-        else {
-            moduleInURL = ""
-        }
-        
+        let moduleInURL = module.rawValue
         
         guard let environmentInURL = environment?.urlComponent() else {
             return nil
@@ -70,7 +79,7 @@ internal extension NSURL {
         }
         
         
-        let url = String(format: "https://\(moduleInURL)api.\(environmentInURL)phoenixplatform\(regionInURL)/v2",
+        let url = String(format: "https://\(moduleInURL)\(environmentInURL).phoenixplatform\(regionInURL)/v2",
             arguments: [moduleInURL, environmentInURL, regionInURL])
         
         self.init(string: url)

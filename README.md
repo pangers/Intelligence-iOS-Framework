@@ -43,7 +43,7 @@ All of these variables come from the Phoenix Platform and will need to be includ
 2. "application_id" (Integer): Can be found on your configured Application.
 4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
 5. "region" (String): "US", "EU", "AU" or "SG"
-6. "environment" (String): "uat" or "production"
+6. "environment" (String): "local", "development", "integration", "uat", "staging" or "production"
 7. "company_id" (Integer): Can be obtained from the Dashboard.
 8. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
 

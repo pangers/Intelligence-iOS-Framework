@@ -15,7 +15,11 @@ import XCTest
 class PhoenixEnvironmentTestCase: PhoenixBaseTestCase {
     func testInitWithCode() {
         let correctAssignments = [
+            "local" : Phoenix.Environment.Local,
+            "development" : Phoenix.Environment.Development,
+            "integration" : Phoenix.Environment.Integration,
             "uat" : Phoenix.Environment.UAT,
+            "staging" : Phoenix.Environment.Staging,
             "production" : Phoenix.Environment.Production,
         ]
         
