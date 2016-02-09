@@ -36,33 +36,29 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
             switch (err.code) {
                     
                 case ConfigurationErrorFileNotFoundError:
-                    // The file you specified does not exist!
+                    [self alertWithMessage:@"The file you specified does not exist!"];
                     break;
                     
                 case ConfigurationErrorInvalidFileError:
-                    // The file is invalid! Check that the JSON provided is correct.
+                    [self alertWithMessage:@"The file is invalid! Check that the JSON provided is correct."];
                     break;
                     
                 case ConfigurationErrorMissingPropertyError:
-                    // You missed a property!
+                    [self alertWithMessage:@"You missed a property!"];
                     break;
                     
                 case ConfigurationErrorInvalidPropertyError:
-                    // There is an invalid property!
+                    [self alertWithMessage:@"There is an invalid property!"];
                     break;
                     
                 default:
-                    // Unknown initialization error!
+                    [self alertWithMessage:@"Unknown initialization error!"];
                     break;
             }
         }
         else {
-            // Unknown initialization error!
+            [self alertWithMessage:@"Unknown initialization error!"];
         }
-
-        // If you get an error here, you should check your configuration file and
-        // how you initialize phoenix.
-        assert(false);
     }
     
     // Start phoenix, will throw a network error if something is configured incorrectly.
@@ -162,12 +158,17 @@ NSString * const PhoenixDemoStoredDeviceTokenKey = @"PhoenixDemoStoredDeviceToke
     
     UIViewController *presenterViewController = self.window.rootViewController;
     
-    while (YES) {
-        if (presenterViewController.presentedViewController == nil) {
-            break;
-        }
-        
+    while (presenterViewController.presentedViewController != nil) {
         presenterViewController = presenterViewController.presentedViewController;
+    }
+    
+    if (presenterViewController.view.window == nil) {
+        // presenterViewController in not yet atttached to the window
+        __weak __typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf alertWithMessage:message];
+        });
+        return;
     }
     
     UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Phoenix Demo" message:message preferredStyle:UIAlertControllerStyleAlert];

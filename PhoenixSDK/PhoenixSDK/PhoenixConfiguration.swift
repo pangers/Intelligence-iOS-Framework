@@ -143,7 +143,7 @@ public extension Phoenix {
             // Helper function to load a value from a dictionary.
             func value<T>(forKey key: ConfigurationKey, inContents contents: NSDictionary) throws -> T {
                 guard let output = contents[key.rawValue] as? T else {
-                    throw ConfigurationError.InvalidPropertyError
+                    throw ConfigurationError.MissingPropertyError
                 }
                 return output
             }

@@ -315,7 +315,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     }
     
     @objc func getUser(userId: Int, callback: UserCallback) {
-        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.loggedInUserOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixOAuthOperation) -> () in
+        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
             let getUserOperation = returnedOperation as! GetUserRequestOperation
             callback(user: getUserOperation.user, error: getUserOperation.output?.error)
         })

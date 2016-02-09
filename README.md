@@ -1,21 +1,4 @@
 # Phoenix SDK #
-```
-== Configuration values for the "Phoenix SDK Test Project" (https://dashboard.phoenixplatform.eu/) ==
-!! these values should be deleted from the app once the codebase goes public !!
-
-Region: EU (https://api.phoenixplatform.eu)
-API Version: v1
-Company Id: 3
-Project Id: 2030
-
-Application Id (iOS): 3152
-Client Id (iOS): iOSSDKApp_napmxilutp
-Client Secret (iOS): Z4D1eCGO65pi45y5dewrmrgenndrfnzarnzdilrl
-
-Application Id (Android): 4154
-Client Id (Android): AndroidSDKApp_kypopf
-Client Secret (Android): OCN20qleymuqjlqbfcwbcwnjdwphdgoxpocrpxvp
-```
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Phoenix platform's API's.
 
@@ -704,7 +687,7 @@ The next sample code shows how to initialize a sample query:
 ```
 #!swift
 
-let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000)
+let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000) // The circumference of the Earth
 query.pageSize = 100
 query.pageNumber = 0
 
@@ -718,7 +701,7 @@ query.pageNumber = 0
 PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:51.5200395
                                                           longitude:-0.1341359];
 
-PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:40075000];
+PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:40075000]; // The circumference of the Earth
 [query setPageSize:100];
 [query setPage:0];
 
