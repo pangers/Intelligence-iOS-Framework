@@ -7,5 +7,5 @@
     "environment": "uat",
     "company_id" : 19017,
     "sdk_user_role": 16017,
-    "certificate_trust_policy": "any"
+    "certificate_trust_policy": "any_non_production"
 }

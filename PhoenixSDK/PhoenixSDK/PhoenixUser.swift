@@ -220,7 +220,7 @@ public extension Phoenix {
         }
         
         /// A password is considered secure if it has at least 8 characters, and uses
-        /// at least a number and a letter.
+        /// at least a number, a lowercase letter and an uppercase letter.
         /// - Returns: True if the password is secure.
         @objc public func isPasswordSecure() -> Bool {
             guard let password = self.password else {
