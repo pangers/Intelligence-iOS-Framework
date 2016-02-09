@@ -117,10 +117,42 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
 }
 
 - (void)assignRole {
-    UIApplication *application = UIApplication.sharedApplication;
-    AppDelegate *delegate = application.delegate;
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter Details"
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
-    [delegate alertWithMessage:@"Not implemented yet"];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"RoleId";
+    }];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+                                                      }]];
+    
+    __weak typeof(self) weakSelf = self;
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Assign Role"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull action) {
+                                                          
+                                                          NSString *roleId = alertController.textFields.firstObject.text;
+                                                          
+                                                          [PHXPhoenixManager.phoenix.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  UIApplication *application = UIApplication.sharedApplication;
+                                                                  AppDelegate *delegate = application.delegate;
+                                                                  
+                                                                  if (error != nil) {
+                                                                      [delegate alertWithMessage:[NSString stringWithFormat:@"Failed with error: %@", @(error.code)]];
+                                                                  }
+                                                                  else {
+                                                                      [delegate alertWithMessage:@"Role Assigned!"];
+                                                                  }
+                                                              });
+                                                          }];
+                                                      }]];
+    
+    [self presentViewController:alertController animated:true completion:nil];
 }
 
 - (void)revokeRole {

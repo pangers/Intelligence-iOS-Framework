@@ -119,10 +119,39 @@ class ManageUserViewController : UITableViewController {
     }
     
     func assignRole() {
-        let application = UIApplication.sharedApplication()
-        let delegate = application.delegate as! AppDelegate
+        let alertController = UIAlertController(title: "Enter Details", message: nil, preferredStyle: .Alert)
         
-        delegate.alert(withMessage: "Not implemented yet")
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "RoleId"
+        }
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            })
+        
+        alertController.addAction(UIAlertAction(title: "Assign Role", style: .Default) { [weak self] (action) -> Void in
+            
+            guard let strongSelf = self,
+                roleString = alertController.textFields?.first?.text,
+                roleId = Int(roleString) else {
+                    return
+            }
+            
+            PhoenixManager.phoenix.identity.assignRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
+                dispatch_async(dispatch_get_main_queue()) {
+                    let application = UIApplication.sharedApplication()
+                    let delegate = application.delegate as! AppDelegate
+                    
+                    if let error = error {
+                        delegate.alert(withMessage: "Failed with error: \(error.code)")
+                    }
+                    else {
+                        delegate.alert(withMessage: "Role Assigned!")
+                    }
+                }
+            }
+            })
+        
+        presentViewController(alertController, animated: true) { }
     }
     
     func revokeRole() {

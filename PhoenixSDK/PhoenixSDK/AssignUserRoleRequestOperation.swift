@@ -11,10 +11,27 @@ import Foundation
 /// Operation for User Role Assignment.
 internal final class AssignUserRoleRequestOperation : UserRequestOperation {
     
+    let roleId: Int?
+    
+    init(roleId: Int, user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+        self.roleId = roleId
+        super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
+    }
+    
+    required init(user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+        self.roleId = nil
+        super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
+    }
+    
     override func main() {
         super.main()
         assert(sentUser != nil)
-        let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        
+        guard let roleId = roleId else {
+            return
+        }
+        
+        let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {

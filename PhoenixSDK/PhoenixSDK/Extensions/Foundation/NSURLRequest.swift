@@ -112,9 +112,9 @@ internal extension NSURLRequest {
 internal extension NSURLRequest {
     
     /// - returns: An NSURLRequest to assign a role to a given user.
-    class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForUserRoleAssignment(roleId: Int, user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
-        let roleid = String(configuration.sdkUserRole).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
