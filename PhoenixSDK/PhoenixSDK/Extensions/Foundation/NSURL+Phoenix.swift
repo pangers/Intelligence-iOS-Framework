@@ -27,7 +27,7 @@ private extension Phoenix.Environment {
             case .Development:
                 urlComponent = "dev"
             case .Integration:
-                urlComponent = "Int"
+                urlComponent = "int"
             case .UAT:
                 urlComponent = "uat"
             case .Staging:
