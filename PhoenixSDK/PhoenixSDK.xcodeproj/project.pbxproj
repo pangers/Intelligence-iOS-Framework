@@ -24,7 +24,7 @@
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
 		BB77B9841BC40A5900B53ABE /* SequenceType+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9831BC40A5900B53ABE /* SequenceType+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
-		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
+		BB8FFC511B611A5E00E37146 /* missingproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* missingproperty.json */; };
 		BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
 		BBA573781B692B6900685EFB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573771B692B6900685EFB /* String.swift */; };
 		BBAA74191B60FCDC00EDADA4 /* MockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */; };
@@ -178,7 +178,7 @@
 		BB77B9831BC40A5900B53ABE /* SequenceType+Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Phoenix.swift"; sourceTree = "<group>"; };
 		BB77B9871BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhoenixLocationAnalyticsCallsTestCase.swift; path = ../PhoenixLocationModuleSDKTests/PhoenixLocationAnalyticsCallsTestCase.swift; sourceTree = "<group>"; };
 		BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockAnalyticsModule.swift; path = ../PhoenixLocationModuleSDKTests/MockAnalyticsModule.swift; sourceTree = "<group>"; };
-		BB8FFC501B611A5E00E37146 /* invalidproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = invalidproperty.json; sourceTree = "<group>"; };
+		BB8FFC501B611A5E00E37146 /* missingproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = missingproperty.json; sourceTree = "<group>"; };
 		BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../../Libraries/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		BBA573771B692B6900685EFB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		BBAA74181B60FCDC00EDADA4 /* MockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockConfiguration.swift; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 			children = (
 				FE22F88B1B5FF71600711EBF /* config.json */,
 				BB27B5AF1B5FFF0A005221EF /* wrongjson.json */,
-				BB8FFC501B611A5E00E37146 /* invalidproperty.json */,
+				BB8FFC501B611A5E00E37146 /* missingproperty.json */,
 			);
 			name = "Configuration files";
 			sourceTree = "<group>";
@@ -776,7 +776,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */,
+				BB8FFC511B611A5E00E37146 /* missingproperty.json in Resources */,
 				FE22F88C1B5FF71600711EBF /* config.json in Resources */,
 				BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */,
 			);
