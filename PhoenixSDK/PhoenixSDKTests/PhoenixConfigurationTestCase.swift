@@ -79,15 +79,15 @@ class PhoenixConfigurationTestCase: PhoenixBaseTestCase {
         }
     }
     
-    func testFileInvalidPropertyConfiguration() {
+    func testFileMissingPropertyConfiguration() {
         let config = Phoenix.Configuration()
         let bundle = NSBundle(forClass: PhoenixConfigurationTestCase.self)
         
         do {
-            try config.readFromFile("invalidproperty", inBundle: bundle)
-            XCTAssert(false, "File has invalid properties, but the exception is not thrown")
+            try config.readFromFile("missingproperty", inBundle: bundle)
+            XCTAssert(false, "File has missing properties, but the exception is not thrown")
         }
-        catch ConfigurationError.InvalidPropertyError {
+        catch ConfigurationError.MissingPropertyError {
             // correct path
         }
         catch {
