@@ -160,17 +160,18 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                         if let error = returnedOperation.output?.error {
                             switch error.code {
                                 case AuthenticationError.CredentialError.rawValue:
-                                    identity.delegate.credentialsIncorrect()
+                                    fallthrough
                                 case AuthenticationError.AccountDisabledError.rawValue:
-                                    identity.delegate.accountDisabled()
+                                    fallthrough
                                 case AuthenticationError.AccountLockedError.rawValue:
-                                    identity.delegate.accountLocked()
+                                    fallthrough
                                 case AuthenticationError.TokenInvalidOrExpired.rawValue:
-                                    identity.delegate.tokenInvalidOrExpired()
-                                default: break
+                                    PhoenixOAuth.reset(identity.network.oauthProvider.sdkUserOAuth)
+                                    identity.createSDKUserRecursively(counter - 1, completion: completion)
+                                default:
+                                    completion(success: false)
                             }
                             
-                            completion(success: false)
                             return
                         }
                     
