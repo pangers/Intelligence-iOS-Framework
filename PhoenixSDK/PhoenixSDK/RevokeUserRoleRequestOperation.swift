@@ -11,7 +11,7 @@ import Foundation
 /// Operation for User Role Revoke.
 internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
     
-    let roleId: Int?
+    let roleId: Int
     
     init(roleId: Int, user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.roleId = roleId
@@ -19,17 +19,12 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
     }
 
     required init(user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
-        self.roleId = nil
-        super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
+        preconditionFailure("roleId is not set")
     }
     
     override func main() {
         super.main()
         assert(sentUser != nil)
-        
-        guard let roleId = roleId else {
-            return
-        }
         
         let request = NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
@@ -47,4 +42,9 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         user = sentUser
     }
     
+    override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = self.dynamicType.init(roleId: roleId, user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
+    }
 }
