@@ -16,8 +16,13 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     
     let sentUser: Phoenix.User?
     
+    init(user: Phoenix.User? = nil) {
+        self.sentUser = user
+        super.init()
+    }
+    
     /// Create new User request.
-    required init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.sentUser = user
         super.init()
         self.callback = callback
@@ -44,7 +49,11 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = UserRequestOperation(user: sentUser)
+        copy.callback = callback
+        copy.oauth = oauth
+        copy.configuration = configuration
+        copy.network = network
         
         return copy
     }

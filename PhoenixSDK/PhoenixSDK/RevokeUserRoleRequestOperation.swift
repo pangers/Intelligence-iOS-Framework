@@ -17,10 +17,6 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         self.roleId = roleId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }
-
-    required init(user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
-        preconditionFailure("roleId is not set")
-    }
     
     override func main() {
         super.main()

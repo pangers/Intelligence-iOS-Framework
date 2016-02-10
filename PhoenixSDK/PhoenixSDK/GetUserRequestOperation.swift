@@ -13,13 +13,9 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     
     let userId: Int
     
-    required init(userId: Int, user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    init(userId: Int, user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.userId = userId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
-    }
-
-    required init(user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
-        preconditionFailure("userId is not set")
     }
     
     override func main() {
