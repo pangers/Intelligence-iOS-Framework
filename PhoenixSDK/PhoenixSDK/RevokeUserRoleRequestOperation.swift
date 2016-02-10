@@ -1,15 +1,15 @@
 //
-//  AssignUserRoleRequestOperation.swift
+//  RevokeUserRoleRequestOperation.swift
 //  PhoenixSDK
 //
-//  Created by Chris Nevin on 05/10/2015.
-//  Copyright © 2015 Tigerspike. All rights reserved.
+//  Created by Michael Lake on 05/02/2016.
+//  Copyright © 2016 Tigerspike. All rights reserved.
 //
 
 import Foundation
 
-/// Operation for User Role Assignment.
-internal final class AssignUserRoleRequestOperation : UserRequestOperation {
+/// Operation for User Role Revoke.
+internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
     
     let roleId: Int
     
@@ -22,7 +22,7 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         super.main()
         assert(sentUser != nil)
         
-        let request = NSURLRequest.phx_URLRequestForUserRoleAssignment(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        let request = NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {
@@ -33,7 +33,8 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
             output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }
-        // For assign, we don't actually receive a user, lets return the user we sent so this method adheres to the Identity-type requests.
+        
+        // For revoke, we don't actually receive a user, lets return the user we sent so this method adheres to the Identity-type requests.
         user = sentUser
     }
     

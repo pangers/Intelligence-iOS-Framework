@@ -12,6 +12,7 @@
 		451C61071C46BE3B006D9ED1 /* PhoenixEnvironmentTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C61061C46BE3B006D9ED1 /* PhoenixEnvironmentTestCase.swift */; };
 		45500F5F1C467D240042B857 /* PhoenixEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45500F5E1C467D240042B857 /* PhoenixEnvironment.swift */; };
 		456E281D1C638E4200983B19 /* PhoenixOAuthOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E281C1C638E4200983B19 /* PhoenixOAuthOperation.swift */; };
+		458DFE781C64CA7000ABD025 /* RevokeUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458DFE771C64CA7000ABD025 /* RevokeUserRoleRequestOperation.swift */; };
 		45A854581C577140006EEDD0 /* NetworkAuthenticationChallengeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A854571C577140006EEDD0 /* NetworkAuthenticationChallengeDelegate.swift */; };
 		45F1559F1C5908E5004A611E /* DeleteIdentifierOnBehalfRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F1559E1C5908E5004A611E /* DeleteIdentifierOnBehalfRequestOperation.swift */; };
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -155,6 +156,7 @@
 		45500F5E1C467D240042B857 /* PhoenixEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixEnvironment.swift; sourceTree = "<group>"; };
 		455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedEvent.swift; sourceTree = "<group>"; };
 		456E281C1C638E4200983B19 /* PhoenixOAuthOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoenixOAuthOperation.swift; sourceTree = "<group>"; };
+		458DFE771C64CA7000ABD025 /* RevokeUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RevokeUserRoleRequestOperation.swift; sourceTree = "<group>"; };
 		45A854571C577140006EEDD0 /* NetworkAuthenticationChallengeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkAuthenticationChallengeDelegate.swift; sourceTree = "<group>"; };
 		45F1559E1C5908E5004A611E /* DeleteIdentifierOnBehalfRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteIdentifierOnBehalfRequestOperation.swift; sourceTree = "<group>"; };
 		A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -567,6 +569,7 @@
 			children = (
 				FEB471451BBD678C00640CD7 /* UserRequestOperation.swift */,
 				FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */,
+				458DFE771C64CA7000ABD025 /* RevokeUserRoleRequestOperation.swift */,
 				BBC46D5F1B6F8D9000C8E418 /* CreateUserRequestOperation.swift */,
 				BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */,
 				45017DDE1C62461200A34966 /* GetUserRequestOperation.swift */,
@@ -823,6 +826,7 @@
 				FEB4713E1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift in Sources */,
 				BBC46D601B6F8D9000C8E418 /* CreateUserRequestOperation.swift in Sources */,
 				FEDE079B1B7398FE009BC6B6 /* Geofence.swift in Sources */,
+				458DFE781C64CA7000ABD025 /* RevokeUserRoleRequestOperation.swift in Sources */,
 				FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */,
 				FE12E1FE1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift in Sources */,
 				FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */,

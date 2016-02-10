@@ -27,7 +27,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         
     // MARK:- Helpers
     
-    func mockDownloadGeofences(status: HTTPStatusCode = .Success, query: GeofenceQuery, body: String? = nil) {
+    func mockDownloadGeofencesResponse(status: HTTPStatusCode = .Success, query: GeofenceQuery, body: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
             method: .GET,
             response: getResponse(status, body: body ?? geofencesResponse))
@@ -39,7 +39,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
         
-        mockDownloadGeofences(.Success, query: query)
+        mockDownloadGeofencesResponse(.Success, query: query)
         
         // Mock a valid token
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
@@ -58,7 +58,7 @@ class PhoenixLocationDownloadGeofencesSDKTests: PhoenixLocationBaseTestCase {
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
         
-        mockDownloadGeofences(.Success, query: query, body: errorResponse)
+        mockDownloadGeofencesResponse(.Success, query: query, body: errorResponse)
         
         // Mock a valid token
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)

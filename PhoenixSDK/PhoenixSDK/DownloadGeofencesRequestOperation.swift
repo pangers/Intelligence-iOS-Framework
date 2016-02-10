@@ -9,6 +9,7 @@
 import Foundation
 
 /// NSOperation that handles downloading geofences.
+/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
 internal final class DownloadGeofencesRequestOperation: PhoenixAPIOperation, NSCopying {
     
     /// Array containing Geofence objects.

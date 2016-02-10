@@ -9,6 +9,7 @@
 import Foundation
 
 /// NSOperation that handles sending analytics.
+/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
 internal final class AnalyticsRequestOperation: PhoenixAPIOperation, NSCopying {
     
     private let eventsJSON: JSONDictionaryArray

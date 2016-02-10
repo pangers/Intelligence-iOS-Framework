@@ -13,12 +13,18 @@ let PhoenixDemoStoredDeviceTokenKey = "PhoenixDemoStoredDeviceTokenKey"
 
 class IdentityModuleViewController : UITableViewController {
     
-    private let ViewUserSegue = "GetAndViewUser"
+    private let ManageUserSegue = "ManageUser"
+    private let ViewUserSegue = "ViewUser"
     
     private var user: Phoenix.User? = nil
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == ViewUserSegue {
+        if segue.identifier == ManageUserSegue {
+            if let manageUser = segue.destinationViewController as? ManageUserViewController {
+                manageUser.user = user
+            }
+        }
+        else if segue.identifier == ViewUserSegue {
             if let viewUser = segue.destinationViewController as? ViewUserViewController {
                 viewUser.user = user
             }
@@ -27,73 +33,101 @@ class IdentityModuleViewController : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         defer {
-            if indexPath.row != 0 {
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
-            }
-        }
-        if indexPath.row == 1 {
-            let alertController = UIAlertController(title: "Enter Details", message: nil, preferredStyle: .Alert)
-            
-            alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
-                textField.placeholder = "UserId"
-            }
-            
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
-                })
-            
-            alertController.addAction(UIAlertAction(title: "Get User", style: .Default) { [weak self] (action) -> Void in
-                
-                guard let strongSelf = self,
-                    userString = alertController.textFields?.first?.text,
-                    userId = Int(userString) else {
-                    return
-                }
-                
-                PhoenixManager.phoenix.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
-                    dispatch_async(dispatch_get_main_queue()) {
-                        guard let strongSelf = strongSelf else {
-                            return
-                        }
-                        
-                        strongSelf.user = user
-                        strongSelf.performSegueWithIdentifier(strongSelf.ViewUserSegue, sender: strongSelf)
-                    }
-                    })
-                })
-            
-            presentViewController(alertController, animated: true) { }
-                
-            return
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
         
-        let application = UIApplication.sharedApplication()
-        let delegate = application.delegate as! AppDelegate
-        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
-        if indexPath.row == 2 {
-            if tokenId != 0 {
-                delegate.alert(withMessage: "Already Registered!")
-                return
-            }
+        if indexPath.row == 0 {
+            login()
+        }
+        else if indexPath.row == 1 {
+            getUser()
+        }
+        else {
+            let application = UIApplication.sharedApplication()
+            let delegate = application.delegate as! AppDelegate
             
-            application.registerForRemoteNotifications()
-            application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
-        } else if indexPath.row == 3 {
-            // This method will return zero if unset.
-            if tokenId == 0 {
-                delegate.alert(withMessage: "Not Registered!")
-                return
-            }
-            PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
-                let notRegisteredError = error?.code == IdentityError.DeviceTokenNotRegisteredError.rawValue
-                if error != nil && !notRegisteredError {
-                    delegate.alert(withMessage: "Failed with error: \(error!.code)")
-                } else {
-                    NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                    delegate.alert(withMessage: "Unregister Succeeded!")
-                }
-            })
+            delegate.alert(withMessage: "Unexpected Row")
         }
     }
     
+    func login() {
+        let alert = UIAlertController(title: "Enter Details", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "Username"
+        }
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "Password"
+            textField.secureTextEntry = true
+        }
+        
+        
+        alert.addAction(UIAlertAction(title: "Login", style: UIAlertActionStyle.Default, handler: { [weak self] (action) -> Void in
+            guard let username = alert.textFields?.first?.text, password = alert.textFields?.last?.text else {
+                return
+            }
+            
+            PhoenixManager.phoenix.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    guard error == nil else {
+                        let application = UIApplication.sharedApplication()
+                        let delegate = application.delegate as! AppDelegate
+                        
+                        delegate.alert(withMessage: "Login Failed")
+                        
+                        return
+                    }
+                    
+                    strongSelf.user = user
+                    strongSelf.performSegueWithIdentifier(strongSelf.ManageUserSegue, sender: strongSelf)
+                }
+                })
+            }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            })
+        presentViewController(alert, animated: true) { }
+    }
+    
+    func getUser() {
+        let alertController = UIAlertController(title: "Enter Details", message: nil, preferredStyle: .Alert)
+        
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "UserId"
+        }
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            })
+        
+        alertController.addAction(UIAlertAction(title: "Get User", style: .Default) { [weak self] (action) -> Void in
+            
+            guard let strongSelf = self,
+                userString = alertController.textFields?.first?.text,
+                userId = Int(userString) else {
+                    return
+            }
+            
+            PhoenixManager.phoenix.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
+                guard let strongSelf = strongSelf else {
+                    return
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    strongSelf.user = user
+                    strongSelf.performSegueWithIdentifier(strongSelf.ViewUserSegue, sender: strongSelf)
+                }
+                })
+            })
+        
+        presentViewController(alertController, animated: true) { }
+    }
+    
+    @IBAction func unwindOnLogout(segue: UIStoryboardSegue) {
+        
+    }
 }

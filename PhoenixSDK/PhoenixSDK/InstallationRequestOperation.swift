@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
 class InstallationRequestOperation : PhoenixAPIOperation, NSCopying {
     
     var installation: Installation!

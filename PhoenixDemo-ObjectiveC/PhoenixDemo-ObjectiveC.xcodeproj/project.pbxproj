@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
 		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; settings = {ASSET_TAGS = (); }; };
+		454DA80D1C69F78D00C13254 /* PHXManageUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */; };
 		7FDAAB051B5D360800DF2BE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB041B5D360800DF2BE6 /* main.m */; };
 		7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */; };
 		7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */; };
@@ -23,7 +24,6 @@
 		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; settings = {ASSET_TAGS = (); }; };
 		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
-		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
 		FE22F8881B5FEFF400711EBF /* PhoenixConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */; };
 		FEF4A7511B7A28DA00CD8603 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; };
 		FEF4A7581B7A291000CD8603 /* PhoenixSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -43,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		454DA80B1C69F78D00C13254 /* PHXManageUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXManageUserViewController.h; sourceTree = "<group>"; };
+		454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXManageUserViewController.m; sourceTree = "<group>"; };
 		455D85F51BC2D73C00A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
 		455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXScreenViewedViewController.h; sourceTree = "<group>"; };
 		455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXScreenViewedViewController.m; sourceTree = "<group>"; };
@@ -69,8 +71,6 @@
 		BB77B94E1BC3BAF300B53ABE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIdentityModuleViewController.h; sourceTree = "<group>"; };
 		FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIdentityModuleViewController.m; sourceTree = "<group>"; };
-		FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXAuthenticationViewController.h; sourceTree = "<group>"; };
-		FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXAuthenticationViewController.m; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* PhoenixConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoenixConfiguration.json; sourceTree = "<group>"; };
 		FEF4A7501B7A28DA00CD8603 /* PhoenixSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoenixSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -149,10 +149,10 @@
 			isa = PBXGroup;
 			children = (
 				BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */,
-				FE16747B1B71052C0085BEC8 /* PHXAuthenticationViewController.h */,
-				FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */,
 				FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */,
 				FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */,
+				454DA80B1C69F78D00C13254 /* PHXManageUserViewController.h */,
+				454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */,
 				BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */,
 				BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */,
 			);
@@ -255,8 +255,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */,
 				FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */,
+				454DA80D1C69F78D00C13254 /* PHXManageUserViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
 				BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */,
 				BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */,

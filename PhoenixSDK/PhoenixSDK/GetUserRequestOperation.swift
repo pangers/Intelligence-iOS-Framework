@@ -11,29 +11,24 @@ import Foundation
 /// Operation for Get User API.
 internal final class GetUserRequestOperation : UserRequestOperation {
     
-    let userId: Int?
+    let userId: Int
     
-    required init(userId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    init(userId: Int, user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.userId = userId
-        super.init(oauth: oauth, configuration: configuration, network: network, callback: callback)
-    }
-
-    required init(user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
-        self.userId = user?.userId
-        super.init(oauth: oauth, configuration: configuration, network: network, callback: callback)
+        super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }
     
     override func main() {
         super.main()
-        
-        guard let userId = userId else {
-            output?.error = NSError(code: IdentityError.InvalidUserError.rawValue)
-            return
-        }
         
         let request = NSURLRequest.phx_URLRequestForGetUser(userId, oauth: oauth!, configuration: configuration!, network: network!)
         output = session.phx_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
     
+    override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = self.dynamicType.init(userId:userId, user: user, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
+    }
 }
