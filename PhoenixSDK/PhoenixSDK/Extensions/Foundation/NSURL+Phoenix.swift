@@ -95,7 +95,7 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/validate")
     }
     
-    /// - Returns: NSURL with append identifiers path.
+    /// - Returns: NSURL with appended identifiers path.
     func phx_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
         if let tokenID = tokenID {
             return URLByAppendingPathComponent("/identifiers/\(tokenID)")
@@ -103,24 +103,29 @@ internal extension NSURL {
         return URLByAppendingPathComponent("/identifiers")
     }
     
-    /// - Returns: NSURL with append installations path.
+    /// - Returns: NSURL with appended installations path.
     func phx_URLByAppendingInstallations() -> NSURL! {
         return URLByAppendingPathComponent("/installations")
     }
     
-    /// - Returns: NSURL with append installations path.
+    /// - Returns: NSURL with appended installations path.
     func phx_URLByAppendingEvents() -> NSURL! {
         return URLByAppendingPathComponent("/events")
     }
     
-    /// - Returns: NSURL with append geofences path.
+    /// - Returns: NSURL with appended geofences path.
     func phx_URLByAppendingGeofences() -> NSURL! {
         return URLByAppendingPathComponent("/geofences")
     }
     
-    /// - Returns: NSURL with append assign role path.
+    /// - Returns: NSURL with appended assign role path.
     func phx_URLByAppendingAssignRole() -> NSURL! {
         return URLByAppendingPathComponent("/assignrole")
+    }
+    
+    /// - Returns: NSURL with appended revoke role path.
+    func phx_URLByAppendingRevokeRole() -> NSURL! {
+        return URLByAppendingPathComponent("/revokerole")
     }
     
     /// - Returns: NSURL with appended providers path.

@@ -30,6 +30,12 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
 
     let successfulAssignRoleResponse = "{\"TotalRecords\":1,\"Data\":[{\"Id\":1132,\"UserId\":6161,\"RoleId\":1008,\"ProviderId\":6,\"CompanyId\":3,\"ProjectId\":2030,\"CreateDate\":\"2015-10-06T11:55:40.5245055Z\",\"ModifyDate\":\"2015-10-06T11:55:40.5245055Z\"}]}"
     
+    let fakeRoleId = 1008
+    let successfulRevokeRoleResponse = "{\"TotalRecords\":1,\"Data\":[{\"Id\":1132,\"UserId\":6161,\"RoleId\":1008,\"CreateDate\":\"2015-10-06T11:55:40.5245055Z\",\"ModifyDate\":\"2015-10-06T11:55:40.5245055Z\"}]}"
+    
+    let invalidRoleId = 1
+    let failureRevokeRoleResponse = "{\"Message\": \"SUCCESS\", \"TotalCount\": 0, \"Data\": []}"
+    
     let successfulResponseCreateUser = "{" +
         "\"TotalRecords\": 1," +
         "\"Data\": [{" +
@@ -74,6 +80,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     let successfulResponseCreateIdentifier = "{\"TotalRecords\":1,\"Data\":[{\"Id\":18952,\"ProjectId\":2030,\"UserId\":6161,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
     let unhandledJSONResponseCreateIdentifier = "{\"TotalRecords\":1,\"Data\":[{\"Identifier\":18952,\"ProjectId\":2030,\"UserId\":6161,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
     let successfulResponseDeleteIdentifier = "{\"TotalRecords\":1,\"Data\":[{\"Id\":18952,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
+    let successfulResponseDeleteIdentifierOnBehalf = "{\"TotalRecords\":1,\"Data\":[{\"Id\":18952,\"IdentifierTypeId\":\"iOS_Device_Token\",\"IsConfirmed\":false,\"Value\":\"d3e3a7db07691f8f698e5139310cce50f5e2d2e36020e2f70187bf23b175ec01\",\"CreateDate\":\"2015-10-13T08:29:14.9413947Z\",\"ModifyDate\":\"2015-10-13T08:29:14.9413947Z\"}]}"
     
     override func setUp() {
         super.setUp()
@@ -88,7 +95,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     
     // MARK: - Mock
 
-    func mockGetUser(userId: Int? = nil, status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockGetUserResponse(userId: Int? = nil, status: HTTPStatusCode = .Success, body: String? = nil) {
         guard let userId = userId else {
             return
         }
@@ -99,20 +106,20 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             response: getResponse(status, body: body ?? successfulResponseGetUser))
     }
     
-    func mockGetUserMe(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockGetUserMeResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
         let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,
             method: .GET,
             response: getResponse(status, body: body ?? successfulResponseGetUser))
     }
     
-    func mockValidate(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockValidateResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .GET,
             response: getResponse(status, body: body ?? validValidate))
     }
     
-    func mockUserCreation(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
+    func mockUserCreationResponse(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
         mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
             response: getResponse(status, body: body ?? successfulResponseCreateUser), identifier: identifier)
@@ -125,7 +132,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
             network: mockNetwork).URL!
     }
     
-    func mockUserUpdate(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockUserUpdateResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(mockUserUpdateURL(),
             method: .PUT,
             response: getResponse(status, body: body ?? successfulResponseCreateUser))
@@ -140,13 +147,23 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         return responses
     }
     
-    func mockUserAssignRole(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+    func mockUserAssignRoleResponse(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(mockConfiguration.sdkUserRole, user: fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
             response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
     }
     
-    func mockRefreshAndLogin(status: HTTPStatusCode? = nil,
+    func mockUserRevokeRoleResponse(roleId: Int, user: Phoenix.User, shouldFail: Bool = false, var body: String? = nil, identifier: String? = nil) {
+        if body == nil {
+            body = shouldFail ? failureRevokeRoleResponse : successfulRevokeRoleResponse
+        }
+        
+        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .DELETE,
+            response: getResponse(.Success, body: body!))
+    }
+    
+    func mockRefreshAndLoginResponse(status: HTTPStatusCode? = nil,
         loginStatus: HTTPStatusCode? = nil,
         alternateRefreshResponse: String? = nil,
         alternateLoginResponse: String? = nil)
@@ -164,11 +181,16 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockAuthenticationResponses(responses)
     }
     
-    func mockCreateIdentifierURL() -> NSURL {
-        return NSURLRequest.phx_URLRequestForIdentifierCreation(fakeDeviceToken, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+    func hexStringFromDeviceToken(deviceToken: String) -> String? {
+        let data = deviceToken.dataUsingEncoding(NSUTF8StringEncoding)
+        return data?.hexString()
     }
     
-    func mockCreateIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockCreateIdentifierURL() -> NSURL {
+        return NSURLRequest.phx_URLRequestForIdentifierCreation(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+    }
+    
+    func mockCreateIdentifierResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(mockCreateIdentifierURL(),
             method: .POST,
             response: getResponse(status, body: body ?? successfulResponseCreateIdentifier))
@@ -178,10 +200,16 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         return NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
     }
     
-    func mockDeleteIdentifier(status: HTTPStatusCode = .Success, body: String? = nil) {
+    func mockDeleteIdentifierResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
         mockResponseForURL(mockDeleteIdentifierURL(),
             method: .DELETE,
             response: getResponse(status, body: body ?? successfulResponseDeleteIdentifier))
+    }
+    
+    func mockDeleteIdentifierOnBehalfResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
+        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierDeletionOnBehalf(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+            method: .DELETE,
+            response: getResponse(status, body: body ?? successfulResponseDeleteIdentifierOnBehalf))
     }
     
     // MARK:- Login/Logout
@@ -205,8 +233,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate()
-        mockGetUserMe()
+        mockValidateResponse()
+        mockGetUserMeResponse()
         
         let expectation = expectationWithDescription("mock validate")
         
@@ -222,7 +250,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateSuccessParseError() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Success, body: badResponse)
+        mockValidateResponse(.Success, body: badResponse)
         
         let expectation = expectationWithDescription("mock validate")
         
@@ -238,9 +266,9 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateFailureRefreshSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Unauthorized)
-        mockRefreshAndLogin(.Success, loginStatus: nil)
-        mockGetUserMe()
+        mockValidateResponse(.Unauthorized)
+        mockRefreshAndLoginResponse(.Success, loginStatus: nil)
+        mockGetUserMeResponse()
         
         let expectation = expectationWithDescription("mock refresh")
         
@@ -256,8 +284,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateFailureRefreshSuccessParseError() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Unauthorized)
-        mockRefreshAndLogin(.Success, loginStatus: nil, alternateRefreshResponse: badResponse)
+        mockValidateResponse(.Unauthorized)
+        mockRefreshAndLoginResponse(.Success, loginStatus: nil, alternateRefreshResponse: badResponse)
         
         let expectation = expectationWithDescription("mock refresh")
         
@@ -273,8 +301,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateRefreshLoginFailure() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Unauthorized)
-        mockRefreshAndLogin(.Unauthorized, loginStatus: .BadRequest)
+        mockValidateResponse(.Unauthorized)
+        mockRefreshAndLoginResponse(.Unauthorized, loginStatus: .BadRequest)
         
         let expectation = expectationWithDescription("mock refresh")
         
@@ -290,9 +318,9 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
     func testValidateRefreshFailureLoginSuccess() {
         fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth)
         
-        mockValidate(.Unauthorized)
-        mockRefreshAndLogin(.Unauthorized, loginStatus: .Success)
-        mockGetUserMe()
+        mockValidateResponse(.Unauthorized)
+        mockRefreshAndLoginResponse(.Unauthorized, loginStatus: .Success)
+        mockGetUserMeResponse()
         
         let expectation = expectationWithDescription("mock refresh")
         
@@ -314,8 +342,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.loggedInUserOAuth.username = fakeUser.username
         mockOAuthProvider.loggedInUserOAuth.password = fakeUser.password
         
-        mockRefreshAndLogin(nil, loginStatus: .Success)
-        mockGetUserMe()
+        mockRefreshAndLoginResponse(nil, loginStatus: .Success)
+        mockGetUserMeResponse()
         
         let expectation = expectationWithDescription("mock logout")
         
@@ -347,8 +375,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        mockRefreshAndLogin(nil, loginStatus: .Success)
-        mockGetUserMe(.BadRequest)
+        mockRefreshAndLoginResponse(nil, loginStatus: .Success)
+        mockGetUserMeResponse(.BadRequest)
         
         let expectation = expectationWithDescription("Expectation")
         
@@ -368,7 +396,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        mockRefreshAndLogin(nil, loginStatus: .BadRequest)
+        mockRefreshAndLoginResponse(nil, loginStatus: .BadRequest)
         
         let expectation = expectationWithDescription("Expectation")
         phoenix?.identity.login(withUsername: "username", password: "password") { (user, error) -> () in
@@ -389,7 +417,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         XCTAssert(!self.mockOAuthProvider.developerLoggedIn, "Phoenix is authenticated before a response")
         
         // Create expectation for login...
-        mockRefreshAndLogin(nil, loginStatus: .Success, alternateLoginResponse: badResponse)
+        mockRefreshAndLoginResponse(nil, loginStatus: .Success, alternateLoginResponse: badResponse)
         
         let expectation = expectationWithDescription("Expectation")
         
@@ -441,7 +469,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         let userId = fakeUser.userId
         
         // Create
-        mockGetUser(userId)
+        mockGetUserResponse(userId)
         
         identity!.getUser(userId) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -483,8 +511,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Create
-        mockUserCreation(.Success)
-        mockUserAssignRole(.Success)
+        mockUserCreationResponse(.Success)
+        mockUserAssignRoleResponse(.Success)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -528,8 +556,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         }
         
         // Create
-        mockUserCreation(.Success, identifier: createUserKey)
-        mockUserAssignRole(.Success, identifier: assignRoleKey)
+        mockUserCreationResponse(.Success, identifier: createUserKey)
+        mockUserAssignRoleResponse(.Success, identifier: assignRoleKey)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user != nil, "User not found")
@@ -571,7 +599,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         }
         
         // Create
-        mockUserCreation(.BadRequest, identifier: createUserKey)
+        mockUserCreationResponse(.BadRequest, identifier: createUserKey)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -593,8 +621,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Create
-        mockUserCreation(.Success)
-        mockUserAssignRole(.BadRequest)
+        mockUserCreationResponse(.Success)
+        mockUserAssignRoleResponse(.BadRequest)
         
         identity!.createUser(sdkUser) { (user, error) -> Void in
             XCTAssert(user == nil, "User not found")
@@ -615,8 +643,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Create
-        mockUserCreation(.Success)
-        mockUserAssignRole(.Success, body: badResponse)
+        mockUserCreationResponse(.Success)
+        mockUserAssignRoleResponse(.Success, body: badResponse)
         
         identity!.createUser(sdkUser) { (user, error) -> Void in
             XCTAssert(user == nil, "User not found")
@@ -636,7 +664,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Mock
-        mockUserCreation(.BadRequest)
+        mockUserCreationResponse(.BadRequest)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -658,7 +686,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeAccessToken(oauth)
         
         // Mock
-        mockUserCreation(.Success, body: badResponse)
+        mockUserCreationResponse(.Success, body: badResponse)
         
         identity!.createUser(fakeUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -689,6 +717,48 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         
         waitForExpectations()
     }
+    
+    // MARK:- Role
+    
+    func testRevokeRoleSuccess() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        // Mock
+        mockUserRevokeRoleResponse(fakeRoleId, user: fakeUser)
+        
+        identity!.revokeRole(fakeRoleId, user: fakeUser) { (user, error) -> Void in
+            XCTAssert(user != nil, "User not found")
+            XCTAssert(error == nil, "Error occured while parsing a success request")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
+    
+    func testRevokeInvalidRoleFailure() {
+        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let oauth = mockOAuthProvider.applicationOAuth
+        
+        // Mock auth
+        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+        
+        // Mock
+        mockUserRevokeRoleResponse(invalidRoleId, user: fakeUser, shouldFail: true)
+        
+        identity!.revokeRole(invalidRoleId, user: fakeUser) { (user, error) -> Void in
+            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+            XCTAssert(error != nil, "No error raised")
+            
+            expectCallback.fulfill()
+        }
+        
+        waitForExpectations()
+    }
 
     // MARK:- Update User
     
@@ -700,7 +770,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockUserUpdate()
+        mockUserUpdateResponse()
         
         XCTAssert(Phoenix.User.isUserIdValid(fakeUpdateUser.userId))
         
@@ -722,7 +792,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockUserUpdate(.BadRequest)
+        mockUserUpdateResponse(.BadRequest)
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -744,7 +814,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         // Mock
-        mockUserUpdate(.Success, body: badResponse)
+        mockUserUpdateResponse(.Success, body: badResponse)
         
         identity!.updateUser(fakeUpdateUser) { (user, error) -> Void in
             XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
@@ -764,7 +834,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockRefreshAndLogin(.Success, loginStatus: nil)
+        mockRefreshAndLoginResponse(.Success, loginStatus: nil)
         mockResponseForURL(mockUserUpdateURL(), method: .PUT, responses: mockUserUpdateResponses())
         
         identity?.updateUser(fakeUpdateUser) { (user, error) -> Void in
@@ -830,7 +900,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockCreateIdentifier()
+        mockDeleteIdentifierOnBehalfResponse()
+        mockCreateIdentifierResponse()
         
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error == nil)
@@ -868,7 +939,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockCreateIdentifier(.NotFound)
+        mockDeleteIdentifierOnBehalfResponse()
+        mockCreateIdentifierResponse(.NotFound)
         
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
@@ -889,7 +961,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockCreateIdentifier(.Success, body: unhandledJSONResponseCreateIdentifier)
+        mockDeleteIdentifierOnBehalfResponse()
+        mockCreateIdentifierResponse(.Success, body: unhandledJSONResponseCreateIdentifier)
         
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
@@ -909,7 +982,8 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockCreateIdentifier(.Success, body: badResponse)
+        mockDeleteIdentifierOnBehalfResponse()
+        mockCreateIdentifierResponse(.Success, body: badResponse)
         
         identity!.registerDeviceToken(fakeDeviceToken.dataUsingEncoding(NSUTF8StringEncoding)!) { (tokenId, error) -> Void in
             XCTAssert(error != nil)
@@ -932,7 +1006,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockDeleteIdentifier()
+        mockDeleteIdentifierResponse()
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
             XCTAssert(error == nil)
@@ -950,7 +1024,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockDeleteIdentifier(.BadRequest)
+        mockDeleteIdentifierResponse(.BadRequest)
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
             XCTAssert(error != nil)
@@ -989,7 +1063,7 @@ class IdentityModuleTestCase: PhoenixBaseTestCase {
         // Mock auth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
-        mockDeleteIdentifier(.Success, body: badResponse)
+        mockDeleteIdentifierResponse(.Success, body: badResponse)
         
         identity!.unregisterDeviceToken(withId: fakeTokenID) { (error) -> Void in
             XCTAssert(error != nil)

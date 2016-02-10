@@ -50,6 +50,11 @@ internal extension NSURLRequest {
         return body.map({ "\($0.0)=\($0.1)" }).joinWithSeparator("&").dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
+    /// Create a NSURLRequest for validate.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to validate a token.
     class func phx_URLRequestForValidate(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthValidatePath()
         let request = NSMutableURLRequest(URL: url)
@@ -62,6 +67,12 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    
+    /// Create a NSURLRequest for refreshToken.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to refresh a token.
     class func phx_URLRequestForRefresh(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         assert(oauth.refreshToken != nil)
         let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
@@ -81,6 +92,11 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for login.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to get a token.
     class func phx_URLRequestForLogin(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
@@ -111,10 +127,16 @@ internal extension NSURLRequest {
 
 internal extension NSURLRequest {
     
+    /// Create a NSURLRequest for assignRole.
+    /// - parameter roleId: The id of the role to assign.
+    /// - parameter user: The user whose role we are assigning.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to assign a role to a given user.
-    class func phx_URLRequestForUserRoleAssignment(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+    class func phx_URLRequestForUserRoleAssignment(roleId: Int, user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
-        let roleid = String(configuration.sdkUserRole).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -130,6 +152,36 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for revokeRole.
+    /// - parameter roleId: The id of the role to revoke.
+    /// - parameter user: The user whose role we are revoking.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to revoke a role from a given user.
+    class func phx_URLRequestForUserRoleRevoke(roleId: Int, user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
+        let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        
+        let url = NSURL(module: .Identity, configuration: configuration)!
+            .phx_URLByAppendingProjects(configuration.projectID)
+            .phx_URLByAppendingRevokeRole()
+            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
+        let request = NSMutableURLRequest(URL: url)
+        
+        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
+        
+        request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
+        
+        return request.copy() as! NSURLRequest
+    }
+    
+    /// Create a NSURLRequest for createUser.
+    /// - parameter user: The user we are creating.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to create the given user.
     class func phx_URLRequestForUserCreation(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -146,6 +198,11 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for getUser.
+    /// - parameter userId: The id for the user we are getting.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForGetUser(userId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -161,6 +218,10 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for getUserMe.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to get the user with the used credentials.
     class func phx_URLRequestForUserMe(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -176,6 +237,11 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for updateUser.
+    /// - parameter user: The user we are updating.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to update the given user.
     class func phx_URLRequestForUserUpdate(user: Phoenix.User, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -194,6 +260,12 @@ internal extension NSURLRequest {
     
     // MARK: Identifiers
     
+    /// Create a NSURLRequest for createIdentifier.
+    /// - parameter tokenString: The identifier we will create.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to create an identifier.
     class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -221,6 +293,12 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for deleteIdentifier.
+    /// - parameter tokenId: The id of the identifier we will delete.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to delete an identifier.
     class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -235,6 +313,12 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
+    /// Create a NSURLRequest for deleteIdentifierOnBehalf.
+    /// - parameter token: The identifier we will delete on behalf.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to delete an identifier on behalf.
     class func phx_URLRequestForIdentifierDeletionOnBehalf(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let applicationId = String(configuration.applicationID).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         let identifierValue = token.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
@@ -256,6 +340,11 @@ internal extension NSURLRequest {
     
     // MARK: Installation
     
+    /// Create a NSURLRequest for createInstallation.
+    /// - parameter installation: The installation we are creating.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - Returns: An NSURLRequest to create a given installation.
     class func phx_URLRequestForInstallationCreate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -272,7 +361,11 @@ internal extension NSURLRequest {
         return request.copy() as! NSURLRequest
     }
     
-
+    /// Create a NSURLRequest for updateInstallation.
+    /// - parameter installation: The installation we are updating.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to update a given installation.
     class func phx_URLRequestForInstallationUpdate(installation: Installation, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
@@ -296,6 +389,12 @@ internal extension NSURLRequest {
 // MARK:- Analytics Module
 internal extension NSURLRequest {
     
+    /// Create a NSURLRequest for sendEvent.
+    /// - parameter json: The details of the event we are sending.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - returns: An NSURLRequest to send an event.
     class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Analytics, configuration: configuration)!
             .phx_URLByAppendingProjects(configuration.projectID)
@@ -319,6 +418,11 @@ internal extension NSURLRequest {
 
 internal extension NSURLRequest {
     
+    /// Create a NSURLRequest for downloadGeofences.
+    /// - parameter oauth: The oauth values to use for this request.
+    /// - parameter configuration: The configuration values to use for this request.
+    /// - parameter network: The network the request will be queued on.
+    /// - parameter query: The query to apply to the url.
     /// - returns: An NSURLRequest to download geofences.
     class func phx_URLRequestForDownloadGeofences(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
         let url = NSURL(module: .Location, configuration: configuration)!

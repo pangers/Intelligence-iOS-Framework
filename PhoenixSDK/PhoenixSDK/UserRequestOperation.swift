@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
 class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     
     /// Once successful, this will contain the user provided by the backend.
@@ -15,8 +16,13 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     
     let sentUser: Phoenix.User?
     
-    /// Create new User request.
-    required init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    /// Initialize UserRequestOperation.
+    /// - parameter user: The user to send during the operation.
+    /// - parameter oauth: The oauth values to use for this operation.
+    /// - parameter configuration: The configuration values to use for this operation.
+    /// - parameter network: The network the operation will be queued on.
+    /// - parameter callback: The callback called on completion of the operation.
+    init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.sentUser = user
         super.init()
         self.callback = callback
@@ -43,7 +49,7 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        let copy = UserRequestOperation(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

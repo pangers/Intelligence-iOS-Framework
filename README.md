@@ -650,6 +650,58 @@ The 'unregisterDeviceTokenWithId' method can return the follow additional errors
 
 * IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Intelligence platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
 
+### Assign Role ###
+
+A user can have multiple roles and it may be necessary to assign another from within the SDK.
+
+*Swift:*
+```
+#!swift
+
+PhoenixManager.phoenix.identity.assignRole(roleId, user: user, callback: { (error) -> Void in
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+})
+
+```
+
+*Objective-C:*
+```
+#!objc
+
+[[[PHXPhoenixManager phoenix] identity] assignRole:roleId user:user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+```
+
+### Revoke Role ###
+
+A user can have multiple roles and it may be necessary to revoke these from within the SDK.
+
+*Swift:*
+```
+#!swift
+
+PhoenixManager.phoenix.identity.revokeRole(roleId, user: user, callback: { (error) -> Void in
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+})
+
+```
+
+*Objective-C:*
+```
+#!objc
+
+[[[PHXPhoenixManager phoenix] identity] revokeRole:roleId user:user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
+}];
+
+```
+
 ## Location Module ##
 
 The location module is responsible for managing a user's location in order to track entering/exiting geofences and add this information to analytics events. 

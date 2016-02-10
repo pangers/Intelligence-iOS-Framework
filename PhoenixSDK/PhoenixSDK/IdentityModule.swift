@@ -45,6 +45,18 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - parameter callback: Will be called with either an error or a user.
     func getUser(userId: Int, callback: UserCallback)
     
+    /// Assign a role to a user.
+    /// - parameter roleId: The id of the role to assign.
+    /// - parameter user: The user to assign the role to.
+    /// - parameter callback: Will be called with either an error or a user.
+    func assignRole(roleId: Int, user: Phoenix.User, callback: UserCallback)
+    
+    /// Revoke a role from a user.
+    /// - parameter roleId: The id of the role to revoke.
+    /// - parameter user: The user to revoke the role from.
+    /// - parameter callback: Will be called with either an error or a user.
+    func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback)
+    
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
     func getMe(callback: UserCallback)
@@ -159,18 +171,16 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                         
                         if let error = returnedOperation.output?.error {
                             switch error.code {
-                                case AuthenticationError.CredentialError.rawValue:
-                                    identity.delegate.credentialsIncorrect()
-                                case AuthenticationError.AccountDisabledError.rawValue:
-                                    identity.delegate.accountDisabled()
-                                case AuthenticationError.AccountLockedError.rawValue:
-                                    identity.delegate.accountLocked()
-                                case AuthenticationError.TokenInvalidOrExpired.rawValue:
-                                    identity.delegate.tokenInvalidOrExpired()
-                                default: break
+                                case AuthenticationError.CredentialError.rawValue,
+                                AuthenticationError.AccountDisabledError.rawValue,
+                                AuthenticationError.AccountLockedError.rawValue,
+                                AuthenticationError.TokenInvalidOrExpired.rawValue:
+                                    PhoenixOAuth.reset(identity.network.oauthProvider.sdkUserOAuth)
+                                    identity.createSDKUserRecursively(counter - 1, completion: completion)
+                                default:
+                                    completion(success: false)
                             }
                             
-                            completion(success: false)
                             return
                         }
                     
@@ -291,6 +301,28 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     
     // MARK: - User Management
+
+    @objc func assignRole(roleId: Int, user: Phoenix.User, callback: UserCallback) {
+        let operation = AssignUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
+            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+                let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
+                callback(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
+    
+    @objc func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback) {
+        let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
+            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+                let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
+                callback(user: revokeRoleOperation.user, error: revokeRoleOperation.output?.error)
+        })
+        
+        // Execute the network operation
+        network.enqueueOperation(operation)
+    }
     
     @objc func updateUser(user: Phoenix.User, callback: UserCallback) {
         if !user.isValidToUpdate {
@@ -359,29 +391,37 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // Create user operation.
-        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
             let createUserOperation = returnedOperation as! CreateUserRequestOperation
             if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                 // On successful operation, lets assign users role.
-                // Assert that all variables exist on the operation as they have been asserted on creation of the operation itself.
-                let assignOperation = AssignUserRoleRequestOperation(user: createUserOperation.user, oauth: createUserOperation.oauth!, configuration: createUserOperation.configuration!, network: createUserOperation.network!, callback: { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
-                    let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
+                
+                guard let roleId = self?.configuration.sdkUserRole else {
+                    self?.delegate.userRoleAssignmentFailed()
+                    return
+                }
+                
+                guard let user = createUserOperation.user else {
+                    self?.delegate.userRoleAssignmentFailed()
+                    return
+                }
+                
+                self?.assignRole(roleId, user: user, callback: { (user, error) -> Void in
                     // Execute original callback.
                     // If assign role fails, the user will exist but not have any access, there is nothing we can do
                     // if the developer is trying to assign a role that doesn't exist or the server changes in some
                     // unexpected way.
-                    if assignRoleOperation.output?.error != nil {
+                    if error != nil {
                         // Note: Assign role will also call a delegate method if it fails because the Phoenix Intelligence
                         // backend may be configured incorrectly.
                         // We don't receive a unique error code, so just call the delegate on any error.
                         self?.delegate.userRoleAssignmentFailed()
                         // Also call callback, so developer doesn't get stuck waiting for a response.
-                        callback?(user: nil, error: assignRoleOperation.output?.error)
+                        callback?(user: nil, error: error)
                     } else {
-                        callback?(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
+                        callback?(user: user, error: error)
                     }
-                    })
-                createUserOperation.network!.enqueueOperation(assignOperation)
+                })
             } else {
                 // On failure, simply execute callback.
                 callback?(user: createUserOperation.user, error: createUserOperation.output?.error)

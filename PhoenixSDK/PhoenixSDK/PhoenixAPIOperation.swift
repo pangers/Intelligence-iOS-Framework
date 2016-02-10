@@ -23,6 +23,8 @@ private let OfflineErrorCode = -1009
 /// - execute the call to the API endpoint
 /// - call handleError so the deafult error handling behavior is executed
 /// - optionally, you can execute custom loginc or additional error handling
+///
+/// Inheritors must conform to NSCopying.
 internal class PhoenixAPIOperation: TSDOperation<PhoenixAPIResponse, PhoenixAPIResponse> {
     var shouldBreak: Bool = false
     
