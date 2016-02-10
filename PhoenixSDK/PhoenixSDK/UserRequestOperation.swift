@@ -16,12 +16,12 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     
     let sentUser: Phoenix.User?
     
-    init(user: Phoenix.User? = nil) {
-        self.sentUser = user
-        super.init()
-    }
-    
-    /// Create new User request.
+    /// Initialize UserRequestOperation.
+    /// - parameter user: The user to send during the operation.
+    /// - parameter oauth: The oauth values to use for this operation.
+    /// - parameter configuration: The configuration values to use for this operation.
+    /// - parameter network: The network the operation will be queued on.
+    /// - parameter callback: The callback called on completion of the operation.
     init(user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
         self.sentUser = user
         super.init()
@@ -49,11 +49,7 @@ class UserRequestOperation : PhoenixAPIOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = UserRequestOperation(user: sentUser)
-        copy.callback = callback
-        copy.oauth = oauth
-        copy.configuration = configuration
-        copy.network = network
+        let copy = UserRequestOperation(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }
