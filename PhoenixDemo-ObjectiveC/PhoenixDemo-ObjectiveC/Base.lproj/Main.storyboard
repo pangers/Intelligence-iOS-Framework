@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="l7e-5F-7gc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="l7e-5F-7gc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wait while we initialise Phoenix..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bNE-2Y-dA7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wait while we initialise Intelligence..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bNE-2Y-dA7">
                                 <rect key="frame" x="15" y="290" width="570" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -32,17 +32,17 @@
                     </view>
                     <navigationItem key="navigationItem" id="AZc-Td-sNx"/>
                     <connections>
-                        <segue destination="uz2-1t-hDU" kind="show" identifier="phoenixStartedUp" id="X5B-OO-8fx"/>
+                        <segue destination="uz2-1t-hDU" kind="show" identifier="intelligenceStartedUp" id="X5B-OO-8fx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BOT-RE-19x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-27" y="563"/>
         </scene>
-        <!--PhoenixSDK-->
+        <!--IntelligenceSDK-->
         <scene sceneID="EvG-BA-6Mt">
             <objects>
-                <tableViewController title="PhoenixSDK" id="4Zv-dv-08P" sceneMemberID="viewController">
+                <tableViewController title="IntelligenceSDK" id="4Zv-dv-08P" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="eoK-fr-rPF">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -126,16 +126,16 @@
                             <outlet property="delegate" destination="4Zv-dv-08P" id="O5r-CB-WzR"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Phoenix SDK" id="2hX-oN-26b"/>
+                    <navigationItem key="navigationItem" title="Intelligence SDK" id="2hX-oN-26b"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RSN-CI-Yrc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1388" y="563"/>
         </scene>
-        <!--Phoenix SDK-->
+        <!--Intelligence SDK-->
         <scene sceneID="jhL-f5-3Sh">
             <objects>
-                <navigationController title="Phoenix SDK" automaticallyAdjustsScrollViewInsets="NO" id="uz2-1t-hDU" sceneMemberID="viewController">
+                <navigationController title="Intelligence SDK" automaticallyAdjustsScrollViewInsets="NO" id="uz2-1t-hDU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="o6h-b2-hzl">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

@@ -1,6 +1,6 @@
 //
 //  MockDelegate.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,35 +8,35 @@
 
 import XCTest
 
-@testable import PhoenixSDK
+@testable import IntelligenceSDK
 
-class MockPhoenixDelegateWrapper: PhoenixDelegateWrapper {
-    let mockDelegate: PhoenixDelegate
+class MockIntelligenceDelegateWrapper: IntelligenceDelegateWrapper {
+    let mockDelegate: IntelligenceDelegate
     init(
         expectCreationFailed: Bool = false,
         expectLoginFailed: Bool = false,
         expectRoleFailed: Bool = false)
     {
-        mockDelegate = MockPhoenixDelegate(
+        mockDelegate = MockIntelligenceDelegate(
             expectCreationFailed: expectCreationFailed,
             expectLoginFailed:expectLoginFailed,
             expectRoleFailed:expectRoleFailed)
     }
     
     @objc override func userCreationFailed() {
-        mockDelegate.userCreationFailedForPhoenix(phoenix)
+        mockDelegate.userCreationFailedForIntelligence(intelligence)
     }
     
     @objc override func userLoginRequired() {
-        mockDelegate.userLoginRequiredForPhoenix(phoenix)
+        mockDelegate.userLoginRequiredForIntelligence(intelligence)
     }
     
     @objc override func userRoleAssignmentFailed() {
-        mockDelegate.userRoleAssignmentFailedForPhoenix(phoenix)
+        mockDelegate.userRoleAssignmentFailedForIntelligence(intelligence)
     }
 }
 
-class MockPhoenixDelegate: PhoenixDelegate {
+class MockIntelligenceDelegate: IntelligenceDelegate {
     private var credentials = true, disabled = true, locked = true, token = true, creation = true, login = true, role = true
     init(
         expectCredentialsIncorrect: Bool = true,
@@ -56,31 +56,31 @@ class MockPhoenixDelegate: PhoenixDelegate {
         role = expectRoleFailed
     }
     
-    @objc func credentialsIncorrectForPhoenix(phoenix: Phoenix) {
+    @objc func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(credentials)
     }
     
-    @objc func accountDisabledForPhoenix(phoenix: Phoenix) {
+    @objc func accountDisabledForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(disabled)
     }
     
-    @objc func accountLockedForPhoenix(phoenix: Phoenix) {
+    @objc func accountLockedForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(locked)
     }
     
-    @objc func tokenInvalidOrExpiredForPhoenix(phoenix: Phoenix) {
+    @objc func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(token)
     }
     
-    @objc func userCreationFailedForPhoenix(phoenix: Phoenix) {
+    @objc func userCreationFailedForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(creation)
     }
     
-    @objc func userLoginRequiredForPhoenix(phoenix: Phoenix) {
+    @objc func userLoginRequiredForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(login)
     }
     
-    @objc func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
+    @objc func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
         XCTAssertTrue(role)
     }
 }

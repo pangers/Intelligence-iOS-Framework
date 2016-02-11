@@ -1,14 +1,15 @@
 //
 //  AnalyticsModule.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 18/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import Foundation
+import UIKit
 
-/// The Phoenix Analytics Module defines the methods available for tracking events.
+/// The Intelligence Analytics Module defines the methods available for tracking events.
 @objc (PHXAnalyticsModuleProtocol)
 public protocol AnalyticsModuleProtocol : ModuleProtocol {
     
@@ -29,8 +30,8 @@ internal protocol LocationModuleProvider:class {
     
 }
 
-/// The Phoenix Analytics Module defines the methods available for tracking events.
-internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
+/// The Intelligence Analytics Module defines the methods available for tracking events.
+internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtocol {
 
     internal weak var locationProvider: LocationModuleProvider?
 
@@ -43,7 +44,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     
     // MARK:- ModuleProtocol
     
-    internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration, installation: Installation) {
+    internal init(withDelegate delegate: IntelligenceInternalDelegate, network: Network, configuration: Intelligence.Configuration, installation: Installation) {
         super.init(withDelegate: delegate, network: network, configuration: configuration)
         self.installation = installation
     }
@@ -123,7 +124,7 @@ internal final class AnalyticsModule: PhoenixModule, AnalyticsModuleProtocol {
     /// - parameter events:     Array of JSONified Events to send.
     /// - parameter completion: Must be called on completion to notify caller of success/failure.
     internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
-        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
             completion(error: analyticsOperation.output?.error)
         })

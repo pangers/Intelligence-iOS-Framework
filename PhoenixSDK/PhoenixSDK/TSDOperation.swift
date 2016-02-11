@@ -1,6 +1,6 @@
 //
 //  TSDOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 29/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  PHXLocationModuleViewController.m
-//  PhoenixDemo-ObjectiveC
+//  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 06/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -10,9 +10,9 @@
 
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-@import PhoenixSDK;
+@import IntelligenceSDK;
 
-#import "PHXPhoenixManager.h"
+#import "PHXIntelligenceManager.h"
 #import "PHXLocationGeofenceQueryViewController.h"
 
 @interface PHXLocationModuleViewController () <PHXLocationModuleDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
@@ -39,14 +39,14 @@ static NSString* const cellIdentifier = @"cell";
     
     self.locationManager = [[CLLocationManager alloc] init];
     
-    [PHXPhoenixManager phoenix].location.locationDelegate = self;
+    [PHXIntelligenceManager intelligence].location.locationDelegate = self;
     
     // Using the best kind of accuracy for demo purposes.
-    [[PHXPhoenixManager phoenix].location setLocationAccuracy:kCLLocationAccuracyBest];
+    [[PHXIntelligenceManager intelligence].location setLocationAccuracy:kCLLocationAccuracyBest];
 }
 
 -(void)dealloc {
-    [[PHXPhoenixManager phoenix].location stopMonitoringGeofences];
+    [[PHXIntelligenceManager intelligence].location stopMonitoringGeofences];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -83,7 +83,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 - (IBAction)didTapMonitoringButton:(id)sender {
-    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
     
     if ( [locationModule isMonitoringGeofences] )
     {
@@ -109,7 +109,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 -(void)didSelectGeofenceQuery:(PHXGeofenceQuery *)query {
-    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
     [locationModule downloadGeofences:query callback:^(NSArray<PHXGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -120,7 +120,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 -(void) didReceiveGeofences:(NSArray<PHXGeofence*>*)geofences error:(NSError*) error {
-    id<PHXLocationModuleProtocol> locationModule = PHXPhoenixManager.phoenix.location;
+    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
 
     if ( error != nil ) {
         [self addRecord:@"Error occured while downloading geofences"];
@@ -144,12 +144,12 @@ static NSString* const cellIdentifier = @"cell";
     }
 }
 
--(void)phoenixLocation:(id<PHXLocationModuleProtocol>)location didEnterGeofence:(PHXGeofence *)geofence
+-(void)intelligenceLocation:(id<PHXLocationModuleProtocol>)location didEnterGeofence:(PHXGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Entered %@", geofence.name]];
 }
 
--(void)phoenixLocation:(id<PHXLocationModuleProtocol>)location didExitGeofence:(PHXGeofence *)geofence
+-(void)intelligenceLocation:(id<PHXLocationModuleProtocol>)location didExitGeofence:(PHXGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Exited %@", geofence.name]];
 }
@@ -169,7 +169,7 @@ static NSString* const cellIdentifier = @"cell";
 {
     NSAssert([overlay isKindOfClass:MKCircle.class], @"Expected an MKCircle as overlay, got a %@ instead.", overlay.class);
     MKCircleRenderer* renderer = [[MKCircleRenderer alloc] initWithCircle:overlay];
-    UIColor* color = [[PHXPhoenixManager phoenix].location isMonitoringGeofences] ? UIColor.greenColor : UIColor.redColor;
+    UIColor* color = [[PHXIntelligenceManager intelligence].location isMonitoringGeofences] ? UIColor.greenColor : UIColor.redColor;
     
     renderer.fillColor = [color colorWithAlphaComponent:0.4];
     renderer.strokeColor = color;

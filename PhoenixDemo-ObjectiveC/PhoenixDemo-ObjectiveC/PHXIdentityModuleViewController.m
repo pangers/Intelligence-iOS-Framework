@@ -1,6 +1,6 @@
 //
 //  PHXIdentityModuleViewController.m
-//  PhoenixDemo-ObjectiveC
+//  IntelligenceDemo-ObjectiveC
 //
 //  Created by Chris Nevin on 05/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import "PHXIdentityModuleViewController.h"
 #import "AppDelegate.h"
-#import "PHXPhoenixManager.h"
+#import "PHXIntelligenceManager.h"
 #import "PHXManageUserViewController.h"
 #import "PHXViewUserViewController.h"
 
@@ -78,7 +78,7 @@ static NSString * const PHXViewUserSegue = @"ViewUser";
             return;
         }
         
-        [PHXPhoenixManager.phoenix.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+        [PHXIntelligenceManager.intelligence.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -120,7 +120,7 @@ static NSString * const PHXViewUserSegue = @"ViewUser";
                                                           
                                                           NSString *userId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXPhoenixManager.phoenix.identity getUser:[userId integerValue] callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [PHXIntelligenceManager.intelligence.identity getUser:[userId integerValue] callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                                                   

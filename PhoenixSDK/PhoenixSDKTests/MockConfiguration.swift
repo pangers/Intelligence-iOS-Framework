@@ -1,6 +1,6 @@
 //
 //  MockConfiguration.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 23/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-import PhoenixSDK
+import IntelligenceSDK
 
-public class MockConfiguration: Phoenix.Configuration {
+public class MockConfiguration: Intelligence.Configuration {
 
     public var mockInvalid:Bool = false
     public var mockMissingProperty: Bool = false
@@ -42,7 +42,7 @@ public class MockConfiguration: Phoenix.Configuration {
     }
 
     /// - Returns: True if the configuration is correct and can be used to initialize
-    /// the Phoenix SDK.
+    /// the Intelligence SDK.
     override public var isValid: Bool {
         if mockInvalid {
             return false

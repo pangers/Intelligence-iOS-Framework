@@ -1,6 +1,6 @@
 //
 //  LocationModule.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 06/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -29,7 +29,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that was entered.
     */
-    optional func phoenixLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
+    optional func intelligenceLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
     
     /**
     Called when the user exits a monitored geofence.
@@ -37,7 +37,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that was exited.
     */
-    optional func phoenixLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence)
+    optional func intelligenceLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence)
     
     /**
     Called when the a geofence has successfully started its monitoring.
@@ -45,7 +45,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that started the monitoring.
     */
-    optional func phoenixLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence)
+    optional func intelligenceLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence)
     
     /**
     Called when an error occured while we tried to start monitoring a geofence. This is likely to
@@ -55,7 +55,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that failed to be monitored.
     */
-    optional func phoenixLocation(location: LocationModuleProtocol, didFailMonitoringGeofence: Geofence)
+    optional func intelligenceLocation(location: LocationModuleProtocol, didFailMonitoringGeofence: Geofence)
     
     /**
     Called when a geofence is no longer monitored.
@@ -63,11 +63,11 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that stopped being monitored
     */
-    optional func phoenixLocation(location: LocationModuleProtocol, didStopMonitoringGeofence: Geofence)
+    optional func intelligenceLocation(location: LocationModuleProtocol, didStopMonitoringGeofence: Geofence)
 }
 
 /**
-The Phoenix Location module protocol. Provides geofence downloading and tracking functionality.
+The Intelligence Location module protocol. Provides geofence downloading and tracking functionality.
 */
 @objc(PHXLocationModuleProtocol)
 public protocol LocationModuleProtocol : ModuleProtocol {
@@ -119,7 +119,7 @@ public protocol LocationModuleProtocol : ModuleProtocol {
     
 }
 
-/// Phoenix coordinate object. CLLocationCoordinate2D can't be used as an optional.
+/// Intelligence coordinate object. CLLocationCoordinate2D can't be used as an optional.
 /// Furthermore, not providing a custom location object would force the developers to
 /// always require CoreLocation even if they don't need to use it.
 @objc(PHXCoordinate)
@@ -147,7 +147,7 @@ public class Coordinate : NSObject {
 }
 
 /// Location module that is responsible for managing Geofences and User Location.
-internal final class LocationModule: PhoenixModule, LocationModuleProtocol, LocationManagerDelegate, LocationModuleProvider {
+internal final class LocationModule: IntelligenceModule, LocationModuleProtocol, LocationManagerDelegate, LocationModuleProvider {
     
     /// The last coordinate we received.
     private var lastLocation: Coordinate?
@@ -179,15 +179,15 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     }
     
     /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
-    /// - parameter delegate:         Internal delegate that notifies Phoenix.
+    /// - parameter delegate:         Internal delegate that notifies Intelligence.
     /// - parameter network:          Instance of Network class to use.
     /// - parameter configuration:    Configuration used to configure requests.
     /// - parameter locationManager:  Location manager used for tracking.
     /// - returns: Returns a Location object.
     internal init(
-        withDelegate delegate: PhoenixInternalDelegate,
+        withDelegate delegate: IntelligenceInternalDelegate,
         network:Network,
-        configuration: Phoenix.Configuration,
+        configuration: Intelligence.Configuration,
         locationManager:LocationManager)
     {
         self.locationManager = locationManager
@@ -265,13 +265,13 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     // MARK:- LocationManagerDelegate
     
     func didEnterGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
-        self.locationDelegate?.phoenixLocation?(self, didEnterGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(self, didEnterGeofence: geofence)
         self.enteredGeofences[geofence.id] = geofence
         self.trackGeofenceEntered(geofence)
     }
     
     func didExitGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
-        self.locationDelegate?.phoenixLocation?(self, didExitGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(self, didExitGeofence: geofence)
         self.enteredGeofences[geofence.id] = nil
         self.trackGeofenceExited(geofence)
     }
@@ -281,15 +281,15 @@ internal final class LocationModule: PhoenixModule, LocationModuleProtocol, Loca
     }
     
     func didStartMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.phoenixLocation?(self, didStartMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(self, didStartMonitoringGeofence: geofence)
     }
     
     func didFailMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.phoenixLocation?(self, didFailMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(self, didFailMonitoringGeofence: geofence)
     }
     
     func didStopMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.phoenixLocation?(self, didStopMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(self, didStopMonitoringGeofence: geofence)
     }
 
 }

@@ -1,6 +1,6 @@
 //
 //  NetworkAuthenticationChallengeDelegate.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 26/01/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
@@ -9,9 +9,9 @@
 import Foundation
 
 internal class NetworkAuthenticationChallengeDelegate : NSObject, NSURLSessionDelegate {
-    let configuration: Phoenix.Configuration
+    let configuration: Intelligence.Configuration
     
-    init(configuration: Phoenix.Configuration) {
+    init(configuration: Intelligence.Configuration) {
         self.configuration = configuration
     }
     

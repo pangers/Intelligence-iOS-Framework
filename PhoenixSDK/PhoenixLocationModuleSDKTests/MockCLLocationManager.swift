@@ -1,13 +1,13 @@
 //
 //  MockCLLocationManager.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 06/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import CoreLocation
-import PhoenixSDK
+import IntelligenceSDK
 
 class MockCLLocationManager: CLLocationManager {
     

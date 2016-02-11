@@ -1,6 +1,6 @@
 //
 //  GetUserRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 03/02/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
@@ -13,7 +13,7 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     
     let userId: Int
     
-    init(userId: Int, user: Phoenix.User? = nil, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    init(userId: Int, user: Intelligence.User? = nil, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
         self.userId = userId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }

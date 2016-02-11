@@ -1,6 +1,6 @@
 //
 //  NSJSONSerializationHelpers.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 27/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

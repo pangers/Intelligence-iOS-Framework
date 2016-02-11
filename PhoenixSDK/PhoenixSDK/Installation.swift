@@ -1,12 +1,13 @@
 //
 //  Installation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 14/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import Foundation
+import UIKit
 
 private enum DeviceType : Int {
     case Smartphone = 1
@@ -31,13 +32,13 @@ internal struct Installation {
     
     // MARK:- Storage
     /// Configuration to use for configuring the installation request.
-    let configuration: Phoenix.Configuration
+    let configuration: Intelligence.Configuration
     /// Bundle of application used to get version and build number.
-    let applicationVersion: PhoenixApplicationVersionProtocol
+    let applicationVersion: IntelligenceApplicationVersionProtocol
     /// User defaults to store response data for update installation request.
     let installationStorage: InstallationStorageProtocol
-    /// PhoenixOAuthProvider to determine the user making the request.
-    let oauthProvider: PhoenixOAuthProvider
+    /// IntelligenceOAuthProvider to determine the user making the request.
+    let oauthProvider: IntelligenceOAuthProvider
     
     // MARK:- Parameters used in requests
     private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
@@ -53,12 +54,12 @@ internal struct Installation {
         return requestId != nil
     }
     
-    /// - Returns: True if app is a fresh install or request has not made it to Phoenix yet.
+    /// - Returns: True if app is a fresh install or request has not made it to Intelligence yet.
     var isNewInstallation: Bool {
         return installationStorage.phx_isNewInstallation
     }
     
-    /// - Returns: True if app is updated or request has not made it to Phoenix yet.
+    /// - Returns: True if app is updated or request has not made it to Intelligence yet.
     var isUpdatedInstallation: Bool {
         return installationStorage.phx_isInstallationUpdated(applicationVersion.phx_applicationVersionString)
     }

@@ -1,6 +1,6 @@
 //
 //  PHXScreenViewedViewController.m
-//  PhoenixDemo-ObjectiveC
+//  IntelligenceDemo-ObjectiveC
 //
 //  Created by Michael Lake on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,9 +8,9 @@
 
 #import "PHXScreenViewedViewController.h"
 
-#import "PHXPhoenixManager.h"
+#import "PHXIntelligenceManager.h"
 
-@import PhoenixSDK;
+@import IntelligenceSDK;
 
 @interface PHXScreenViewedViewController ()
 
@@ -112,7 +112,7 @@
 	
     PHXEvent *event = [[PHXScreenViewedEvent alloc] initWithScreenName:self.title viewingDuration:viewingDuration];
     
-    [PHXPhoenixManager.phoenix.analytics track:event];
+    [PHXIntelligenceManager.intelligence.analytics track:event];
 }
 
 @end

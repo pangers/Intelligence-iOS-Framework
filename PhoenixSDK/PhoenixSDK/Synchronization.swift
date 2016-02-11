@@ -1,6 +1,6 @@
 //
 //  Synchronization.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 02/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

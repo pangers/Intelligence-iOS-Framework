@@ -1,6 +1,6 @@
 //
 //  EventQueue.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 18/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

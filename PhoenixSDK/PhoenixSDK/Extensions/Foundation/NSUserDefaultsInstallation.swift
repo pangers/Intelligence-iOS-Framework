@@ -1,6 +1,6 @@
 //
 //  NSUserDefaultsInstallation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 14/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -25,27 +25,27 @@ internal protocol InstallationStorageProtocol {
     var phx_installationRequestID: Int? {get}
     /// Stores request ID that was returned by the server.
     func phx_storeInstallationRequestID(newID: Int?)
-    /// Phoenix currently requires us to send the creation date, otherwise it will update it to the current date.
+    /// Intelligence currently requires us to send the creation date, otherwise it will update it to the current date.
     /// - Returns: Creation date of previous request.
     var phx_installationCreateDateString: String? {get}
     /// Stores create date that was returned by the server.
     func phx_storeInstallationCreateDate(newDate: String?)
 }
 
-private let phoenixAppVersionKey = "PhoenixAppVersion"
-private let phoenixInstallationIDKey = "InstallationID"
-private let phoenixInstallationCreateDateKey = "InstallationCreateDate"
-private let phoenixInstallationRequestIDKey = "InstallationRequestID"
+private let intelligenceAppVersionKey = "IntelligenceAppVersion"
+private let intelligenceInstallationIDKey = "InstallationID"
+private let intelligenceInstallationCreateDateKey = "InstallationCreateDate"
+private let intelligenceInstallationRequestIDKey = "InstallationRequestID"
 
 extension NSUserDefaults: InstallationStorageProtocol {
     
     // MARK:- App Version
     var phx_applicationVersion: String? {
-        return objectForKey(phoenixAppVersionKey) as? String
+        return objectForKey(intelligenceAppVersionKey) as? String
     }
     
     func phx_storeApplicationVersion(version: String?) {
-        setObject(version, forKey: phoenixAppVersionKey)
+        setObject(version, forKey: intelligenceAppVersionKey)
         synchronize()
     }
     
@@ -61,33 +61,33 @@ extension NSUserDefaults: InstallationStorageProtocol {
     // MARK:- Installation ID
     
     var phx_installationID: String? {
-        return objectForKey(phoenixInstallationIDKey) as? String
+        return objectForKey(intelligenceInstallationIDKey) as? String
     }
     
     func phx_storeInstallationID(newID: String?) {
-        setObject(newID, forKey: phoenixInstallationIDKey)
+        setObject(newID, forKey: intelligenceInstallationIDKey)
         synchronize()
     }
     
     // MARK:- Request ID
     
     var phx_installationRequestID: Int? {
-        return objectForKey(phoenixInstallationRequestIDKey) as? Int
+        return objectForKey(intelligenceInstallationRequestIDKey) as? Int
     }
     
     func phx_storeInstallationRequestID(newID: Int?) {
-        setObject(newID, forKey: phoenixInstallationRequestIDKey)
+        setObject(newID, forKey: intelligenceInstallationRequestIDKey)
         synchronize()
     }
     
     // MARK:- Creation Date
     
     var phx_installationCreateDateString: String? {
-        return objectForKey(phoenixInstallationCreateDateKey) as? String
+        return objectForKey(intelligenceInstallationCreateDateKey) as? String
     }
     
     func phx_storeInstallationCreateDate(newDate: String?) {
-        setObject(newDate, forKey: phoenixInstallationCreateDateKey)
+        setObject(newDate, forKey: intelligenceInstallationCreateDateKey)
         synchronize()
     }
 }

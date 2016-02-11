@@ -1,13 +1,13 @@
 //
 //  MockLocationProvider.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 13/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import Foundation
-@testable import PhoenixSDK
+@testable import IntelligenceSDK
 
 class MockLocationProvider : LocationModuleProvider {
     var userLocation:Coordinate? {

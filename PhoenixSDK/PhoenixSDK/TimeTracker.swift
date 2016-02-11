@@ -1,6 +1,6 @@
 //
 //  TimeTracker.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 09/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-let TrackEventType = "Phoenix.Analytics.Application.Time"
+let TrackEventType = "Intelligence.Analytics.Application.Time"
 
 typealias TimeTrackerCallback = (event: TrackApplicationTimeEvent) -> ()
 

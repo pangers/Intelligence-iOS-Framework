@@ -1,6 +1,6 @@
 //
 //  LocationManagerDelegate.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 01/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -39,7 +39,7 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
     
     - parameter locationManager: the CLLocationManager to use.
     
-    - returns: The phoenix location manager
+    - returns: The intelligence location manager
     */
     init(locationManager:CLLocationManager){
         self.locationManager = locationManager
@@ -48,9 +48,9 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     /**
-    Initializes a phoenix location manager with a newly created CLLocationManager.
+    Initializes an intelligence location manager with a newly created CLLocationManager.
     
-    - returns: The phoenix location manager
+    - returns: The intelligence location manager
     */
     override convenience init() {
         self.init(locationManager: CLLocationManager())

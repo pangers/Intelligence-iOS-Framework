@@ -1,22 +1,22 @@
 //
 //  IdentityModuleViewController.swift
-//  PhoenixDemo-Swift
+//  IntelligenceDemo-Swift
 //
 //  Created by Chris Nevin on 05/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 import UIKit
-import PhoenixSDK
+import IntelligenceSDK
 
-let PhoenixDemoStoredDeviceTokenKey = "PhoenixDemoStoredDeviceTokenKey"
+let IntelligenceDemoStoredDeviceTokenKey = "IntelligenceDemoStoredDeviceTokenKey"
 
 class IdentityModuleViewController : UITableViewController {
     
     private let ManageUserSegue = "ManageUser"
     private let ViewUserSegue = "ViewUser"
     
-    private var user: Phoenix.User? = nil
+    private var user: Intelligence.User? = nil
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == ManageUserSegue {
@@ -68,7 +68,7 @@ class IdentityModuleViewController : UITableViewController {
                 return
             }
             
-            PhoenixManager.phoenix.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
+            IntelligenceManager.intelligence.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
                 guard let strongSelf = self else {
                     return
                 }
@@ -112,7 +112,7 @@ class IdentityModuleViewController : UITableViewController {
                     return
             }
             
-            PhoenixManager.phoenix.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
+            IntelligenceManager.intelligence.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
                 guard let strongSelf = strongSelf else {
                     return
                 }

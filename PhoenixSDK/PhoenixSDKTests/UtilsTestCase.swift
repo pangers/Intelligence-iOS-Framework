@@ -1,6 +1,6 @@
 //
 //  UtilsTestCase.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 30/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import PhoenixSDK
+@testable import IntelligenceSDK
 
 class UtilsTestCase: XCTestCase {
 
@@ -155,7 +155,7 @@ class UtilsTestCase: XCTestCase {
     }
     
     func testKeychainSubscript() {
-        let defaults = PhoenixKeychain()
+        let defaults = IntelligenceKeychain()
         let key = "test"
         let value = "value"
         

@@ -1,6 +1,6 @@
 //
 //  ViewUserViewController.swift
-//  PhoenixDemo-Swift
+//  IntelligenceDemo-Swift
 //
 //  Created by Josep Rodriguez on 03/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-import PhoenixSDK
+import IntelligenceSDK
 
 class ViewUserViewController : UIViewController {
     
@@ -21,7 +21,7 @@ class ViewUserViewController : UIViewController {
     @IBOutlet weak var lastname: UITextField!
     @IBOutlet weak var avatarURL: UITextField!
     
-    var user:Phoenix.User? {
+    var user:Intelligence.User? {
         didSet {
             displayUser()
         }
@@ -42,7 +42,7 @@ class ViewUserViewController : UIViewController {
         }
     }
     
-    func displayMe(user: Phoenix.User?, error: NSError?) {
+    func displayMe(user: Intelligence.User?, error: NSError?) {
         NSOperationQueue.mainQueue().addOperationWithBlock({ [weak self] in
             guard let user = user else {
                 let alert = UIAlertController(title: "Error", message: error?.description ?? "Unknown error", preferredStyle: .Alert)
@@ -80,7 +80,7 @@ class ViewUserViewController : UIViewController {
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
-        PhoenixManager.phoenix.identity.updateUser(user, callback: { (user, error) -> Void in
+        IntelligenceManager.intelligence.identity.updateUser(user, callback: { (user, error) -> Void in
             if let user = user {
                 self.user = user
                 self.showInformation(" ")

@@ -1,6 +1,6 @@
 //
 //  CreateIdentifierRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 12/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -9,13 +9,13 @@
 import Foundation
 
 /// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
-class CreateIdentifierRequestOperation : PhoenixAPIOperation, NSCopying {
+class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     var tokenId: Int?
     
     private let tokenString: String
     
-    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
         self.tokenString = token
         super.init()
         self.callback = callback

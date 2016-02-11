@@ -1,6 +1,6 @@
 //
 //  RevokeUserRoleRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 05/02/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
@@ -13,7 +13,7 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
     
     let roleId: Int
     
-    init(roleId: Int, user: Phoenix.User?, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    init(roleId: Int, user: Intelligence.User?, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
         self.roleId = roleId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }

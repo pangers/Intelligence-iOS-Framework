@@ -1,6 +1,6 @@
 //
 //  ScreenViewedViewController.swift
-//  PhoenixDemo-Swift
+//  IntelligenceDemo-Swift
 //
 //  Created by Michael Lake on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-import PhoenixSDK
+import IntelligenceSDK
 
 class ScreenViewedViewController : UIViewController {
 	
@@ -112,6 +112,6 @@ class ScreenViewedViewController : UIViewController {
 		let viewingDuration = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
 		
         let event = ScreenViewedEvent(screenName: self.title!, viewingDuration: viewingDuration)
-		PhoenixManager.phoenix?.analytics.track(event)
+		IntelligenceManager.intelligence?.analytics.track(event)
 	}
 }

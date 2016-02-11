@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Xa0-3V-nqW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Xa0-3V-nqW">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
-        <!--Phoenix Location Module View Controller-->
+        <!--Intelligence Location Module View Controller-->
         <scene sceneID="peW-h1-N4f">
             <objects>
-                <viewController id="Xa0-3V-nqW" customClass="PhoenixLocationModuleViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Xa0-3V-nqW" customClass="IntelligenceLocationModuleViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Qgs-XQ-lMP"/>
                         <viewControllerLayoutGuide type="bottom" id="YXb-SR-eHc"/>
@@ -106,10 +106,10 @@
             </objects>
             <point key="canvasLocation" x="983" y="115"/>
         </scene>
-        <!--Phoenix Location Geofence Query View Controller-->
+        <!--Intelligence Location Geofence Query View Controller-->
         <scene sceneID="RRN-aV-QjB">
             <objects>
-                <viewController id="yEt-hT-k1r" customClass="PhoenixLocationGeofenceQueryViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="yEt-hT-k1r" customClass="IntelligenceLocationGeofenceQueryViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zfm-6E-9a1"/>
                         <viewControllerLayoutGuide type="bottom" id="TEX-At-kHP"/>

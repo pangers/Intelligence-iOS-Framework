@@ -1,6 +1,6 @@
 //
 //  GeofenceQuery.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Małgorzata Dybizbańska on 29/09/15.
 //  Copyright © 2015 Tigerspike. All rights reserved.

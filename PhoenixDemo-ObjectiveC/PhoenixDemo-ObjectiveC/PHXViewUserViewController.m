@@ -1,13 +1,13 @@
 //
 //  PHXViewUserViewController.m
-//  PhoenixDemo-ObjectiveC
+//  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 04/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
 #import "PHXViewUserViewController.h"
-#import "PHXPhoenixManager.h"
+#import "PHXIntelligenceManager.h"
 
 @interface PHXViewUserViewController ()
 
@@ -77,8 +77,8 @@
     });
 }
 
--(id<PHXIdentityModuleProtocol>) phoenixIdentity {
-    return PHXPhoenixManager.phoenix.identity;
+-(id<PHXIdentityModuleProtocol>) intelligenceIdentity {
+    return PHXIntelligenceManager.intelligence.identity;
 }
 
 - (IBAction)didTapUpdateUser:(id)sender {
@@ -86,7 +86,7 @@
     self.user.lastName = self.lastname.text;
     self.user.avatarURL = self.avatarURL.text;
     
-    [[self phoenixIdentity] updateUser:self.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+    [[self intelligenceIdentity] updateUser:self.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;

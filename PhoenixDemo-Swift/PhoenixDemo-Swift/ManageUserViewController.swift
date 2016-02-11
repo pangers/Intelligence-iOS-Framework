@@ -1,19 +1,19 @@
 //
 //  ManageUserViewController.swift
-//  PhoenixDemo-Swift
+//  IntelligenceDemo-Swift
 //
 //  Created by Michael Lake on 09/02/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
 //
 
 import UIKit
-import PhoenixSDK
+import IntelligenceSDK
 
 class ManageUserViewController : UITableViewController {
     private let UpdateUserSegue = "UpdateUser"
     private let UnwindOnLogoutSegue = "UnwindOnLogout"
     
-    var user: Phoenix.User? = nil
+    var user: Intelligence.User? = nil
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == UpdateUserSegue {
@@ -80,7 +80,7 @@ class ManageUserViewController : UITableViewController {
     func registerDeviceToken() {
         let application = UIApplication.sharedApplication()
         
-        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
+        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(IntelligenceDemoStoredDeviceTokenKey)
         
         if tokenId != 0 {
             let delegate = application.delegate as! AppDelegate
@@ -96,21 +96,21 @@ class ManageUserViewController : UITableViewController {
         let application = UIApplication.sharedApplication()
         let delegate = application.delegate as! AppDelegate
         
-        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(PhoenixDemoStoredDeviceTokenKey)
+        let tokenId = NSUserDefaults.standardUserDefaults().integerForKey(IntelligenceDemoStoredDeviceTokenKey)
         
         if tokenId == 0 {
             delegate.alert(withMessage: "Not Registered!")
             return
         }
         
-        PhoenixManager.phoenix.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
+        IntelligenceManager.intelligence.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
             let notRegisteredError = error?.code == IdentityError.DeviceTokenNotRegisteredError.rawValue
             
             if error != nil && !notRegisteredError {
                 delegate.alert(withMessage: "Failed with error: \(error!.code)")
             }
             else {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
+                NSUserDefaults.standardUserDefaults().removeObjectForKey(IntelligenceDemoStoredDeviceTokenKey)
                 NSUserDefaults.standardUserDefaults().synchronize()
                 
                 delegate.alert(withMessage: "Unregister Succeeded!")
@@ -136,7 +136,7 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            PhoenixManager.phoenix.identity.assignRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
+            IntelligenceManager.intelligence.identity.assignRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
                     let application = UIApplication.sharedApplication()
                     let delegate = application.delegate as! AppDelegate
@@ -172,7 +172,7 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            PhoenixManager.phoenix.identity.revokeRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
+            IntelligenceManager.intelligence.identity.revokeRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
                     let application = UIApplication.sharedApplication()
                     let delegate = application.delegate as! AppDelegate
@@ -191,11 +191,11 @@ class ManageUserViewController : UITableViewController {
     }
     
     func logout() {
-        PhoenixManager.phoenix.identity.logout()
+        IntelligenceManager.intelligence.identity.logout()
         
         self.user = nil
         
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(PhoenixDemoStoredDeviceTokenKey)
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(IntelligenceDemoStoredDeviceTokenKey)
         NSUserDefaults.standardUserDefaults().synchronize()
         
         self.performSegueWithIdentifier(UnwindOnLogoutSegue, sender: self)

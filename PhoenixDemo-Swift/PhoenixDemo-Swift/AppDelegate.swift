@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  PhoenixDemo-Swift
+//  IntelligenceDemo-Swift
 //
 //  Created by Rui Silvestre on 20/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,48 +8,48 @@
 
 import UIKit
 
-import PhoenixSDK
+import IntelligenceSDK
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
 	var window: UIWindow?
     
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        startupPhoenix()
+        startupIntelligence()
 
 		return true
 	}
     
-    func startupPhoenix() {
-        if PhoenixManager.phoenix != nil {
+    func startupIntelligence() {
+        if IntelligenceManager.intelligence != nil {
             return
         }
         
         do {
-            let phoenix = try Phoenix(withDelegate: self, file: "PhoenixConfiguration")
+            let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
             
             // Startup all modules.
-            phoenix.startup { (success) -> () in
+            intelligence.startup { (success) -> () in
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
 
                     if success {
                         // Register test event.
-                        let testEvent = Event(withType: "Phoenix.Test.Event.Type")
-                        phoenix.analytics.track(testEvent)
-                        PhoenixManager.startupWithPhoenix(phoenix)
+                        let testEvent = Event(withType: "Intelligence.Test.Event.Type")
+                        intelligence.analytics.track(testEvent)
+                        IntelligenceManager.startupWithIntelligence(intelligence)
                         
                         self.segueToDemo()
                     }
                     else {
-                            // Allow the user to retry to startup phoenix.
-                            let message = "Phoenix was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Phoenix startup."
+                            // Allow the user to retry to startup intelligence.
+                            let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
                             let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
                             controller.addAction(UIAlertAction(title: "Retry", style: .Cancel, handler: { (action) -> Void in
-                                // Try again to start phoenix
-                                self.startupPhoenix()
+                                // Try again to start intelligence
+                                self.startupIntelligence()
                             }))
                             
                             self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
@@ -58,16 +58,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 }
             }
         }
-        catch PhoenixSDK.ConfigurationError.FileNotFoundError {
+        catch IntelligenceSDK.ConfigurationError.FileNotFoundError {
             self.alert(withMessage: "The file you specified does not exist!")
         }
-        catch PhoenixSDK.ConfigurationError.InvalidFileError {
+        catch IntelligenceSDK.ConfigurationError.InvalidFileError {
             self.alert(withMessage: "The file is invalid! Check that the JSON provided is correct.")
         }
-        catch PhoenixSDK.ConfigurationError.MissingPropertyError {
+        catch IntelligenceSDK.ConfigurationError.MissingPropertyError {
             self.alert(withMessage: "You missed a property!")
         }
-        catch PhoenixSDK.ConfigurationError.InvalidPropertyError {
+        catch IntelligenceSDK.ConfigurationError.InvalidPropertyError {
             self.alert(withMessage: "There is an invalid property!")
         }
         catch {
@@ -77,26 +77,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
     
 
 	func applicationDidEnterBackground(application: UIApplication) {
-        PhoenixManager.phoenix.analytics.pause()
+        IntelligenceManager.intelligence.analytics.pause()
 	}
 
 	func applicationWillEnterForeground(application: UIApplication) {
-        PhoenixManager.phoenix.analytics.resume()
+        IntelligenceManager.intelligence.analytics.resume()
 	}
 
 	func applicationWillTerminate(application: UIApplication) {
-        PhoenixManager.phoenix.shutdown()
+        IntelligenceManager.intelligence.shutdown()
 	}
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        PhoenixManager.phoenix.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+        IntelligenceManager.intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
             if error != nil {
                 self.alert(withMessage: "Failed with error: \(error!.code)")
             } else {
                 // Store token id for unregistration. For this example I have stored it in user defaults.
                 // However, this should be stored in the keychain as the app may be uninstalled and reinstalled
                 // multiple times and may receive the same device token from Apple.
-                NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: PhoenixDemoStoredDeviceTokenKey)
+                NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: IntelligenceDemoStoredDeviceTokenKey)
                 NSUserDefaults.standardUserDefaults().synchronize()
                 
                 self.alert(withMessage: "Registration Succeeded!")
@@ -113,7 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
             return;
         }
         
-        viewController.performSegueWithIdentifier("phoenixStartedUp", sender: self)
+        viewController.performSegueWithIdentifier("intelligenceStartedUp", sender: self)
     }
     
     func alert(withMessage message: String) {
@@ -139,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
                 return
             }
             
-            let controller = UIAlertController(title: "Phoenix Demo", message: message, preferredStyle: .Alert)
+            let controller = UIAlertController(title: "Intelligence Demo", message: message, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presenterViewController.presentViewController(controller, animated: true, completion: nil)
         }
@@ -148,35 +148,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PhoenixDelegate {
         }
     }
     
-    // MARK:- PhoenixDelegate
+    // MARK:- IntelligenceDelegate
     
-    func credentialsIncorrectForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during login, check credentials for Phoenix Intelligence accounts.")
+    func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
     }
     
-    func accountDisabledForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during login, the Phoenix Intelligence account is disabled.")
+    func accountDisabledForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
     }
     
-    func accountLockedForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during login, the Phoenix Intelligence account is locked. Contact a Phoenix Intelligence Administrator")
+    func accountLockedForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
     }
     
-    func tokenInvalidOrExpiredForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Phoenix Intelligence accounts.")
+    func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
     }
     
-    func userCreationFailedForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during user creation, check Phoenix Intelligence accounts are configured correctly.")
+    func userCreationFailedForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
     }
     
-    func userLoginRequiredForPhoenix(phoenix: Phoenix) {
+    func userLoginRequiredForIntelligence(intelligence: Intelligence) {
         // Present login screen or call identity.login with credentials stored in Keychain.
         alert(withMessage: "Token expired, you will need to login again.")
     }
     
-    func userRoleAssignmentFailedForPhoenix(phoenix: Phoenix) {
-        alert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Phoenix Intelligence accounts are configured correctly.")
+    func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
+        alert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
     }
 }
 

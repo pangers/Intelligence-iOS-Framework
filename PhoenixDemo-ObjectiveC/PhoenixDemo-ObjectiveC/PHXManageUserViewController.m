@@ -1,6 +1,6 @@
 //
 //  PHXManageUserViewController.m
-//  PhoenixDemo-ObjectiveC
+//  IntelligenceDemo-ObjectiveC
 //
 //  Created by Michael Lake on 09/02/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
@@ -80,7 +80,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
 - (void)registerDeviceToken {
     UIApplication *application = UIApplication.sharedApplication;
     
-    NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:PhoenixDemoStoredDeviceTokenKey];
+    NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:IntelligenceDemoStoredDeviceTokenKey];
     
     if (tokenId != 0) {
         AppDelegate *delegate = application.delegate;
@@ -95,20 +95,20 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
     UIApplication *application = UIApplication.sharedApplication;
     AppDelegate *delegate = application.delegate;
     
-    NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:PhoenixDemoStoredDeviceTokenKey];
+    NSInteger tokenId = [[NSUserDefaults standardUserDefaults] integerForKey:IntelligenceDemoStoredDeviceTokenKey];
     
     if (tokenId == 0) {
         [delegate alertWithMessage:@"Not Registered!"];
         return;
     }
     
-    [[[PHXPhoenixManager phoenix] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+    [[[PHXIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
         BOOL notRegisteredError = [IdentityErrorDomain rangeOfString:error.domain].location != NSNotFound && error.code == IdentityErrorDeviceTokenNotRegisteredError;
         
         if (error != nil && !notRegisteredError) {
             [delegate alertWithError: error];
         } else {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey: PhoenixDemoStoredDeviceTokenKey];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey: IntelligenceDemoStoredDeviceTokenKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             [delegate alertWithMessage: @"Unregister Succeeded!"];
@@ -137,7 +137,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXPhoenixManager.phoenix.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [PHXIntelligenceManager.intelligence.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
@@ -176,7 +176,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXPhoenixManager.phoenix.identity revokeRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [PHXIntelligenceManager.intelligence.identity revokeRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
@@ -195,11 +195,11 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
 }
 
 - (void)logout {
-    [PHXPhoenixManager.phoenix.identity logout];
+    [PHXIntelligenceManager.intelligence.identity logout];
     
     self.user = nil;
     
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey: PhoenixDemoStoredDeviceTokenKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey: IntelligenceDemoStoredDeviceTokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [self performSegueWithIdentifier:PHXUnwindOnLogoutSegue sender:self];

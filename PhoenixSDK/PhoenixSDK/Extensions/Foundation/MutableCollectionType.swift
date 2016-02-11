@@ -1,6 +1,6 @@
 //
 //  MutableCollectionType.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 01/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  ModuleProtocol.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 19/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -16,22 +16,22 @@ import Foundation
     
 }
 
-internal class PhoenixModule : NSObject, ModuleProtocol {
+internal class IntelligenceModule : NSObject, ModuleProtocol {
     
-    internal var delegate: PhoenixInternalDelegate!
+    internal var delegate: IntelligenceInternalDelegate!
     
     /// A reference to the Network manager.
     internal let network: Network
     
     /// Configuration instance used for NSURLRequests.
-    internal let configuration: Phoenix.Configuration
+    internal let configuration: Intelligence.Configuration
     
     /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
     /// - parameter delegate:         Delegate used to notify developer of an event.
     /// - parameter network:          Instance of Network class to use.
     /// - parameter configuration:    Configuration used to configure requests.
     /// - returns: An initialized module.
-    internal init(withDelegate delegate: PhoenixInternalDelegate, network: Network, configuration: Phoenix.Configuration) {
+    internal init(withDelegate delegate: IntelligenceInternalDelegate, network: Network, configuration: Intelligence.Configuration) {
         self.delegate = delegate
         self.network = network
         self.configuration = configuration

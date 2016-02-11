@@ -1,6 +1,6 @@
 //
 //  ScreenViewedEvent.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.

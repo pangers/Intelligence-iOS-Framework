@@ -1,6 +1,6 @@
 //
 //  DownloadGeofencesRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 06/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -10,13 +10,13 @@ import Foundation
 
 /// NSOperation that handles downloading geofences.
 /// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
-internal final class DownloadGeofencesRequestOperation: PhoenixAPIOperation, NSCopying {
+internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation, NSCopying {
     
     /// Array containing Geofence objects.
     var geofences: [Geofence]?
     let queryDetails: GeofenceQuery
 
-    required init(oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, query:GeofenceQuery, callback: PhoenixAPICallback) {
+    required init(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, query:GeofenceQuery, callback: IntelligenceAPICallback) {
         queryDetails = query
         super.init()
         self.callback = callback

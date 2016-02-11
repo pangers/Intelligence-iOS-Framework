@@ -1,6 +1,6 @@
 //
-//  PhoenixNetworking.swift
-//  PhoenixSDK
+//  IntelligenceNetworking.swift
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 27/07/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -28,16 +28,16 @@ internal enum HTTPStatusCode: Int {
     case NotFound = 404
 }
 
-/// Acts as a Network manager for the Phoenix SDK, encapsulates authentication requests.
+/// Acts as a Network manager for the Intelligence SDK, encapsulates authentication requests.
 internal final class Network: NSObject, NSURLSessionDelegate {
     
     /// Delegate must be set before startup is called on modules.
-    internal var delegate: PhoenixInternalDelegate!
+    internal var delegate: IntelligenceInternalDelegate!
     
     internal let authenticationChallengeDelegate: NSURLSessionDelegate
     
     /// Provider responsible for serving OAuth information.
-    internal var oauthProvider: PhoenixOAuthProvider!
+    internal var oauthProvider: IntelligenceOAuthProvider!
     
     /// NSURLSession with default session configuration.
     internal private(set) var sessionManager : NSURLSession?
@@ -45,8 +45,8 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     
     // MARK: Initializers
     
-    /// Initialize new instance of Phoenix Networking class
-    init(delegate: PhoenixInternalDelegate, authenticationChallengeDelegate: NSURLSessionDelegate, oauthProvider: PhoenixOAuthProvider) {
+    /// Initialize new instance of Intelligence Networking class
+    init(delegate: IntelligenceInternalDelegate, authenticationChallengeDelegate: NSURLSessionDelegate, oauthProvider: IntelligenceOAuthProvider) {
         self.queue = NSOperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
@@ -63,26 +63,26 @@ internal final class Network: NSObject, NSURLSessionDelegate {
     }
     
     /// Return all queued operations (excluding pipeline operations).
-    internal func queuedOperations() -> [PhoenixAPIOperation] {
+    internal func queuedOperations() -> [IntelligenceAPIOperation] {
         return queue.operations.filter({
-            $0.isMemberOfClass(PhoenixAPIPipeline.self) == false &&
-                $0.isKindOfClass(PhoenixAPIOperation.self) == true })
-            .map({ $0 as! PhoenixAPIOperation })
+            $0.isMemberOfClass(IntelligenceAPIPipeline.self) == false &&
+                $0.isKindOfClass(IntelligenceAPIOperation.self) == true })
+            .map({ $0 as! IntelligenceAPIOperation })
     }
     
     /// Return all queued operations (excluding pipeline operations).
-    internal func queuedPipelines() -> [PhoenixAPIPipeline] {
+    internal func queuedPipelines() -> [IntelligenceAPIPipeline] {
         return queue.operations.filter({
-            $0.isMemberOfClass(PhoenixAPIPipeline.self) == true })
-            .map({ $0 as! PhoenixAPIPipeline })
+            $0.isMemberOfClass(IntelligenceAPIPipeline.self) == true })
+            .map({ $0 as! IntelligenceAPIPipeline })
     }
     
     // MARK: Interception of responses
     
     /// Caller's responsibility to enqueue this operation.
     /// - parameter tokenType:  Type of token we need.
-    /// - returns: Return PhoenixAPIPipeline for given token type.
-    internal func getPipeline(forOAuth oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, shouldValidate: Bool = true, completion: (PhoenixAPIPipeline?) -> ()) {
+    /// - returns: Return IntelligenceAPIPipeline for given token type.
+    internal func getPipeline(forOAuth oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, shouldValidate: Bool = true, completion: (IntelligenceAPIPipeline?) -> ()) {
         if oauth.tokenType == .SDKUser && (oauth.username == nil || oauth.password == nil) {
             assertionFailure("User should have been created in startup()")
             completion(nil)
@@ -100,12 +100,12 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         }
         
         // If shouldValidate == false, the token is no longer valid, lets try and refresh, if that fails login again.
-        var operations = [PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()]
+        var operations = [IntelligenceOAuthRefreshOperation(), IntelligenceOAuthLoginOperation()]
         if shouldValidate {
-            operations.insert(PhoenixOAuthValidateOperation(), atIndex: 0)
+            operations.insert(IntelligenceOAuthValidateOperation(), atIndex: 0)
         }
         
-        let pipeline = PhoenixAPIPipeline(withOperations: operations,
+        let pipeline = IntelligenceAPIPipeline(withOperations: operations,
             oauth: oauth, configuration: configuration, network: self)
         
         // Iterate all queued operations (excluding pipeline operations).
@@ -122,7 +122,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         completion(pipeline)
     }
     
-    internal func enqueueOperation(operation: PhoenixAPIOperation) {
+    internal func enqueueOperation(operation: IntelligenceAPIOperation) {
         // This method will enqueue an operation and
         // execute the initial completion block when appropriate.
         operation.completionBlock = { [weak operation] in

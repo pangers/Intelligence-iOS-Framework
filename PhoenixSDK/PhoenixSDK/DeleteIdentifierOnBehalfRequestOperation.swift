@@ -1,6 +1,6 @@
 //
 //  DeleteIdentifierOnBehalfRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Michael Lake on 27/01/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
@@ -9,11 +9,11 @@
 import Foundation
 
 /// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
-class DeleteIdentifierOnBehalfRequestOperation : PhoenixAPIOperation, NSCopying {
+class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     let token: String
     
-    required init(token: String, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
         self.token = token
         
         super.init()

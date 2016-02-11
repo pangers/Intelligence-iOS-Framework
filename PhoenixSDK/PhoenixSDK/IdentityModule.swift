@@ -1,6 +1,6 @@
 //
 //  IdentityModule.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Josep Rodriguez on 03/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// A generic UserCallback in which we get either a PhoenixUser or an error.
-public typealias UserCallback = (user:Phoenix.User?, error:NSError?) -> Void
+/// A generic UserCallback in which we get either an IntelligenceUser or an error.
+public typealias UserCallback = (user:Intelligence.User?, error:NSError?) -> Void
 
 /// Called on completion of update or create installation request.
 /// - Returns: Installation object and optional error.
@@ -25,7 +25,7 @@ public typealias UnregisterDeviceTokenOnBehalfCallback = (error: NSError?) -> Vo
 private let InvalidDeviceTokenID = -1
 private let CreateSDKUserRetries = 5
 
-/// The Phoenix Idenity module protocol. Defines the available API calls that can be performed.
+/// The Intelligence Idenity module protocol. Defines the available API calls that can be performed.
 @objc(PHXIdentityModuleProtocol)
 public protocol IdentityModuleProtocol : ModuleProtocol {
     
@@ -49,13 +49,13 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - parameter roleId: The id of the role to assign.
     /// - parameter user: The user to assign the role to.
     /// - parameter callback: Will be called with either an error or a user.
-    func assignRole(roleId: Int, user: Phoenix.User, callback: UserCallback)
+    func assignRole(roleId: Int, user: Intelligence.User, callback: UserCallback)
     
     /// Revoke a role from a user.
     /// - parameter roleId: The id of the role to revoke.
     /// - parameter user: The user to revoke the role from.
     /// - parameter callback: Will be called with either an error or a user.
-    func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback)
+    func revokeRole(roleId: Int, user: Intelligence.User, callback: UserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
@@ -63,11 +63,11 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     
     /// Updates a user in the backend.
     /// - Parameters:
-    ///     - user: Phoenix User instance containing information about the user we are trying to update.
+    ///     - user: Intelligence User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func updateUser(user: Phoenix.User, callback: UserCallback)
+    func updateUser(user: Intelligence.User, callback: UserCallback)
     
-    /// Register a push notification token on the Phoenix platform.
+    /// Register a push notification token on the Intelligence platform.
     /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.
     /// - parameter callback: Callback to fire on completion, will contain error or token ID. Developer should store token ID and is responsible for managing the flow of registration for push.
     func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback)
@@ -79,15 +79,15 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
 }
 
 /// The IdentityModule implementation.
-final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
+final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     
     /// Installation object used for Create/Update Installation requests.
     private var installation: Installation!
     
     init(
-        withDelegate delegate: PhoenixInternalDelegate,
+        withDelegate delegate: IntelligenceInternalDelegate,
         network: Network,
-        configuration: Phoenix.Configuration,
+        configuration: Intelligence.Configuration,
         installation: Installation)
     {
         super.init(withDelegate: delegate, network: network, configuration: configuration)
@@ -102,7 +102,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // Need to create user first.
-        let sdkUser = Phoenix.User(companyId: configuration.companyId)
+        let sdkUser = Intelligence.User(companyId: configuration.companyId)
         let password = sdkUser.password
         
         createUser(sdkUser) { [weak self] (serverUser, error) -> Void in
@@ -163,7 +163,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                     
                     identity.network.enqueueOperation(sdkUserPipeline)
                     
-                    sdkUserPipeline.callback = { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
+                    sdkUserPipeline.callback = { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
                         guard let identity = self else {
                             completion(success: false)
                             return
@@ -175,7 +175,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                                 AuthenticationError.AccountDisabledError.rawValue,
                                 AuthenticationError.AccountLockedError.rawValue,
                                 AuthenticationError.TokenInvalidOrExpired.rawValue:
-                                    PhoenixOAuth.reset(identity.network.oauthProvider.sdkUserOAuth)
+                                    IntelligenceOAuth.reset(identity.network.oauthProvider.sdkUserOAuth)
                                     identity.createSDKUserRecursively(counter - 1, completion: completion)
                                 default:
                                     completion(success: false)
@@ -263,10 +263,10 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         
         network.oauthProvider.developerLoggedIn = false
         
-        let pipeline = PhoenixAPIPipeline(withOperations: [PhoenixOAuthValidateOperation(), PhoenixOAuthRefreshOperation(), PhoenixOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
+        let pipeline = IntelligenceAPIPipeline(withOperations: [IntelligenceOAuthValidateOperation(), IntelligenceOAuthRefreshOperation(), IntelligenceOAuthLoginOperation()], oauth: oauth, configuration: configuration, network: network)
         
-        pipeline.callback = { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
-            let returnedPipeline = returnedOperation as! PhoenixAPIPipeline
+        pipeline.callback = { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
+            let returnedPipeline = returnedOperation as! IntelligenceAPIPipeline
             
             // Clear password from memory.
             if oauth.tokenType == .LoggedInUser {
@@ -296,15 +296,15 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     @objc func logout() {
         network.oauthProvider.developerLoggedIn = false
-        PhoenixOAuth.reset(network.oauthProvider.loggedInUserOAuth)
+        IntelligenceOAuth.reset(network.oauthProvider.loggedInUserOAuth)
     }
     
     
     // MARK: - User Management
 
-    @objc func assignRole(roleId: Int, user: Phoenix.User, callback: UserCallback) {
+    @objc func assignRole(roleId: Int, user: Intelligence.User, callback: UserCallback) {
         let operation = AssignUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
                 callback(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
         })
@@ -313,9 +313,9 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         network.enqueueOperation(operation)
     }
     
-    @objc func revokeRole(roleId: Int, user: Phoenix.User, callback: UserCallback) {
+    @objc func revokeRole(roleId: Int, user: Intelligence.User, callback: UserCallback) {
         let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
                 callback(user: revokeRoleOperation.user, error: revokeRoleOperation.output?.error)
         })
@@ -324,7 +324,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         network.enqueueOperation(operation)
     }
     
-    @objc func updateUser(user: Phoenix.User, callback: UserCallback) {
+    @objc func updateUser(user: Intelligence.User, callback: UserCallback) {
         if !user.isValidToUpdate {
             callback(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
             return
@@ -337,7 +337,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let updateOperation = returnedOperation as! UpdateUserRequestOperation
                 callback(user: updateOperation.user, error: updateOperation.output?.error)
         })
@@ -347,7 +347,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     }
     
     @objc func getUser(userId: Int, callback: UserCallback) {
-        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let getUserOperation = returnedOperation as! GetUserRequestOperation
             callback(user: getUserOperation.user, error: getUserOperation.output?.error)
         })
@@ -356,8 +356,8 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         network.enqueueOperation(operation)
     }
     
-    internal func getMe(oauth: PhoenixOAuthProtocol, callback: UserCallback) {
-        let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+    internal func getMe(oauth: IntelligenceOAuthProtocol, callback: UserCallback) {
+        let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let getMeOperation = returnedOperation as! GetUserMeRequestOperation
             callback(user: getMeOperation.user, error: getMeOperation.output?.error)
         })
@@ -374,12 +374,12 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
     
     /// Registers a user in the backend.
     /// - Parameters:
-    ///     - user: Phoenix User instance containing information about the user we are trying to create.
+    ///     - user: Intelligence User instance containing information about the user we are trying to create.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
     /// The developer is responsible to dispatch the callback to the main thread using dispatch_async if necessary.
     /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
     /// user is invalid, or one of the RequestError errors.
-    internal func createUser(user: Phoenix.User, callback: UserCallback? = nil) {
+    internal func createUser(user: Intelligence.User, callback: UserCallback? = nil) {
         if !user.isValidToCreate {
             callback?(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
             return
@@ -391,7 +391,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // Create user operation.
-        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { [weak self] (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
             let createUserOperation = returnedOperation as! CreateUserRequestOperation
             if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                 // On successful operation, lets assign users role.
@@ -412,7 +412,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
                     // if the developer is trying to assign a role that doesn't exist or the server changes in some
                     // unexpected way.
                     if error != nil {
-                        // Note: Assign role will also call a delegate method if it fails because the Phoenix Intelligence
+                        // Note: Assign role will also call a delegate method if it fails because the Intelligence
                         // backend may be configured incorrectly.
                         // We don't receive a unique error code, so just call the delegate on any error.
                         self?.delegate.userRoleAssignmentFailed()
@@ -452,7 +452,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixAPIOperation) -> () in
+                (returnedOperation: IntelligenceAPIOperation) -> () in
                 let createIdentifierOperation = returnedOperation as! CreateIdentifierRequestOperation
                 callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
         })
@@ -471,7 +471,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixAPIOperation) -> () in
+                (returnedOperation: IntelligenceAPIOperation) -> () in
                 let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
                 callback(error:deleteIdentifierOperation.output?.error)
         })
@@ -490,7 +490,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             configuration: configuration,
             network: network,
             callback: {
-                (returnedOperation: PhoenixAPIOperation) -> () in
+                (returnedOperation: IntelligenceAPIOperation) -> () in
                 let deleteIdentifierOnBehalfOperation = returnedOperation as! DeleteIdentifierOnBehalfRequestOperation
                 callback(error:deleteIdentifierOnBehalfOperation.output?.error)
         })
@@ -512,7 +512,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
             return
         }
         
-        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
             callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
         })
@@ -531,7 +531,7 @@ final class IdentityModule : PhoenixModule, IdentityModuleProtocol {
         }
         
         // If this call fails, it will retry again the next time we open the app.
-        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: PhoenixAPIOperation) -> () in
+        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
             callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
         })

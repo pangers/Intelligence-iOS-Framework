@@ -1,6 +1,6 @@
 //
 //  AnalyticsRequestOperation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 19/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -10,13 +10,13 @@ import Foundation
 
 /// NSOperation that handles sending analytics.
 /// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
-internal final class AnalyticsRequestOperation: PhoenixAPIOperation, NSCopying {
+internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopying {
     
     private let eventsJSON: JSONDictionaryArray
     
     private let InvalidRequestErrorCode = "invalid_request"
     
-    required init(json: JSONDictionaryArray, oauth: PhoenixOAuthProtocol, configuration: Phoenix.Configuration, network: Network, callback: PhoenixAPICallback) {
+    required init(json: JSONDictionaryArray, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
         self.eventsJSON = json
         super.init()
         self.callback = callback

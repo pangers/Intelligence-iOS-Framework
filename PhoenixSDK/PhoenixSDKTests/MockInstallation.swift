@@ -1,6 +1,6 @@
 //
 //  MockInstallation.swift
-//  PhoenixSDK
+//  IntelligenceSDK
 //
 //  Created by Chris Nevin on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable import PhoenixSDK
+@testable import IntelligenceSDK
 
 class MockInstallation {
     
-    class func newInstance(configuration: Phoenix.Configuration, storage: InstallationStorageProtocol, oauthProvider: PhoenixOAuthProvider) -> Installation {
+    class func newInstance(configuration: Intelligence.Configuration, storage: InstallationStorageProtocol, oauthProvider: IntelligenceOAuthProvider) -> Installation {
         let installation = Installation(configuration: configuration, applicationVersion: VersionClass(), installationStorage: storage, oauthProvider: oauthProvider)
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
