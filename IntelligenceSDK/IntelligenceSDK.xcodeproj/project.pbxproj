@@ -132,7 +132,7 @@
 			containerPortal = A07FACA71B5D0C4200482BB7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A07FACAF1B5D0C4200482BB7;
-			remoteInfo = PhoenixSDK;
+			remoteInfo = IntelligenceSDK;
 		};
 		BBA5736A1B6926C800685EFB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -689,7 +689,7 @@
 			dependencies = (
 			);
 			name = IntelligenceSDK;
-			productName = PhoenixSDK;
+			productName = IntelligenceSDK;
 			productReference = A07FACB01B5D0C4200482BB7 /* IntelligenceSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
@@ -707,7 +707,7 @@
 				A07FACBD1B5D0C4200482BB7 /* PBXTargetDependency */,
 			);
 			name = IntelligenceSDKTests;
-			productName = PhoenixSDKTests;
+			productName = IntelligenceSDKTests;
 			productReference = A07FACBA1B5D0C4200482BB7 /* IntelligenceSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};

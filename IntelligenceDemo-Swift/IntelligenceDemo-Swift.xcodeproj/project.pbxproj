@@ -166,7 +166,7 @@
 			dependencies = (
 			);
 			name = "IntelligenceDemo-Swift";
-			productName = "PhoenixDemo-Swift";
+			productName = "IntelligenceDemo-Swift";
 			productReference = 7FDAAAD91B5D35AE00DF2BE6 /* IntelligenceDemo-Swift.app */;
 			productType = "com.apple.product-type.application";
 		};

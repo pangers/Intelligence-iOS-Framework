@@ -7,7 +7,7 @@
         <!--Intelligence Location Module View Controller-->
         <scene sceneID="peW-h1-N4f">
             <objects>
-                <viewController id="Xa0-3V-nqW" customClass="IntelligenceLocationModuleViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Xa0-3V-nqW" customClass="IntelligenceLocationModuleViewController" customModule="IntelligenceDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Qgs-XQ-lMP"/>
                         <viewControllerLayoutGuide type="bottom" id="YXb-SR-eHc"/>
@@ -109,7 +109,7 @@
         <!--Intelligence Location Geofence Query View Controller-->
         <scene sceneID="RRN-aV-QjB">
             <objects>
-                <viewController id="yEt-hT-k1r" customClass="IntelligenceLocationGeofenceQueryViewController" customModule="PhoenixDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="yEt-hT-k1r" customClass="IntelligenceLocationGeofenceQueryViewController" customModule="IntelligenceDemo_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zfm-6E-9a1"/>
                         <viewControllerLayoutGuide type="bottom" id="TEX-At-kHP"/>

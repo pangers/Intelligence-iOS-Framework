@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:PhoenixDemo-Swift.xcodeproj">
+      location = "self:IntelligenceDemo-Swift.xcodeproj">
    </FileRef>
 </Workspace>

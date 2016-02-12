@@ -198,7 +198,7 @@
 			dependencies = (
 			);
 			name = "IntelligenceDemo-ObjectiveC";
-			productName = "PhoenixDemo-ObjectiveC";
+			productName = "IntelligenceDemo-ObjectiveC";
 			productReference = 7FDAAB001B5D360800DF2BE6 /* IntelligenceDemo-ObjectiveC.app */;
 			productType = "com.apple.product-type.application";
 		};
