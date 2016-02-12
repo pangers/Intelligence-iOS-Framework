@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// The Intelligence Analytics Module defines the methods available for tracking events.
-@objc (PHXAnalyticsModuleProtocol)
+@objc (INTAnalyticsModuleProtocol)
 public protocol AnalyticsModuleProtocol : ModuleProtocol {
     
     /// Pause analytics module, must be called when entering the background.
@@ -105,8 +105,8 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
         
         // Set optional values (may fail for whatever reason).
-        dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.phx_applicationVersionString)
-        dictionary <-? (Event.InstallationIdKey, installation.installationStorage.phx_installationID)
+        dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.int_applicationVersionString)
+        dictionary <-? (Event.InstallationIdKey, installation.installationStorage.int_installationID)
         dictionary <-? (Event.UserIdKey, network.oauthProvider.bestPasswordGrantOAuth.userId)
         
         // Add geolocation

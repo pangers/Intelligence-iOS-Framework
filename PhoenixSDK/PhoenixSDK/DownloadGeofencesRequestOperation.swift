@@ -27,14 +27,14 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
     
     override func main() {
         super.main()
-        let request = NSURLRequest.phx_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!, query:queryDetails)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!, query:queryDetails)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {
             return
         }
         
-        guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.phx_jsonDictionary) else {
+        guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.int_jsonDictionary) else {
             output?.error = NSError(code: RequestError.ParseError.rawValue)
             return
         }

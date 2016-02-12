@@ -20,7 +20,7 @@ func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
 Implement the LocationModuleDelegate in order to be notified of events that
 occur related to the location module.
 */
-@objc(PHXLocationModuleDelegate)
+@objc(INTLocationModuleDelegate)
 public protocol LocationModuleDelegate {
     
     /**
@@ -69,7 +69,7 @@ public protocol LocationModuleDelegate {
 /**
 The Intelligence Location module protocol. Provides geofence downloading and tracking functionality.
 */
-@objc(PHXLocationModuleProtocol)
+@objc(INTLocationModuleProtocol)
 public protocol LocationModuleProtocol : ModuleProtocol {
     
     /**
@@ -122,7 +122,7 @@ public protocol LocationModuleProtocol : ModuleProtocol {
 /// Intelligence coordinate object. CLLocationCoordinate2D can't be used as an optional.
 /// Furthermore, not providing a custom location object would force the developers to
 /// always require CoreLocation even if they don't need to use it.
-@objc(PHXCoordinate)
+@objc(INTCoordinate)
 public class Coordinate : NSObject {
     
     let longitude:Double

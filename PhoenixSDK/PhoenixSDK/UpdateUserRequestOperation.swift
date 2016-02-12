@@ -15,8 +15,8 @@ internal final class UpdateUserRequestOperation: UserRequestOperation {
         super.main()
         assert(network!.oauthProvider.developerLoggedIn, "Update can only be called explicitly by developers currently, and only on an account they have logged into.")
         assert(sentUser != nil)
-        let request = NSURLRequest.phx_URLRequestForUserUpdate(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForUserUpdate(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
 

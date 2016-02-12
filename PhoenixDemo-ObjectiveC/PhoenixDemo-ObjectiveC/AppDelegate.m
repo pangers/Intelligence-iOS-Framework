@@ -7,11 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "PHXIntelligenceManager.h"
+#import "INTIntelligenceManager.h"
 
 NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStoredDeviceTokenKey";
 
-@interface AppDelegate () <PHXDelegate>
+@interface AppDelegate () <INTDelegate>
 
 @end
 
@@ -68,10 +68,10 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
         
             if (success) {
                 // Setup intelligence
-                [PHXIntelligenceManager setupIntelligence:intelligence];
+                [INTIntelligenceManager setupIntelligence:intelligence];
 
                 // Track test event.
-                PHXEvent *myTestEvent = [[PHXEvent alloc] initWithType:@"Intelligence.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
+                INTEvent *myTestEvent = [[INTEvent alloc] initWithType:@"Intelligence.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
                 [intelligence.analytics track:myTestEvent];
 
                 [self doSegueToDemo];
@@ -108,20 +108,20 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Shutdown Intelligence in the applicationWillTerminate method so Intelligence has time
     // to teardown properly.
-    [[PHXIntelligenceManager intelligence] shutdown];
+    [[INTIntelligenceManager intelligence] shutdown];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    [[[PHXIntelligenceManager intelligence] analytics] pause];
+    [[[INTIntelligenceManager intelligence] analytics] pause];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [[[PHXIntelligenceManager intelligence] analytics] resume];
+    [[[INTIntelligenceManager intelligence] analytics] resume];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     __weak __typeof(self) weakSelf = self;
-    [[[PHXIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+    [[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
         if (error != nil) {
             [weakSelf alertWithError:error];
         } else {
@@ -176,7 +176,7 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
     [presenterViewController presentViewController:controller animated:YES completion:nil];
 }
 
-#pragma mark - PHXIntelligenceDelegate
+#pragma mark - INTIntelligenceDelegate
 
 /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
 - (void)credentialsIncorrectForIntelligence:(Intelligence * __nonnull)intelligence {

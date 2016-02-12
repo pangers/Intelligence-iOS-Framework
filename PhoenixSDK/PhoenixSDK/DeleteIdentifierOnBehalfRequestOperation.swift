@@ -26,8 +26,8 @@ class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCop
     
     override func main() {
         super.main()
-        let request = NSURLRequest.phx_URLRequestForIdentifierDeletionOnBehalf(token, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForIdentifierDeletionOnBehalf(token, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {
             return

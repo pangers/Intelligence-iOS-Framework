@@ -26,7 +26,7 @@ private let InvalidDeviceTokenID = -1
 private let CreateSDKUserRetries = 5
 
 /// The Intelligence Idenity module protocol. Defines the available API calls that can be performed.
-@objc(PHXIdentityModuleProtocol)
+@objc(INTIdentityModuleProtocol)
 public protocol IdentityModuleProtocol : ModuleProtocol {
     
     /// Attempt to authenticate with a username and password.

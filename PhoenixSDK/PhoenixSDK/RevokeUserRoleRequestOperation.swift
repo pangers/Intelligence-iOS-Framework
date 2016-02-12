@@ -22,8 +22,8 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         super.main()
         assert(sentUser != nil)
         
-        let request = NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForUserRoleRevoke(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {
             return

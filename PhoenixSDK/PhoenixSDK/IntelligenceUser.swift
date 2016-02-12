@@ -48,7 +48,7 @@ private enum UserType : Int {
 public extension Intelligence {
 
     /// The user class implementation
-    @objc(PHXUser) public final class User : NSObject {
+    @objc(INTUser) public final class User : NSObject {
         
         /// The user Id as a let
         @objc public let userId:Int

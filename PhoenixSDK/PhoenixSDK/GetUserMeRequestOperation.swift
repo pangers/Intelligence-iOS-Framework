@@ -14,8 +14,8 @@ internal final class GetUserMeRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         assert(oauth?.tokenType != .Application)
-        let request = NSURLRequest.phx_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
-        output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
+        output = session.int_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
 

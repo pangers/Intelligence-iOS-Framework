@@ -1,34 +1,34 @@
 //
-//  PHXIntelligenceManager.m
+//  INTIntelligenceManager.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 04/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXIntelligenceManager.h"
+#import "INTIntelligenceManager.h"
 
-@interface PHXIntelligenceManager()
+@interface INTIntelligenceManager()
 
 @property (nonatomic) Intelligence* intelligence;
 
 @end
 
-@implementation PHXIntelligenceManager
+@implementation INTIntelligenceManager
 
 + (instancetype)sharedInstance {
-    static PHXIntelligenceManager* instance;
+    static INTIntelligenceManager* instance;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[PHXIntelligenceManager alloc] init];
+        instance = [[INTIntelligenceManager alloc] init];
     });
     
     return instance;
 }
 
 +(void) setupIntelligence:(Intelligence*)intelligence {
-    [PHXIntelligenceManager sharedInstance].intelligence = intelligence;
+    [INTIntelligenceManager sharedInstance].intelligence = intelligence;
 }
 
 + (Intelligence*)intelligence {

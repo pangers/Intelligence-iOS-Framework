@@ -28,8 +28,8 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
     override func main() {
         super.main()
         assert(network != nil && configuration != nil)
-        let request = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
-        output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForAnalytics(eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
+        output = session.int_executeSynchronousDataTaskWithRequest(request)
         
         // Swallowing the invalid request so that the events sent are cleared.
         // This error is not recoverable and we need to purge the data.

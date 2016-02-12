@@ -9,7 +9,7 @@
 import Foundation
 
 /// Mandatory public protocol developers must implement in order to respond to events correctly.
-@objc(PHXDelegate)
+@objc(INTDelegate)
 public protocol IntelligenceDelegate {
     /// Credentials provided are incorrect.
     /// Will not distinguish between incorrect client or user credentials.

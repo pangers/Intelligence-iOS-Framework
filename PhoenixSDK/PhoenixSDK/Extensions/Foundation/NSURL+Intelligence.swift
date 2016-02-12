@@ -86,17 +86,17 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.
-    func phx_URLByAppendingOAuthTokenPath() -> NSURL! {
+    func int_URLByAppendingOAuthTokenPath() -> NSURL! {
         return URLByAppendingPathComponent("/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
-    func phx_URLByAppendingOAuthValidatePath() -> NSURL! {
+    func int_URLByAppendingOAuthValidatePath() -> NSURL! {
         return URLByAppendingPathComponent("/validate")
     }
     
     /// - Returns: NSURL with appended identifiers path.
-    func phx_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
         if let tokenID = tokenID {
             return URLByAppendingPathComponent("/identifiers/\(tokenID)")
         }
@@ -104,32 +104,32 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL with appended installations path.
-    func phx_URLByAppendingInstallations() -> NSURL! {
+    func int_URLByAppendingInstallations() -> NSURL! {
         return URLByAppendingPathComponent("/installations")
     }
     
     /// - Returns: NSURL with appended installations path.
-    func phx_URLByAppendingEvents() -> NSURL! {
+    func int_URLByAppendingEvents() -> NSURL! {
         return URLByAppendingPathComponent("/events")
     }
     
     /// - Returns: NSURL with appended geofences path.
-    func phx_URLByAppendingGeofences() -> NSURL! {
+    func int_URLByAppendingGeofences() -> NSURL! {
         return URLByAppendingPathComponent("/geofences")
     }
     
     /// - Returns: NSURL with appended assign role path.
-    func phx_URLByAppendingAssignRole() -> NSURL! {
+    func int_URLByAppendingAssignRole() -> NSURL! {
         return URLByAppendingPathComponent("/assignrole")
     }
     
     /// - Returns: NSURL with appended revoke role path.
-    func phx_URLByAppendingRevokeRole() -> NSURL! {
+    func int_URLByAppendingRevokeRole() -> NSURL! {
         return URLByAppendingPathComponent("/revokerole")
     }
     
     /// - Returns: NSURL with appended providers path.
-    func phx_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
+    func int_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
         if let providerId = providerId {
             return URLByAppendingPathComponent("/providers/\(providerId)")
         }
@@ -137,7 +137,7 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL with appended companies path.
-    func phx_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
         if let companyID = companyID {
             return URLByAppendingPathComponent("/companies/\(companyID)")
         }
@@ -145,7 +145,7 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL with appended projects path.
-    func phx_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
         if let projectID = projectID {
             return URLByAppendingPathComponent("/projects/\(projectID)")
         }
@@ -153,7 +153,7 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL with appended users path.
-    func phx_URLByAppendingUsers(userID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingUsers(userID: Int? = nil) -> NSURL! {
         if let userID = userID {
             return URLByAppendingPathComponent("/users/\(userID)")
         }
@@ -161,12 +161,12 @@ internal extension NSURL {
     }
     
     /// - Returns: NSURL with appended '/users/me' path.
-    func phx_URLByAppendingUsersMe() -> NSURL! {
+    func int_URLByAppendingUsersMe() -> NSURL! {
         return URLByAppendingPathComponent("/users/me")
     }
     
 
-    func phx_URLByAppendingQueryString(queryString:String) -> NSURL! {
+    func int_URLByAppendingQueryString(queryString:String) -> NSURL! {
         if queryString.characters.count == 0 {
             return self
         }

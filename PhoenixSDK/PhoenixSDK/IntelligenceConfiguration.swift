@@ -52,7 +52,7 @@ public extension Intelligence {
     /// This class holds the data to configure the intelligence SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Intelligence SDK.
-    @objc(PHXConfiguration) public class Configuration: NSObject {
+    @objc(INTConfiguration) public class Configuration: NSObject {
 
         /// The client ID
         public var clientID = ""
@@ -136,7 +136,7 @@ public extension Intelligence {
             }
             
             // Guard that we have the json data parsed correctly
-            guard let contents = data.phx_jsonDictionary else {
+            guard let contents = data.int_jsonDictionary else {
                 throw ConfigurationError.InvalidFileError
             }
             

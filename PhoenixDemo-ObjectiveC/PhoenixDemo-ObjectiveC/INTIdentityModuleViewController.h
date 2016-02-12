@@ -1,5 +1,5 @@
 //
-//  PHXIdentityModuleViewController.h
+//  INTIdentityModuleViewController.h
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Chris Nevin on 05/08/2015.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PHXIdentityModuleViewController : UITableViewController
+@interface INTIdentityModuleViewController : UITableViewController
 
 @end

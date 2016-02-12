@@ -1,5 +1,5 @@
 //
-//  PHXScreenViewedViewController.h
+//  INTScreenViewedViewController.h
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Michael Lake on 05/10/2015.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PHXScreenViewedViewController : UIViewController
+@interface INTScreenViewedViewController : UIViewController
 
 @end

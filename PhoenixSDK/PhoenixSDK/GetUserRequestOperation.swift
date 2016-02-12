@@ -21,8 +21,8 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         
-        let request = NSURLRequest.phx_URLRequestForGetUser(userId, oauth: oauth!, configuration: configuration!, network: network!)
-        output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForGetUser(userId, oauth: oauth!, configuration: configuration!, network: network!)
+        output = session.int_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
     

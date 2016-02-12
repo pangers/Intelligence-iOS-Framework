@@ -14,8 +14,8 @@ internal final class CreateUserRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         assert(sentUser != nil)
-        let request = NSURLRequest.phx_URLRequestForUserCreation(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForUserCreation(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
     

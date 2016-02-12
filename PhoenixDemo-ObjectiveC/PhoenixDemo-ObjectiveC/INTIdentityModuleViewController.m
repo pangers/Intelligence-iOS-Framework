@@ -1,36 +1,36 @@
 //
-//  PHXIdentityModuleViewController.m
+//  INTIdentityModuleViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Chris Nevin on 05/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXIdentityModuleViewController.h"
+#import "INTIdentityModuleViewController.h"
 #import "AppDelegate.h"
-#import "PHXIntelligenceManager.h"
-#import "PHXManageUserViewController.h"
-#import "PHXViewUserViewController.h"
+#import "INTIntelligenceManager.h"
+#import "INTManageUserViewController.h"
+#import "INTViewUserViewController.h"
 
-static NSString * const PHXManageUserSegue = @"ManageUser";
-static NSString * const PHXViewUserSegue = @"ViewUser";
+static NSString * const INTManageUserSegue = @"ManageUser";
+static NSString * const INTViewUserSegue = @"ViewUser";
 
-@interface PHXIdentityModuleViewController()
+@interface INTIdentityModuleViewController()
 
-@property (nonatomic, strong) PHXUser *user;
+@property (nonatomic, strong) INTUser *user;
 
 @end
 
 
-@implementation PHXIdentityModuleViewController
+@implementation INTIdentityModuleViewController
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:PHXManageUserSegue]) {
-        PHXManageUserViewController *manageUser = segue.destinationViewController;
+    if ([segue.identifier isEqualToString:INTManageUserSegue]) {
+        INTManageUserViewController *manageUser = segue.destinationViewController;
         manageUser.user = self.user;
     }
-    else if ([segue.identifier isEqualToString:PHXViewUserSegue]) {
-        PHXViewUserViewController *viewUser = segue.destinationViewController;
+    else if ([segue.identifier isEqualToString:INTViewUserSegue]) {
+        INTViewUserViewController *viewUser = segue.destinationViewController;
         viewUser.user = self.user;
     }
 }
@@ -78,7 +78,7 @@ static NSString * const PHXViewUserSegue = @"ViewUser";
             return;
         }
         
-        [PHXIntelligenceManager.intelligence.identity loginWithUsername:username password:password callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+        [INTIntelligenceManager.intelligence.identity loginWithUsername:username password:password callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -90,7 +90,7 @@ static NSString * const PHXViewUserSegue = @"ViewUser";
                 }
                 else {
                     self.user = user;
-                    [strongSelf performSegueWithIdentifier:PHXManageUserSegue sender:strongSelf];
+                    [strongSelf performSegueWithIdentifier:INTManageUserSegue sender:strongSelf];
                 }
             });
         }];
@@ -120,14 +120,14 @@ static NSString * const PHXViewUserSegue = @"ViewUser";
                                                           
                                                           NSString *userId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXIntelligenceManager.intelligence.identity getUser:[userId integerValue] callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity getUser:[userId integerValue] callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                                                   
                                                                   if (user != nil && strongSelf != nil) {
                                                                       strongSelf.user = user;
                                                                       
-                                                                      [strongSelf performSegueWithIdentifier:PHXViewUserSegue sender:strongSelf];
+                                                                      [strongSelf performSegueWithIdentifier:INTViewUserSegue sender:strongSelf];
                                                                   }
                                                               });
                                                           }];

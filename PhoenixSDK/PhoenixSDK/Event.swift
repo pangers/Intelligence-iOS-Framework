@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 /// Custom event which can be sent to the 'track:' method in the Analytics module.
-@objc(PHXEvent)
+@objc(INTEvent)
 public class Event: NSObject {
     internal static let EventTypeKey = "EventType"
     internal static let EventValueKey = "EventValue"

@@ -24,8 +24,8 @@ class DeleteIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     override func main() {
         super.main()
-        let request = NSURLRequest.phx_URLRequestForIdentifierDeletion(tokenId, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForIdentifierDeletion(tokenId, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         
         if errorInData() == "object_notfound" {
             output?.error = NSError(code: IdentityError.DeviceTokenNotRegisteredError.rawValue)
@@ -36,7 +36,7 @@ class DeleteIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
             return
         }
         
-        guard let jsonDictionary = self.output?.data?.phx_jsonDictionary,
+        guard let jsonDictionary = self.output?.data?.int_jsonDictionary,
             let data = jsonDictionary["Data"],
             let dataObject = data.lastObject,
             let returnedId = dataObject?["Id"] as? Int where returnedId == tokenId else {

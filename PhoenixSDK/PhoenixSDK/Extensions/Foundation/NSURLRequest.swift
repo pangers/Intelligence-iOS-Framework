@@ -37,7 +37,7 @@ internal enum IdentifierType : Int {
 // MARK: - OAuth
 
 internal extension NSURLRequest {
-    private class func phx_HTTPHeaders(bearerOAuth: IntelligenceOAuthProtocol? = nil) -> [String: String] {
+    private class func int_HTTPHeaders(bearerOAuth: IntelligenceOAuthProtocol? = nil) -> [String: String] {
         var headers = [String: String]()
         headers[HTTPHeaderAcceptKey] = HTTPHeaderApplicationJson
         if (bearerOAuth != nil && bearerOAuth?.accessToken != nil) {
@@ -46,7 +46,7 @@ internal extension NSURLRequest {
         return headers
     }
     
-    private class func phx_HTTPBodyData(body: [String: String]) -> NSData {
+    private class func int_HTTPBodyData(body: [String: String]) -> NSData {
         return body.map({ "\($0.0)=\($0.1)" }).joinWithSeparator("&").dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
@@ -55,11 +55,11 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to validate a token.
-    class func phx_URLRequestForValidate(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
-        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthValidatePath()
+    class func int_URLRequestForValidate(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+        let url = NSURL(module: .Authentication, configuration: configuration)!.int_URLByAppendingOAuthValidatePath()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
@@ -73,9 +73,9 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to refresh a token.
-    class func phx_URLRequestForRefresh(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForRefresh(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         assert(oauth.refreshToken != nil)
-        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
+        let url = NSURL(module: .Authentication, configuration: configuration)!.int_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
         var body = [String: String]()
@@ -84,11 +84,11 @@ internal extension NSURLRequest {
         body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeRefreshToken
         body[HTTPBodyRefreshTokenKey] = oauth.refreshToken
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.allHTTPHeaderFields = int_HTTPHeaders()
         request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = phx_HTTPBodyData(body)
+        request.HTTPBody = int_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
     }
     
@@ -97,8 +97,8 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to get a token.
-    class func phx_URLRequestForLogin(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
-        let url = NSURL(module: .Authentication, configuration: configuration)!.phx_URLByAppendingOAuthTokenPath()
+    class func int_URLRequestForLogin(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+        let url = NSURL(module: .Authentication, configuration: configuration)!.int_URLByAppendingOAuthTokenPath()
         let request = NSMutableURLRequest(URL: url)
         
         var body = [String: String]()
@@ -112,11 +112,11 @@ internal extension NSURLRequest {
             body[HTTPBodyPasswordKey] = oauth.password!
         }
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders()
+        request.allHTTPHeaderFields = int_HTTPHeaders()
         request.addValue(HTTPHeaderApplicationFormUrlEncoded, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = phx_HTTPBodyData(body)
+        request.HTTPBody = int_HTTPBodyData(body)
         return request.copy() as! NSURLRequest
     }
 }
@@ -134,17 +134,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to assign a role to a given user.
-    class func phx_URLRequestForUserRoleAssignment(roleId: Int, user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForUserRoleAssignment(roleId: Int, user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingAssignRole()
-            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingAssignRole()
+            .int_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
         let request = NSMutableURLRequest(URL: url)
 
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
@@ -159,17 +159,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to revoke a role from a given user.
-    class func phx_URLRequestForUserRoleRevoke(roleId: Int, user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForUserRoleRevoke(roleId: Int, user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let userid = String(user.userId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         let roleid = String(roleId).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingRevokeRole()
-            .phx_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingRevokeRole()
+            .int_URLByAppendingQueryString("userid=\(userid)&roleid=\(roleid)")
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
@@ -183,17 +183,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to create the given user.
-    class func phx_URLRequestForUserCreation(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForUserCreation(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingCompanies(configuration.companyId)
-            .phx_URLByAppendingUsers()
+            .int_URLByAppendingCompanies(configuration.companyId)
+            .int_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = [user.toJSON()].phx_toJSONData()
+        request.HTTPBody = [user.toJSON()].int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -204,13 +204,13 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to get the user with the used credentials.
-    class func phx_URLRequestForGetUser(userId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForGetUser(userId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingCompanies(configuration.companyId)
-            .phx_URLByAppendingUsers(userId)
+            .int_URLByAppendingCompanies(configuration.companyId)
+            .int_URLByAppendingUsers(userId)
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
@@ -223,13 +223,13 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to get the user with the used credentials.
-    class func phx_URLRequestForUserMe(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForUserMe(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProviders(configuration.providerId)
-            .phx_URLByAppendingUsersMe()
+            .int_URLByAppendingProviders(configuration.providerId)
+            .int_URLByAppendingUsersMe()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue
@@ -243,17 +243,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to update the given user.
-    class func phx_URLRequestForUserUpdate(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForUserUpdate(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingCompanies(configuration.companyId)
-            .phx_URLByAppendingUsers()
+            .int_URLByAppendingCompanies(configuration.companyId)
+            .int_URLByAppendingUsers()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
-        request.HTTPBody = [user.toJSON()].phx_toJSONData()
+        request.HTTPBody = [user.toJSON()].int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -266,10 +266,10 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to create an identifier.
-    class func phx_URLRequestForIdentifierCreation(tokenString: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForIdentifierCreation(tokenString: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingIdentifiers()
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingIdentifiers()
         let request = NSMutableURLRequest(URL: url)
         
         var json : [String : AnyObject] = ["ApplicationId": configuration.applicationID,
@@ -284,11 +284,11 @@ internal extension NSURLRequest {
             json["UserId"] = userId
         }
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = [json].phx_toJSONData()
+        request.HTTPBody = [json].int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -299,13 +299,13 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to delete an identifier.
-    class func phx_URLRequestForIdentifierDeletion(tokenId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForIdentifierDeletion(tokenId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingIdentifiers(tokenId)
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingIdentifiers(tokenId)
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
@@ -319,18 +319,18 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to delete an identifier on behalf.
-    class func phx_URLRequestForIdentifierDeletionOnBehalf(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForIdentifierDeletionOnBehalf(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let applicationId = String(configuration.applicationID).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         let identifierValue = token.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         let identifierTypeId = String(IdentifierType.iOSDeviceToken.rawValue).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingIdentifiers()
-            .phx_URLByAppendingQueryString("applicationId=\(applicationId)&identifierValue=\(identifierValue)&identifierTypeId=\(identifierTypeId)")
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingIdentifiers()
+            .int_URLByAppendingQueryString("applicationId=\(applicationId)&identifierValue=\(identifierValue)&identifierTypeId=\(identifierTypeId)")
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.DELETE.rawValue
@@ -346,17 +346,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - Returns: An NSURLRequest to create a given installation.
-    class func phx_URLRequestForInstallationCreate(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForInstallationCreate(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingInstallations()
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+        request.HTTPBody = [installation.toJSON()].int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -367,17 +367,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to update a given installation.
-    class func phx_URLRequestForInstallationUpdate(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForInstallationUpdate(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Identity, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingInstallations()
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingInstallations()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.PUT.rawValue
-        request.HTTPBody = [installation.toJSON()].phx_toJSONData()
+        request.HTTPBody = [installation.toJSON()].int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -395,17 +395,17 @@ internal extension NSURLRequest {
     /// - parameter configuration: The configuration values to use for this request.
     /// - parameter network: The network the request will be queued on.
     /// - returns: An NSURLRequest to send an event.
-    class func phx_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
+    class func int_URLRequestForAnalytics(json: JSONDictionaryArray, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> NSURLRequest {
         let url = NSURL(module: .Analytics, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingEvents()
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingEvents()
         let request = NSMutableURLRequest(URL: url)
         
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.POST.rawValue
-        request.HTTPBody = json.phx_toJSONData()
+        request.HTTPBody = json.int_toJSONData()
         
         return request.copy() as! NSURLRequest
     }
@@ -424,14 +424,14 @@ internal extension NSURLRequest {
     /// - parameter network: The network the request will be queued on.
     /// - parameter query: The query to apply to the url.
     /// - returns: An NSURLRequest to download geofences.
-    class func phx_URLRequestForDownloadGeofences(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
+    class func int_URLRequestForDownloadGeofences(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, query:GeofenceQuery) -> NSURLRequest {
         let url = NSURL(module: .Location, configuration: configuration)!
-            .phx_URLByAppendingProjects(configuration.projectID)
-            .phx_URLByAppendingGeofences()
-            .phx_URLByAppendingQueryString(query.urlQueryString())
+            .int_URLByAppendingProjects(configuration.projectID)
+            .int_URLByAppendingGeofences()
+            .int_URLByAppendingQueryString(query.urlQueryString())
         let request = NSMutableURLRequest(URL: url)
 
-        request.allHTTPHeaderFields = phx_HTTPHeaders(oauth)
+        request.allHTTPHeaderFields = int_HTTPHeaders(oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
         request.HTTPMethod = HTTPRequestMethod.GET.rawValue

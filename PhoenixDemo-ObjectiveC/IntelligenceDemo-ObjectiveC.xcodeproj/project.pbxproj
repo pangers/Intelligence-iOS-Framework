@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		4542B5581C6BCA0B00763B76 /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */; };
 		4542B5591C6BCA0B00763B76 /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		454DA80D1C69F78D00C13254 /* PHXManageUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */; };
+		454DA80D1C69F78D00C13254 /* INTManageUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454DA80C1C69F78D00C13254 /* INTManageUserViewController.m */; };
 		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; };
-		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; };
+		455D85FA1BC2D87D00A64B96 /* INTScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */; };
 		7FDAAB051B5D360800DF2BE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB041B5D360800DF2BE6 /* main.m */; };
 		7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */; };
 		7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */; };
@@ -19,13 +19,13 @@
 		7FDAAB101B5D360800DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */; };
 		7FDAAB131B5D360800DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */; };
 		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
-		BB0A237C1B70B8BE00CE0C81 /* PHXIntelligenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXIntelligenceManager.m */; };
-		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
+		BB0A237C1B70B8BE00CE0C81 /* INTIntelligenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* INTIntelligenceManager.m */; };
+		BB0A237F1B70C60D00CE0C81 /* INTViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* INTViewUserViewController.m */; };
 		BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* Location.storyboard */; };
-		BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */; };
-		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; };
+		BB77B94A1BC3B7AC00B53ABE /* INTLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */; };
+		BB77B94D1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m */; };
 		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
-		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
+		FE0C64E31B7247B6008C02D7 /* INTIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* INTIdentityModuleViewController.m */; };
 		FE22F8881B5FEFF400711EBF /* IntelligenceConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */; };
 /* End PBXBuildFile section */
 
@@ -45,11 +45,11 @@
 
 /* Begin PBXFileReference section */
 		4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		454DA80B1C69F78D00C13254 /* PHXManageUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXManageUserViewController.h; sourceTree = "<group>"; };
-		454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXManageUserViewController.m; sourceTree = "<group>"; };
+		454DA80B1C69F78D00C13254 /* INTManageUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTManageUserViewController.h; sourceTree = "<group>"; };
+		454DA80C1C69F78D00C13254 /* INTManageUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTManageUserViewController.m; sourceTree = "<group>"; };
 		455D85F51BC2D73C00A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
-		455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXScreenViewedViewController.h; sourceTree = "<group>"; };
-		455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXScreenViewedViewController.m; sourceTree = "<group>"; };
+		455D85F81BC2D87D00A64B96 /* INTScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTScreenViewedViewController.h; sourceTree = "<group>"; };
+		455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTScreenViewedViewController.m; sourceTree = "<group>"; };
 		7FDAAB001B5D360800DF2BE6 /* IntelligenceDemo-ObjectiveC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IntelligenceDemo-ObjectiveC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FDAAB041B5D360800DF2BE6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -61,18 +61,18 @@
 		7FDAAB121B5D360800DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAB141B5D360800DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB0A23701B70B1B800CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
-		BB0A237A1B70B8BE00CE0C81 /* PHXIntelligenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIntelligenceManager.h; sourceTree = "<group>"; };
-		BB0A237B1B70B8BE00CE0C81 /* PHXIntelligenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIntelligenceManager.m; sourceTree = "<group>"; };
-		BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXViewUserViewController.h; sourceTree = "<group>"; };
-		BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXViewUserViewController.m; sourceTree = "<group>"; };
+		BB0A237A1B70B8BE00CE0C81 /* INTIntelligenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTIntelligenceManager.h; sourceTree = "<group>"; };
+		BB0A237B1B70B8BE00CE0C81 /* INTIntelligenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTIntelligenceManager.m; sourceTree = "<group>"; };
+		BB0A237D1B70C60D00CE0C81 /* INTViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTViewUserViewController.h; sourceTree = "<group>"; };
+		BB0A237E1B70C60D00CE0C81 /* INTViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTViewUserViewController.m; sourceTree = "<group>"; };
 		BB77B9461BC3B78400B53ABE /* Location.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Location.storyboard; sourceTree = "<group>"; };
-		BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationModuleViewController.h; sourceTree = "<group>"; };
-		BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXLocationModuleViewController.m; sourceTree = "<group>"; };
-		BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXLocationGeofenceQueryViewController.h; sourceTree = "<group>"; };
-		BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXLocationGeofenceQueryViewController.m; sourceTree = "<group>"; };
+		BB77B9481BC3B7AC00B53ABE /* INTLocationModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTLocationModuleViewController.h; sourceTree = "<group>"; };
+		BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTLocationModuleViewController.m; sourceTree = "<group>"; };
+		BB77B94B1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTLocationGeofenceQueryViewController.h; sourceTree = "<group>"; };
+		BB77B94C1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTLocationGeofenceQueryViewController.m; sourceTree = "<group>"; };
 		BB77B94E1BC3BAF300B53ABE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHXIdentityModuleViewController.h; sourceTree = "<group>"; };
-		FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHXIdentityModuleViewController.m; sourceTree = "<group>"; };
+		FE0C64E11B7247B6008C02D7 /* INTIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTIdentityModuleViewController.h; sourceTree = "<group>"; };
+		FE0C64E21B7247B6008C02D7 /* INTIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTIdentityModuleViewController.m; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = IntelligenceConfiguration.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,8 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
-				455D85F81BC2D87D00A64B96 /* PHXScreenViewedViewController.h */,
-				455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */,
+				455D85F81BC2D87D00A64B96 /* INTScreenViewedViewController.h */,
+				455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -151,12 +151,12 @@
 			isa = PBXGroup;
 			children = (
 				BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */,
-				FE0C64E11B7247B6008C02D7 /* PHXIdentityModuleViewController.h */,
-				FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */,
-				454DA80B1C69F78D00C13254 /* PHXManageUserViewController.h */,
-				454DA80C1C69F78D00C13254 /* PHXManageUserViewController.m */,
-				BB0A237D1B70C60D00CE0C81 /* PHXViewUserViewController.h */,
-				BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */,
+				FE0C64E11B7247B6008C02D7 /* INTIdentityModuleViewController.h */,
+				FE0C64E21B7247B6008C02D7 /* INTIdentityModuleViewController.m */,
+				454DA80B1C69F78D00C13254 /* INTManageUserViewController.h */,
+				454DA80C1C69F78D00C13254 /* INTManageUserViewController.m */,
+				BB0A237D1B70C60D00CE0C81 /* INTViewUserViewController.h */,
+				BB0A237E1B70C60D00CE0C81 /* INTViewUserViewController.m */,
 			);
 			name = Identity;
 			sourceTree = "<group>";
@@ -164,8 +164,8 @@
 		BB0A23791B70B89F00CE0C81 /* Intelligence */ = {
 			isa = PBXGroup;
 			children = (
-				BB0A237A1B70B8BE00CE0C81 /* PHXIntelligenceManager.h */,
-				BB0A237B1B70B8BE00CE0C81 /* PHXIntelligenceManager.m */,
+				BB0A237A1B70B8BE00CE0C81 /* INTIntelligenceManager.h */,
+				BB0A237B1B70B8BE00CE0C81 /* INTIntelligenceManager.m */,
 			);
 			name = Intelligence;
 			sourceTree = "<group>";
@@ -174,10 +174,10 @@
 			isa = PBXGroup;
 			children = (
 				BB77B9461BC3B78400B53ABE /* Location.storyboard */,
-				BB77B9481BC3B7AC00B53ABE /* PHXLocationModuleViewController.h */,
-				BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */,
-				BB77B94B1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.h */,
-				BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */,
+				BB77B9481BC3B7AC00B53ABE /* INTLocationModuleViewController.h */,
+				BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */,
+				BB77B94B1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.h */,
+				BB77B94C1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m */,
 			);
 			name = Location;
 			sourceTree = "<group>";
@@ -257,15 +257,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */,
-				454DA80D1C69F78D00C13254 /* PHXManageUserViewController.m in Sources */,
+				FE0C64E31B7247B6008C02D7 /* INTIdentityModuleViewController.m in Sources */,
+				454DA80D1C69F78D00C13254 /* INTManageUserViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
-				BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */,
-				BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */,
+				BB0A237F1B70C60D00CE0C81 /* INTViewUserViewController.m in Sources */,
+				BB77B94A1BC3B7AC00B53ABE /* INTLocationModuleViewController.m in Sources */,
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
-				BB0A237C1B70B8BE00CE0C81 /* PHXIntelligenceManager.m in Sources */,
-				BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */,
-				455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */,
+				BB0A237C1B70B8BE00CE0C81 /* INTIntelligenceManager.m in Sources */,
+				BB77B94D1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m in Sources */,
+				455D85FA1BC2D87D00A64B96 /* INTScreenViewedViewController.m in Sources */,
 				7FDAAB051B5D360800DF2BE6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -32,7 +32,7 @@ class IntelligenceBaseTestCase : XCTestCase {
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"\(userAccessToken)=\",\"refresh_token\":\"\(userRefreshToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let tokenMethod = HTTPRequestMethod.POST
     var tokenUrl: NSURL? {
-        return NSURLRequest.phx_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        return NSURLRequest.int_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
     }
     
     override func setUp() {

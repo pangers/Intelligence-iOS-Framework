@@ -10,12 +10,12 @@ import Foundation
 
 protocol IntelligenceApplicationVersionProtocol {
     /// - Returns: Current app version.
-    var phx_applicationVersionString: String? {get}
+    var int_applicationVersionString: String? {get}
 }
 
 extension NSBundle: IntelligenceApplicationVersionProtocol {
     
-    var phx_applicationVersionString: String? {
+    var int_applicationVersionString: String? {
         guard let version = infoDictionary?["CFBundleShortVersionString"] as? String, build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
         return "\(version) (\(build))"
     }

@@ -146,12 +146,12 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     
     /// Returns error if response contains an error in the data.
     func errorInData() -> String? {
-        return self.output?.data?.phx_jsonDictionary?[BodyError] as? String
+        return self.output?.data?.int_jsonDictionary?[BodyError] as? String
     }
     
     /// Returns all dictionaries in the 'Data' array of the output.
     func outputArray() -> JSONDictionaryArray? {
-        guard let dataArray = self.output?.data?.phx_jsonDictionary?[BodyData] as? JSONDictionaryArray else {
+        guard let dataArray = self.output?.data?.int_jsonDictionary?[BodyData] as? JSONDictionaryArray else {
             return nil
         }
         return dataArray

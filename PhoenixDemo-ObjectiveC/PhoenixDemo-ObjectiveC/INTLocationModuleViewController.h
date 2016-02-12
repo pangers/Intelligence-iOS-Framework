@@ -1,5 +1,5 @@
 //
-//  PHXLocationModuleViewController.h
+//  INTLocationModuleViewController.h
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 06/10/2015.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PHXLocationModuleViewController : UIViewController
+@interface INTLocationModuleViewController : UIViewController
 
 @end

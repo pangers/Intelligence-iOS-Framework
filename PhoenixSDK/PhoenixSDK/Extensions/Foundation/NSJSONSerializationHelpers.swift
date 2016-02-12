@@ -39,25 +39,25 @@ internal func <-? (inout lhs: JSONDictionary, rhs: (String, AnyObject?)) {
 internal extension NSData {
     
     /// Returns: Any object, as an optional, as returned from NSJSONSerialization.JSONObjectWithData
-    private func phx_tryJSON() -> AnyObject? {
+    private func int_tryJSON() -> AnyObject? {
         return try? NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions.AllowFragments)
     }
     
     /// - Returns: Array of AnyObjects or nil if cast fails.
-    var phx_jsonArray: JSONArray? {
-        guard let arr = phx_tryJSON() as? JSONArray else { return nil }
+    var int_jsonArray: JSONArray? {
+        guard let arr = int_tryJSON() as? JSONArray else { return nil }
         return arr
     }
     
     /// - Returns: Array of JSONDictionary objects or nil if cast fails.
-    var phx_jsonDictionaryArray: JSONDictionaryArray? {
-        guard let arr = phx_tryJSON() as? JSONDictionaryArray else { return nil }
+    var int_jsonDictionaryArray: JSONDictionaryArray? {
+        guard let arr = int_tryJSON() as? JSONDictionaryArray else { return nil }
         return arr
     }
     
     /// - Returns: A JSONDictionary object or nil if cast fails.
-    var phx_jsonDictionary: JSONDictionary? {
-        guard let dict = phx_tryJSON() as? JSONDictionary else { return nil }
+    var int_jsonDictionary: JSONDictionary? {
+        guard let dict = int_tryJSON() as? JSONDictionary else { return nil }
         return dict
     }
 }
@@ -65,7 +65,7 @@ internal extension NSData {
 internal extension Dictionary {
     /// Converts a JSON Dictionary to NSData. Accepts any Dictionary type, not just the JSONDictionary we defined.
     /// - Returns: nil or NSData representation of JSON Object.
-    func phx_toJSONData() -> NSData? {
+    func int_toJSONData() -> NSData? {
         if let anyObject = self as? AnyObject where NSJSONSerialization.isValidJSONObject(anyObject) {
             return try? NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
         }
@@ -77,7 +77,7 @@ internal extension CollectionType {
     
     /// Converts a JSON Array to NSData. Accepts any Collection type, not just the JSONArray/JSONDictionaryArray we defined.
     /// - Returns: nil or NSData representation of JSON Object.
-    func phx_toJSONData() -> NSData? {
+    func int_toJSONData() -> NSData? {
         if let anyObject = self as? AnyObject where NSJSONSerialization.isValidJSONObject(anyObject) {
             return try? NSJSONSerialization.dataWithJSONObject(anyObject, options: .PrettyPrinted)
         }

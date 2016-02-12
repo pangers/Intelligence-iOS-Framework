@@ -174,7 +174,7 @@ class UtilsTestCase: XCTestCase {
         
         var dict = [NSString: NSObject]()
         dict["TEST"] = NSObject()
-        XCTAssert(dict.phx_toJSONData() == nil)
+        XCTAssert(dict.int_toJSONData() == nil)
         
     }
     
@@ -187,7 +187,7 @@ class UtilsTestCase: XCTestCase {
     }
     
     func testDataToJSONArray() {
-        guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonArray else {
+        guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonArray else {
             XCTAssert(false,"Couldn't load an array from the NSData")
             return
         }
@@ -196,7 +196,7 @@ class UtilsTestCase: XCTestCase {
     func testGuardedJSONParsing() {
         let wrongJSONData = "sadasda{\\".dataUsingEncoding(NSUTF8StringEncoding)!
         
-        XCTAssertNil(wrongJSONData.phx_jsonDictionaryArray, "Json array loaded from wrong data")
-        XCTAssertNil(wrongJSONData.phx_jsonDictionary, "Json dictionary loaded from wrong data")
+        XCTAssertNil(wrongJSONData.int_jsonDictionaryArray, "Json array loaded from wrong data")
+        XCTAssertNil(wrongJSONData.int_jsonDictionary, "Json dictionary loaded from wrong data")
     }
 }

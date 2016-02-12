@@ -1,5 +1,5 @@
 //
-//  PHXViewUserViewController.h
+//  INTViewUserViewController.h
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 04/08/2015.
@@ -10,8 +10,8 @@
 
 @import IntelligenceSDK;
 
-@interface PHXViewUserViewController : UIViewController
+@interface INTViewUserViewController : UIViewController
 
-@property (strong, nonatomic) PHXUser* user;
+@property (strong, nonatomic) INTUser* user;
 
 @end

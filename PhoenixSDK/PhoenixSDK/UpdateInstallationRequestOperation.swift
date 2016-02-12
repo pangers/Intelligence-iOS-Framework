@@ -14,8 +14,8 @@ internal final class UpdateInstallationRequestOperation : InstallationRequestOpe
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
-        let request = NSURLRequest.phx_URLRequestForInstallationUpdate(installation, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForInstallationUpdate(installation, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
         parse()
     }
     

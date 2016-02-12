@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekT-aQ-9TR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekT-aQ-9TR">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -8,7 +8,7 @@
         <!--Identity Module-->
         <scene sceneID="qWo-zZ-WHH">
             <objects>
-                <tableViewController title="Identity Module" id="ekT-aQ-9TR" customClass="PHXIdentityModuleViewController" sceneMemberID="viewController">
+                <tableViewController title="Identity Module" id="ekT-aQ-9TR" customClass="INTIdentityModuleViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ppw-6q-yqY">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,7 +74,7 @@
         <!--View user-->
         <scene sceneID="D1A-Od-5oC">
             <objects>
-                <viewController title="View user" id="ifj-Kc-6gy" customClass="PHXViewUserViewController" sceneMemberID="viewController">
+                <viewController title="View user" id="ifj-Kc-6gy" customClass="INTViewUserViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2zh-Xi-5gP"/>
                         <viewControllerLayoutGuide type="bottom" id="xXp-UA-iYv"/>
@@ -265,7 +265,7 @@
         <!--View user-->
         <scene sceneID="mdc-q1-umy">
             <objects>
-                <viewController title="View user" id="VGG-59-vsU" customClass="PHXViewUserViewController" sceneMemberID="viewController">
+                <viewController title="View user" id="VGG-59-vsU" customClass="INTViewUserViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3at-nP-pGM"/>
                         <viewControllerLayoutGuide type="bottom" id="tPf-Rc-8oW"/>
@@ -410,7 +410,7 @@
         <!--Manage User-->
         <scene sceneID="Ptq-Oh-aH1">
             <objects>
-                <tableViewController title="Manage User" id="CXU-cH-VKO" customClass="PHXManageUserViewController" sceneMemberID="viewController">
+                <tableViewController title="Manage User" id="CXU-cH-VKO" customClass="INTManageUserViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="TP3-rd-bd3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

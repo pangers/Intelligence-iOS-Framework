@@ -1,5 +1,5 @@
 //
-//  PHXIntelligenceManager.h
+//  INTIntelligenceManager.h
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 04/08/2015.
@@ -10,7 +10,7 @@
 
 @import IntelligenceSDK;
 
-@interface PHXIntelligenceManager : NSObject
+@interface INTIntelligenceManager : NSObject
 
 + (void)setupIntelligence:(Intelligence*)intelligence;
 

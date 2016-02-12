@@ -28,7 +28,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     // MARK:- Helpers
     
     func mockDownloadGeofencesResponse(status: HTTPStatusCode = .Success, query: GeofenceQuery, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
+        mockResponseForURL(NSURLRequest.int_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
             method: .GET,
             response: getResponse(status, body: body ?? geofencesResponse))
     }
@@ -88,7 +88,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test valid read
     func testStoreGeofences() {
         do {
-            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
         } catch {
             XCTAssert(false)
         }
@@ -97,7 +97,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Store holds more than one geofence.
     func testStoreReadGeofences() {
         do {
-            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 2)
         } catch {
@@ -108,7 +108,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Missing data key from response. InvalidPropertyError
     func testStoreReadMissingDataKeyGeofences() {
         do {
-            try Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            try Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 0)
         }
@@ -146,7 +146,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test One of these responses will be invalid
     func testGeofenceStore() {
         do {
-            try Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary)
+            try Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 1)
         } catch {

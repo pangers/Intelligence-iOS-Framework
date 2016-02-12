@@ -14,7 +14,7 @@ import XCTest
 
 class VersionClass: IntelligenceApplicationVersionProtocol {
     var fakeVersion: String = "1.0.1"
-    var phx_applicationVersionString: String? {
+    var int_applicationVersionString: String? {
         return fakeVersion
     }
 }
@@ -23,35 +23,35 @@ class VersionClass: IntelligenceApplicationVersionProtocol {
 
 class InstallationStorage: InstallationStorageProtocol {
     var dictionary = [String: AnyObject]()
-    var phx_applicationVersion: String? {
+    var int_applicationVersion: String? {
         return dictionary["appVer"] as? String
     }
-    func phx_storeApplicationVersion(version: String?) {
+    func int_storeApplicationVersion(version: String?) {
         dictionary["appVer"] = version
     }
-    var phx_isNewInstallation: Bool {
-        return phx_applicationVersion == nil
+    var int_isNewInstallation: Bool {
+        return int_applicationVersion == nil
     }
-    func phx_isInstallationUpdated(applicationVersion: String?) -> Bool {
-        guard let version = applicationVersion, stored = phx_applicationVersion else { return false }
+    func int_isInstallationUpdated(applicationVersion: String?) -> Bool {
+        guard let version = applicationVersion, stored = int_applicationVersion else { return false }
         return version != stored // Assumption: any version change is considered an update
     }
-    var phx_installationID: String? {
+    var int_installationID: String? {
         return dictionary["installID"] as? String
     }
-    func phx_storeInstallationID(newID: String?) {
+    func int_storeInstallationID(newID: String?) {
         dictionary["installID"] = newID
     }
-    var phx_installationRequestID: Int? {
+    var int_installationRequestID: Int? {
         return dictionary["requestID"] as? Int
     }
-    func phx_storeInstallationRequestID(newID: Int?) {
+    func int_storeInstallationRequestID(newID: Int?) {
         dictionary["requestID"] = newID
     }
-    var phx_installationCreateDateString: String? {
+    var int_installationCreateDateString: String? {
         return dictionary["date"] as? String
     }
-    func phx_storeInstallationCreateDate(newDate: String?) {
+    func int_storeInstallationCreateDate(newDate: String?) {
         dictionary["date"] = newDate
     }
 }
@@ -127,7 +127,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForCreateInstallation()
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         mockResponseForURL(URL,
             method: .POST,
@@ -152,7 +152,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForCreateInstallation()
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         mockResponseForURL(URL,
             method: .POST,
@@ -176,13 +176,13 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         mockPrepareForCreateInstallation()
         
         // Mock installation request
-        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray
+        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray
         let data = jsonData.first!
         mockInstallation.updateWithJSON(data)
         
         XCTAssert(mockInstallation.isNewInstallation == false, "Should not be new installation")
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         assertURLNotCalled(URL)
         
@@ -214,7 +214,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         mockPrepareForCreateInstallation()
         
         // Mock installation request
-        let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
         installation.updateWithJSON(jsonData)
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
@@ -232,7 +232,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
             method: .PUT,
@@ -268,7 +268,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
             method:.PUT,
@@ -292,7 +292,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
         
         mockResponseForURL(URL,
             method: .PUT,
@@ -315,12 +315,12 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.phx_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
         mockInstallation.updateWithJSON(jsonData)
         XCTAssert(mockInstallation.isUpdatedInstallation == false, "Should not be updated version")
         
         
-        let URL = NSURLRequest.phx_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         assertURLNotCalled(URL)
         
         identity?.updateInstallation() { (installation, error) -> Void in

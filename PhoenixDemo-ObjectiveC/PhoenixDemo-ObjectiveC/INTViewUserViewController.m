@@ -1,15 +1,15 @@
 //
-//  PHXViewUserViewController.m
+//  INTViewUserViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 04/08/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXViewUserViewController.h"
-#import "PHXIntelligenceManager.h"
+#import "INTViewUserViewController.h"
+#import "INTIntelligenceManager.h"
 
-@interface PHXViewUserViewController ()
+@interface INTViewUserViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *idLabel;
 @property (weak, nonatomic) IBOutlet UITextField *username;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation PHXViewUserViewController
+@implementation INTViewUserViewController
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -38,7 +38,7 @@
 }
 
 
--(void)setUser:(PHXUser*)user
+-(void)setUser:(INTUser*)user
 {
     _user = user;
     
@@ -77,8 +77,8 @@
     });
 }
 
--(id<PHXIdentityModuleProtocol>) intelligenceIdentity {
-    return PHXIntelligenceManager.intelligence.identity;
+-(id<INTIdentityModuleProtocol>) intelligenceIdentity {
+    return INTIntelligenceManager.intelligence.identity;
 }
 
 - (IBAction)didTapUpdateUser:(id)sender {
@@ -86,7 +86,7 @@
     self.user.lastName = self.lastname.text;
     self.user.avatarURL = self.avatarURL.text;
     
-    [[self intelligenceIdentity] updateUser:self.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+    [[self intelligenceIdentity] updateUser:self.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;

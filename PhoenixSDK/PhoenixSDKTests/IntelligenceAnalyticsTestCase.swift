@@ -30,7 +30,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     "}"
     
     func fakeGeofence() -> Geofence {
-        let data = fakeGeofenceString.dataUsingEncoding(NSUTF8StringEncoding)?.phx_jsonDictionary
+        let data = fakeGeofenceString.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary
         return try! Geofence.geofences(withJSON: data).first!
     }
     
@@ -178,8 +178,8 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         let eventsJSON: JSONDictionaryArray = [eventJSON]
         let eventsResponse = eventsJSONResponse ?? ["TotalRecords": 1, "Data": eventsJSON]
-        let successfulResponse = NSString(data: eventsResponse.phx_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
-        let URL = NSURLRequest.phx_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
+        let URL = NSURLRequest.int_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(URL,
             method: .POST,
             response: (data: status == .Success ? successfulResponse : nil, statusCode: status, headers:nil))
@@ -348,7 +348,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     func testAnalyticsError400InvalidRequest() {
         let analytics = intelligence.analytics as! AnalyticsModule
         let failureResponse = "{ \"error\": \"invalid_request\", \"error_description\": \"Invalid parameter.\" }"
-        let URL = NSURLRequest.phx_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = NSURLRequest.int_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         
         // Expect the analytics response.
         let expectation = expectationWithDescription("Expected analytics callback")

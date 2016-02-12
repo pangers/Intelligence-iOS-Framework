@@ -70,7 +70,7 @@ internal class EventQueue: NSObject {
     /// Load events present in file at `jsonPath()`.
     internal func loadEvents() {
         synced(semaphore) {
-            if let path = self.jsonPath(), data = NSData(contentsOfFile: path)?.phx_jsonDictionaryArray {
+            if let path = self.jsonPath(), data = NSData(contentsOfFile: path)?.int_jsonDictionaryArray {
                 self.eventArray = data
             }
         }
@@ -80,7 +80,7 @@ internal class EventQueue: NSObject {
     /// The caller is responsible to sync the call.
     private func storeEvents() {
         // Store to disk.
-        if let path = self.jsonPath(), data = self.eventArray.phx_toJSONData() {
+        if let path = self.jsonPath(), data = self.eventArray.int_toJSONData() {
             data.writeToFile(path, atomically: true)
         }
     }

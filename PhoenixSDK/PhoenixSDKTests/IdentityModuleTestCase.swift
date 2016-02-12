@@ -100,33 +100,33 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
             return
         }
         
-        let guURL = NSURLRequest.phx_URLRequestForGetUser(userId, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let guURL = NSURLRequest.int_URLRequestForGetUser(userId, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,
             method: .GET,
             response: getResponse(status, body: body ?? successfulResponseGetUser))
     }
     
     func mockGetUserMeResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
-        let guURL = NSURLRequest.phx_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let guURL = NSURLRequest.int_URLRequestForUserMe(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
         mockResponseForURL(guURL,
             method: .GET,
             response: getResponse(status, body: body ?? successfulResponseGetUser))
     }
     
     func mockValidateResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(NSURLRequest.int_URLRequestForValidate(mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .GET,
             response: getResponse(status, body: body ?? validValidate))
     }
     
     func mockUserCreationResponse(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(NSURLRequest.int_URLRequestForUserCreation(fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
             response: getResponse(status, body: body ?? successfulResponseCreateUser), identifier: identifier)
     }
     
     func mockUserUpdateURL() -> NSURL {
-        return NSURLRequest.phx_URLRequestForUserUpdate(fakeUpdateUser,
+        return NSURLRequest.int_URLRequestForUserUpdate(fakeUpdateUser,
             oauth: mockOAuthProvider.loggedInUserOAuth,
             configuration: mockConfiguration,
             network: mockNetwork).URL!
@@ -148,7 +148,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     }
     
     func mockUserAssignRoleResponse(status: HTTPStatusCode = .Success, body: String? = nil, identifier: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleAssignment(mockConfiguration.sdkUserRole, user: fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(NSURLRequest.int_URLRequestForUserRoleAssignment(mockConfiguration.sdkUserRole, user: fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .POST,
             response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
     }
@@ -158,7 +158,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
             body = shouldFail ? failureRevokeRoleResponse : successfulRevokeRoleResponse
         }
         
-        mockResponseForURL(NSURLRequest.phx_URLRequestForUserRoleRevoke(roleId, user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(NSURLRequest.int_URLRequestForUserRoleRevoke(roleId, user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .DELETE,
             response: getResponse(.Success, body: body!))
     }
@@ -187,7 +187,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     }
     
     func mockCreateIdentifierURL() -> NSURL {
-        return NSURLRequest.phx_URLRequestForIdentifierCreation(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+        return NSURLRequest.int_URLRequestForIdentifierCreation(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
     }
     
     func mockCreateIdentifierResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
@@ -197,7 +197,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     }
     
     func mockDeleteIdentifierURL() -> NSURL {
-        return NSURLRequest.phx_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+        return NSURLRequest.int_URLRequestForIdentifierDeletion(fakeTokenID, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
     }
     
     func mockDeleteIdentifierResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
@@ -207,7 +207,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     }
     
     func mockDeleteIdentifierOnBehalfResponse(status: HTTPStatusCode = .Success, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.phx_URLRequestForIdentifierDeletionOnBehalf(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
+        mockResponseForURL(NSURLRequest.int_URLRequestForIdentifierDeletionOnBehalf(hexStringFromDeviceToken(fakeDeviceToken)!, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL,
             method: .DELETE,
             response: getResponse(status, body: body ?? successfulResponseDeleteIdentifierOnBehalf))
     }
@@ -486,7 +486,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     // Assures that when the user is not valid to create, an error is returned.
     func testCreateUserErrorOnUserCondition() {
         let user = Intelligence.User(companyId: mockCompanyID, username: "", password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
-        let URL = NSURLRequest.phx_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         assertURLNotCalled(URL)
         
@@ -702,7 +702,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     func testCreateUserFailureDueToPasswordSecurity() {
         let oauth = mockOAuthProvider.loggedInUserOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let URL = NSURLRequest.phx_URLRequestForUserCreation(fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForUserCreation(fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(URL)
@@ -861,7 +861,7 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     func testUpdateUserFailureDueToPasswordSecurity() {
         let oauth = mockOAuthProvider.applicationOAuth
         let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
-        let URL = NSURLRequest.phx_URLRequestForUserUpdate(updateUserWeakPassword, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = NSURLRequest.int_URLRequestForUserUpdate(updateUserWeakPassword, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
         
         // Assert that the call won't be done.
         assertURLNotCalled(URL, method: .PUT)

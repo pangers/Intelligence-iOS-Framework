@@ -13,7 +13,7 @@ private let BodyErrorDescription = "error_description"
 
 class IntelligenceOAuthOperation : IntelligenceAPIOperation {
     override func handleUnauthorizedError() {
-        let data = self.output?.data?.phx_jsonDictionary
+        let data = self.output?.data?.int_jsonDictionary
         
         if let data = data {
             let error = data[BodyError] as? String

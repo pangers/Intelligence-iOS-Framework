@@ -1,30 +1,30 @@
 //
-//  PHXManageUserViewController.m
+//  INTManageUserViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Michael Lake on 09/02/2016.
 //  Copyright © 2016 Tigerspike. All rights reserved.
 //
 
-#import "PHXManageUserViewController.h"
+#import "INTManageUserViewController.h"
 #import "AppDelegate.h"
-#import "PHXViewUserViewController.h"
+#import "INTViewUserViewController.h"
 
-static NSString * const PHXUpdateUserSegue = @"UpdateUser";
-static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
+static NSString * const INTUpdateUserSegue = @"UpdateUser";
+static NSString * const INTUnwindOnLogoutSegue = @"UnwindOnLogout";
 
-@interface PHXManageUserViewController ()
+@interface INTManageUserViewController ()
 
 @end
 
-@implementation PHXManageUserViewController
+@implementation INTManageUserViewController
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:PHXUpdateUserSegue]) {
-        PHXViewUserViewController *viewUser = segue.destinationViewController;
+    if ([segue.identifier isEqualToString:INTUpdateUserSegue]) {
+        INTViewUserViewController *viewUser = segue.destinationViewController;
         viewUser.user = self.user;
     }
-    else if ([segue.identifier isEqualToString:PHXUnwindOnLogoutSegue]) {
+    else if ([segue.identifier isEqualToString:INTUnwindOnLogoutSegue]) {
     }
 }
 
@@ -102,7 +102,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
         return;
     }
     
-    [[[PHXIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+    [[[INTIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
         BOOL notRegisteredError = [IdentityErrorDomain rangeOfString:error.domain].location != NSNotFound && error.code == IdentityErrorDeviceTokenNotRegisteredError;
         
         if (error != nil && !notRegisteredError) {
@@ -137,7 +137,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXIntelligenceManager.intelligence.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
@@ -176,7 +176,7 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [PHXIntelligenceManager.intelligence.identity revokeRole:[roleId integerValue] user:weakSelf.user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity revokeRole:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
@@ -195,14 +195,14 @@ static NSString * const PHXUnwindOnLogoutSegue = @"UnwindOnLogout";
 }
 
 - (void)logout {
-    [PHXIntelligenceManager.intelligence.identity logout];
+    [INTIntelligenceManager.intelligence.identity logout];
     
     self.user = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey: IntelligenceDemoStoredDeviceTokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    [self performSegueWithIdentifier:PHXUnwindOnLogoutSegue sender:self];
+    [self performSegueWithIdentifier:INTUnwindOnLogoutSegue sender:self];
 }
 
 @end

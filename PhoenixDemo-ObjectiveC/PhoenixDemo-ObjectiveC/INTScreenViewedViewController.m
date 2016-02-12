@@ -1,18 +1,18 @@
 //
-//  PHXScreenViewedViewController.m
+//  INTScreenViewedViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Michael Lake on 05/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXScreenViewedViewController.h"
+#import "INTScreenViewedViewController.h"
 
-#import "PHXIntelligenceManager.h"
+#import "INTIntelligenceManager.h"
 
 @import IntelligenceSDK;
 
-@interface PHXScreenViewedViewController ()
+@interface INTScreenViewedViewController ()
 
 @property (nonatomic, weak) IBOutlet UILabel *clockLabel;
 
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation PHXScreenViewedViewController
+@implementation INTScreenViewedViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -110,9 +110,9 @@
 - (void)sendAnalytics {
 	NSTimeInterval viewingDuration = [[NSUserDefaults standardUserDefaults] doubleForKey:self.title];
 	
-    PHXEvent *event = [[PHXScreenViewedEvent alloc] initWithScreenName:self.title viewingDuration:viewingDuration];
+    INTEvent *event = [[INTScreenViewedEvent alloc] initWithScreenName:self.title viewingDuration:viewingDuration];
     
-    [PHXIntelligenceManager.intelligence.analytics track:event];
+    [INTIntelligenceManager.intelligence.analytics track:event];
 }
 
 @end

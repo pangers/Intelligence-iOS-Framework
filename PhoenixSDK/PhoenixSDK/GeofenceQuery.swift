@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 ///An instance of object using to create query part of URL for Geofence API
-@objc(PHXGeofenceQuery) public class GeofenceQuery : NSObject {
+@objc(INTGeofenceQuery) public class GeofenceQuery : NSObject {
     
     /// The latitude of the coordinates.
     @objc public var longitude: Double

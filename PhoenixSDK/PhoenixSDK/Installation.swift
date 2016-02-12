@@ -43,11 +43,11 @@ internal struct Installation {
     // MARK:- Parameters used in requests
     private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
     private var deviceTypeId: DeviceType { return .Smartphone }
-    private var installedVersion: String { return applicationVersion.phx_applicationVersionString ?? "" }
+    private var installedVersion: String { return applicationVersion.int_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
     private var projectId: Int { return configuration.projectID }
     private var userId: Int? { return oauthProvider.sdkUserOAuth.userId }
-    private var requestId: Int? { return installationStorage.phx_installationRequestID }
+    private var requestId: Int? { return installationStorage.int_installationRequestID }
     
     /// - Returns: True if valid to send an update with this object.
     var isValidToUpdate: Bool {
@@ -56,12 +56,12 @@ internal struct Installation {
     
     /// - Returns: True if app is a fresh install or request has not made it to Intelligence yet.
     var isNewInstallation: Bool {
-        return installationStorage.phx_isNewInstallation
+        return installationStorage.int_isNewInstallation
     }
     
     /// - Returns: True if app is updated or request has not made it to Intelligence yet.
     var isUpdatedInstallation: Bool {
-        return installationStorage.phx_isInstallationUpdated(applicationVersion.phx_applicationVersionString)
+        return installationStorage.int_isInstallationUpdated(applicationVersion.int_applicationVersionString)
     }
     
     /// - Returns: JSON Dictionary representation used in Installation requests.
@@ -98,10 +98,10 @@ internal struct Installation {
             id = json[Installation.Id] as? Int,
             installedVersion = json[Installation.InstalledVersion] as? String,
             createDate = json[Installation.CreateDate] as? String {
-                installationStorage.phx_storeInstallationID(installation)
-                installationStorage.phx_storeInstallationCreateDate(createDate)
-                installationStorage.phx_storeInstallationRequestID(id)
-                installationStorage.phx_storeApplicationVersion(installedVersion)
+                installationStorage.int_storeInstallationID(installation)
+                installationStorage.int_storeInstallationCreateDate(createDate)
+                installationStorage.int_storeInstallationRequestID(id)
+                installationStorage.int_storeApplicationVersion(installedVersion)
                 return true
         }
         return false

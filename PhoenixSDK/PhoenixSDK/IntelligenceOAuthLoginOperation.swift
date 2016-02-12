@@ -13,8 +13,8 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
     override func main() {
         super.main()
         assert(oauth != nil && network != nil)
-        let request = NSURLRequest.phx_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
-        output = session.phx_executeSynchronousDataTaskWithRequest(request)
+        let request = NSURLRequest.int_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
+        output = session.int_executeSynchronousDataTaskWithRequest(request)
         
         if handleError() {
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
@@ -24,7 +24,7 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
         // Assumption: 200 status code means our credentials are valid, otherwise invalid.
         guard let httpResponse = output?.response as? NSHTTPURLResponse
             where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
-                oauth?.updateWithResponse(output?.data?.phx_jsonDictionary) == true else
+                oauth?.updateWithResponse(output?.data?.int_jsonDictionary) == true else
         {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.ParseError.rawValue)

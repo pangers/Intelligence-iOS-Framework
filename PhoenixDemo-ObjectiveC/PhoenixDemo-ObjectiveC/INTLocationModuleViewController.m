@@ -1,25 +1,25 @@
 //
-//  PHXLocationModuleViewController.m
+//  INTLocationModuleViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 06/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXLocationModuleViewController.h"
+#import "INTLocationModuleViewController.h"
 
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 @import IntelligenceSDK;
 
-#import "PHXIntelligenceManager.h"
-#import "PHXLocationGeofenceQueryViewController.h"
+#import "INTIntelligenceManager.h"
+#import "INTLocationGeofenceQueryViewController.h"
 
-@interface PHXLocationModuleViewController () <PHXLocationModuleDelegate,PHXGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
+@interface INTLocationModuleViewController () <INTLocationModuleDelegate,INTGeofenceQueryBuilderDelegate, UITableViewDataSource, MKMapViewDelegate>
 
 @property(nonatomic, strong) NSArray<NSString*>* events;
 @property(nonatomic, strong) CLLocationManager* locationManager;
-@property(nonatomic, strong) NSArray<PHXGeofence*>* lastDownloadedGeofences;
+@property(nonatomic, strong) NSArray<INTGeofence*>* lastDownloadedGeofences;
 @property(nonatomic, strong) NSTimer* timer;
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -28,7 +28,7 @@
 
 @end
 
-@implementation PHXLocationModuleViewController
+@implementation INTLocationModuleViewController
 
 static NSString* const cellIdentifier = @"cell";
 
@@ -39,14 +39,14 @@ static NSString* const cellIdentifier = @"cell";
     
     self.locationManager = [[CLLocationManager alloc] init];
     
-    [PHXIntelligenceManager intelligence].location.locationDelegate = self;
+    [INTIntelligenceManager intelligence].location.locationDelegate = self;
     
     // Using the best kind of accuracy for demo purposes.
-    [[PHXIntelligenceManager intelligence].location setLocationAccuracy:kCLLocationAccuracyBest];
+    [[INTIntelligenceManager intelligence].location setLocationAccuracy:kCLLocationAccuracyBest];
 }
 
 -(void)dealloc {
-    [[PHXIntelligenceManager intelligence].location stopMonitoringGeofences];
+    [[INTIntelligenceManager intelligence].location stopMonitoringGeofences];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -75,7 +75,7 @@ static NSString* const cellIdentifier = @"cell";
     
     if ( [@"download" isEqualToString:segue.identifier] )
     {
-        PHXLocationGeofenceQueryViewController* vc = (PHXLocationGeofenceQueryViewController*) segue.destinationViewController;
+        INTLocationGeofenceQueryViewController* vc = (INTLocationGeofenceQueryViewController*) segue.destinationViewController;
         vc.latitude = self.locationManager.location.coordinate.latitude;
         vc.longitude = self.locationManager.location.coordinate.longitude;
         vc.delegate = self;
@@ -83,7 +83,7 @@ static NSString* const cellIdentifier = @"cell";
 }
 
 - (IBAction)didTapMonitoringButton:(id)sender {
-    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
+    id<INTLocationModuleProtocol> locationModule = INTIntelligenceManager.intelligence.location;
     
     if ( [locationModule isMonitoringGeofences] )
     {
@@ -108,9 +108,9 @@ static NSString* const cellIdentifier = @"cell";
     [self refreshGeofences];
 }
 
--(void)didSelectGeofenceQuery:(PHXGeofenceQuery *)query {
-    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
-    [locationModule downloadGeofences:query callback:^(NSArray<PHXGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
+-(void)didSelectGeofenceQuery:(INTGeofenceQuery *)query {
+    id<INTLocationModuleProtocol> locationModule = INTIntelligenceManager.intelligence.location;
+    [locationModule downloadGeofences:query callback:^(NSArray<INTGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self didReceiveGeofences:geofences error:error];
@@ -119,8 +119,8 @@ static NSString* const cellIdentifier = @"cell";
     }];
 }
 
--(void) didReceiveGeofences:(NSArray<PHXGeofence*>*)geofences error:(NSError*) error {
-    id<PHXLocationModuleProtocol> locationModule = PHXIntelligenceManager.intelligence.location;
+-(void) didReceiveGeofences:(NSArray<INTGeofence*>*)geofences error:(NSError*) error {
+    id<INTLocationModuleProtocol> locationModule = INTIntelligenceManager.intelligence.location;
 
     if ( error != nil ) {
         [self addRecord:@"Error occured while downloading geofences"];
@@ -144,12 +144,12 @@ static NSString* const cellIdentifier = @"cell";
     }
 }
 
--(void)intelligenceLocation:(id<PHXLocationModuleProtocol>)location didEnterGeofence:(PHXGeofence *)geofence
+-(void)intelligenceLocation:(id<INTLocationModuleProtocol>)location didEnterGeofence:(INTGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Entered %@", geofence.name]];
 }
 
--(void)intelligenceLocation:(id<PHXLocationModuleProtocol>)location didExitGeofence:(PHXGeofence *)geofence
+-(void)intelligenceLocation:(id<INTLocationModuleProtocol>)location didExitGeofence:(INTGeofence *)geofence
 {
     [self addRecord:[NSString stringWithFormat:@"Exited %@", geofence.name]];
 }
@@ -169,7 +169,7 @@ static NSString* const cellIdentifier = @"cell";
 {
     NSAssert([overlay isKindOfClass:MKCircle.class], @"Expected an MKCircle as overlay, got a %@ instead.", overlay.class);
     MKCircleRenderer* renderer = [[MKCircleRenderer alloc] initWithCircle:overlay];
-    UIColor* color = [[PHXIntelligenceManager intelligence].location isMonitoringGeofences] ? UIColor.greenColor : UIColor.redColor;
+    UIColor* color = [[INTIntelligenceManager intelligence].location isMonitoringGeofences] ? UIColor.greenColor : UIColor.redColor;
     
     renderer.fillColor = [color colorWithAlphaComponent:0.4];
     renderer.strokeColor = color;
@@ -193,10 +193,10 @@ static NSString* const cellIdentifier = @"cell";
     }
 }
 
--(void) displayGeofences:(NSArray<PHXGeofence*>*) geofences {
+-(void) displayGeofences:(NSArray<INTGeofence*>*) geofences {
     [self.mapView removeOverlays:self.mapView.overlays];
     
-    for ( PHXGeofence* geofence in geofences )
+    for ( INTGeofence* geofence in geofences )
     {
         CLLocationCoordinate2D coordinates = CLLocationCoordinate2DMake(geofence.latitude, geofence.longitude);
         MKCircle* circle = [MKCircle circleWithCenterCoordinate:coordinates radius:geofence.radius];

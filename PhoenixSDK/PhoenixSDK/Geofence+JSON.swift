@@ -1,5 +1,5 @@
 //
-//  PHXGeofenceJSON.swift
+//  INTGeofenceJSON.swift
 //  IntelligenceSDK
 //
 //  Created by Chris Nevin on 06/08/2015.
@@ -54,7 +54,7 @@ internal extension Geofence {
     /// Writes JSONDictionary to file.
     /// - Parameter json: Optional JSONDictionary object.
     internal class func storeJSON(json: JSONDictionary?) throws {
-        guard let path = jsonPath(), json = json?.phx_toJSONData() else {
+        guard let path = jsonPath(), json = json?.int_toJSONData() else {
             throw RequestError.ParseError
         }
         json.writeToFile(path, atomically: true)
@@ -62,7 +62,7 @@ internal extension Geofence {
     
     /// - Returns: Cached array of Geofence objects or nil.
     private class func readJSON() throws -> JSONDictionary? {
-        guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.phx_jsonDictionary else {
+        guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.int_jsonDictionary else {
             throw RequestError.ParseError
         }
         return json

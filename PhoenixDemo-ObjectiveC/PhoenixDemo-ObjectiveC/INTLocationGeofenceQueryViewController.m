@@ -1,22 +1,22 @@
 //
-//  PHXLocationGeofenceQueryViewController.m
+//  INTLocationGeofenceQueryViewController.m
 //  IntelligenceDemo-ObjectiveC
 //
 //  Created by Josep Rodriguez on 06/10/2015.
 //  Copyright © 2015 Tigerspike. All rights reserved.
 //
 
-#import "PHXLocationGeofenceQueryViewController.h"
+#import "INTLocationGeofenceQueryViewController.h"
 
 @interface UITextField (Numeric)
 
--(nullable NSNumber*) phx_number;
+-(nullable NSNumber*) int_number;
 
 @end
 
 @implementation UITextField (Numeric)
 
--(nullable NSNumber*) phx_number
+-(nullable NSNumber*) int_number
 {
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
@@ -25,7 +25,7 @@
 
 @end
 
-@interface PHXLocationGeofenceQueryViewController ()
+@interface INTLocationGeofenceQueryViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *latitudeText;
 @property (weak, nonatomic) IBOutlet UITextField *longitudeText;
@@ -37,7 +37,7 @@
 
 @end
 
-@implementation PHXLocationGeofenceQueryViewController
+@implementation INTLocationGeofenceQueryViewController
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -64,8 +64,8 @@
     {
         double latitude;
         
-        if (self.latitudeText.phx_number != nil) {
-            latitude = [self.latitudeText.phx_number doubleValue];
+        if (self.latitudeText.int_number != nil) {
+            latitude = [self.latitudeText.int_number doubleValue];
         }
         else {
             latitude = 0;
@@ -74,8 +74,8 @@
         
         double longitude;
         
-        if (self.longitudeText.phx_number != nil) {
-            longitude = [self.longitudeText.phx_number doubleValue];
+        if (self.longitudeText.int_number != nil) {
+            longitude = [self.longitudeText.int_number doubleValue];
         }
         else {
             longitude = 0;
@@ -84,25 +84,25 @@
         
         double radius;
         
-        if (self.radiusText.phx_number != nil) {
-            radius = [self.radiusText.phx_number doubleValue];
+        if (self.radiusText.int_number != nil) {
+            radius = [self.radiusText.int_number doubleValue];
         }
         else {
             radius = 40075000; // The circumference of the Earth
         }
         
         
-        PHXCoordinate* coordinate = [[PHXCoordinate alloc] initWithLatitude:latitude
+        INTCoordinate* coordinate = [[INTCoordinate alloc] initWithLatitude:latitude
                                                                   longitude:longitude];
         
-        PHXGeofenceQuery* query = [[PHXGeofenceQuery alloc] initWithLocation:coordinate radius:radius];
+        INTGeofenceQuery* query = [[INTGeofenceQuery alloc] initWithLocation:coordinate radius:radius];
         
-        if (self.pageSizeText.phx_number != nil) {
-            [query setPageSize:[self.pageSizeText.phx_number integerValue]];
+        if (self.pageSizeText.int_number != nil) {
+            [query setPageSize:[self.pageSizeText.int_number integerValue]];
         }
         
-        if (self.pageText.phx_number != nil) {
-            [query setPage:[self.pageText.phx_number integerValue]];
+        if (self.pageText.int_number != nil) {
+            [query setPage:[self.pageText.int_number integerValue]];
         }
         
         

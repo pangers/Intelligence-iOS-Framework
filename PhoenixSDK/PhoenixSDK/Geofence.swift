@@ -9,7 +9,7 @@
 import Foundation
 
 /// An instance of a geofence with a latitude/longitude/radius combination.
-@objc(PHXGeofence) public final class Geofence: NSObject {
+@objc(INTGeofence) public final class Geofence: NSObject {
     
     /// Longitude of the geofence.
     internal(set) public var longitude: Double = 0.0
