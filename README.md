@@ -658,7 +658,7 @@ A user can have multiple roles and it may be necessary to assign another from wi
 ```
 #!swift
 
-PhoenixManager.phoenix.identity.assignRole(roleId, user: user, callback: { (error) -> Void in
+IntelligenceManager.intelligence.identity.assignRole(roleId, user: user, callback: { (error) -> Void in
 // Treat the user and error appropriately. Notice that the callback might be performed
 // in a background thread. Use dispatch_async to handle it in the main thread.
 })
@@ -669,7 +669,7 @@ PhoenixManager.phoenix.identity.assignRole(roleId, user: user, callback: { (erro
 ```
 #!objc
 
-[[[PHXPhoenixManager phoenix] identity] assignRole:roleId user:user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+[[[INTIntelligenceManager intelligence] identity] assignRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
 // Treat the user and error appropriately. Notice that the callback might be performed
 // in a background thread. Use dispatch_async to handle it in the main thread.
 }];
@@ -684,7 +684,7 @@ A user can have multiple roles and it may be necessary to revoke these from with
 ```
 #!swift
 
-PhoenixManager.phoenix.identity.revokeRole(roleId, user: user, callback: { (error) -> Void in
+IntelligenceManager.intelligence.identity.revokeRole(roleId, user: user, callback: { (error) -> Void in
 // Treat the user and error appropriately. Notice that the callback might be performed
 // in a background thread. Use dispatch_async to handle it in the main thread.
 })
@@ -695,7 +695,7 @@ PhoenixManager.phoenix.identity.revokeRole(roleId, user: user, callback: { (erro
 ```
 #!objc
 
-[[[PHXPhoenixManager phoenix] identity] revokeRole:roleId user:user callback:^(PHXUser * _Nullable user, NSError * _Nullable error) {
+[[[INTIntelligenceManager intelligence] identity] revokeRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
 // Treat the user and error appropriately. Notice that the callback might be performed
 // in a background thread. Use dispatch_async to handle it in the main thread.
 }];
