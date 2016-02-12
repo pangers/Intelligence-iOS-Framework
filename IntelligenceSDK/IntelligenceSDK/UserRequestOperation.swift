@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which may require an override.
+/// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which must be overriden.
 class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     /// Once successful, this will contain the user provided by the backend.
@@ -49,9 +49,6 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = UserRequestOperation(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
-        
-        return copy
+        preconditionFailure("copyWithZone(zone:) sould never be called on UserRequestOperation, it needs to be overridden")
     }
-    
 }

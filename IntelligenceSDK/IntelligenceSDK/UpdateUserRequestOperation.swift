@@ -20,4 +20,9 @@ internal final class UpdateUserRequestOperation: UserRequestOperation {
         parse()
     }
 
+    override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+        
+        return copy
+    }
 }
