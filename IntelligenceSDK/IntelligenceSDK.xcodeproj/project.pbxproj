@@ -194,13 +194,13 @@
 		BB3A101F1BBD939800DCF331 /* IntelligenceGeofenceTestcase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceGeofenceTestcase.swift; sourceTree = "<group>"; };
 		BB653F711B5E59C40003C0C9 /* IntelligenceError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceError.swift; sourceTree = "<group>"; };
 		BB7276681B5FB53200F098DA /* Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Intelligence.swift; sourceTree = "<group>"; };
-		BB77B9581BC3D95C00B53ABE /* IntelligenceLocationDownloadGeofencesSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntelligenceLocationDownloadGeofencesSDKTests.swift; path = ../PhoenixLocationModuleSDKTests/IntelligenceLocationDownloadGeofencesSDKTests.swift; sourceTree = "<group>"; };
-		BB77B9681BC3DB4700B53ABE /* IntelligenceLocationBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelligenceLocationBaseTestCase.swift; path = ../PhoenixLocationModuleSDKTests/IntelligenceLocationBaseTestCase.swift; sourceTree = "<group>"; };
-		BB77B97F1BC3E36200B53ABE /* IntelligenceLocationEnterExitGeofencesSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelligenceLocationEnterExitGeofencesSDKTests.swift; path = ../PhoenixLocationModuleSDKTests/IntelligenceLocationEnterExitGeofencesSDKTests.swift; sourceTree = "<group>"; };
-		BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockCLLocationManager.swift; path = ../PhoenixLocationModuleSDKTests/MockCLLocationManager.swift; sourceTree = "<group>"; };
+		BB77B9581BC3D95C00B53ABE /* IntelligenceLocationDownloadGeofencesSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationDownloadGeofencesSDKTests.swift; sourceTree = "<group>"; };
+		BB77B9681BC3DB4700B53ABE /* IntelligenceLocationBaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationBaseTestCase.swift; sourceTree = "<group>"; };
+		BB77B97F1BC3E36200B53ABE /* IntelligenceLocationEnterExitGeofencesSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationEnterExitGeofencesSDKTests.swift; sourceTree = "<group>"; };
+		BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCLLocationManager.swift; sourceTree = "<group>"; };
 		BB77B9831BC40A5900B53ABE /* SequenceType+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Intelligence.swift"; sourceTree = "<group>"; };
-		BB77B9871BC418E200B53ABE /* IntelligenceLocationAnalyticsCallsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelligenceLocationAnalyticsCallsTestCase.swift; path = ../PhoenixLocationModuleSDKTests/IntelligenceLocationAnalyticsCallsTestCase.swift; sourceTree = "<group>"; };
-		BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockAnalyticsModule.swift; path = ../PhoenixLocationModuleSDKTests/MockAnalyticsModule.swift; sourceTree = "<group>"; };
+		BB77B9871BC418E200B53ABE /* IntelligenceLocationAnalyticsCallsTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationAnalyticsCallsTestCase.swift; sourceTree = "<group>"; };
+		BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAnalyticsModule.swift; sourceTree = "<group>"; };
 		BB8FFC501B611A5E00E37146 /* missingproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = missingproperty.json; sourceTree = "<group>"; };
 		BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../../Libraries/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		BBA573771B692B6900685EFB /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -324,8 +324,7 @@
 				FEF7EF721B6671C700066AA3 /* Extensions */,
 				BBFC3E541BBECD1500B20C2D /* Helpers */,
 			);
-			name = IntelligenceSDK;
-			path = PhoenixSDK;
+			path = IntelligenceSDK;
 			sourceTree = "<group>";
 		};
 		A07FACBE1B5D0C4200482BB7 /* IntelligenceSDKTests */ = {
@@ -342,8 +341,7 @@
 				BB8FFC521B611A6500E37146 /* Configuration files */,
 				BBAA74171B60FCCF00EDADA4 /* MockObjects */,
 			);
-			name = IntelligenceSDKTests;
-			path = PhoenixSDKTests;
+			path = IntelligenceSDKTests;
 			sourceTree = "<group>";
 		};
 		BB0A23871B70D4A100CE0C81 /* Modules */ = {
@@ -1048,7 +1046,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				INFOPLIST_FILE = "PhoenixSDK/IntelligenceSDK-Info.plist";
+				INFOPLIST_FILE = "IntelligenceSDK/IntelligenceSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDK;
@@ -1067,7 +1065,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				INFOPLIST_FILE = "PhoenixSDK/IntelligenceSDK-Info.plist";
+				INFOPLIST_FILE = "IntelligenceSDK/IntelligenceSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDK;
@@ -1080,7 +1078,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = "PhoenixSDKTests/IntelligenceSDKTests-Info.plist";
+				INFOPLIST_FILE = "IntelligenceSDKTests/IntelligenceSDKTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDKTests;
 				PRODUCT_NAME = IntelligenceSDKTests;
@@ -1092,7 +1090,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = "PhoenixSDKTests/IntelligenceSDKTests-Info.plist";
+				INFOPLIST_FILE = "IntelligenceSDKTests/IntelligenceSDKTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDKTests;
 				PRODUCT_NAME = IntelligenceSDKTests;

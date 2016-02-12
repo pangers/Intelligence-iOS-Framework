@@ -2,12 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:PhoenixSDK/IntelligenceSDK.xcodeproj">
+      location = "group:IntelligenceSDK/IntelligenceSDK.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:PhoenixDemo-Swift/IntelligenceDemo-Swift.xcodeproj">
+      location = "group:IntelligenceDemo-Swift/IntelligenceDemo-Swift.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:PhoenixDemo-ObjectiveC/IntelligenceDemo-ObjectiveC.xcodeproj">
+      location = "group:IntelligenceDemo-ObjectiveC/IntelligenceDemo-ObjectiveC.xcodeproj">
    </FileRef>
 </Workspace>

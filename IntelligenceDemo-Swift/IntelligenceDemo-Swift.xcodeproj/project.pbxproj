@@ -117,8 +117,7 @@
 				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
 				7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */,
 			);
-			name = "IntelligenceDemo-Swift";
-			path = "PhoenixDemo-Swift";
+			path = "IntelligenceDemo-Swift";
 			sourceTree = "<group>";
 		};
 		BB0A23781B70B89600CE0C81 /* Intelligence */ = {
@@ -370,7 +369,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = "PhoenixDemo-Swift/Info.plist";
+				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
@@ -382,7 +381,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = "PhoenixDemo-Swift/Info.plist";
+				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
 				PRODUCT_NAME = "IntelligenceDemo-Swift";

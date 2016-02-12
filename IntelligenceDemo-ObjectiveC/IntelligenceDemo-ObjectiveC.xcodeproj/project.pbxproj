@@ -65,7 +65,7 @@
 		BB0A237B1B70B8BE00CE0C81 /* INTIntelligenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTIntelligenceManager.m; sourceTree = "<group>"; };
 		BB0A237D1B70C60D00CE0C81 /* INTViewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTViewUserViewController.h; sourceTree = "<group>"; };
 		BB0A237E1B70C60D00CE0C81 /* INTViewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTViewUserViewController.m; sourceTree = "<group>"; };
-		BB77B9461BC3B78400B53ABE /* Location.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Location.storyboard; sourceTree = "<group>"; };
+		BB77B9461BC3B78400B53ABE /* Location.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Location.storyboard; path = Base.lproj/Location.storyboard; sourceTree = "<group>"; };
 		BB77B9481BC3B7AC00B53ABE /* INTLocationModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTLocationModuleViewController.h; sourceTree = "<group>"; };
 		BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTLocationModuleViewController.m; sourceTree = "<group>"; };
 		BB77B94B1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTLocationGeofenceQueryViewController.h; sourceTree = "<group>"; };
@@ -135,8 +135,7 @@
 				7FDAAB141B5D360800DF2BE6 /* Info.plist */,
 				7FDAAB031B5D360800DF2BE6 /* Supporting Files */,
 			);
-			name = "IntelligenceDemo-ObjectiveC";
-			path = "PhoenixDemo-ObjectiveC";
+			path = "IntelligenceDemo-ObjectiveC";
 			sourceTree = "<group>";
 		};
 		7FDAAB031B5D360800DF2BE6 /* Supporting Files */ = {
@@ -394,7 +393,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = "PhoenixDemo-ObjectiveC/Info.plist";
+				INFOPLIST_FILE = "IntelligenceDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-ObjectiveC";
 				PRODUCT_NAME = "IntelligenceDemo-ObjectiveC";
@@ -405,7 +404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = "PhoenixDemo-ObjectiveC/Info.plist";
+				INFOPLIST_FILE = "IntelligenceDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-ObjectiveC";
 				PRODUCT_NAME = "IntelligenceDemo-ObjectiveC";
