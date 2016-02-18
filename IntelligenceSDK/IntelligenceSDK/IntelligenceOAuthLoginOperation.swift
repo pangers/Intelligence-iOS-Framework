@@ -13,6 +13,12 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
     override func main() {
         super.main()
         assert(oauth != nil && network != nil)
+
+        if oauth?.password == nil {
+            output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+            return
+        }
+
         let request = NSURLRequest.int_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
         output = session.int_executeSynchronousDataTaskWithRequest(request)
         
