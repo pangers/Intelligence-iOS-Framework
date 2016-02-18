@@ -103,7 +103,7 @@ class ManageUserViewController : UITableViewController {
             return
         }
         
-        IntelligenceManager.intelligence.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
+        IntelligenceManager.intelligence?.identity.unregisterDeviceToken(withId: tokenId, callback: { (error) -> Void in
             let notRegisteredError = error?.code == IdentityError.DeviceTokenNotRegisteredError.rawValue
             
             if error != nil && !notRegisteredError {
@@ -136,7 +136,7 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence.identity.assignRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
+            IntelligenceManager.intelligence?.identity.assignRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
                     let application = UIApplication.sharedApplication()
                     let delegate = application.delegate as! AppDelegate
@@ -172,7 +172,7 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence.identity.revokeRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
+            IntelligenceManager.intelligence?.identity.revokeRole(roleId, user: strongSelf.user!) { (user, error) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
                     let application = UIApplication.sharedApplication()
                     let delegate = application.delegate as! AppDelegate
@@ -191,7 +191,7 @@ class ManageUserViewController : UITableViewController {
     }
     
     func logout() {
-        IntelligenceManager.intelligence.identity.logout()
+        IntelligenceManager.intelligence?.identity.logout()
         
         self.user = nil
         
