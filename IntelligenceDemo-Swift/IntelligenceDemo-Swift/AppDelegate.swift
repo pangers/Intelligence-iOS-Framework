@@ -13,26 +13,30 @@ import IntelligenceSDK
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
-	var window: UIWindow?
-    
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+    var window: UIWindow?
+
+    var startupViewController: StartupViewController? {
+        return self.window?.rootViewController as? StartupViewController
+    }
+
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
         startupIntelligence()
 
-		return true
-	}
-    
+        return true
+    }
+
     func startupIntelligence() {
         if IntelligenceManager.intelligence != nil {
             return
         }
-        
+
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
-            
+
             // Startup all modules.
             intelligence.startup { (success) -> () in
-                
+
                 NSOperationQueue.mainQueue().addOperationWithBlock {
 
                     if success {
@@ -40,20 +44,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                         let testEvent = Event(withType: "Intelligence.Test.Event.Type")
                         intelligence.analytics.track(testEvent)
                         IntelligenceManager.startupWithIntelligence(intelligence)
-                        
-                        self.segueToDemo()
+
+                        self.startupViewController?.state = .Started
                     }
                     else {
-                            // Allow the user to retry to startup intelligence.
-                            let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
-                            let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
-                            controller.addAction(UIAlertAction(title: "Retry", style: .Cancel, handler: { (action) -> Void in
-                                // Try again to start intelligence
-                                self.startupIntelligence()
-                            }))
-                            
-                            self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+                        // Allow the user to retry to startup intelligence.
+                        let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
+                        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+                        controller.addAction(UIAlertAction(title: "Retry", style: .Cancel, handler: { (action) -> Void in
+                            // Try again to start intelligence
+                            self.startupIntelligence()
+                        }))
 
+                        self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
                     }
                 }
             }
@@ -74,7 +77,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             self.alert(withMessage: "Treat the error with care!")
         }
     }
-    
 
 	func applicationDidEnterBackground(application: UIApplication) {
         IntelligenceManager.intelligence?.analytics.pause()
@@ -98,24 +100,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                 // multiple times and may receive the same device token from Apple.
                 NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: IntelligenceDemoStoredDeviceTokenKey)
                 NSUserDefaults.standardUserDefaults().synchronize()
-                
+
                 self.alert(withMessage: "Registration Succeeded!")
             }
         }
     }
-    
+
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         self.alert(withMessage: "Unable to Register for Push Notifications")
     }
-    
-    func segueToDemo() {
-        guard let viewController = self.window?.rootViewController else {
-            return;
-        }
-        
-        viewController.performSegueWithIdentifier("intelligenceStartedUp", sender: self)
-    }
-    
+
     func alert(withMessage message: String) {
         if !NSThread.isMainThread() {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
@@ -123,13 +117,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                 })
             return
         }
-        
+
         var presenterViewController = window?.rootViewController
-        
+
         while let presentedViewController = presenterViewController?.presentedViewController {
             presenterViewController = presentedViewController
         }
-        
+
         if let presenterViewController = presenterViewController {
             guard let _ = presenterViewController.view.window else {
                 // presenterViewController in not yet atttached to the window
@@ -138,7 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                     })
                 return
             }
-            
+
             let controller = UIAlertController(title: "Intelligence Demo", message: message, preferredStyle: .Alert)
             controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presenterViewController.presentViewController(controller, animated: true, completion: nil)
@@ -146,35 +140,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         else {
             print("Unable to raise alert: " + message)
         }
+
+        // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
+        startupViewController?.state = .Failed
     }
-    
+
     // MARK:- IntelligenceDelegate
-    
+
     func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
     }
-    
+
     func accountDisabledForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
     }
-    
+
     func accountLockedForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
     }
-    
+
     func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
     }
-    
+
     func userCreationFailedForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
     }
-    
+
     func userLoginRequiredForIntelligence(intelligence: Intelligence) {
         // Present login screen or call identity.login with credentials stored in Keychain.
         alert(withMessage: "Token expired, you will need to login again.")
     }
-    
+
     func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
         alert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
     }
