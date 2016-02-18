@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             return
         }
 
+        startupViewController?.state = .Starting
+
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
 
@@ -48,6 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                         self.startupViewController?.state = .Started
                     }
                     else {
+                        self.startupViewController?.state = .Failed
+
                         // Allow the user to retry to startup intelligence.
                         let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
                         let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
@@ -118,6 +122,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             return
         }
 
+        // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
+        startupViewController?.state = .Failed
+
         var presenterViewController = window?.rootViewController
 
         while let presentedViewController = presenterViewController?.presentedViewController {
@@ -140,9 +147,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         else {
             print("Unable to raise alert: " + message)
         }
-
-        // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
-        startupViewController?.state = .Failed
     }
 
     // MARK:- IntelligenceDelegate

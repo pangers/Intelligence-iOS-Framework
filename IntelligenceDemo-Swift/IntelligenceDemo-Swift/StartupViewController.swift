@@ -16,17 +16,17 @@ enum StartupState {
 
 class StartupViewController : UIViewController {
 
-    @IBOutlet weak var loadingLabel: UILabel!
+    @IBOutlet weak var loadingLabel: UILabel?
 
     var state: StartupState = .Starting {
         didSet {
             switch (state) {
             case .Starting:
-                loadingLabel.text = "Wait while we startup Intelligence..."
+                loadingLabel?.text = "Wait while we startup Intelligence..."
             case .Started:
                 performSegueWithIdentifier("intelligenceStartedUp", sender: self)
             case .Failed:
-                loadingLabel.text = "Unable to startup Intelligence."
+                loadingLabel?.text = "Unable to startup Intelligence."
             }
         }
     }
