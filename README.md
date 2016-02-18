@@ -702,7 +702,7 @@ IntelligenceManager.intelligence.identity.revokeRole(roleId, user: user, callbac
 
 ```
 
-Note that revokeRole only revokes one copy of that role, so if a role has been assigned mutliple times it will need to be revoked multiple times.
+Note that revokeRole only revokes one copy of that role, so if a role has been assigned multiple times it will need to be revoked multiple times.
 
 ## Location Module ##
 
