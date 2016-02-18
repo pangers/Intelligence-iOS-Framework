@@ -80,7 +80,7 @@ class ViewUserViewController : UIViewController {
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
-        IntelligenceManager.intelligence.identity.updateUser(user, callback: { (user, error) -> Void in
+        IntelligenceManager.intelligence?.identity.updateUser(user, callback: { (user, error) -> Void in
             if let user = user {
                 self.user = user
                 self.showInformation(" ")

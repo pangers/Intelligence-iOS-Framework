@@ -10,7 +10,7 @@ import IntelligenceSDK
 
 class IntelligenceManager {
     
-    internal private(set) static var intelligence:Intelligence!
+    internal private(set) static var intelligence: Intelligence?
         
     static func startupWithIntelligence(intelligence:Intelligence) {
         IntelligenceManager.intelligence = intelligence
