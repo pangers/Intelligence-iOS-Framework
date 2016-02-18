@@ -46,28 +46,28 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
             switch (err.code) {
                     
                 case ConfigurationErrorFileNotFoundError:
-                    [self alertWithMessage:@"The file you specified does not exist!"];
+                    [self unrecoverableAlertWithMessage:@"The file you specified does not exist!"];
                     break;
                     
                 case ConfigurationErrorInvalidFileError:
-                    [self alertWithMessage:@"The file is invalid! Check that the JSON provided is correct."];
+                    [self unrecoverableAlertWithMessage:@"The file is invalid! Check that the JSON provided is correct."];
                     break;
                     
                 case ConfigurationErrorMissingPropertyError:
-                    [self alertWithMessage:@"You missed a property!"];
+                    [self unrecoverableAlertWithMessage:@"You missed a property!"];
                     break;
                     
                 case ConfigurationErrorInvalidPropertyError:
-                    [self alertWithMessage:@"There is an invalid property!"];
+                    [self unrecoverableAlertWithMessage:@"There is an invalid property!"];
                     break;
                     
                 default:
-                    [self alertWithMessage:@"Unknown initialization error!"];
+                    [self unrecoverableAlertWithMessage:@"Unknown initialization error!"];
                     break;
             }
         }
         else {
-            [self alertWithMessage:@"Unknown initialization error!"];
+            [self unrecoverableAlertWithMessage:@"Unknown initialization error!"];
         }
     }
     
@@ -163,13 +163,18 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 }
 
 /// This method should only be called if the startup fails.
+- (void)unrecoverableAlertWithMessage:(NSString*)message {
+    // Notify startup view controller of new state.
+    [[self startupViewController] setState:INTStartupStateFailed];
+    // Present alert...
+    [self alertWithMessage:message];
+}
+
 - (void)alertWithMessage:(NSString*)message {
     if (![NSThread isMainThread]) {
         [self performSelectorOnMainThread:@selector(alertWithMessage:) withObject:message waitUntilDone:YES];
         return;
     }
-    // Lets notify the startupViewController of the failure.
-    [[self startupViewController] setState:INTStartupStateFailed];
 
     UIViewController *presenterViewController = self.window.rootViewController;
     
@@ -195,37 +200,37 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 
 /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
 - (void)credentialsIncorrectForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during login, check credentials for Intelligence accounts."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during login, check credentials for Intelligence accounts."];
 }
 
 /// Account has been disabled and no longer active. Credentials are no longer valid.
 - (void)accountDisabledForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during login, the Intelligence account is disabled."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during login, the Intelligence account is disabled."];
 }
 
 /// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
 - (void)accountLockedForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator."];
 }
 
 /// Token is invalid or expired, this may occur if your Application is configured incorrectly.
 - (void)tokenInvalidOrExpiredForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during user creation, check credentials for Intelligence accounts."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during user creation, check credentials for Intelligence accounts."];
 }
 
 /// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
 - (void)userCreationFailedForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly."];
 }
 
 /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
 - (void)userLoginRequiredForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Token expired, you will need to login again."];
+    [self unrecoverableAlertWithMessage:@"Token expired, you will need to login again."];
 }
 
 /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
 - (void)userRoleAssignmentFailedForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly."];
+    [self unrecoverableAlertWithMessage:@"Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly."];
 }
 
 

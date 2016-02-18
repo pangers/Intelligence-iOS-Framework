@@ -66,19 +66,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             }
         }
         catch IntelligenceSDK.ConfigurationError.FileNotFoundError {
-            self.alert(withMessage: "The file you specified does not exist!")
+            unrecoverableAlert(withMessage: "The file you specified does not exist!")
         }
         catch IntelligenceSDK.ConfigurationError.InvalidFileError {
-            self.alert(withMessage: "The file is invalid! Check that the JSON provided is correct.")
+            unrecoverableAlert(withMessage: "The file is invalid! Check that the JSON provided is correct.")
         }
         catch IntelligenceSDK.ConfigurationError.MissingPropertyError {
-            self.alert(withMessage: "You missed a property!")
+            unrecoverableAlert(withMessage: "You missed a property!")
         }
         catch IntelligenceSDK.ConfigurationError.InvalidPropertyError {
-            self.alert(withMessage: "There is an invalid property!")
+            unrecoverableAlert(withMessage: "There is an invalid property!")
         }
         catch {
-            self.alert(withMessage: "Treat the error with care!")
+            unrecoverableAlert(withMessage: "Treat the error with care!")
         }
     }
 
@@ -111,10 +111,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     }
 
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        self.alert(withMessage: "Unable to Register for Push Notifications")
+        alert(withMessage: "Unable to Register for Push Notifications")
     }
 
-    /// This method should only be called if the startup fails.
+    /// Only called if startup fails.
+    private func unrecoverableAlert(withMessage message: String) {
+        // Notify startup view controller of new state
+        startupViewController?.state = .Failed
+        // Present alert
+        alert(withMessage: message)
+    }
+
     func alert(withMessage message: String) {
         if !NSThread.isMainThread() {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
@@ -122,9 +129,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                 })
             return
         }
-
-        // Lets notify the startupViewController of the failure.
-        startupViewController?.state = .Failed
 
         var presenterViewController = window?.rootViewController
 
@@ -153,32 +157,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     // MARK:- IntelligenceDelegate
 
     func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
     }
 
     func accountDisabledForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
     }
 
     func accountLockedForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
     }
 
     func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
     }
 
     func userCreationFailedForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
     }
 
     func userLoginRequiredForIntelligence(intelligence: Intelligence) {
         // Present login screen or call identity.login with credentials stored in Keychain.
-        alert(withMessage: "Token expired, you will need to login again.")
+        unrecoverableAlert(withMessage: "Token expired, you will need to login again.")
     }
 
     func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
-        alert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
+        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
     }
 }
 
