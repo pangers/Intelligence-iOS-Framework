@@ -79,12 +79,6 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     /// If authentication fails the function completes.
     /// This cycle will continue until the current operation succeds or timesToRetry reaches 0.
     func handleUnauthorizedError() {
-        // We don't store password for logged in users, they must login again
-        if oauth?.tokenType == .LoggedInUser {
-            output?.error = NSError(code: RequestError.Unauthorized.rawValue)
-            return
-        }
-
         let semaphore = dispatch_semaphore_create(0)
         
         // Attempt to get the pipeline for our OAuth token type.
