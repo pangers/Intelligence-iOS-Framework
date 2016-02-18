@@ -27,6 +27,7 @@
 		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
 		FE0C64E31B7247B6008C02D7 /* INTIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* INTIdentityModuleViewController.m */; };
 		FE22F8881B5FEFF400711EBF /* IntelligenceConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */; };
+		FE240A831C76299B00D2E336 /* INTStartupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE240A821C76299B00D2E336 /* INTStartupViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -74,6 +75,8 @@
 		FE0C64E11B7247B6008C02D7 /* INTIdentityModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTIdentityModuleViewController.h; sourceTree = "<group>"; };
 		FE0C64E21B7247B6008C02D7 /* INTIdentityModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTIdentityModuleViewController.m; sourceTree = "<group>"; };
 		FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = IntelligenceConfiguration.json; sourceTree = "<group>"; };
+		FE240A811C76299B00D2E336 /* INTStartupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTStartupViewController.h; sourceTree = "<group>"; };
+		FE240A821C76299B00D2E336 /* INTStartupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTStartupViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23791B70B89F00CE0C81 /* Intelligence */,
+				FE240A841C7629A100D2E336 /* Startup */,
 				BB0A236E1B70B1A400CE0C81 /* Identity */,
 				BB77B9451BC3B76D00B53ABE /* Location */,
 				455D85F71BC2D74100A64B96 /* Analytics */,
@@ -179,6 +183,15 @@
 				BB77B94C1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m */,
 			);
 			name = Location;
+			sourceTree = "<group>";
+		};
+		FE240A841C7629A100D2E336 /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				FE240A811C76299B00D2E336 /* INTStartupViewController.h */,
+				FE240A821C76299B00D2E336 /* INTStartupViewController.m */,
+			);
+			name = Startup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,6 +275,7 @@
 				BB0A237F1B70C60D00CE0C81 /* INTViewUserViewController.m in Sources */,
 				BB77B94A1BC3B7AC00B53ABE /* INTLocationModuleViewController.m in Sources */,
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,
+				FE240A831C76299B00D2E336 /* INTStartupViewController.m in Sources */,
 				BB0A237C1B70B8BE00CE0C81 /* INTIntelligenceManager.m in Sources */,
 				BB77B94D1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m in Sources */,
 				455D85FA1BC2D87D00A64B96 /* INTScreenViewedViewController.m in Sources */,

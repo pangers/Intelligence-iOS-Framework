@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "INTIntelligenceManager.h"
+#import "INTStartupViewController.h"
 
 NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStoredDeviceTokenKey";
 
@@ -23,7 +24,16 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
     return YES;
 }
 
+- (INTStartupViewController *)startupViewController {
+    if ([self.window.rootViewController isKindOfClass:[INTStartupViewController class]]) {
+        return self.window.rootViewController;
+    }
+    return nil;
+}
+
 -(void) startupIntelligence {
+    [[self startupViewController] setState:INTStartupStateStarting];
+
     // Attempt to instantiate Intelligence from file.
     NSError *err;
     Intelligence* intelligence = [[Intelligence alloc] initWithDelegate:self file:@"IntelligenceConfiguration" inBundle:[NSBundle mainBundle] error:&err];
@@ -74,7 +84,7 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
                 INTEvent *myTestEvent = [[INTEvent alloc] initWithType:@"Intelligence.Test.Event.Type" value:1.0 targetId:@"5" metadata:nil];
                 [intelligence.analytics track:myTestEvent];
 
-                [self doSegueToDemo];
+                [[self startupViewController] setState:INTStartupStateStarted];
             }
             else {
                 [self didFailToStartupIntelligence];
@@ -84,6 +94,8 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 }
 
 -(void) didFailToStartupIntelligence {
+    [[self startupViewController] setState:INTStartupStateFailed];
+
     NSString* message = @"Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup.";
     UIAlertController* viewController = [UIAlertController alertControllerWithTitle:@"Error"
                                                                             message:message
@@ -155,7 +167,9 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
         [self performSelectorOnMainThread:@selector(alertWithMessage:) withObject:message waitUntilDone:YES];
         return;
     }
-    
+    // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
+    [[self startupViewController] setState:INTStartupStateFailed];
+
     UIViewController *presenterViewController = self.window.rootViewController;
     
     while (presenterViewController.presentedViewController != nil) {
