@@ -9,9 +9,10 @@
 import IntelligenceSDK
 
 class IntelligenceManager {
-    
+
+    // This variable may be nil if startup has not been called successfully.
     internal private(set) static var intelligence: Intelligence?
-        
+    
     static func startupWithIntelligence(intelligence:Intelligence) {
         IntelligenceManager.intelligence = intelligence
     }
