@@ -162,12 +162,13 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
     }
 }
 
+/// This method should only be called if the startup fails.
 - (void)alertWithMessage:(NSString*)message {
     if (![NSThread isMainThread]) {
         [self performSelectorOnMainThread:@selector(alertWithMessage:) withObject:message waitUntilDone:YES];
         return;
     }
-    // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
+    // Lets notify the startupViewController of the failure.
     [[self startupViewController] setState:INTStartupStateFailed];
 
     UIViewController *presenterViewController = self.window.rootViewController;

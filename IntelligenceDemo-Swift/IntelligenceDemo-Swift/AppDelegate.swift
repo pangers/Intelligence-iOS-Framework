@@ -114,6 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         self.alert(withMessage: "Unable to Register for Push Notifications")
     }
 
+    /// This method should only be called if the startup fails.
     func alert(withMessage message: String) {
         if !NSThread.isMainThread() {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
@@ -122,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             return
         }
 
-        // These alerts are only shown when the startup has failed in some way, lets notify the startupViewController.
+        // Lets notify the startupViewController of the failure.
         startupViewController?.state = .Failed
 
         var presenterViewController = window?.rootViewController
