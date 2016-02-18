@@ -68,7 +68,7 @@ class IdentityModuleViewController : UITableViewController {
                 return
             }
             
-            IntelligenceManager.intelligence.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
+            IntelligenceManager.intelligence?.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
                 guard let strongSelf = self else {
                     return
                 }
@@ -112,7 +112,7 @@ class IdentityModuleViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
+            IntelligenceManager.intelligence?.identity.getUser(userId, callback: { [weak strongSelf] (user, error) -> () in
                 guard let strongSelf = strongSelf else {
                     return
                 }

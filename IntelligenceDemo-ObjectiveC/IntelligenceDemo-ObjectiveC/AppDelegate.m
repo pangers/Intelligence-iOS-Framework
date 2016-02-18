@@ -205,7 +205,7 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 
 /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
 - (void)userLoginRequiredForIntelligence:(Intelligence * __nonnull)intelligence {
-    [self alertWithMessage:@"Present login screen or call identity.login with credentials stored in Keychain."];
+    [self alertWithMessage:@"Token expired, you will need to login again."];
 }
 
 /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.

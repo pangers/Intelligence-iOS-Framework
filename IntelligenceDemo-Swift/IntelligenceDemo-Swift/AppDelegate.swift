@@ -77,19 +77,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     
 
 	func applicationDidEnterBackground(application: UIApplication) {
-        IntelligenceManager.intelligence.analytics.pause()
+        IntelligenceManager.intelligence?.analytics.pause()
 	}
 
 	func applicationWillEnterForeground(application: UIApplication) {
-        IntelligenceManager.intelligence.analytics.resume()
+        IntelligenceManager.intelligence?.analytics.resume()
 	}
 
 	func applicationWillTerminate(application: UIApplication) {
-        IntelligenceManager.intelligence.shutdown()
+        IntelligenceManager.intelligence?.shutdown()
 	}
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        IntelligenceManager.intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+        IntelligenceManager.intelligence?.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
             if error != nil {
                 self.alert(withMessage: "Failed with error: \(error!.code)")
             } else {
