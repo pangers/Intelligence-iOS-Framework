@@ -159,31 +159,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
     // MARK:- IntelligenceDelegate
 
+    /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
     func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
     }
 
+    /// Account has been disabled and no longer active. Credentials are no longer valid.
     func accountDisabledForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
     }
 
+    /// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
     func accountLockedForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
     }
-
+    
+    /// Token is invalid or expired, this may occur if your Application is configured incorrectly.
     func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
     }
 
+    /// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
     func userCreationFailedForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
     }
-
+    
+    /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
     func userLoginRequiredForIntelligence(intelligence: Intelligence) {
         // Present login screen or call identity.login with credentials stored in Keychain.
         unrecoverableAlert(withMessage: "Token expired, you will need to login again.")
     }
 
+    /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
     func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
         unrecoverableAlert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
     }
