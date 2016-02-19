@@ -652,7 +652,7 @@ The 'unregisterDeviceTokenWithId' method can return the follow additional errors
 
 ### Assign Role ###
 
-A user can have multiple roles and it may be necessary to assign another from within the SDK.
+A user can have multiple roles (and multiple of the same role) and it may be necessary to assign another from within the SDK.
 
 *Swift:*
 ```
@@ -678,7 +678,7 @@ IntelligenceManager.intelligence.identity.assignRole(roleId, user: user, callbac
 
 ### Revoke Role ###
 
-A user can have multiple roles and it may be necessary to revoke these from within the SDK.
+A user can have multiple roles (and multiple of the same role) and it may be necessary to revoke these from within the SDK.
 
 *Swift:*
 ```
@@ -701,6 +701,8 @@ IntelligenceManager.intelligence.identity.revokeRole(roleId, user: user, callbac
 }];
 
 ```
+
+Note that revokeRole only revokes one copy of that role, so if a role has been assigned multiple times it will need to be revoked multiple times.
 
 ## Location Module ##
 
