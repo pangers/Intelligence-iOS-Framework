@@ -116,12 +116,6 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
                 oauth.userId = serverUser?.userId
             }
-            else {
-                // Pass error back to developer (special case, use delegate).
-                // Probably means that user already exists, or perhaps Application is configured incorrectly
-                // and cannot create users.
-                self?.delegate?.userCreationFailed()
-            }
         }
     }
     
@@ -136,6 +130,12 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     */
     private func createSDKUserRecursively(counter: Int, completion: (success: Bool) -> ()) {
         if counter <= 1 {
+            
+            // Pass error back to developer (special case, use delegate).
+            // Probably means that user already exists, or perhaps Application is configured incorrectly
+            // and cannot create users.
+            self.delegate?.userCreationFailed()
+            
             completion(success: false)
             return
         }
