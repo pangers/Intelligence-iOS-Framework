@@ -13,6 +13,14 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
     override func main() {
         super.main()
         assert(oauth != nil && network != nil)
+
+        // If the password is unset and the token type is not 'Application'
+        // (which doesn't require a password for Login). Lets raise an error.
+        if oauth?.tokenType != .Application && oauth?.password == nil {
+            output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+            return
+        }
+
         let request = NSURLRequest.int_URLRequestForLogin(oauth!, configuration: configuration!, network: network!)
         output = session.int_executeSynchronousDataTaskWithRequest(request)
         
