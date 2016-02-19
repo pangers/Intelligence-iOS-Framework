@@ -25,6 +25,7 @@
 		BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBBB63591BC27BF700802EF9 /* MapKit.framework */; };
 		BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
+		FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE240A7E1C7623B700D2E336 /* StartupViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,7 @@
 		BBBB63591BC27BF700802EF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationModuleViewController.swift; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
+		FE240A7E1C7623B700D2E336 /* StartupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23781B70B89600CE0C81 /* Intelligence */,
+				FE240A801C7623BB00D2E336 /* Startup */,
 				BBBB63581BC27AF500802EF9 /* Location */,
 				BB3534831B6FAAB900C67500 /* Identity */,
 				455D85F11BC2BFCB00A64B96 /* Analytics */,
@@ -147,6 +150,14 @@
 				BB61731D1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift */,
 			);
 			name = Location;
+			sourceTree = "<group>";
+		};
+		FE240A801C7623BB00D2E336 /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				FE240A7E1C7623B700D2E336 /* StartupViewController.swift */,
+			);
+			name = Startup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +238,7 @@
 			files = (
 				BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */,
 				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
+				FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */,
 				BB61731E1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */,
 				BB3534871B6FAB5800C67500 /* IntelligenceManager.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
