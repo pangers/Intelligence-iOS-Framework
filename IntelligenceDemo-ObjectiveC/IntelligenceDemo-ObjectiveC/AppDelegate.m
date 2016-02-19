@@ -163,6 +163,8 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 }
 
 /// This method should only be called if the startup fails.
+/// Calling this method will present an alert and put the app into an unrecoverable state.
+/// You will need to run the app again in order to try startup again.
 - (void)unrecoverableAlertWithMessage:(NSString*)message {
     // Notify startup view controller of new state.
     [[self startupViewController] setState:INTStartupStateFailed];
