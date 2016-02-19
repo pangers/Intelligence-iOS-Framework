@@ -114,8 +114,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         alert(withMessage: "Unable to Register for Push Notifications")
     }
 
-    /// This method should only be called if the startup fails.
-    /// Calling this method will present an alert and put the app into an unrecoverable state.
+    /// This method should only be called if there is a IntelligenceSDK.ConfigurationError during
+    /// startup or if one of the INTIntelligenceDelegate methods is invoked after calling startup.
+    /// This method will present an alert and put the app into an unrecoverable state.
     /// You will need to run the app again in order to try startup again.
     private func unrecoverableAlert(withMessage message: String) {
         // Notify startup view controller of new state
