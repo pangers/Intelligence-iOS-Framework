@@ -12,6 +12,9 @@ private let BodyError = "error"
 private let BodyErrorDescription = "error_description"
 
 class IntelligenceOAuthOperation : IntelligenceAPIOperation {
+
+    // This method should never call super otherwise we will get stuck in a 'OAuth' loop
+    // due to the 'network?.getPipeline(forOAuth:...' call.
     override func handleUnauthorizedError() {
         let data = self.output?.data?.int_jsonDictionary
         
