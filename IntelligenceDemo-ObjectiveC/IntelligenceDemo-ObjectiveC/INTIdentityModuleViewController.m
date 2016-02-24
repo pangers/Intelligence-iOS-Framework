@@ -78,6 +78,9 @@ static NSString * const INTViewUserSegue = @"ViewUser";
             return;
         }
         
+        // logout before we login to clear the previous token (which means we check the login credentials, not just the token)
+        [INTIntelligenceManager.intelligence.identity logout];
+        
         [INTIntelligenceManager.intelligence.identity loginWithUsername:username password:password callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             

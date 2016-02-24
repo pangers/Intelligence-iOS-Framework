@@ -68,6 +68,9 @@ class IdentityModuleViewController : UITableViewController {
                 return
             }
             
+            // logout before we login to clear the previous token (which means we check the login credentials, not just the token)
+            IntelligenceManager.intelligence?.identity.logout()
+            
             IntelligenceManager.intelligence?.identity.login(withUsername: username, password: password, callback: { [weak self] (user, error) -> () in
                 guard let strongSelf = self else {
                     return
