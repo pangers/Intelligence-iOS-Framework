@@ -129,8 +129,8 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     copiedOperation.start()
                 }
                 else {
-                    // Forward the erorr from the OAuth pipline to this pipeline
-                    self?.output?.error = pipeline?.output?.error;
+                    // Forward the error from the OAuth pipeline to this pipeline
+                    self?.output?.error = pipeline?.output?.error
                     
                     dispatch_semaphore_signal(semaphore)
                 }
