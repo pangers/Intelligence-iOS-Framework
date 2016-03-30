@@ -96,9 +96,14 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
 
         // Start monitoring our new geofences array.
         geofences.forEachInMainThread() { [weak self] in
+            
+            // take a look at : https://tigerspike.atlassian.net/browse/INT-968
+            // and https://tigerspike.atlassian.net/browse/INT-967
+            let radius = $0.radius >= 100 ? $0.radius : 100
+            
             let region = CLCircularRegion(
                 center: CLLocationCoordinate2DMake($0.latitude, $0.longitude),
-                radius: $0.radius,
+                radius: radius,
                 identifier: $0.id.description)
             
             self?.locationManager.startMonitoringForRegion(region)
