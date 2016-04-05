@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                         let testEvent = Event(withType: "Intelligence.Test.Event.Type")
                         intelligence.analytics.track(testEvent)
                         IntelligenceManager.startupWithIntelligence(intelligence)
-                        
+                        self.registerForPush()
                         self.segueToDemo()
                     }
                     else {
@@ -74,8 +74,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             self.alert(withMessage: "Treat the error with care!")
         }
     }
-    
 
+    func registerForPush() {
+        let application = UIApplication.sharedApplication()
+        application.registerForRemoteNotifications()
+        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+    }
+    
 	func applicationDidEnterBackground(application: UIApplication) {
         IntelligenceManager.intelligence.analytics.pause()
 	}

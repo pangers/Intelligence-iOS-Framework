@@ -1,11 +1,11 @@
 {
-    "client_id": "iOSIntelligenceSDKApp_n",
-    "client_secret": "jLmYC6Onq2MRM4y7755in6r127mmzchrvxqnuzul",
-    "application_id": 10068,
-    "project_id": 40002,
+    "client_id": "Sydney_iOS_SDK_1458776025",
+    "client_secret": "t8ZYuj7Bxc8kLp0FUMROl6P",
+    "application_id": 4200,
+    "project_id": 40039,
     "region": "SG",
-    "environment": "uat",
-    "company_id" : 19017,
-    "sdk_user_role": 16017,
+    "environment": "staging",
+    "company_id" : 9085,
+    "sdk_user_role" : 3149,
     "certificate_trust_policy": "any_non_production"
 }
