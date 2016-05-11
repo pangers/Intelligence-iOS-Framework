@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */; };
 		4531DEEE1C6BCAC90065025A /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; };
 		4531DEEF1C6BCAC90065025A /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454DA8091C69DE7500C13254 /* ManageUserViewController.swift */; };
@@ -25,6 +26,7 @@
 		BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBBB63591BC27BF700802EF9 /* MapKit.framework */; };
 		BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */; };
 		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
+		FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE240A7E1C7623B700D2E336 /* StartupViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsCustomEventViewController.swift; sourceTree = "<group>"; };
 		4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		454DA8091C69DE7500C13254 /* ManageUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageUserViewController.swift; sourceTree = "<group>"; };
 		455D85EF1BC2BFC400A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 		BBBB63591BC27BF700802EF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationModuleViewController.swift; sourceTree = "<group>"; };
 		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
+		FE240A7E1C7623B700D2E336 /* StartupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,7 @@
 			children = (
 				455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */,
 				455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */,
+				0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -107,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0A23781B70B89600CE0C81 /* Intelligence */,
+				FE240A801C7623BB00D2E336 /* Startup */,
 				BBBB63581BC27AF500802EF9 /* Location */,
 				BB3534831B6FAAB900C67500 /* Identity */,
 				455D85F11BC2BFCB00A64B96 /* Analytics */,
@@ -149,6 +155,14 @@
 			name = Location;
 			sourceTree = "<group>";
 		};
+		FE240A801C7623BB00D2E336 /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				FE240A7E1C7623B700D2E336 /* StartupViewController.swift */,
+			);
+			name = Startup;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -182,6 +196,7 @@
 				TargetAttributes = {
 					7FDAAAD81B5D35AE00DF2BE6 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 5364AC7HJT;
 					};
 				};
 			};
@@ -227,12 +242,14 @@
 			files = (
 				BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */,
 				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
+				FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */,
 				BB61731E1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */,
 				BB3534871B6FAB5800C67500 /* IntelligenceManager.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
 				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
 				455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */,
 				454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */,
+				0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,11 +386,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
 			};
 			name = Debug;
 		};
@@ -381,11 +399,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: TigerSpike Pty Ltd";
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
 			};
 			name = Release;
 		};

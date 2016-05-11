@@ -117,6 +117,10 @@ public protocol LocationModuleProtocol : ModuleProtocol {
     /// The delegate that will be notified upon entering/exiting a geofence.
     var locationDelegate:LocationModuleDelegate? { get set }
     
+    /// set this property to true if you want to include location in all of your intelligence events. default value is
+    /// false. location permissions are required to granted before this property is used which is the caller's
+    /// responsibility. for more information, read the documentation.
+    @objc var includeLocationInEvents: Bool { get set }
 }
 
 /// Intelligence coordinate object. CLLocationCoordinate2D can't be used as an optional.
@@ -153,6 +157,16 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     private var lastLocation: Coordinate?
     
     var locationDelegate: LocationModuleDelegate?
+    
+    var includeLocationInEvents: Bool = false {
+        didSet {
+            if includeLocationInEvents {
+                self.startMonitoringLocation()
+            } else {
+                self.stopMonitoringLocation()
+            }
+        }
+    }
     
     /// A reference to the analytics module so we can track the geofences entered/exited events
     internal weak var analytics: AnalyticsModuleProtocol?
@@ -242,6 +256,15 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     func setLocationAccuracy(accuracy:CLLocationAccuracy) {
         self.locationManager.setLocationAccuracy(accuracy)
+    }
+    
+    
+    internal func startMonitoringLocation() {
+        self.locationManager.startUpdatingLocation()
+    }
+    
+    internal func stopMonitoringLocation() {
+        self.locationManager.stopUpdatingLocation()
     }
     
     /**

@@ -88,6 +88,8 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
             
             // Pipeline will be nil if it already exists in the queue.
             guard let pipeline = pipeline else {
+                self.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                
                 dispatch_semaphore_signal(semaphore)
                 return
             }
@@ -95,11 +97,15 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
             pipeline.callback = { [weak self, weak pipeline] (returnedOperation: IntelligenceAPIOperation) in
                 if pipeline?.output?.error == nil {
                     guard let timesToRetry = self?.timesToRetry else {
+                        self?.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                        
                         dispatch_semaphore_signal(semaphore)
                         return
                     }
                     
                     if timesToRetry == 0 {
+                        self?.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                        
                         dispatch_semaphore_signal(semaphore)
                         return
                     }
@@ -109,7 +115,7 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     
                     // Remove the current operations completion block
                     // Only the copiedOperation should complete
-                    self?.completionBlock = nil
+                    self?.callback = nil
                     
                     // Take off this try
                     copiedOperation.timesToRetry = timesToRetry - 1
@@ -123,8 +129,8 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     copiedOperation.start()
                 }
                 else {
-                    // Call completion block for current operation.
-                    self?.complete()
+                    // Forward the error from the OAuth pipeline to this pipeline
+                    self?.output?.error = pipeline?.output?.error
                     
                     dispatch_semaphore_signal(semaphore)
                 }

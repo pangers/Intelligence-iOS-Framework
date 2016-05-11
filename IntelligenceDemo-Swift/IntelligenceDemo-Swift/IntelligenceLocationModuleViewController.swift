@@ -183,8 +183,14 @@ class IntelligenceLocationModuleViewController : UIViewController, UITableViewDa
         mapView.removeOverlays(mapView.overlays)
         
         for geofence in geofences {
+            
+            // take a look at : https://tigerspike.atlassian.net/browse/INT-968
+            // and https://tigerspike.atlassian.net/browse/INT-967
+            let radius = geofence.radius >= 100 ? geofence.radius : 100
+
+            
             let coordinate = CLLocationCoordinate2D(latitude: geofence.latitude, longitude: geofence.longitude)
-            let circle = MKCircle(centerCoordinate: coordinate, radius: geofence.radius)
+            let circle = MKCircle(centerCoordinate: coordinate, radius: radius)
             mapView.addOverlay(circle)
         }
     }
