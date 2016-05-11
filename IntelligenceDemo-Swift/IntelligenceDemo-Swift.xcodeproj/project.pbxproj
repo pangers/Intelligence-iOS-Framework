@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */; };
 		4531DEEE1C6BCAC90065025A /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; };
 		4531DEEF1C6BCAC90065025A /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454DA8091C69DE7500C13254 /* ManageUserViewController.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsCustomEventViewController.swift; sourceTree = "<group>"; };
 		4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		454DA8091C69DE7500C13254 /* ManageUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageUserViewController.swift; sourceTree = "<group>"; };
 		455D85EF1BC2BFC400A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			children = (
 				455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */,
 				455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */,
+				0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				TargetAttributes = {
 					7FDAAAD81B5D35AE00DF2BE6 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 5364AC7HJT;
 					};
 				};
 			};
@@ -245,6 +249,7 @@
 				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
 				455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */,
 				454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */,
+				0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,11 +386,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
 			};
 			name = Debug;
 		};
@@ -393,11 +399,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: TigerSpike Pty Ltd";
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-Swift";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
 			};
 			name = Release;
 		};

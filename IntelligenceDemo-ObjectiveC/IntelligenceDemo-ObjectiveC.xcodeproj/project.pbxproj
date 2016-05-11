@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0AAE1E1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0AAE1D1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m */; };
 		4542B5581C6BCA0B00763B76 /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */; };
 		4542B5591C6BCA0B00763B76 /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		454DA80D1C69F78D00C13254 /* INTManageUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454DA80C1C69F78D00C13254 /* INTManageUserViewController.m */; };
@@ -45,6 +46,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B0AAE1C1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTAnalyticsCustomEventViewController.h; sourceTree = "<group>"; };
+		0B0AAE1D1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTAnalyticsCustomEventViewController.m; sourceTree = "<group>"; };
 		4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		454DA80B1C69F78D00C13254 /* INTManageUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTManageUserViewController.h; sourceTree = "<group>"; };
 		454DA80C1C69F78D00C13254 /* INTManageUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTManageUserViewController.m; sourceTree = "<group>"; };
@@ -98,6 +101,8 @@
 				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
 				455D85F81BC2D87D00A64B96 /* INTScreenViewedViewController.h */,
 				455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */,
+				0B0AAE1C1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.h */,
+				0B0AAE1D1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -272,6 +277,7 @@
 				FE0C64E31B7247B6008C02D7 /* INTIdentityModuleViewController.m in Sources */,
 				454DA80D1C69F78D00C13254 /* INTManageUserViewController.m in Sources */,
 				7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */,
+				0B0AAE1E1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m in Sources */,
 				BB0A237F1B70C60D00CE0C81 /* INTViewUserViewController.m in Sources */,
 				BB77B94A1BC3B7AC00B53ABE /* INTLocationModuleViewController.m in Sources */,
 				7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */,

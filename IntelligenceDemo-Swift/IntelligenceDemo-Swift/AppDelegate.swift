@@ -48,6 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
                         IntelligenceManager.startupWithIntelligence(intelligence)
 
                         self.startupViewController?.state = .Started
+                        self.registerForPush()
+                        self.segueToDemo()
                     }
                     else {
                         self.startupViewController?.state = .Failed
@@ -82,6 +84,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         }
     }
 
+    func registerForPush() {
+        let application = UIApplication.sharedApplication()
+        application.registerForRemoteNotifications()
+        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+    }
+    
 	func applicationDidEnterBackground(application: UIApplication) {
         IntelligenceManager.intelligence?.analytics.pause()
 	}
