@@ -7,21 +7,33 @@
 //
 
 import UIKit
+import CoreLocation
 
 import IntelligenceSDK
+
+
+extension AppDelegate: CLLocationManagerDelegate {
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        print("authorization status changed")
+        if status == .AuthorizedAlways || status == .AuthorizedWhenInUse {
+            startupIntelligence()
+        }
+    }
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
-    var window: UIWindow?
-
-    var startupViewController: StartupViewController? {
-        return self.window?.rootViewController as? StartupViewController
-    }
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
-        startupIntelligence()
+	var window: UIWindow?
+    let locationManager: CLLocationManager = CLLocationManager()
+    
+	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+//        startupIntelligence()
+        locationManager.delegate = self
+        if CLLocationManager.authorizationStatus() == .NotDetermined {
+            locationManager.requestAlwaysAuthorization()
+        }
 
         return true
     }
@@ -35,13 +47,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
-
+            intelligence.location.includeLocationInEvents = true
+            
             // Startup all modules.
             intelligence.startup { (success) -> () in
 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
 
                     if success {
+                        
+                        
                         // Register test event.
                         let testEvent = Event(withType: "Intelligence.Test.Event.Type")
                         intelligence.analytics.track(testEvent)
