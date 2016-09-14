@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; settings = {ASSET_TAGS = (); }; };
-		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; settings = {ASSET_TAGS = (); }; };
+		455D85F61BC2D73C00A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85F41BC2D73C00A64B96 /* Analytics.storyboard */; };
+		455D85FA1BC2D87D00A64B96 /* PHXScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F91BC2D87D00A64B96 /* PHXScreenViewedViewController.m */; };
 		7FDAAB051B5D360800DF2BE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB041B5D360800DF2BE6 /* main.m */; };
 		7FDAAB081B5D360800DF2BE6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */; };
 		7FDAAB0B1B5D360800DF2BE6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */; };
@@ -18,9 +18,9 @@
 		BB0A23711B70B1B800CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A236F1B70B1B800CE0C81 /* Identity.storyboard */; };
 		BB0A237C1B70B8BE00CE0C81 /* PHXPhoenixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237B1B70B8BE00CE0C81 /* PHXPhoenixManager.m */; };
 		BB0A237F1B70C60D00CE0C81 /* PHXViewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0A237E1B70C60D00CE0C81 /* PHXViewUserViewController.m */; };
-		BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* Location.storyboard */; settings = {ASSET_TAGS = (); }; };
-		BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */; settings = {ASSET_TAGS = (); }; };
-		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; settings = {ASSET_TAGS = (); }; };
+		BB77B9471BC3B78400B53ABE /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB77B9461BC3B78400B53ABE /* Location.storyboard */; };
+		BB77B94A1BC3B7AC00B53ABE /* PHXLocationModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9491BC3B7AC00B53ABE /* PHXLocationModuleViewController.m */; };
+		BB77B94D1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77B94C1BC3B7BF00B53ABE /* PHXLocationGeofenceQueryViewController.m */; };
 		BB77B94F1BC3BAF300B53ABE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB77B94E1BC3BAF300B53ABE /* MapKit.framework */; };
 		FE0C64E31B7247B6008C02D7 /* PHXIdentityModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64E21B7247B6008C02D7 /* PHXIdentityModuleViewController.m */; };
 		FE16747D1B71052C0085BEC8 /* PHXAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE16747C1B71052C0085BEC8 /* PHXAuthenticationViewController.m */; };
@@ -393,6 +393,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				INFOPLIST_FILE = "PhoenixDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.PhoenixDemo-ObjectiveC";
@@ -405,6 +406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				INFOPLIST_FILE = "PhoenixDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.PhoenixDemo-ObjectiveC";

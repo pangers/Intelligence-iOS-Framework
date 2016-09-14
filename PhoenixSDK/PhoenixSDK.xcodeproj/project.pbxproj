@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		455D85E81BC2B39F00A64B96 /* ScreenViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		455D85E81BC2B39F00A64B96 /* ScreenViewedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85E71BC2B39F00A64B96 /* ScreenViewedEvent.swift */; };
 		A07FACB41B5D0C4200482BB7 /* PhoenixSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = A07FACB31B5D0C4200482BB7 /* PhoenixSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A07FACBB1B5D0C4200482BB7 /* PhoenixSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07FACB01B5D0C4200482BB7 /* PhoenixSDK.framework */; };
 		BB0A238C1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0A238B1B70D4D000CE0C81 /* PhoenixIdentityTestCase.swift */; };
 		BB0A238F1B70F12600CE0C81 /* PhoenixURLRequestTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0A238E1B70F12600CE0C81 /* PhoenixURLRequestTestCase.swift */; };
 		BB0F0ECE1B68C6A6008679C9 /* TSDOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ECD1B68C6A6008679C9 /* TSDOperation.swift */; };
 		BB27B5B01B5FFF0A005221EF /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = BB27B5AF1B5FFF0A005221EF /* wrongjson.json */; };
-		BB3A10191BBD7E1F00DCF331 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A10181BBD7E1F00DCF331 /* LocationManager.swift */; settings = {ASSET_TAGS = (); }; };
+		BB3A10191BBD7E1F00DCF331 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A10181BBD7E1F00DCF331 /* LocationManager.swift */; };
 		BB653F721B5E59C40003C0C9 /* PhoenixError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB653F711B5E59C40003C0C9 /* PhoenixError.swift */; };
 		BB7276691B5FB53200F098DA /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7276681B5FB53200F098DA /* Phoenix.swift */; };
-		BB77B9841BC40A5900B53ABE /* SequenceType+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9831BC40A5900B53ABE /* SequenceType+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
+		BB77B9841BC40A5900B53ABE /* SequenceType+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9831BC40A5900B53ABE /* SequenceType+Phoenix.swift */; };
 		BB8FFC511B611A5E00E37146 /* invalidproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = BB8FFC501B611A5E00E37146 /* invalidproperty.json */; };
 		BBA573741B6926F100685EFB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */; };
 		BBA573781B692B6900685EFB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA573771B692B6900685EFB /* String.swift */; };
@@ -33,16 +33,16 @@
 		BBD7AF211B6A3D4000F5B9C1 /* UtilsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD7AF201B6A3D4000F5B9C1 /* UtilsTestCase.swift */; };
 		BBE209DE1B67C149000202B6 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE209DD1B67C149000202B6 /* NSURLRequest.swift */; };
 		BBF417361B74B7A500AF2BFA /* UpdateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF417351B74B7A500AF2BFA /* UpdateUserRequestOperation.swift */; };
-		BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
-		BBFC3E581BBECF0D00B20C2D /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */; settings = {ASSET_TAGS = (); }; };
+		BBFC3E531BBEB7DE00B20C2D /* NSURLSession+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0F0ED11B68DA03008679C9 /* NSURLSession+Phoenix.swift */; };
+		BBFC3E581BBECF0D00B20C2D /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBFC3E571BBECF0D00B20C2D /* Synchronization.swift */; };
 		FE05EB5E1B7BA82100326B4C /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE05EB5D1B7BA82100326B4C /* NSBundleInstallation.swift */; };
-		FE12E1B81BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1B71BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift */; settings = {ASSET_TAGS = (); }; };
-		FE12E1C91BC7F5C30077B5F6 /* TimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1C81BC7F5C30077B5F6 /* TimeTracker.swift */; settings = {ASSET_TAGS = (); }; };
-		FE12E1DB1BC81D820077B5F6 /* GeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */; settings = {ASSET_TAGS = (); }; };
-		FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
-		FE12E1FA1BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FE12E1FE1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1FD1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */; settings = {ASSET_TAGS = (); }; };
+		FE12E1B81BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1B71BC7BF420077B5F6 /* TrackApplicationTimeEvent.swift */; };
+		FE12E1C91BC7F5C30077B5F6 /* TimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1C81BC7F5C30077B5F6 /* TimeTracker.swift */; };
+		FE12E1DB1BC81D820077B5F6 /* GeofenceEnterEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1DA1BC81D820077B5F6 /* GeofenceEnterEvent.swift */; };
+		FE12E1F21BCBB2110077B5F6 /* NSData+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F11BCBB2110077B5F6 /* NSData+Phoenix.swift */; };
+		FE12E1FA1BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1F91BCBB2D90077B5F6 /* CreateIdentifierRequestOperation.swift */; };
+		FE12E1FE1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12E1FD1BCBC5410077B5F6 /* DeleteIdentifierRequestOperation.swift */; };
+		FE146C1B1BBEC70100304A8D /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE146C1A1BBEC70100304A8D /* MutableCollectionType.swift */; };
 		FE1674441B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1674431B70BB6E0085BEC8 /* GetUserMeRequestOperation.swift */; };
 		FE18F91F1B84B23D00DCF2EF /* OpenApplicationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F91E1B84B23D00DCF2EF /* OpenApplicationEvent.swift */; };
 		FE18F92B1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE18F92A1B84E5C000DCF2EF /* NSDateFormatterIRFC3339.swift */; };
@@ -50,47 +50,47 @@
 		FE22F88C1B5FF71600711EBF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = FE22F88B1B5FF71600711EBF /* config.json */; };
 		FE22F88E1B5FF93700711EBF /* PhoenixTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88D1B5FF93700711EBF /* PhoenixTestCase.swift */; };
 		FE22F8901B5FFA1800711EBF /* PhoenixRegionTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE22F88F1B5FFA1800711EBF /* PhoenixRegionTestCase.swift */; };
-		FE2F35351BBC3FE7003EDECA /* PhoenixOAuthPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2F35341BBC3FE7003EDECA /* PhoenixOAuthPipeline.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3449611BC4269B00449445 /* PhoenixOAuthTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3449601BC4269B00449445 /* PhoenixOAuthTestCase.swift */; settings = {ASSET_TAGS = (); }; };
+		FE2F35351BBC3FE7003EDECA /* PhoenixOAuthPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2F35341BBC3FE7003EDECA /* PhoenixOAuthPipeline.swift */; };
+		FE3449611BC4269B00449445 /* PhoenixOAuthTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3449601BC4269B00449445 /* PhoenixOAuthTestCase.swift */; };
 		FE366D3E1B8397AD00D4D6D2 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D3D1B8397AD00D4D6D2 /* EventQueue.swift */; };
 		FE366D451B84760F00D4D6D2 /* ModuleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D441B84760F00D4D6D2 /* ModuleProtocol.swift */; };
 		FE366D481B84816500D4D6D2 /* AnalyticsRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D471B84816500D4D6D2 /* AnalyticsRequestOperation.swift */; };
 		FE366D521B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE366D511B84890B00D4D6D2 /* PhoenixAnalyticsTestCase.swift */; };
-		FE3B01D41BCD0AB300B98622 /* PhoenixLocationBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9681BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01D51BCD0AB500B98622 /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9581BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01D61BCD0AB700B98622 /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B97F1BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01D71BCD0AB900B98622 /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9871BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01D81BCD0ABB00B98622 /* MockCLLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01D91BCD0ABD00B98622 /* MockAnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */; settings = {ASSET_TAGS = (); }; };
-		FE3B01DA1BCD0AC100B98622 /* PhoenixGeofenceTestcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A101F1BBD939800DCF331 /* PhoenixGeofenceTestcase.swift */; settings = {ASSET_TAGS = (); }; };
-		FE4DB62B1BC5392E00D7C1C3 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */; settings = {ASSET_TAGS = (); }; };
-		FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */; settings = {ASSET_TAGS = (); }; };
+		FE3B01D41BCD0AB300B98622 /* PhoenixLocationBaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9681BC3DB4700B53ABE /* PhoenixLocationBaseTestCase.swift */; };
+		FE3B01D51BCD0AB500B98622 /* PhoenixLocationDownloadGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9581BC3D95C00B53ABE /* PhoenixLocationDownloadGeofencesSDKTests.swift */; };
+		FE3B01D61BCD0AB700B98622 /* PhoenixLocationEnterExitGeofencesSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B97F1BC3E36200B53ABE /* PhoenixLocationEnterExitGeofencesSDKTests.swift */; };
+		FE3B01D71BCD0AB900B98622 /* PhoenixLocationAnalyticsCallsTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9871BC418E200B53ABE /* PhoenixLocationAnalyticsCallsTestCase.swift */; };
+		FE3B01D81BCD0ABB00B98622 /* MockCLLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9811BC3F9EB00B53ABE /* MockCLLocationManager.swift */; };
+		FE3B01D91BCD0ABD00B98622 /* MockAnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB77B9891BC4197B00B53ABE /* MockAnalyticsModule.swift */; };
+		FE3B01DA1BCD0AC100B98622 /* PhoenixGeofenceTestcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3A101F1BBD939800DCF331 /* PhoenixGeofenceTestcase.swift */; };
+		FE4DB62B1BC5392E00D7C1C3 /* GeofenceQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB62A1BC5392E00D7C1C3 /* GeofenceQuery.swift */; };
+		FE4DB6321BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4DB6311BC55D5300D7C1C3 /* PhoenixNetworkTestCase.swift */; };
 		FE65772E1B832C8400E02B03 /* AnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE65772D1B832C8400E02B03 /* AnalyticsModule.swift */; };
 		FE6577311B832EB000E02B03 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6577301B832EB000E02B03 /* Event.swift */; };
-		FE667E981BC27DAF0094395F /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FE667EA71BC2C04F0094395F /* PhoenixOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667EA61BC2C04F0094395F /* PhoenixOAuthProvider.swift */; settings = {ASSET_TAGS = (); }; };
+		FE667E981BC27DAF0094395F /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667E971BC27DAF0094395F /* AssignUserRoleRequestOperation.swift */; };
+		FE667EA71BC2C04F0094395F /* PhoenixOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE667EA61BC2C04F0094395F /* PhoenixOAuthProvider.swift */; };
 		FE6999401B861A5400EB7094 /* GeofenceExitEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69993F1B861A5400EB7094 /* GeofenceExitEvent.swift */; };
 		FE75E3351B6F6F6700DD400D /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3341B6F6F6700DD400D /* TSDKeychain.swift */; };
 		FE75E3371B6F814200DD400D /* PhoenixKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE75E3361B6F814200DD400D /* PhoenixKeychain.swift */; };
-		FE7745E41BCD4F9900072B13 /* MockLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7745E31BCD4F9900072B13 /* MockLocationProvider.swift */; settings = {ASSET_TAGS = (); }; };
-		FEAB722F1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAB722E1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift */; settings = {ASSET_TAGS = (); }; };
+		FE7745E41BCD4F9900072B13 /* MockLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7745E31BCD4F9900072B13 /* MockLocationProvider.swift */; };
+		FEAB722F1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAB722E1BCD17D6005B43F5 /* MockTimeTrackerStorage.swift */; };
 		FEAFBC9D1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAFBC9C1B7E3F1300938AC9 /* UpdateInstallationRequestOperation.swift */; };
-		FEB4713E1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4713D1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB471401BBD1DCF00640CD7 /* PhoenixOAuthRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4713F1BBD1DCF00640CD7 /* PhoenixOAuthRefreshOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB471421BBD1DDA00640CD7 /* PhoenixOAuthLoginOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471411BBD1DDA00640CD7 /* PhoenixOAuthLoginOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB471441BBD20FD00640CD7 /* PhoenixOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471431BBD20FD00640CD7 /* PhoenixOAuth.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB471461BBD678C00640CD7 /* UserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471451BBD678C00640CD7 /* UserRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB471481BBD69FF00640CD7 /* PhoenixOAuthOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471471BBD69FF00640CD7 /* PhoenixOAuthOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB4714A1BBD6A5C00640CD7 /* InstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471491BBD6A5C00640CD7 /* InstallationRequestOperation.swift */; settings = {ASSET_TAGS = (); }; };
-		FEB4714C1BBD708000640CD7 /* NSURL+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4714B1BBD708000640CD7 /* NSURL+Phoenix.swift */; settings = {ASSET_TAGS = (); }; };
+		FEB4713E1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4713D1BBD1DA500640CD7 /* PhoenixOAuthValidateOperation.swift */; };
+		FEB471401BBD1DCF00640CD7 /* PhoenixOAuthRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4713F1BBD1DCF00640CD7 /* PhoenixOAuthRefreshOperation.swift */; };
+		FEB471421BBD1DDA00640CD7 /* PhoenixOAuthLoginOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471411BBD1DDA00640CD7 /* PhoenixOAuthLoginOperation.swift */; };
+		FEB471441BBD20FD00640CD7 /* PhoenixOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471431BBD20FD00640CD7 /* PhoenixOAuth.swift */; };
+		FEB471461BBD678C00640CD7 /* UserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471451BBD678C00640CD7 /* UserRequestOperation.swift */; };
+		FEB471481BBD69FF00640CD7 /* PhoenixOAuthOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471471BBD69FF00640CD7 /* PhoenixOAuthOperation.swift */; };
+		FEB4714A1BBD6A5C00640CD7 /* InstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB471491BBD6A5C00640CD7 /* InstallationRequestOperation.swift */; };
+		FEB4714C1BBD708000640CD7 /* NSURL+Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB4714B1BBD708000640CD7 /* NSURL+Phoenix.swift */; };
 		FEB629181B820230008F7A9C /* PhoenixIdentityInstallationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB629171B820230008F7A9C /* PhoenixIdentityInstallationTestCase.swift */; };
 		FEDE07711B73530A009BC6B6 /* LocationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE07701B73530A009BC6B6 /* LocationModule.swift */; };
 		FEDE077F1B735692009BC6B6 /* DownloadGeofencesRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE077E1B735692009BC6B6 /* DownloadGeofencesRequestOperation.swift */; };
 		FEDE079B1B7398FE009BC6B6 /* Geofence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE07991B7398FE009BC6B6 /* Geofence.swift */; };
 		FEDE079E1B73A797009BC6B6 /* Geofence+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDE079D1B73A797009BC6B6 /* Geofence+JSON.swift */; };
-		FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEDA1BC2C89D00F02701 /* MockDelegate.swift */; settings = {ASSET_TAGS = (); }; };
-		FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE11BC2C9D400F02701 /* MockOAuthProvider.swift */; settings = {ASSET_TAGS = (); }; };
-		FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE31BC2D05500F02701 /* MockInstallation.swift */; settings = {ASSET_TAGS = (); }; };
+		FEECFEDB1BC2C89D00F02701 /* MockDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEDA1BC2C89D00F02701 /* MockDelegate.swift */; };
+		FEECFEE21BC2C9D400F02701 /* MockOAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE11BC2C9D400F02701 /* MockOAuthProvider.swift */; };
+		FEECFEE41BC2D05500F02701 /* MockInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECFEE31BC2D05500F02701 /* MockInstallation.swift */; };
 		FEEE79EA1B661AFB0047905D /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEE79E91B661AFB0047905D /* Network.swift */; };
 		FEEF2D061B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D051B7DE3BC007C1730 /* CreateInstallationRequestOperation.swift */; };
 		FEEF2D0E1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEF2D0D1B7DF96E007C1730 /* NSUserDefaultsInstallation.swift */; };
@@ -140,6 +140,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = 095981D219806A7900807DBE;
 			remoteInfo = "OHHTTPStubs Mac Tests";
+		};
+		D695821F1D893E2100F2A606 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 093442F91B80EC4A00A91535;
+			remoteInfo = "OHHTTPStubs iOS Fmk Tests";
+		};
+		D69582211D893E2100F2A606 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EAA436A51BE1598D000E9E99;
+			remoteInfo = "OHHTTPStubs tvOS Framework";
+		};
+		D69582231D893E2100F2A606 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBA573621B6926C800685EFB /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EA100AB71BE15BE400129352;
+			remoteInfo = "OHHTTPStubs tvOS Fmk Tests";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -358,10 +379,13 @@
 			isa = PBXGroup;
 			children = (
 				BBA5736B1B6926C800685EFB /* libOHHTTPStubs.a */,
-				BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Tests.xctest */,
+				BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Lib Tests.xctest */,
 				BBA5736F1B6926C800685EFB /* OHHTTPStubs.framework */,
+				D69582201D893E2100F2A606 /* OHHTTPStubs iOS Fmk Tests.xctest */,
 				BBA573711B6926C800685EFB /* OHHTTPStubs.framework */,
 				BBA573731B6926C800685EFB /* OHHTTPStubs Mac Tests.xctest */,
+				D69582221D893E2100F2A606 /* OHHTTPStubs.framework */,
+				D69582241D893E2100F2A606 /* OHHTTPStubs tvOS Fmk Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -716,10 +740,10 @@
 			remoteRef = BBA5736A1B6926C800685EFB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Tests.xctest */ = {
+		BBA5736D1B6926C800685EFB /* OHHTTPStubs iOS Lib Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "OHHTTPStubs iOS Tests.xctest";
+			path = "OHHTTPStubs iOS Lib Tests.xctest";
 			remoteRef = BBA5736C1B6926C800685EFB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -742,6 +766,27 @@
 			fileType = wrapper.cfbundle;
 			path = "OHHTTPStubs Mac Tests.xctest";
 			remoteRef = BBA573721B6926C800685EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D69582201D893E2100F2A606 /* OHHTTPStubs iOS Fmk Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs iOS Fmk Tests.xctest";
+			remoteRef = D695821F1D893E2100F2A606 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D69582221D893E2100F2A606 /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = D69582211D893E2100F2A606 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D69582241D893E2100F2A606 /* OHHTTPStubs tvOS Fmk Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs tvOS Fmk Tests.xctest";
+			remoteRef = D69582231D893E2100F2A606 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -917,6 +962,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -957,6 +1003,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -980,6 +1027,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -998,6 +1046,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.PhoenixSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
