@@ -171,7 +171,7 @@ internal extension NSURL {
             return self
         }
         let separator = (query?.isEmpty ?? true) ? "?" : "&"
-        let URLString = "\(absoluteString)\(separator)\(queryString)"
+        let URLString = "\(absoluteString!)\(separator)\(queryString)"
         
         return NSURL(string: URLString)
     }

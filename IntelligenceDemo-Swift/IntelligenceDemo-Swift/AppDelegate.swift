@@ -37,13 +37,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
         return true
     }
+ 
+    func startupViewController() -> StartupViewController? {
+        
+        if((self.window?.rootViewController?.isKindOfClass(StartupViewController)) != nil){
+            return self.window!.rootViewController as? StartupViewController
+        }
+        else{
+            return nil
+        }
+    }
+    
+    func segueToDemo()  {
+        self.window?.rootViewController?.performSegueWithIdentifier("intelligenceStartedUp", sender: self)
+    }
 
     func startupIntelligence() {
         if IntelligenceManager.intelligence != nil {
             return
         }
 
-        startupViewController?.state = .Starting
+        self.startupViewController()?.state = .Starting
 
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
@@ -56,18 +70,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 
                     if success {
                         
-                        
                         // Register test event.
                         let testEvent = Event(withType: "Intelligence.Test.Event.Type")
                         intelligence.analytics.track(testEvent)
                         IntelligenceManager.startupWithIntelligence(intelligence)
 
-                        self.startupViewController?.state = .Started
+                        self.startupViewController()?.state = .Started
                         self.registerForPush()
                         self.segueToDemo()
                     }
                     else {
-                        self.startupViewController?.state = .Failed
+                        self.startupViewController()?.state = .Failed
 
                         // Allow the user to retry to startup intelligence.
                         let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
@@ -143,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     /// You will need to run the app again in order to try startup again.
     private func unrecoverableAlert(withMessage message: String) {
         // Notify startup view controller of new state
-        startupViewController?.state = .Failed
+        startupViewController()?.state = .Failed
         // Present alert
         alert(withMessage: message)
     }
