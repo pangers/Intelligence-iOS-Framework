@@ -1,0 +1,11 @@
+{
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "application_id": "adb",
+    "project_id": 20,
+    "region": "EU",
+    "environment": "production",
+    "sdk_user_role": 1008,
+    "certificate_trust_policy": "any",
+    "company_id": 5
+}

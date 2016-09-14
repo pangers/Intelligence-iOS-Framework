@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:IntelligenceSDK/IntelligenceSDK.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:IntelligenceDemo-Swift/IntelligenceDemo-Swift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:IntelligenceDemo-ObjectiveC/IntelligenceDemo-ObjectiveC.xcodeproj">
+   </FileRef>
+</Workspace>
