@@ -1,0 +1,11 @@
+{
+    "client_id": "iOSIntelligenceSDKApp_n",
+    "client_secret": "jLmYC6Onq2MRM4y7755in6r127mmzchrvxqnuzul",
+    "application_id": 10068,
+    "project_id": 40002,
+    "region": "SG",
+    "environment": "uat",
+    "company_id" : 19017,
+    "sdk_user_role": 16017,
+    "certificate_trust_policy": "any_non_production"
+}
