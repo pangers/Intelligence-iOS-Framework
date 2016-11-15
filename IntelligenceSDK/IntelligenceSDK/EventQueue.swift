@@ -95,7 +95,7 @@ internal class EventQueue: NSObject {
             }
             
             self.isPaused = false
-            self.timer = NSTimer(timeInterval: self.eventInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
+            self.timer = NSTimer(timeInterval: self.eventInterval, target: self, selector: #selector(EventQueue.runTimer(_:)), userInfo: nil, repeats: true)
             NSRunLoop.mainRunLoop().addTimer(self.timer!, forMode: NSRunLoopCommonModes)
         }
     }
@@ -145,7 +145,7 @@ internal class EventQueue: NSObject {
             let endIndex = self.eventArray.endIndex > self.maxEvents ? self.maxEvents : self.eventArray.endIndex
             
             // Store range, so we know what to remove.
-            let range = Range(start: self.eventArray.startIndex, end: endIndex)
+            let range = self.eventArray.startIndex ..< endIndex
             
             // Set sending to true.
             self.isSending = true

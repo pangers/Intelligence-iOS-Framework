@@ -73,7 +73,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         return true
     }
     
-    class func reset(var oauth: IntelligenceOAuthProtocol) {
+    class func reset(inout oauth: IntelligenceOAuthProtocol) {
         oauth.accessToken = nil
         oauth.refreshToken = nil
         oauth.username = nil

@@ -175,7 +175,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                                 AuthenticationError.AccountDisabledError.rawValue,
                                 AuthenticationError.AccountLockedError.rawValue,
                                 AuthenticationError.TokenInvalidOrExpired.rawValue:
-                                    IntelligenceOAuth.reset(identity.network.oauthProvider.sdkUserOAuth)
+                                    IntelligenceOAuth.reset(&identity.network.oauthProvider.sdkUserOAuth)
                                     identity.createSDKUserRecursively(counter - 1, completion: completion)
                                 default:
                                     completion(success: false)
@@ -296,7 +296,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     
     @objc func logout() {
         network.oauthProvider.developerLoggedIn = false
-        IntelligenceOAuth.reset(network.oauthProvider.loggedInUserOAuth)
+        IntelligenceOAuth.reset(&network.oauthProvider.loggedInUserOAuth)
     }
     
     

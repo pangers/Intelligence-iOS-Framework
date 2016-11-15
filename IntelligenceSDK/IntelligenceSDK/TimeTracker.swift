@@ -152,7 +152,7 @@ class TimeTracker: NSObject {
     // MARK: - Timer
     
     private func createTimer() {
-        timer = NSTimer(timeInterval: storageTimeInterval, target: self, selector: "runTimer:", userInfo: nil, repeats: true)
+        timer = NSTimer(timeInterval: storageTimeInterval, target: self, selector: #selector(TimeTracker.runTimer(_:)), userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
     }
     
