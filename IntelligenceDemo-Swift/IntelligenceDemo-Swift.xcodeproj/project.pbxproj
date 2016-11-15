@@ -389,11 +389,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5364AC7HJT;
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
+				PROVISIONING_PROFILE = "18f07510-629a-48c0-8ac9-3769101d202c";
+				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo Swift Dev";
 			};
 			name = Debug;
 		};

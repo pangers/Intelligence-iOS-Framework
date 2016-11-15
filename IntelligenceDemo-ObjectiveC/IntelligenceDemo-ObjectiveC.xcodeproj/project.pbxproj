@@ -231,6 +231,8 @@
 				TargetAttributes = {
 					7FDAAAFF1B5D360800DF2BE6 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 5364AC7HJT;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -413,10 +415,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 5364AC7HJT;
 				INFOPLIST_FILE = "IntelligenceDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-ObjectiveC";
 				PRODUCT_NAME = "IntelligenceDemo-ObjectiveC";
+				PROVISIONING_PROFILE = "6c8be445-539a-4330-8f61-035ce755f7a2";
+				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo App ObjC Dev";
 			};
 			name = Debug;
 		};
@@ -424,10 +429,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 5364AC7HJT;
 				INFOPLIST_FILE = "IntelligenceDemo-ObjectiveC/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tigerspike.IntelligenceDemo-ObjectiveC";
 				PRODUCT_NAME = "IntelligenceDemo-ObjectiveC";
+				PROVISIONING_PROFILE = "c836d6d4-9ec6-4b7f-bbd3-ed0925f21165";
+				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo App ObjC";
 			};
 			name = Release;
 		};
