@@ -86,7 +86,7 @@
     self.user.lastName = self.lastname.text;
     self.user.avatarURL = self.avatarURL.text;
     
-    [[self intelligenceIdentity] updateUser:self.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
+    [[self intelligenceIdentity] updateWithUser:[self user] callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
         if (user)
         {
             self.user = user;

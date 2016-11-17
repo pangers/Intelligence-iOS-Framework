@@ -55,7 +55,7 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - parameter roleId: The id of the role to revoke.
     /// - parameter user: The user to revoke the role from.
     /// - parameter callback: Will be called with either an error or a user.
-    func revokeRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
+    func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
@@ -65,12 +65,12 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - Parameters:
     ///     - user: Intelligence User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func updateUser(user: Intelligence.User, callback: @escaping UserCallback)
+    func update(user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Register a push notification token on the Intelligence platform.
     /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.
     /// - parameter callback: Callback to fire on completion, will contain error or token ID. Developer should store token ID and is responsible for managing the flow of registration for push.
-    func registerDeviceToken(data: Data, callback: @escaping RegisterDeviceTokenCallback)
+    func registerDeviceToken(with data: Data, callback: @escaping RegisterDeviceTokenCallback)
     
     /// Unregister a token ID in the backend, will fail if it was registered against another user.
     /// - parameter tokenId: Previously registered token ID. Should be unregistered prior to logout if you have multiple accounts.
@@ -313,7 +313,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         network.enqueueOperation(operation: operation)
     }
     
-    @objc func revokeRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
+    @objc func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
         let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
             configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
@@ -325,7 +325,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     }
     
     
-    @objc func updateUser(user: Intelligence.User, callback: @escaping UserCallback) {
+    @objc func update(user: Intelligence.User, callback: @escaping UserCallback) {
         if !user.isValidToUpdate {
             callback(nil, NSError(code: IdentityError.invalidUserError.rawValue) )
             return
@@ -437,7 +437,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     
     // MARK:- Identifiers
     
-    func registerDeviceToken(data: Data, callback: @escaping RegisterDeviceTokenCallback) {
+    func registerDeviceToken(with data: Data, callback: @escaping RegisterDeviceTokenCallback) {
         let token = data.hexString()
         
         unregisterDeviceTokenOnBehalf(token: token) { [weak self] (error) -> Void in

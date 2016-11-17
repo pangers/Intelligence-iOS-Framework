@@ -21,6 +21,7 @@ public protocol AnalyticsModuleProtocol : ModuleProtocol {
     
     /// Track user engagement and behavioral insight.
     /// - parameter event: Event containing information to track.
+    @objc(track:)
     func track(event: Event)
 }
 

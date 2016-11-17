@@ -59,11 +59,11 @@ import CoreLocation
     }
     
     // So that Obj-c can edit the optional values.
-
+    @objc(setPageSize:)
     public func setPageSize(pageSize:Int) {
         self.pageSize = pageSize;
     }
-    
+    @objc(setPage:)
     public func setPage(page:Int) {
         self.pageNumber = page;
     }

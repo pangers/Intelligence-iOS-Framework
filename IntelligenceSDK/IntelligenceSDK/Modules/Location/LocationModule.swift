@@ -79,6 +79,7 @@ public protocol LocationModuleProtocol : ModuleProtocol {
     - parameter callback:     The callback that will be notified upon success/error.
     The callback receives either an array of geofences or an NSError.
     */
+    @objc(downloadGeofences:callback:)
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?)
     
     /**
@@ -93,6 +94,7 @@ public protocol LocationModuleProtocol : ModuleProtocol {
     the locationDelegate will be notified asynchronously.
     
     */
+    @objc(startMonitoringGeofences:)
     func startMonitoringGeofences(geofences:[Geofence])
     
     /**
@@ -105,6 +107,7 @@ public protocol LocationModuleProtocol : ModuleProtocol {
     
     - parameter accuracy: The accuracy
     */
+    @objc(setLocationAccuracy:)
     func setLocationAccuracy(accuracy:CLLocationAccuracy)
     
     /// Geofences array, loaded from Cache on startup but updated with data from server if network is available.

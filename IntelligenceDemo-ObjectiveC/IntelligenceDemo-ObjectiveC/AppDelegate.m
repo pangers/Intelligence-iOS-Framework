@@ -133,7 +133,7 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     __weak __typeof(self) weakSelf = self;
-    [[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+    [[[INTIntelligenceManager intelligence] identity] registerDeviceTokenWith:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
         if (error != nil) {
             [weakSelf alertWithError:error];
         } else {

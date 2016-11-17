@@ -266,6 +266,7 @@ public final class Intelligence: NSObject {
     /// whether the startup was successful or not. This call has to finish successfully
     /// before using any of the intelligence modules. If any action is performed while startup
     /// has not yet finished fully, an unexpected error is likely to occur.
+    @objc(startup:)
     public func startup(completion: @escaping (_ success: Bool) -> ()) {
         // Anonymously logins into the SDK then:
         // - Cannot request anything on behalf of the user.
