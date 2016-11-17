@@ -13,7 +13,7 @@ class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCop
     
     let token: String
     
-    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.token = token
         
         super.init()
@@ -26,16 +26,17 @@ class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCop
     
     override func main() {
         super.main()
-        let request = NSURLRequest.int_URLRequestForIdentifierDeletionOnBehalf(token, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForIdentifierDeletionOnBehalf(token: token, oauth: oauth!, configuration: configuration!, network: network!)
+        
+        output = network!.sessionManager!.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             return
         }
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(token: token, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(token: token, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

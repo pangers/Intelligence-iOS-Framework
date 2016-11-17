@@ -8,10 +8,10 @@
 
 import Foundation
 
-typealias IntelligenceAPIResponse = (data: NSData?, response: NSURLResponse?, error: NSError?)
+typealias IntelligenceAPIResponse = (data: Data?, response: URLResponse?, error: NSError?)
 
 // Returned operation will be different than operation in some circumstances where tokens expire.
-typealias IntelligenceAPICallback = (returnedOperation: IntelligenceAPIOperation) -> ()
+typealias IntelligenceAPICallback = (_ returnedOperation: IntelligenceAPIOperation) -> ()
 
 private let BodyData = "Data"
 private let BodyError = "error"
@@ -36,14 +36,14 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     var oauth: IntelligenceOAuthProtocol?
     var configuration: Intelligence.Configuration?
     var network: Network?
-    var session: NSURLSession! {
-        return network!.sessionManager
+    var session: URLSession? {
+        return network?.sessionManager
     }
     
     // MARK: Output Helpers
     
     func complete() {
-        callback?(returnedOperation: self)
+        callback?(self)
     }
     
     /// This function replaces the current output?.error with a sanitized error and is intended to be called
@@ -53,21 +53,21 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     func handleError() -> Bool {
         // This is NSURLSession's reponse code if we are offline
         if output?.error?.code == OfflineErrorCode {
-            output?.error = NSError(code: RequestError.InternetOfflineError.rawValue)
+            output?.error = NSError(code: RequestError.internetOfflineError.rawValue)
             return true
         }
         
-        if let httpResponse = output?.response as? NSHTTPURLResponse {
-            if httpResponse.statusCode == HTTPStatusCode.Unauthorized.rawValue {
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            if httpResponse.statusCode == HTTPStatusCode.unauthorized.rawValue {
                 handleUnauthorizedError()
                 return true
             }
-            else if httpResponse.statusCode == HTTPStatusCode.Forbidden.rawValue {
+            else if httpResponse.statusCode == HTTPStatusCode.forbidden.rawValue {
                 handleForbbiddenError()
                 return true
             }
             else if httpResponse.statusCode / 100 != 2 {
-                handleUnhandledError(httpResponse.statusCode)
+                handleUnhandledError(httpStatusCode: httpResponse.statusCode)
                 return true
             }
         }
@@ -79,7 +79,7 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     /// If authentication fails the function completes.
     /// This cycle will continue until the current operation succeds or timesToRetry reaches 0.
     func handleUnauthorizedError() {
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         
         // Attempt to get the pipeline for our OAuth token type.
         // Then execute the login pipeline before trying us again.
@@ -88,25 +88,25 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
             
             // Pipeline will be nil if it already exists in the queue.
             guard let pipeline = pipeline else {
-                self.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                self.output?.error = NSError(code: RequestError.unauthorized.rawValue)
                 
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
                 return
             }
             
             pipeline.callback = { [weak self, weak pipeline] (returnedOperation: IntelligenceAPIOperation) in
                 if pipeline?.output?.error == nil {
                     guard let timesToRetry = self?.timesToRetry else {
-                        self?.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                        self?.output?.error = NSError(code: RequestError.unauthorized.rawValue)
                         
-                        dispatch_semaphore_signal(semaphore)
+                        semaphore.signal()
                         return
                     }
                     
                     if timesToRetry == 0 {
-                        self?.output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                        self?.output?.error = NSError(code: RequestError.unauthorized.rawValue)
                         
-                        dispatch_semaphore_signal(semaphore)
+                        semaphore.signal()
                         return
                     }
                     
@@ -123,7 +123,7 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     copiedOperation.completionBlock = { [weak copiedOperation] in
                         copiedOperation?.complete()
                         
-                        dispatch_semaphore_signal(semaphore)
+                        semaphore.signal()
                     }
                     
                     copiedOperation.start()
@@ -132,22 +132,22 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     // Forward the error from the OAuth pipeline to this pipeline
                     self?.output?.error = pipeline?.output?.error
                     
-                    dispatch_semaphore_signal(semaphore)
+                    semaphore.signal()
                 }
             }
             
            pipeline.start()
         })
         
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
     }
     
     private func handleForbbiddenError() {
-        output?.error = NSError(code: RequestError.Forbidden.rawValue)
+        output?.error = NSError(code: RequestError.forbidden.rawValue)
     }
     
     private func handleUnhandledError(httpStatusCode: Int) {
-        output?.error = NSError(code: RequestError.UnhandledError.rawValue, httpStatusCode:httpStatusCode)
+        output?.error = NSError(code: RequestError.unhandledError.rawValue, httpStatusCode:httpStatusCode)
     }
     
     /// Returns error if response contains an error in the data.

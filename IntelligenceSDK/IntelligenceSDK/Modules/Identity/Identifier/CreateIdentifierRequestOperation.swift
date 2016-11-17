@@ -15,7 +15,7 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     private let tokenString: String
     
-    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    required init(token: String, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.tokenString = token
         super.init()
         self.callback = callback
@@ -26,23 +26,23 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     override func main() {
         super.main()
-        let request = NSURLRequest.int_URLRequestForIdentifierCreation(tokenString, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForIdentifierCreation(tokenString: tokenString, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             return
         }
         
-        guard let data = outputArrayFirstDictionary(), returnedId = data["Id"] as? Int else {
-            output?.error = NSError(code: RequestError.ParseError.rawValue)
+        guard let data = outputArrayFirstDictionary(), let returnedId = data["Id"] as? Int else {
+            output?.error = NSError(code: RequestError.parseError.rawValue)
             return
         }
         
         tokenId = returnedId
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(token: tokenString, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(token: tokenString, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

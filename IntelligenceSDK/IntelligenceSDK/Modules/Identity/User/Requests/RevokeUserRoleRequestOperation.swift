@@ -13,7 +13,7 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
     
     let roleId: Int
     
-    init(roleId: Int, user: Intelligence.User?, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    init(roleId: Int, user: Intelligence.User?, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.roleId = roleId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }
@@ -22,15 +22,15 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         super.main()
         assert(sentUser != nil)
         
-        let request = NSURLRequest.int_URLRequestForUserRoleRevoke(roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForUserRoleRevoke(roleId: roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             return
         }
         
         guard let _ = outputArrayFirstDictionary() else {
-            output?.error = NSError(code: RequestError.ParseError.rawValue)
+            output?.error = NSError(code: RequestError.parseError.rawValue)
             return
         }
         
@@ -38,8 +38,8 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         user = sentUser
     }
     
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(roleId: roleId, user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(roleId: roleId, user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

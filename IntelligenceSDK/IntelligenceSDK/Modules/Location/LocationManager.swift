@@ -106,7 +106,7 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
                 radius: radius,
                 identifier: $0.id.description)
             
-            self?.locationManager.startMonitoringForRegion(region)
+            self?.locationManager.startMonitoring(for: region)
         }
     }
     
@@ -116,10 +116,10 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
     func stopMonitoringGeofences() {
         // Stop monitoring any regions we may be currently monitoring (such as old geofences).
         locationManager.monitoredRegions.forEachInMainThread() { [weak self] in
-            self?.locationManager.stopMonitoringForRegion($0)
+            self?.locationManager.stopMonitoring(for: $0)
             
-            if let geofence = self?.geofenceFromRegion($0) {
-                self?.delegate?.didStopMonitoringGeofence(geofence)
+            if let geofence = self?.geofenceFromRegion(region: $0) {
+                self?.delegate?.didStopMonitoringGeofence(geofence: geofence)
             }
         }
         
@@ -127,7 +127,7 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func isMonitoringGeofences() -> Bool {
-        return geofencesMonitored?.count > 0
+        return (geofencesMonitored ?? []).count > 0
     }
     
     // MARK:- CLLocationManagerDelegate
@@ -135,63 +135,64 @@ internal class LocationManager: NSObject, CLLocationManagerDelegate {
     /// Called when authorization status changes, refresh our geofences states.
     /// - parameter manager: CLLocationManager instance.
     /// - parameter status:  In response to user enabling/disabling location services.
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         guard let geofences = geofencesMonitored else {
             return
         }
-        startMonitoringGeofences(geofences)
+        startMonitoringGeofences(geofences: geofences)
     }
     
     func setLocationAccuracy(accuracy:CLLocationAccuracy) {
         self.locationManager.desiredAccuracy = accuracy
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             return
         }
         
         let coordinate = Coordinate(withLatitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        self.delegate?.didUpdateLocationWithCoordinate(coordinate)
+        self.delegate?.didUpdateLocationWithCoordinate(coordinate: coordinate)
     }
     
     /// Called when a geofence is entered.
     /// - parameter manager: CLLocationManager instance.
     /// - parameter region:  CLRegion we just entered.
-    func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        guard let geofence = geofenceFromRegion(region) else {
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        guard let geofence = geofenceFromRegion(region: region) else {
             return
         }
-
-        self.delegate?.didEnterGeofence(geofence, withUserCoordinate: self.userLocation)
+        
+        self.delegate?.didEnterGeofence(geofence: geofence, withUserCoordinate: self.userLocation)
     }
     
     /// Called when a geofence is exited.
     /// - parameter manager: CLLocationManager instance.
     /// - parameter region:  CLRegion we just exited.
-    func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
-        guard let geofence = geofenceFromRegion(region) else {
-            return
-        }
-
-        self.delegate?.didExitGeofence(geofence, withUserCoordinate: self.userLocation)
-    }
-    
-    func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
-        guard let geofence = geofenceFromRegion(region) else {
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        guard let geofence = geofenceFromRegion(region: region) else {
             return
         }
         
-        self.delegate?.didStartMonitoringGeofence(geofence)
+        self.delegate?.didExitGeofence(geofence: geofence, withUserCoordinate: self.userLocation)
     }
     
-    func locationManager(manager: CLLocationManager, monitoringDidFailForRegion region: CLRegion?, withError error: NSError) {
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        guard let geofence = geofenceFromRegion(region: region) else {
+            return
+        }
+        
+        self.delegate?.didStartMonitoringGeofence(geofence: geofence)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
         guard let region = region,
-            let geofence = geofenceFromRegion(region) else {
-            return
+            let geofence = geofenceFromRegion(region: region) else {
+                return
         }
         
-        self.delegate?.didFailMonitoringGeofence(geofence)
+        self.delegate?.didFailMonitoringGeofence(geofence: geofence)
     }
     
     // MARK:- Helper methods

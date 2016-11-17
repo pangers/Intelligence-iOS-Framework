@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A07FACAF1B5D0C4200482BB7"
+               BlueprintIdentifier = "6D5148371DDB26C2002E056E"
                BuildableName = "IntelligenceSDK.framework"
                BlueprintName = "IntelligenceSDK"
                ReferencedContainer = "container:IntelligenceSDK.xcodeproj">
@@ -33,7 +33,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A07FACB91B5D0C4200482BB7"
+               BlueprintIdentifier = "6D51483F1DDB26C2002E056E"
                BuildableName = "IntelligenceSDKTests.xctest"
                BlueprintName = "IntelligenceSDKTests"
                ReferencedContainer = "container:IntelligenceSDK.xcodeproj">
@@ -47,7 +47,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A07FACAF1B5D0C4200482BB7"
+            BlueprintIdentifier = "6D5148371DDB26C2002E056E"
             BuildableName = "IntelligenceSDK.framework"
             BlueprintName = "IntelligenceSDK"
             ReferencedContainer = "container:IntelligenceSDK.xcodeproj">
@@ -69,7 +69,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A07FACAF1B5D0C4200482BB7"
+            BlueprintIdentifier = "6D5148371DDB26C2002E056E"
             BuildableName = "IntelligenceSDK.framework"
             BlueprintName = "IntelligenceSDK"
             ReferencedContainer = "container:IntelligenceSDK.xcodeproj">
@@ -87,7 +87,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A07FACAF1B5D0C4200482BB7"
+            BlueprintIdentifier = "6D5148371DDB26C2002E056E"
             BuildableName = "IntelligenceSDK.framework"
             BlueprintName = "IntelligenceSDK"
             ReferencedContainer = "container:IntelligenceSDK.xcodeproj">

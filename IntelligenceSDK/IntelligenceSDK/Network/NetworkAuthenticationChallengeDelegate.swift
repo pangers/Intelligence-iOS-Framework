@@ -8,32 +8,32 @@
 
 import Foundation
 
-internal class NetworkAuthenticationChallengeDelegate : NSObject, NSURLSessionDelegate {
+internal class NetworkAuthenticationChallengeDelegate : NSObject, URLSessionDelegate {
     let configuration: Intelligence.Configuration
     
     init(configuration: Intelligence.Configuration) {
         self.configuration = configuration
     }
     
-    @objc func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust {
-            completionHandler(.PerformDefaultHandling, nil)
+            completionHandler(.performDefaultHandling, nil)
             return
         }
         
         switch self.configuration.certificateTrustPolicy {
-            case .Valid:
-                // Use the default handling
-                completionHandler(.PerformDefaultHandling, nil)
-            case .AnyNonProduction where self.configuration.environment == .Production:
-                // Use the default handling
-                completionHandler(.PerformDefaultHandling, nil)
-            case .AnyNonProduction:
-                // Trust the server
-                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
-            case .Any:
-                // Trust the server
-                completionHandler(.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+        case .valid:
+            // Use the default handling
+            completionHandler(.performDefaultHandling, nil)
+        case .anyNonProduction where self.configuration.environment == .production:
+            // Use the default handling
+            completionHandler(.performDefaultHandling, nil)
+        case .anyNonProduction:
+            // Trust the server
+            completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+        case .any:
+            // Trust the server
+            completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
         }
     }
 }

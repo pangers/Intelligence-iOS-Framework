@@ -16,7 +16,7 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
     var geofences: [Geofence]?
     let queryDetails: GeofenceQuery
 
-    required init(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, query:GeofenceQuery, callback: IntelligenceAPICallback) {
+    required init(oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, query:GeofenceQuery, callback: @escaping IntelligenceAPICallback) {
         queryDetails = query
         super.init()
         self.callback = callback
@@ -27,23 +27,23 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
     
     override func main() {
         super.main()
-        let request = NSURLRequest.int_URLRequestForDownloadGeofences(oauth!, configuration: configuration!, network: network!, query:queryDetails)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForDownloadGeofences(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails)
+        output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             return
         }
         
         guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.int_jsonDictionary) else {
-            output?.error = NSError(code: RequestError.ParseError.rawValue)
+            output?.error = NSError(code: RequestError.parseError.rawValue)
             return
         }
         
         geofences = downloaded
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails, callback: callback!)
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails, callback: callback!)
         
         return copy
     }

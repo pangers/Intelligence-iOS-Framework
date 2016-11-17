@@ -14,22 +14,22 @@ public extension Intelligence {
     @objc public enum Environment : Int {
 
         /// Local Environment
-        case Local
+        case local
         
         /// Development Environment
-        case Development
+        case development
         
         /// Integration Environment
-        case Integration
+        case integration
         
         /// UAT Environment
-        case UAT
+        case uat
         
         /// Staging Environment
-        case Staging
+        case staging
         
         /// Production Environment
-        case Production
+        case production
         
         
         /// This init method should be used to extract the environment from a configuration file and turn it into an enum value
@@ -38,17 +38,17 @@ public extension Intelligence {
         init?(code: String) {
             switch code {
             case "local":
-                self = .Local
+                self = .local
             case "development":
-                self = .Development
+                self = .development
             case "integration":
-                self = .Integration
+                self = .integration
             case "uat":
-                self = .UAT
+                self = .uat
             case "staging":
-                self = .Staging
+                self = .staging
             case "production":
-                self = .Production
+                self = .production
             default:
                 return nil
             }

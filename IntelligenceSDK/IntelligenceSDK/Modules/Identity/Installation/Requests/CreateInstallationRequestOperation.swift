@@ -14,8 +14,8 @@ internal final class CreateInstallationRequestOperation : InstallationRequestOpe
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
-        let request = NSURLRequest.int_URLRequestForInstallationCreate(installation, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForInstallationCreate(installation: installation, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         parse()
     }
     

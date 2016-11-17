@@ -13,7 +13,7 @@ class InstallationRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     var installation: Installation!
     
-    required init(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    required init(installation: Installation, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         super.init()
         self.callback = callback
         self.configuration = configuration
@@ -31,14 +31,14 @@ class InstallationRequestOperation : IntelligenceAPIOperation, NSCopying {
             return
         }
         
-        if installation.updateWithJSON(outputArrayFirstDictionary()) == false {
-            output?.error = NSError(code: RequestError.ParseError.rawValue)
+        if installation.updateWithJSON(json: outputArrayFirstDictionary()) == false {
+            output?.error = NSError(code: RequestError.parseError.rawValue)
             return
         }
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(installation: installation, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

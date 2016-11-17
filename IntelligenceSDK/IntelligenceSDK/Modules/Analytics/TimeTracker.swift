@@ -10,7 +10,7 @@ import Foundation
 
 let TrackEventType = "Intelligence.Analytics.Application.Time"
 
-typealias TimeTrackerCallback = (event: TrackApplicationTimeEvent) -> ()
+typealias TimeTrackerCallback = (_ event: TrackApplicationTimeEvent) -> ()
 
 protocol TimeTrackerStorageProtocol {
     func seconds() -> UInt64?
@@ -19,25 +19,25 @@ protocol TimeTrackerStorageProtocol {
 }
 
 class TimeTrackerStorage: TimeTrackerStorageProtocol {
-    let storage: NSUserDefaults
+    let storage: UserDefaults
     
-    init(userDefaults: NSUserDefaults) {
+    init(userDefaults: UserDefaults) {
        storage = userDefaults
     }
     
     func seconds() -> UInt64? {
-        return (storage.objectForKey(TrackEventType) as? NSNumber)?.unsignedLongLongValue
+        return (storage.object(forKey: TrackEventType) as? NSNumber)?.uint64Value
     }
     
     func update(seconds: UInt64) {
         // Store value.
-        storage.setObject(NSNumber(unsignedLongLong: seconds), forKey: TrackEventType)
+        storage.set(NSNumber(value: seconds), forKey: TrackEventType)
         storage.synchronize()
     }
     
     func reset() {
         // Clear storage.
-        storage.removeObjectForKey(TrackEventType)
+        storage.removeObject(forKey: TrackEventType)
         storage.synchronize()
     }
 }
@@ -50,11 +50,11 @@ class TimeTracker: NSObject {
     internal var seconds = UInt64(0)
     internal var backgroundTime: UInt64?
     internal var referenceTime: UInt64?
-    private var timer: NSTimer?
+    private var timer: Timer?
     
     private let storage: TimeTrackerStorageProtocol
     
-    init(storage: TimeTrackerStorageProtocol, callback: TimeTrackerCallback) {
+    init(storage: TimeTrackerStorageProtocol, callback: @escaping TimeTrackerCallback) {
         self.storage = storage
         self.callback = callback
         
@@ -63,7 +63,7 @@ class TimeTracker: NSObject {
         // On initialize, check if we had an unsent duration stored
         if let previousDuration = storage.seconds() {
             // Send it
-            callback(event: TrackApplicationTimeEvent(withSeconds: previousDuration))
+            callback(TrackApplicationTimeEvent(withSeconds: previousDuration))
             // Clean the slate
             reset()
         }
@@ -81,7 +81,7 @@ class TimeTracker: NSObject {
     /// Increment seconds then clear reference time.
     private func stop() {
         if let startTime = referenceTime {
-            seconds += elapsedSince(startTime)
+            seconds += elapsedSince(start: startTime)
             referenceTime = nil
         }
     }
@@ -98,9 +98,9 @@ class TimeTracker: NSObject {
         if let backgroundTime = backgroundTime {
             // If we were backgrounded longer than the threshold
             // we should sent the event and reset the seconds to zero.
-            if elapsedSince(backgroundTime) > backgroundThreshold {
+            if elapsedSince(start: backgroundTime) > backgroundThreshold {
                 store(resume: false)
-                callback(event: TrackApplicationTimeEvent(withSeconds: seconds))
+                callback(TrackApplicationTimeEvent(withSeconds: seconds))
                 reset()
             }
         }
@@ -130,14 +130,14 @@ class TimeTracker: NSObject {
     }
     
     /// Store value in NSUserDefaults, stop counting, and optionally resume counting.
-    private func store(resume resume: Bool) {
+    private func store(resume: Bool) {
         stop()
         if resume {
             start()
         }
         
         // Store value.
-        storage.update(seconds)
+        storage.update(seconds: seconds)
     }
     
     /// Calculate seconds elapsed since a starting reference time.
@@ -152,8 +152,8 @@ class TimeTracker: NSObject {
     // MARK: - Timer
     
     private func createTimer() {
-        timer = NSTimer(timeInterval: storageTimeInterval, target: self, selector: #selector(TimeTracker.runTimer(_:)), userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(timer!, forMode: NSRunLoopCommonModes)
+        timer = Timer(timeInterval: storageTimeInterval, target: self, selector: #selector(TimeTracker.runTimer(timer:)), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer!, forMode: .commonModes)
     }
     
     private func destroyTimer() {
@@ -161,7 +161,7 @@ class TimeTracker: NSObject {
         timer = nil
     }
     
-    internal func runTimer(timer: NSTimer) {
+    internal func runTimer(timer: Timer) {
         store(resume: true)
     }
 }

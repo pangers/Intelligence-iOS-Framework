@@ -10,27 +10,27 @@ import Foundation
 
 internal enum GeofenceKey: String {
     /// Top level data key
-    case DataKey = "Data"
+    case dataKey = "Data"
     /// Identifier within a data object.
-    case IdKey = "Id"
+    case idKey = "Id"
     /// Project Identifier key within a data object.
-    case ProjectIdKey = "ProjectId"
+    case projectIdKey = "ProjectId"
     /// Name key within a data object.
-    case NameKey = "Name"
+    case nameKey = "Name"
     /// Address key within a data object.
-    case AddressKey = "Address"
+    case addressKey = "Address"
     /// Radius key within a data object.
-    case RadiusKey = "Radius"
+    case radiusKey = "Radius"
     /// Modify date key within a data object.
-    case DateUpdatedKey = "DateUpdated"
+    case dateUpdatedKey = "DateUpdated"
     /// Create date key within a data object.
-    case DateCreatedKey = "DateCreated"
+    case dateCreatedKey = "DateCreated"
     /// Geolocation key within a data object.
-    case GeolocationKey = "Geolocation"
+    case geolocationKey = "Geolocation"
     /// Latitude key within a geolocation object.
-    case LatitudeKey = "Latitude"
+    case latitudeKey = "Latitude"
     /// Longitude key within a geolocation object.
-    case LongitudeKey = "Longitude"
+    case longitudeKey = "Longitude"
 }
 
 internal extension Geofence {
@@ -40,30 +40,30 @@ internal extension Geofence {
     /// - Returns: Value for a specific GeofenceKey in our JSONDictionary or throws a GeofenceError.
     private class func geoValue<T>(forKey key: GeofenceKey, dictionary: JSONDictionary) throws -> T {
         guard let output = dictionary[key.rawValue] as? T else {
-            throw GeofenceError.InvalidPropertyError(key)
+            throw GeofenceError.invalidPropertyError(key)
         }
         return output
     }
     
     /// - Returns: Path to Geofences JSON file.
     internal class func jsonPath() -> String? {
-        guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
+        guard let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else { return nil }
         return "\(path)/Geofences.json"
     }
     
     /// Writes JSONDictionary to file.
     /// - Parameter json: Optional JSONDictionary object.
     internal class func storeJSON(json: JSONDictionary?) throws {
-        guard let path = jsonPath(), json = json?.int_toJSONData() else {
-            throw RequestError.ParseError
+        guard let path = jsonPath(), let url = URL(string: path), let json = json?.int_toJSONData() else {
+            throw RequestError.parseError
         }
-        json.writeToFile(path, atomically: true)
+        try json.write(to: url, options: .atomic)
     }
     
     /// - Returns: Cached array of Geofence objects or nil.
     private class func readJSON() throws -> JSONDictionary? {
-        guard let path = jsonPath(), json = NSData(contentsOfFile: path)?.int_jsonDictionary else {
-            throw RequestError.ParseError
+        guard let path = jsonPath(), let url = URL(string: path), let json = try? Data.init(contentsOf: url).int_jsonDictionary else {
+            throw RequestError.parseError
         }
         return json
     }
@@ -78,12 +78,12 @@ internal extension Geofence {
     /// - Parameter readFromCache: If reading from cache we don't want to save `json` to file.
     internal class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
         if readFromCache! == false {
-            try storeJSON(json)
+            try storeJSON(json: json)
         }
         guard let json = json else {
-            throw RequestError.ParseError
+            throw RequestError.parseError
         }
-        let data: JSONDictionaryArray = try geoValue(forKey: .DataKey, dictionary: json)
+        let data: JSONDictionaryArray = try geoValue(forKey: .dataKey, dictionary: json)
         return data.map({ geofence(withJSON: $0) }).filter({ $0 != nil }).map({ $0! })
     }
     
@@ -91,19 +91,19 @@ internal extension Geofence {
     /// - parameter json: Optional JSONDictionary object.
     internal class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
-            let createDate: String = try geoValue(forKey: .DateCreatedKey, dictionary: json)
-            let modifyDate: String = try geoValue(forKey: .DateUpdatedKey, dictionary: json)
-            let geolocation: JSONDictionary = try geoValue(forKey: .GeolocationKey, dictionary: json)
+            let createDate: String = try geoValue(forKey: .dateCreatedKey, dictionary: json)
+            let modifyDate: String = try geoValue(forKey: .dateUpdatedKey, dictionary: json)
+            let geolocation: JSONDictionary = try geoValue(forKey: .geolocationKey, dictionary: json)
             let geofence = Geofence()
-            geofence.latitude = try geoValue(forKey: .LatitudeKey, dictionary: geolocation)
-            geofence.longitude = try geoValue(forKey: .LongitudeKey, dictionary: geolocation)
-            geofence.createDate = RFC3339DateFormatter.dateFromString(createDate)?.timeIntervalSinceReferenceDate ?? 0
-            geofence.modifyDate = RFC3339DateFormatter.dateFromString(modifyDate)?.timeIntervalSinceReferenceDate ?? 0
-            geofence.radius = try geoValue(forKey: .RadiusKey, dictionary: json)
-            geofence.id = try geoValue(forKey: .IdKey, dictionary: json)
-            geofence.projectId = try geoValue(forKey: .ProjectIdKey, dictionary: json)
-            geofence.name = try geoValue(forKey: .NameKey, dictionary: json)
-            geofence.address = try geoValue(forKey: .AddressKey, dictionary: json)
+            geofence.latitude = try geoValue(forKey: .latitudeKey, dictionary: geolocation)
+            geofence.longitude = try geoValue(forKey: .longitudeKey, dictionary: geolocation)
+            geofence.createDate = RFC3339DateFormatter.date(from: createDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.modifyDate = RFC3339DateFormatter.date(from: modifyDate)?.timeIntervalSinceReferenceDate ?? 0
+            geofence.radius = try geoValue(forKey: .radiusKey, dictionary: json)
+            geofence.id = try geoValue(forKey: .idKey, dictionary: json)
+            geofence.projectId = try geoValue(forKey: .projectIdKey, dictionary: json)
+            geofence.name = try geoValue(forKey: .nameKey, dictionary: json)
+            geofence.address = try geoValue(forKey: .addressKey, dictionary: json)
             return geofence
         } catch {
             // Silently fail for this geofence, letting others continue to be parsed.

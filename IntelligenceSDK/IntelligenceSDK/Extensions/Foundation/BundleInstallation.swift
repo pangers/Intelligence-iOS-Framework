@@ -13,10 +13,11 @@ protocol IntelligenceApplicationVersionProtocol {
     var int_applicationVersionString: String? {get}
 }
 
-extension NSBundle: IntelligenceApplicationVersionProtocol {
+extension Bundle: IntelligenceApplicationVersionProtocol {
     
     var int_applicationVersionString: String? {
-        guard let version = infoDictionary?["CFBundleShortVersionString"] as? String, build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
+        guard let version = infoDictionary?["CFBundleShortVersionString"] as? String,
+            let build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
         return "\(version) (\(build))"
     }
     

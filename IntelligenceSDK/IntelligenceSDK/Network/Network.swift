@@ -11,43 +11,43 @@ import Foundation
 /// An enumeration of the HTTP Methods available to use
 internal enum HTTPRequestMethod : String {
     /// HTTP GET
-    case GET = "GET"
+    case get = "GET"
     /// HTTP POST
-    case POST = "POST"
+    case post = "POST"
     /// HTTP PUT
-    case PUT = "PUT"
+    case put = "PUT"
     /// HTTP DELETE
-    case DELETE = "DELETE"
+    case delete = "DELETE"
 }
 
 internal enum HTTPStatusCode: Int {
-    case Success = 200
-    case BadRequest = 400
-    case Unauthorized = 401
-    case Forbidden = 403
-    case NotFound = 404
+    case success = 200
+    case badRequest = 400
+    case unauthorized = 401
+    case forbidden = 403
+    case notFound = 404
 }
 
 /// Acts as a Network manager for the Intelligence SDK, encapsulates authentication requests.
-internal final class Network: NSObject, NSURLSessionDelegate {
+internal final class Network: NSObject, URLSessionDelegate {
     
     /// Delegate must be set before startup is called on modules.
     internal var delegate: IntelligenceInternalDelegate!
     
-    internal let authenticationChallengeDelegate: NSURLSessionDelegate
+    internal let authenticationChallengeDelegate: URLSessionDelegate
     
     /// Provider responsible for serving OAuth information.
     internal var oauthProvider: IntelligenceOAuthProvider!
     
     /// NSURLSession with default session configuration.
-    internal private(set) var sessionManager : NSURLSession?
-    internal let queue: NSOperationQueue
+    internal private(set) var sessionManager : URLSession?
+    internal let queue: OperationQueue
     
     // MARK: Initializers
     
     /// Initialize new instance of Intelligence Networking class
-    init(delegate: IntelligenceInternalDelegate, authenticationChallengeDelegate: NSURLSessionDelegate, oauthProvider: IntelligenceOAuthProvider) {
-        self.queue = NSOperationQueue()
+    init(delegate: IntelligenceInternalDelegate, authenticationChallengeDelegate: URLSessionDelegate, oauthProvider: IntelligenceOAuthProvider) {
+        self.queue = OperationQueue()
         self.queue.maxConcurrentOperationCount = 1
         self.delegate = delegate
         self.authenticationChallengeDelegate = authenticationChallengeDelegate;
@@ -55,25 +55,25 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         
         super.init()
         
-        self.sessionManager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: nil)
+        self.sessionManager = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
     }
     
-    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        self.authenticationChallengeDelegate.URLSession?(session, didReceiveChallenge: challenge, completionHandler: completionHandler)
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        self.authenticationChallengeDelegate.urlSession?(session, didReceive: challenge, completionHandler: completionHandler)
     }
     
     /// Return all queued operations (excluding pipeline operations).
     internal func queuedOperations() -> [IntelligenceAPIOperation] {
         return queue.operations.filter({
-            $0.isMemberOfClass(IntelligenceAPIPipeline.self) == false &&
-                $0.isKindOfClass(IntelligenceAPIOperation.self) == true })
+            !($0 is IntelligenceAPIPipeline) &&
+                $0 is IntelligenceAPIOperation })
             .map({ $0 as! IntelligenceAPIOperation })
     }
     
     /// Return all queued operations (excluding pipeline operations).
     internal func queuedPipelines() -> [IntelligenceAPIPipeline] {
         return queue.operations.filter({
-            $0.isMemberOfClass(IntelligenceAPIPipeline.self) == true })
+            $0 is IntelligenceAPIOperation })
             .map({ $0 as! IntelligenceAPIPipeline })
     }
     
@@ -102,7 +102,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         // If shouldValidate == false, the token is no longer valid, lets try and refresh, if that fails login again.
         var operations = [IntelligenceOAuthRefreshOperation(), IntelligenceOAuthLoginOperation()]
         if shouldValidate {
-            operations.insert(IntelligenceOAuthValidateOperation(), atIndex: 0)
+            operations.insert(IntelligenceOAuthValidateOperation(), at: 0)
         }
         
         let pipeline = IntelligenceAPIPipeline(withOperations: operations,
@@ -117,7 +117,7 @@ internal final class Network: NSObject, NSURLSessionDelegate {
         })
         
         // Set priority of pipeline to high, to move it above other requests (that aren't in progress already).
-        pipeline.queuePriority = .VeryHigh
+        pipeline.queuePriority = .veryHigh
         
         completion(pipeline)
     }

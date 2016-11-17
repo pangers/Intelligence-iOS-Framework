@@ -30,7 +30,7 @@ private let userTypeKey = "UserTypeId"
 private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
 
 /// The regular expression unwrapped. Shouldn't fail unless the pattern is modified.
-private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .AllowCommentsAndWhitespace)
+private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .allowCommentsAndWhitespace)
 
 /// A constant to mark an invalid user Id.
 private let invalidUserId = Int.min
@@ -92,7 +92,7 @@ public extension Intelligence {
         
         /// Convenience initializer to create a user with random details, intended to be used for the SDK user account
         convenience public init(companyId:Int) {
-            let username = NSUUID().UUIDString
+            let username = UUID().uuidString
             
             let uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
@@ -104,10 +104,10 @@ public extension Intelligence {
             
             let range = (0..<3)
             let password = String(Array([
-                range.map({ _ in selectRandomLetter(uppercaseLetters) }),
-                range.map({ _ in selectRandomLetter(lowercaseLetters) }),
-                range.map({ _ in selectRandomLetter(numbers) })
-                ].flatten()).shuffle())
+                range.map({ _ in selectRandomLetter(str: uppercaseLetters) }),
+                range.map({ _ in selectRandomLetter(str: lowercaseLetters) }),
+                range.map({ _ in selectRandomLetter(str: numbers) })
+                ].flatMap({ $0 }).shuffled()))
             
             self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
         }
@@ -125,9 +125,9 @@ public extension Intelligence {
         ///     - configuration: The configuration that holds the company Id.
         convenience internal init?(withJSON json: JSONDictionary?, configuration: Intelligence.Configuration) {
             guard let json = json,
-                userId = json[idKey] as? Int,
-                username = json[usernameKey] as? String,
-                firstName = json[firstNameKey] as? String else {
+                let userId = json[idKey] as? Int,
+                let username = json[usernameKey] as? String,
+                let firstName = json[firstNameKey] as? String else {
                     return nil
             }
             let lastName = json[lastNameKey] as? String
@@ -227,7 +227,7 @@ public extension Intelligence {
                 return false
             }
             
-            let matches = passwordRegularExpression.matchesInString(password, options: .Anchored, range:NSRange(location:0, length:password.characters.count))
+            let matches = passwordRegularExpression.matches(in: password, options: .anchored, range:NSRange(location:0, length:password.characters.count))
             return matches.count > 0
         }
 

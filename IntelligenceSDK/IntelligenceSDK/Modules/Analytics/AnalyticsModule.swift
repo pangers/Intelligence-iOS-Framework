@@ -49,25 +49,26 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         self.installation = installation
     }
     
-    override func startup(completion: (success: Bool) -> ()) {
+    
+    override func startup(completion: @escaping (Bool) -> ()) {
         super.startup { [weak self] (success) -> () in
             if !success {
-                completion(success: false)
+                completion(false)
                 return
             }
             guard let this = self else {
-                completion(success: false)
+                completion(false)
                 return
             }
             this.eventQueue = EventQueue(withCallback: this.sendEvents)
             this.eventQueue?.startQueue()
             
-            this.track(OpenApplicationEvent(applicationID: this.configuration.applicationID))
+            this.track(event: OpenApplicationEvent(applicationID: this.configuration.applicationID))
             
-            this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: NSUserDefaults.standardUserDefaults()), callback: { [weak self] (event) -> () in
-                self?.track(event)
-                })
-            completion(success: true)
+            this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: UserDefaults.standard), callback: { [weak self] (event) -> () in
+                self?.track(event: event)
+            })
+            completion(true)
         }
     }
     
@@ -88,7 +89,7 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     }
     
     func track(event: Event) {
-        eventQueue?.enqueueEvent(prepareEvent(event))
+        eventQueue?.enqueueEvent(event: prepareEvent(event: event))
     }
     
     // MARK: Internal
@@ -101,8 +102,8 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         
         dictionary[Event.ProjectIdKey] = configuration.projectID
         dictionary[Event.ApplicationIdKey] = configuration.applicationID
-        dictionary[Event.DeviceTypeKey] = UIDevice.currentDevice().model
-        dictionary[Event.OperationSystemVersionKey] = UIDevice.currentDevice().systemVersion
+        dictionary[Event.DeviceTypeKey] = UIDevice.current.model
+        dictionary[Event.OperationSystemVersionKey] = UIDevice.current.systemVersion
         
         // Set optional values (may fail for whatever reason).
         dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.int_applicationVersionString)
@@ -123,12 +124,12 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     /// Callback from EventQueue, responsible for propogating changes to the server.
     /// - parameter events:     Array of JSONified Events to send.
     /// - parameter completion: Must be called on completion to notify caller of success/failure.
-    internal func sendEvents(events: JSONDictionaryArray, completion: (error: NSError?) -> ()) {
+    internal func sendEvents(events: JSONDictionaryArray, completion: @escaping (NSError?) -> ()) {
         let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
-            completion(error: analyticsOperation.output?.error)
+            completion(analyticsOperation.output?.error)
         })
         
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
 }

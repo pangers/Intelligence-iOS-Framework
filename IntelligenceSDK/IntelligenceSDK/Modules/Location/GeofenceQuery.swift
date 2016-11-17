@@ -43,16 +43,16 @@ import CoreLocation
     func urlQueryString () -> String {
         var queryString : String = ""
             
-        queryString.appendUrlQueryParameter("longitude", parameterValue: longitude, isFirst: true)
-        queryString.appendUrlQueryParameter("latitude", parameterValue: latitude)
-        queryString.appendUrlQueryParameter("radius", parameterValue: radius)
+        queryString.appendUrlQueryParameter(parameterName: "longitude", parameterValue: longitude, isFirst: true)
+        queryString.appendUrlQueryParameter(parameterName: "latitude", parameterValue: latitude)
+        queryString.appendUrlQueryParameter(parameterName: "radius", parameterValue: radius)
         
         if let pagenum = pageNumber {
-            queryString.appendUrlQueryParameter("pagenumber", parameterValue: pagenum)
+            queryString.appendUrlQueryParameter(parameterName: "pagenumber", parameterValue: pagenum)
         }
         
         if let pagesize = pageSize {
-            queryString.appendUrlQueryParameter("pagesize", parameterValue: pagesize)
+            queryString.appendUrlQueryParameter(parameterName: "pagesize", parameterValue: pagesize)
         }
         
         return queryString
@@ -74,8 +74,9 @@ private extension String {
     /// - Return: New string with added url query parameter in formats
     /// '?parameterName=parameterValue' if this is first parameter or
     /// '&parameterName=parameterValue' if not first parameter.
-    mutating func appendUrlQueryParameter(parameterName: String, parameterValue: AnyObject, isFirst: Bool = false) {
-        let urlEncodedParameterValue = String(parameterValue).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+    mutating func appendUrlQueryParameter(parameterName: String, parameterValue: Any, isFirst: Bool = false) {
+        let urlEncodedParameterValue = "\(parameterValue)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        
         self += ((isFirst ? "" : "&") + "\(parameterName)=\(urlEncodedParameterValue)")
     }
 }

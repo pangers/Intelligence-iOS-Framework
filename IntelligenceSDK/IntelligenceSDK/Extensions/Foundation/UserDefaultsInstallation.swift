@@ -37,15 +37,16 @@ private let intelligenceInstallationIDKey = "InstallationID"
 private let intelligenceInstallationCreateDateKey = "InstallationCreateDate"
 private let intelligenceInstallationRequestIDKey = "InstallationRequestID"
 
-extension NSUserDefaults: InstallationStorageProtocol {
+extension UserDefaults: InstallationStorageProtocol {
     
     // MARK:- App Version
     var int_applicationVersion: String? {
-        return objectForKey(intelligenceAppVersionKey) as? String
+        return object(forKey:
+            intelligenceAppVersionKey) as? String
     }
     
     func int_storeApplicationVersion(version: String?) {
-        setObject(version, forKey: intelligenceAppVersionKey)
+        set(version, forKey: intelligenceAppVersionKey)
         synchronize()
     }
     
@@ -54,40 +55,40 @@ extension NSUserDefaults: InstallationStorageProtocol {
     }
     
     func int_isInstallationUpdated(applicationVersion: String?) -> Bool {
-        guard let version = applicationVersion, stored = int_applicationVersion else { return false }
+        guard let version = applicationVersion, let stored = int_applicationVersion else { return false }
         return version != stored // Assumption: any version change is considered an update
     }
     
     // MARK:- Installation ID
     
     var int_installationID: String? {
-        return objectForKey(intelligenceInstallationIDKey) as? String
+        return object(forKey: intelligenceInstallationIDKey) as? String
     }
     
     func int_storeInstallationID(newID: String?) {
-        setObject(newID, forKey: intelligenceInstallationIDKey)
+        set(newID, forKey: intelligenceInstallationIDKey)
         synchronize()
     }
     
     // MARK:- Request ID
     
     var int_installationRequestID: Int? {
-        return objectForKey(intelligenceInstallationRequestIDKey) as? Int
+        return object(forKey: intelligenceInstallationRequestIDKey) as? Int
     }
     
     func int_storeInstallationRequestID(newID: Int?) {
-        setObject(newID, forKey: intelligenceInstallationRequestIDKey)
+        set(newID, forKey: intelligenceInstallationRequestIDKey)
         synchronize()
     }
     
     // MARK:- Creation Date
     
     var int_installationCreateDateString: String? {
-        return objectForKey(intelligenceInstallationCreateDateKey) as? String
+        return object(forKey: intelligenceInstallationCreateDateKey) as? String
     }
     
     func int_storeInstallationCreateDate(newDate: String?) {
-        setObject(newDate, forKey: intelligenceInstallationCreateDateKey)
+        set(newDate, forKey: intelligenceInstallationCreateDateKey)
         synchronize()
     }
 }

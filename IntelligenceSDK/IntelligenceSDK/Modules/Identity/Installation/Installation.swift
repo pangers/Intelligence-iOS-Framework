@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 
 private enum DeviceType : Int {
-    case Smartphone = 1
-    case Tablet = 2
-    case Desktop = 3
-    case SmartTV = 4
-    case Wearable = 5
+    case smartphone = 1
+    case tablet = 2
+    case desktop = 3
+    case smartTV = 4
+    case wearable = 5
 }
 
 /// Manager used for Installation requests.
@@ -41,8 +41,8 @@ internal struct Installation {
     let oauthProvider: IntelligenceOAuthProvider
     
     // MARK:- Parameters used in requests
-    private var systemVersion: String { return UIDevice.currentDevice().systemVersion }
-    private var deviceTypeId: DeviceType { return .Smartphone }
+    private var systemVersion: String { return UIDevice.current.systemVersion }
+    private var deviceTypeId: DeviceType { return .smartphone }
     private var installedVersion: String { return applicationVersion.int_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
     private var projectId: Int { return configuration.projectID }
@@ -61,7 +61,7 @@ internal struct Installation {
     
     /// - Returns: True if app is updated or request has not made it to Intelligence yet.
     var isUpdatedInstallation: Bool {
-        return installationStorage.int_isInstallationUpdated(applicationVersion.int_applicationVersionString)
+        return installationStorage.int_isInstallationUpdated(applicationVersion: applicationVersion.int_applicationVersionString)
     }
     
     /// - Returns: JSON Dictionary representation used in Installation requests.
@@ -94,14 +94,14 @@ internal struct Installation {
     func updateWithJSON(json: JSONDictionary?) -> Bool {
         if let
             json = json,
-            installation = json[Installation.InstallationId] as? String,
-            id = json[Installation.Id] as? Int,
-            installedVersion = json[Installation.InstalledVersion] as? String,
-            createDate = json[Installation.CreateDate] as? String {
-                installationStorage.int_storeInstallationID(installation)
-                installationStorage.int_storeInstallationCreateDate(createDate)
-                installationStorage.int_storeInstallationRequestID(id)
-                installationStorage.int_storeApplicationVersion(installedVersion)
+            let installation = json[Installation.InstallationId] as? String,
+            let id = json[Installation.Id] as? Int,
+            let installedVersion = json[Installation.InstalledVersion] as? String,
+            let createDate = json[Installation.CreateDate] as? String {
+                installationStorage.int_storeInstallationID(newID: installation)
+                installationStorage.int_storeInstallationCreateDate(newDate: createDate)
+                installationStorage.int_storeInstallationRequestID(newID: id)
+                installationStorage.int_storeApplicationVersion(version: installedVersion)
                 return true
         }
         return false

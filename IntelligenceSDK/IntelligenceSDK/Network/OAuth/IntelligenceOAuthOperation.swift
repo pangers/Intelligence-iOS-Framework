@@ -29,28 +29,28 @@ class IntelligenceOAuthOperation : IntelligenceAPIOperation {
             
             if error == "Authentication failed." {
                 if errorDescription == "Credentials incorrect." {
-                    output?.error = NSError(code: AuthenticationError.CredentialError.rawValue)
+                    output?.error = NSError(code: AuthenticationError.credentialError.rawValue)
                 }
                 else if errorDescription == "Account disabled." {
-                    output?.error = NSError(code: AuthenticationError.AccountDisabledError.rawValue)
+                    output?.error = NSError(code: AuthenticationError.accountDisabledError.rawValue)
                 }
                 else if errorDescription == "Account locked." {
-                    output?.error = NSError(code: AuthenticationError.AccountLockedError.rawValue)
+                    output?.error = NSError(code: AuthenticationError.accountLockedError.rawValue)
                 }
             }
             else if error == "Invalid token." {
                 if errorDescription == "Token invalid or expired." {
-                    output?.error = NSError(code: AuthenticationError.TokenInvalidOrExpired.rawValue)
+                    output?.error = NSError(code: AuthenticationError.tokenInvalidOrExpired.rawValue)
                 }
             }
             else
             {
-                output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+                output?.error = NSError(code: RequestError.unauthorized.rawValue)
             }
         }
         else
         {
-            output?.error = NSError(code: RequestError.Unauthorized.rawValue)
+            output?.error = NSError(code: RequestError.unauthorized.rawValue)
         }
     }
 }

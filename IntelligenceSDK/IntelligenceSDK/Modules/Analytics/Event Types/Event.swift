@@ -50,14 +50,14 @@ public class Event: NSObject {
         self.eventType = type
         self.value = value
         self.targetId = targetId
-        self.eventDate = RFC3339DateFormatter.stringFromDate(NSDate())
+        self.eventDate = RFC3339DateFormatter.string(from: Date())
         self.metadata = metadata
     }
     
     /// Convert Event object to JSON representation.
     /// - returns: JSON Dictionary representation of this Event.
     internal func toJSON() -> JSONDictionary {
-        var dictionary: [String: AnyObject] = [Event.EventTypeKey: eventType, Event.EventValueKey: value, Event.EventDateKey: eventDate]
+        var dictionary: [String: Any] = [Event.EventTypeKey: eventType, Event.EventValueKey: value, Event.EventDateKey: eventDate]
         
         // Set keys with optional values.
         dictionary <-? (Event.TargetIdKey, targetId)

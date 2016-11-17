@@ -73,7 +73,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         return true
     }
     
-    class func reset(inout oauth: IntelligenceOAuthProtocol) {
+    class func reset( oauth: inout IntelligenceOAuthProtocol) {
         oauth.accessToken = nil
         oauth.refreshToken = nil
         oauth.username = nil
@@ -86,7 +86,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         assert(tokenType != .Application, "Invalid method for Application tokens")
         // Compare usernames, if they differ we must clear tokens so login will not validate as
         // incorrect user. Usernames are case insensitive.
-        if self.username != nil && self.username?.lowercaseString != username.lowercaseString {
+        if self.username != nil && self.username?.lowercased() != username.lowercased() {
             self.accessToken = nil
             self.refreshToken = nil
             self.userId = nil

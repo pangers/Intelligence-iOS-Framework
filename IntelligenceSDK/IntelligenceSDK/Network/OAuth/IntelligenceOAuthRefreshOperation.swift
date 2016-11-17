@@ -17,8 +17,8 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
             print("\(oauth!.tokenType) Refresh Token Skipped")
             return
         }
-        let request = NSURLRequest.int_URLRequestForRefresh(oauth!, configuration: configuration!, network: network!)
-        output = session.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForRefresh(oauth: oauth!, configuration: configuration!, network: network!)
+        output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
@@ -26,12 +26,11 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         }
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.
-        guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
-                oauth?.updateWithResponse(output?.data?.int_jsonDictionary) == true else
+        guard let httpResponse = output?.response as? HTTPURLResponse, httpResponse.statusCode == HTTPStatusCode.success.rawValue &&
+                oauth?.updateWithResponse(response: output?.data?.int_jsonDictionary) == true else
         {
             if output?.error == nil {
-                output?.error = NSError(code: RequestError.ParseError.rawValue)
+                output?.error = NSError(code: RequestError.parseError.rawValue)
             }
             print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             self.shouldBreak = true

@@ -9,18 +9,18 @@
 import Foundation
 
 /// A generic UserCallback in which we get either an IntelligenceUser or an error.
-public typealias UserCallback = (user:Intelligence.User?, error:NSError?) -> Void
+public typealias UserCallback = (Intelligence.User?, NSError?) -> Void
 
 /// Called on completion of update or create installation request.
 /// - Returns: Installation object and optional error.
-internal typealias InstallationCallback = (installation: Installation?, error: NSError?) -> Void
+internal typealias InstallationCallback = (Installation?, NSError?) -> Void
 
 /// Callback for Register Device Token method, developer is responsbile for managing the tokenId and calling unregister at appropriate times.
-public typealias RegisterDeviceTokenCallback = (tokenId: Int, error: NSError?) -> Void
+public typealias RegisterDeviceTokenCallback = (Int, NSError?) -> Void
 /// Callback for Unregister Device Token method, an error may occur if tokenId was not registred or is registered against another user.
-public typealias UnregisterDeviceTokenCallback = (error: NSError?) -> Void
+public typealias UnregisterDeviceTokenCallback = (NSError?) -> Void
 /// Callback for Unregister Device Token (On Befalf) method
-public typealias UnregisterDeviceTokenOnBehalfCallback = (error: NSError?) -> Void
+public typealias UnregisterDeviceTokenOnBehalfCallback = (NSError?) -> Void
 
 private let InvalidDeviceTokenID = -1
 private let CreateSDKUserRetries = 5
@@ -35,7 +35,7 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     ///     - username: Username of account to attempt login with.
     ///     - password: Password associated with username.
     ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    func login(withUsername username: String, password: String, callback: UserCallback)
+    func login(with username: String, password: String, callback: @escaping UserCallback)
     
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
@@ -43,39 +43,39 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// Get details about a user.
     /// - parameter userId: The id of the user to retrieve details for.
     /// - parameter callback: Will be called with either an error or a user.
-    func getUser(userId: Int, callback: UserCallback)
+    func getUser(with userId: Int, callback: @escaping UserCallback)
     
     /// Assign a role to a user.
     /// - parameter roleId: The id of the role to assign.
     /// - parameter user: The user to assign the role to.
     /// - parameter callback: Will be called with either an error or a user.
-    func assignRole(roleId: Int, user: Intelligence.User, callback: UserCallback)
+    func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Revoke a role from a user.
     /// - parameter roleId: The id of the role to revoke.
     /// - parameter user: The user to revoke the role from.
     /// - parameter callback: Will be called with either an error or a user.
-    func revokeRole(roleId: Int, user: Intelligence.User, callback: UserCallback)
+    func revokeRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
-    func getMe(callback: UserCallback)
+    func getMe(callback: @escaping UserCallback)
     
     /// Updates a user in the backend.
     /// - Parameters:
     ///     - user: Intelligence User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func updateUser(user: Intelligence.User, callback: UserCallback)
+    func updateUser(user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Register a push notification token on the Intelligence platform.
     /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.
     /// - parameter callback: Callback to fire on completion, will contain error or token ID. Developer should store token ID and is responsible for managing the flow of registration for push.
-    func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback)
+    func registerDeviceToken(data: Data, callback: @escaping RegisterDeviceTokenCallback)
     
     /// Unregister a token ID in the backend, will fail if it was registered against another user.
     /// - parameter tokenId: Previously registered token ID. Should be unregistered prior to logout if you have multiple accounts.
     /// - parameter callback: Callback to fire on completion, error will be set if unable to unregister.
-    func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback)
+    func unregisterDeviceToken(with tokenId: Int, callback: @escaping UnregisterDeviceTokenCallback)
 }
 
 /// The IdentityModule implementation.
@@ -94,7 +94,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         self.installation = installation
     }
     
-    private func createSDKUserIfRequired(completion: (Bool) -> ()) {
+    private func createSDKUserIfRequired(completion: @escaping (Bool) -> ()) {
         var oauth = network.oauthProvider.sdkUserOAuth
         if oauth.username != nil && oauth.password != nil {
                 completion(true)
@@ -105,7 +105,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         let sdkUser = Intelligence.User(companyId: configuration.companyId)
         let password = sdkUser.password
         
-        createUser(sdkUser) { [weak self] (serverUser, error) -> Void in
+        createUser(user: sdkUser) { [weak self] (serverUser, error) -> Void in
             // defer the completion callback call.
             defer {
                 completion(serverUser != nil)
@@ -128,7 +128,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     - parameter counter:    The number of retries to perform.
     - parameter completion: A callback to notify on success or failure.
     */
-    private func createSDKUserRecursively(counter: Int, completion: (success: Bool) -> ()) {
+    private func createSDKUserRecursively(counter: Int, completion: @escaping (Bool) -> ()) {
         if counter <= 1 {
             
             // Pass error back to developer (special case, use delegate).
@@ -136,64 +136,64 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             // and cannot create users.
             self.delegate?.userCreationFailed()
             
-            completion(success: false)
+            completion(false)
             return
         }
         
         // Create user if their credentials are empty.
-        self.createSDKUserIfRequired({ [weak self] (success: Bool) -> () in
+        self.createSDKUserIfRequired(completion: { [weak self] (success: Bool) -> () in
             guard let identity = self else {
-                completion(success: false)
+                completion(false)
                 return
             }
             
             if !success {
-                identity.createSDKUserRecursively(counter - 1, completion: completion)
+                identity.createSDKUserRecursively(counter: counter - 1, completion: completion)
                 return
             }
             
             // Get pipeline if created or existing.
             identity.network.getPipeline(forOAuth: identity.network.oauthProvider.sdkUserOAuth, configuration: identity.configuration) { [weak self] (sdkUserPipeline) -> () in
                     
-                    guard let identity = self, sdkUserPipeline = sdkUserPipeline else {
+                    guard let identity = self, let sdkUserPipeline = sdkUserPipeline else {
                         // Should not happen (user created above)
-                        completion(success: false)
+                        completion(false)
                         return
                     }
                     
-                    identity.network.enqueueOperation(sdkUserPipeline)
+                    identity.network.enqueueOperation(operation: sdkUserPipeline)
                     
                     sdkUserPipeline.callback = { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
                         guard let identity = self else {
-                            completion(success: false)
+                            completion(false)
                             return
                         }
                         
                         if let error = returnedOperation.output?.error {
                             switch error.code {
-                                case AuthenticationError.CredentialError.rawValue,
-                                AuthenticationError.AccountDisabledError.rawValue,
-                                AuthenticationError.AccountLockedError.rawValue,
-                                AuthenticationError.TokenInvalidOrExpired.rawValue:
-                                    IntelligenceOAuth.reset(&identity.network.oauthProvider.sdkUserOAuth)
-                                    identity.createSDKUserRecursively(counter - 1, completion: completion)
+                                case AuthenticationError.credentialError.rawValue,
+                                AuthenticationError.accountDisabledError.rawValue,
+                                AuthenticationError.accountLockedError.rawValue,
+                                AuthenticationError.tokenInvalidOrExpired.rawValue:
+                                    IntelligenceOAuth.reset(oauth: &identity.network.oauthProvider.sdkUserOAuth)
+                                    identity.createSDKUserRecursively(counter: counter - 1, completion: completion)
                                 default:
-                                    completion(success: false)
+                                    completion(false)
                             }
                             
                             return
                         }
                     
                         // Installation can succeed without a user id
-                        identity.createInstallation(nil)
-                        identity.updateInstallation(nil)
+                        identity.createInstallation(callback: nil)
+                        identity.updateInstallation(callback: nil)
                         
                         // Grab our user ID.
-                        identity.getMe(identity.network.oauthProvider.sdkUserOAuth) { [weak identity] (user, error) -> Void in
+                        identity.getMe(oauth: identity.network.oauthProvider.sdkUserOAuth) { [weak identity] (user, error) -> Void in
                             
                             // Update user id for SDKUser
                             identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
-                            completion(success: error == nil)
+                            completion(error == nil)
                         }
                     }
             }
@@ -201,51 +201,51 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     }
 
     
-    override func startup(completion: (success: Bool) -> ()) {
+    override func startup(completion: @escaping (Bool) -> ()) {
         super.startup { [weak network, weak configuration] (success) -> () in
             if !success {
-                completion(success: false)
+                completion(false)
                 return
             }
-            guard let network = network, configuration = configuration else {
-                completion(success: false)
+            guard let network = network, let configuration = configuration else {
+                completion(false)
                 return
             }
             
             // Get pipeline for grant_type 'client_credentials'.
             network.getPipeline(forOAuth: network.oauthProvider.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
-                guard let applicationPipeline = applicationPipeline, identity = self else {
-                    completion(success: false)
+                guard let applicationPipeline = applicationPipeline, let identity = self else {
+                    completion(false)
                     return
                 }
 
                 applicationPipeline.callback = { [weak self] (returnedOperation) in
                     guard let identity = self else {
-                        completion(success: false)
+                        completion(false)
                         return
                     }
                     
                     if let error = returnedOperation.output?.error {
                         switch error.code {
-                            case AuthenticationError.CredentialError.rawValue:
+                            case AuthenticationError.credentialError.rawValue:
                                 identity.delegate.credentialsIncorrect()
-                            case AuthenticationError.AccountDisabledError.rawValue:
+                            case AuthenticationError.accountDisabledError.rawValue:
                                 identity.delegate.accountDisabled()
-                            case AuthenticationError.AccountLockedError.rawValue:
+                            case AuthenticationError.accountLockedError.rawValue:
                                 identity.delegate.accountLocked()
-                            case AuthenticationError.TokenInvalidOrExpired.rawValue:
+                            case AuthenticationError.tokenInvalidOrExpired.rawValue:
                                 identity.delegate.tokenInvalidOrExpired()
                             default: break
                         }
                         
-                        completion(success: false)
+                        completion(false)
                         return
                     }
                     
-                    identity.createSDKUserRecursively(CreateSDKUserRetries,completion:completion)
+                    identity.createSDKUserRecursively(counter: CreateSDKUserRetries,completion:completion)
                 }
                 
-                identity.network.enqueueOperation(applicationPipeline)
+                identity.network.enqueueOperation(operation: applicationPipeline)
             }
         }
     }
@@ -257,7 +257,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     
     // MARK:- Login
     
-    @objc func login(withUsername username: String, password: String, callback: UserCallback) {
+    @objc func login(with username: String, password: String, callback: @escaping UserCallback) {
         var oauth = network.oauthProvider.loggedInUserOAuth
         oauth.updateCredentials(withUsername: username, password: password)
         
@@ -275,10 +275,10 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             
             if returnedPipeline.output?.error != nil {
                 // Failed, tell developer!
-                callback(user: nil, error: returnedPipeline.output?.error)
+                callback(nil, returnedPipeline.output?.error)
             } else {
                 // Get user me.
-                self?.getMe({ (user, error) -> Void in
+                self?.getMe(callback: { (user, error) -> Void in
                     // Clear userid if get me fails, otherwise update user id.
                     oauth.userId = user?.userId
                     
@@ -286,88 +286,91 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                     self?.network.oauthProvider.developerLoggedIn = oauth.userId != nil
                     
                     // Notify developer
-                    callback(user: user, error: error)
+                    callback(user, error)
                 })
             }
         }
         
-        network.enqueueOperation(pipeline)
+        network.enqueueOperation(operation: pipeline)
     }
     
     @objc func logout() {
         network.oauthProvider.developerLoggedIn = false
-        IntelligenceOAuth.reset(&network.oauthProvider.loggedInUserOAuth)
+        IntelligenceOAuth.reset(oauth: &network.oauthProvider.loggedInUserOAuth)
     }
     
     
     // MARK: - User Management
 
-    @objc func assignRole(roleId: Int, user: Intelligence.User, callback: UserCallback) {
+    @objc func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
         let operation = AssignUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
             configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
-                callback(user: assignRoleOperation.user, error: assignRoleOperation.output?.error)
+                callback(assignRoleOperation.user, assignRoleOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    @objc func revokeRole(roleId: Int, user: Intelligence.User, callback: UserCallback) {
+    @objc func revokeRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
         let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
             configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
-                callback(user: revokeRoleOperation.user, error: revokeRoleOperation.output?.error)
+                callback(revokeRoleOperation.user, revokeRoleOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    @objc func updateUser(user: Intelligence.User, callback: UserCallback) {
+    
+    @objc func updateUser(user: Intelligence.User, callback: @escaping UserCallback) {
         if !user.isValidToUpdate {
-            callback(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
+            callback(nil, NSError(code: IdentityError.invalidUserError.rawValue) )
             return
         }
         
         // The password can be nil due to the fact that getting a user does not retrieve the password
         if user.password != nil && !user.isPasswordSecure() {
-            callback(user:nil, error: NSError(code: IdentityError.WeakPasswordError.rawValue) )
+            callback(nil, NSError(code: IdentityError.weakPasswordError.rawValue) )
             return
         }
         
         let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
             configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
                 let updateOperation = returnedOperation as! UpdateUserRequestOperation
-                callback(user: updateOperation.user, error: updateOperation.output?.error)
+                callback(updateOperation.user, updateOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation:
+            
+            operation)
     }
     
-    @objc func getUser(userId: Int, callback: UserCallback) {
+    @objc func getUser(with userId: Int, callback: @escaping UserCallback) {
         let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let getUserOperation = returnedOperation as! GetUserRequestOperation
-            callback(user: getUserOperation.user, error: getUserOperation.output?.error)
+            callback(getUserOperation.user, getUserOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    internal func getMe(oauth: IntelligenceOAuthProtocol, callback: UserCallback) {
+    internal func getMe(oauth: IntelligenceOAuthProtocol, callback: @escaping UserCallback) {
         let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let getMeOperation = returnedOperation as! GetUserMeRequestOperation
-            callback(user: getMeOperation.user, error: getMeOperation.output?.error)
+            callback(getMeOperation.user, getMeOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    @objc func getMe(callback: UserCallback) {
-        getMe(network.oauthProvider.loggedInUserOAuth, callback: callback)
+    @objc func getMe(callback: @escaping UserCallback) {
+        getMe(oauth: network.oauthProvider.loggedInUserOAuth, callback: callback)
     }
     
     // MARK: Internal
@@ -381,12 +384,12 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     /// user is invalid, or one of the RequestError errors.
     internal func createUser(user: Intelligence.User, callback: UserCallback? = nil) {
         if !user.isValidToCreate {
-            callback?(user:nil, error: NSError(code: IdentityError.InvalidUserError.rawValue) )
+            callback?(nil, NSError(code: IdentityError.invalidUserError.rawValue) )
             return
         }
         
         if !user.isPasswordSecure() {
-            callback?(user:nil, error: NSError(code: IdentityError.WeakPasswordError.rawValue) )
+            callback?(nil, NSError(code: IdentityError.weakPasswordError.rawValue) )
             return
         }
         
@@ -406,7 +409,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                     return
                 }
                 
-                self?.assignRole(roleId, user: user, callback: { (user, error) -> Void in
+                self?.assignRole(to: roleId, user: user, callback: { (user, error) -> Void in
                     // Execute original callback.
                     // If assign role fails, the user will exist but not have any access, there is nothing we can do
                     // if the developer is trying to assign a role that doesn't exist or the server changes in some
@@ -417,34 +420,34 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         // We don't receive a unique error code, so just call the delegate on any error.
                         self?.delegate.userRoleAssignmentFailed()
                         // Also call callback, so developer doesn't get stuck waiting for a response.
-                        callback?(user: nil, error: error)
+                        callback?(nil, error)
                     } else {
-                        callback?(user: user, error: error)
+                        callback?(user, error)
                     }
                 })
             } else {
                 // On failure, simply execute callback.
-                callback?(user: createUserOperation.user, error: createUserOperation.output?.error)
+                callback?(createUserOperation.user, createUserOperation.output?.error)
             }
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
     // MARK:- Identifiers
     
-    func registerDeviceToken(data: NSData, callback: RegisterDeviceTokenCallback) {
+    func registerDeviceToken(data: Data, callback: @escaping RegisterDeviceTokenCallback) {
         let token = data.hexString()
         
-        unregisterDeviceTokenOnBehalf(token) { [weak self] (error) -> Void in
-            self?.registerDeviceToken(token, callback: callback)
+        unregisterDeviceTokenOnBehalf(token: token) { [weak self] (error) -> Void in
+            self?.registerDeviceToken(token: token, callback: callback)
         }
     }
     
-    private func registerDeviceToken(token: String, callback: RegisterDeviceTokenCallback) {
-        if token.characters.count == 0 || token.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
-            callback(tokenId: InvalidDeviceTokenID, error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
+    private func registerDeviceToken(token: String, callback: @escaping RegisterDeviceTokenCallback) {
+        if token.characters.count == 0 || token.lengthOfBytes(using: String.Encoding.utf8) == 0 {
+            callback(InvalidDeviceTokenID, NSError(code: IdentityError.deviceTokenInvalidError.rawValue))
             return
         }
         let operation = CreateIdentifierRequestOperation(token: token,
@@ -454,16 +457,16 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             callback: {
                 (returnedOperation: IntelligenceAPIOperation) -> () in
                 let createIdentifierOperation = returnedOperation as! CreateIdentifierRequestOperation
-                callback(tokenId: createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, error: createIdentifierOperation.output?.error)
+                callback(createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, createIdentifierOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    func unregisterDeviceToken(withId tokenId: Int, callback: UnregisterDeviceTokenCallback) {
+    func unregisterDeviceToken(with tokenId: Int, callback: @escaping UnregisterDeviceTokenCallback) {
         if tokenId < 1 {
-            callback(error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
+            callback(NSError(code: IdentityError.deviceTokenInvalidError.rawValue))
             return
         }
         let operation = DeleteIdentifierRequestOperation(tokenId: tokenId,
@@ -473,16 +476,16 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             callback: {
                 (returnedOperation: IntelligenceAPIOperation) -> () in
                 let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
-                callback(error:deleteIdentifierOperation.output?.error)
+                callback(deleteIdentifierOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
-    private func unregisterDeviceTokenOnBehalf(token: String, callback: UnregisterDeviceTokenOnBehalfCallback) {
+    private func unregisterDeviceTokenOnBehalf(token: String, callback: @escaping UnregisterDeviceTokenOnBehalfCallback) {
         if token.characters.count == 0 {
-            callback(error: NSError(code: IdentityError.DeviceTokenInvalidError.rawValue))
+            callback(NSError(code: IdentityError.deviceTokenInvalidError.rawValue))
             return
         }
         let operation = DeleteIdentifierOnBehalfRequestOperation(token: token,
@@ -492,11 +495,11 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             callback: {
                 (returnedOperation: IntelligenceAPIOperation) -> () in
                 let deleteIdentifierOnBehalfOperation = returnedOperation as! DeleteIdentifierOnBehalfRequestOperation
-                callback(error:deleteIdentifierOnBehalfOperation.output?.error)
+                callback(deleteIdentifierOnBehalfOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
     
@@ -508,17 +511,17 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     ///     - callback: Optionally provide a callback to fire on completion.
     internal func createInstallation(callback: InstallationCallback? = nil) {
         if !installation.isNewInstallation {
-            callback?(installation: installation, error: NSError(code: InstallationError.AlreadyInstalledError.rawValue))
+            callback?(installation, NSError(code: InstallationError.alreadyInstalledError.rawValue))
             return
         }
         
         let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
-            callback?(installation: createInstallationOperation.installation, error: createInstallationOperation.output?.error)
+            callback?(createInstallationOperation.installation, createInstallationOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
     /// Schedules an update installation request if version number changed.
@@ -526,17 +529,17 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     ///     - callback: Optionally provide a callback to fire on completion.
     internal func updateInstallation(callback: InstallationCallback? = nil) {
         if !installation.isUpdatedInstallation {
-            callback?(installation: installation, error: NSError(code: InstallationError.AlreadyUpdatedError.rawValue))
+            callback?(installation, NSError(code: InstallationError.alreadyUpdatedError.rawValue))
             return
         }
         
         // If this call fails, it will retry again the next time we open the app.
         let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
-            callback?(installation: updateInstallationOperation.installation, error: updateInstallationOperation.output?.error)
+            callback?(updateInstallationOperation.installation, updateInstallationOperation.output?.error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
 }

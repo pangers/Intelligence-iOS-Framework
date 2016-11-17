@@ -22,7 +22,7 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
     /// - parameter configuration: The configuration values to use for this operation.
     /// - parameter network: The network the operation will be queued on.
     /// - parameter callback: The callback called on completion of the operation.
-    init(user: Intelligence.User? = nil, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    init(user: Intelligence.User? = nil, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.sentUser = user
         super.init()
         self.callback = callback
@@ -42,13 +42,13 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
         }
         
         guard let receivedUser = Intelligence.User(withJSON: outputArrayFirstDictionary(), configuration: configuration!) else {
-            output?.error = NSError(code: RequestError.ParseError.rawValue)
+            output?.error = NSError(code: RequestError.parseError.rawValue)
             return
         }
         user = receivedUser
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
+    func copy(with zone: NSZone? = nil) -> Any {
         preconditionFailure("copyWithZone(zone:) sould never be called on UserRequestOperation, it needs to be overridden")
     }
 }

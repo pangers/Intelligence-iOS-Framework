@@ -13,14 +13,14 @@
 		6DC34CED1DDB26FB00FC3306 /* IntelligenceEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34C9B1DDB26FB00FC3306 /* IntelligenceEnvironment.swift */; };
 		6DC34CEE1DDB26FB00FC3306 /* IntelligenceRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34C9C1DDB26FB00FC3306 /* IntelligenceRegion.swift */; };
 		6DC34CEF1DDB26FB00FC3306 /* MutableCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34C9F1DDB26FB00FC3306 /* MutableCollectionType.swift */; };
-		6DC34CF01DDB26FB00FC3306 /* NSBundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA01DDB26FB00FC3306 /* NSBundleInstallation.swift */; };
-		6DC34CF11DDB26FB00FC3306 /* NSData+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA11DDB26FB00FC3306 /* NSData+Intelligence.swift */; };
-		6DC34CF21DDB26FB00FC3306 /* NSDateFormatterIRFC3339.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA21DDB26FB00FC3306 /* NSDateFormatterIRFC3339.swift */; };
-		6DC34CF31DDB26FB00FC3306 /* NSJSONSerializationHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA31DDB26FB00FC3306 /* NSJSONSerializationHelpers.swift */; };
-		6DC34CF41DDB26FB00FC3306 /* NSURL+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA41DDB26FB00FC3306 /* NSURL+Intelligence.swift */; };
-		6DC34CF51DDB26FB00FC3306 /* NSURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA51DDB26FB00FC3306 /* NSURLRequest.swift */; };
-		6DC34CF61DDB26FB00FC3306 /* NSURLSession+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA61DDB26FB00FC3306 /* NSURLSession+Intelligence.swift */; };
-		6DC34CF71DDB26FB00FC3306 /* NSUserDefaultsInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA71DDB26FB00FC3306 /* NSUserDefaultsInstallation.swift */; };
+		6DC34CF01DDB26FB00FC3306 /* BundleInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA01DDB26FB00FC3306 /* BundleInstallation.swift */; };
+		6DC34CF11DDB26FB00FC3306 /* Data+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA11DDB26FB00FC3306 /* Data+Intelligence.swift */; };
+		6DC34CF21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift */; };
+		6DC34CF31DDB26FB00FC3306 /* JSONSerializationHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA31DDB26FB00FC3306 /* JSONSerializationHelpers.swift */; };
+		6DC34CF41DDB26FB00FC3306 /* URL+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA41DDB26FB00FC3306 /* URL+Intelligence.swift */; };
+		6DC34CF51DDB26FB00FC3306 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA51DDB26FB00FC3306 /* URLRequest.swift */; };
+		6DC34CF61DDB26FB00FC3306 /* URLSession+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA61DDB26FB00FC3306 /* URLSession+Intelligence.swift */; };
+		6DC34CF71DDB26FB00FC3306 /* UserDefaultsInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA71DDB26FB00FC3306 /* UserDefaultsInstallation.swift */; };
 		6DC34CF81DDB26FB00FC3306 /* SequenceType+Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA81DDB26FB00FC3306 /* SequenceType+Intelligence.swift */; };
 		6DC34CF91DDB26FB00FC3306 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CA91DDB26FB00FC3306 /* String.swift */; };
 		6DC34CFA1DDB26FB00FC3306 /* TSDOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CAA1DDB26FB00FC3306 /* TSDOperation.swift */; };
@@ -124,14 +124,14 @@
 		6DC34C9B1DDB26FB00FC3306 /* IntelligenceEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceEnvironment.swift; sourceTree = "<group>"; };
 		6DC34C9C1DDB26FB00FC3306 /* IntelligenceRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceRegion.swift; sourceTree = "<group>"; };
 		6DC34C9F1DDB26FB00FC3306 /* MutableCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableCollectionType.swift; sourceTree = "<group>"; };
-		6DC34CA01DDB26FB00FC3306 /* NSBundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSBundleInstallation.swift; sourceTree = "<group>"; };
-		6DC34CA11DDB26FB00FC3306 /* NSData+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Intelligence.swift"; sourceTree = "<group>"; };
-		6DC34CA21DDB26FB00FC3306 /* NSDateFormatterIRFC3339.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateFormatterIRFC3339.swift; sourceTree = "<group>"; };
-		6DC34CA31DDB26FB00FC3306 /* NSJSONSerializationHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSJSONSerializationHelpers.swift; sourceTree = "<group>"; };
-		6DC34CA41DDB26FB00FC3306 /* NSURL+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Intelligence.swift"; sourceTree = "<group>"; };
-		6DC34CA51DDB26FB00FC3306 /* NSURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLRequest.swift; sourceTree = "<group>"; };
-		6DC34CA61DDB26FB00FC3306 /* NSURLSession+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+Intelligence.swift"; sourceTree = "<group>"; };
-		6DC34CA71DDB26FB00FC3306 /* NSUserDefaultsInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaultsInstallation.swift; sourceTree = "<group>"; };
+		6DC34CA01DDB26FB00FC3306 /* BundleInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundleInstallation.swift; sourceTree = "<group>"; };
+		6DC34CA11DDB26FB00FC3306 /* Data+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Intelligence.swift"; sourceTree = "<group>"; };
+		6DC34CA21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatterIRFC3339.swift; sourceTree = "<group>"; };
+		6DC34CA31DDB26FB00FC3306 /* JSONSerializationHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSerializationHelpers.swift; sourceTree = "<group>"; };
+		6DC34CA41DDB26FB00FC3306 /* URL+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Intelligence.swift"; sourceTree = "<group>"; };
+		6DC34CA51DDB26FB00FC3306 /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
+		6DC34CA61DDB26FB00FC3306 /* URLSession+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+Intelligence.swift"; sourceTree = "<group>"; };
+		6DC34CA71DDB26FB00FC3306 /* UserDefaultsInstallation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsInstallation.swift; sourceTree = "<group>"; };
 		6DC34CA81DDB26FB00FC3306 /* SequenceType+Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+Intelligence.swift"; sourceTree = "<group>"; };
 		6DC34CA91DDB26FB00FC3306 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		6DC34CAA1DDB26FB00FC3306 /* TSDOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDOperation.swift; sourceTree = "<group>"; };
@@ -288,18 +288,18 @@
 		6DC34C9E1DDB26FB00FC3306 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				6DC34CA01DDB26FB00FC3306 /* BundleInstallation.swift */,
+				6DC34CA11DDB26FB00FC3306 /* Data+Intelligence.swift */,
+				6DC34CA21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift */,
+				6DC34CA31DDB26FB00FC3306 /* JSONSerializationHelpers.swift */,
 				6DC34C9F1DDB26FB00FC3306 /* MutableCollectionType.swift */,
-				6DC34CA01DDB26FB00FC3306 /* NSBundleInstallation.swift */,
-				6DC34CA11DDB26FB00FC3306 /* NSData+Intelligence.swift */,
-				6DC34CA21DDB26FB00FC3306 /* NSDateFormatterIRFC3339.swift */,
-				6DC34CA31DDB26FB00FC3306 /* NSJSONSerializationHelpers.swift */,
-				6DC34CA41DDB26FB00FC3306 /* NSURL+Intelligence.swift */,
-				6DC34CA51DDB26FB00FC3306 /* NSURLRequest.swift */,
-				6DC34CA61DDB26FB00FC3306 /* NSURLSession+Intelligence.swift */,
-				6DC34CA71DDB26FB00FC3306 /* NSUserDefaultsInstallation.swift */,
 				6DC34CA81DDB26FB00FC3306 /* SequenceType+Intelligence.swift */,
 				6DC34CA91DDB26FB00FC3306 /* String.swift */,
 				6DC34CAA1DDB26FB00FC3306 /* TSDOperation.swift */,
+				6DC34CA41DDB26FB00FC3306 /* URL+Intelligence.swift */,
+				6DC34CA51DDB26FB00FC3306 /* URLRequest.swift */,
+				6DC34CA61DDB26FB00FC3306 /* URLSession+Intelligence.swift */,
+				6DC34CA71DDB26FB00FC3306 /* UserDefaultsInstallation.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -711,7 +711,7 @@
 				6DC34D031DDB26FB00FC3306 /* GeofenceExitEvent.swift in Sources */,
 				6DC34D291DDB26FB00FC3306 /* IntelligenceOAuthRefreshOperation.swift in Sources */,
 				6DC34D181DDB26FB00FC3306 /* UpdateUserRequestOperation.swift in Sources */,
-				6DC34CF01DDB26FB00FC3306 /* NSBundleInstallation.swift in Sources */,
+				6DC34CF01DDB26FB00FC3306 /* BundleInstallation.swift in Sources */,
 				6DC34D1F1DDB26FB00FC3306 /* DownloadGeofencesRequestOperation.swift in Sources */,
 				6DC34CEE1DDB26FB00FC3306 /* IntelligenceRegion.swift in Sources */,
 				6DC34D121DDB26FB00FC3306 /* IntelligenceUser.swift in Sources */,
@@ -719,14 +719,14 @@
 				6DC34D0F1DDB26FB00FC3306 /* CreateInstallationRequestOperation.swift in Sources */,
 				6DC34D281DDB26FB00FC3306 /* IntelligenceOAuthProvider.swift in Sources */,
 				6DC34D201DDB26FB00FC3306 /* ModuleProtocol.swift in Sources */,
-				6DC34CF51DDB26FB00FC3306 /* NSURLRequest.swift in Sources */,
+				6DC34CF51DDB26FB00FC3306 /* URLRequest.swift in Sources */,
 				6DC34D171DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift in Sources */,
 				6DC34D2B1DDB26FB00FC3306 /* IntelligenceOAuthValidateOperation.swift in Sources */,
 				6DC34CFB1DDB26FB00FC3306 /* IntelligenceKeychain.swift in Sources */,
 				6DC34D151DDB26FB00FC3306 /* GetUserMeRequestOperation.swift in Sources */,
 				6DC34CED1DDB26FB00FC3306 /* IntelligenceEnvironment.swift in Sources */,
 				6DC34CF91DDB26FB00FC3306 /* String.swift in Sources */,
-				6DC34CF61DDB26FB00FC3306 /* NSURLSession+Intelligence.swift in Sources */,
+				6DC34CF61DDB26FB00FC3306 /* URLSession+Intelligence.swift in Sources */,
 				6DC34CFD1DDB26FB00FC3306 /* Synchronization.swift in Sources */,
 				6DC34D081DDB26FB00FC3306 /* AnalyticsRequestOperation.swift in Sources */,
 				6DC34CFC1DDB26FB00FC3306 /* TSDKeychain.swift in Sources */,
@@ -738,24 +738,24 @@
 				6DC34D111DDB26FB00FC3306 /* UpdateInstallationRequestOperation.swift in Sources */,
 				6DC34D191DDB26FB00FC3306 /* UserRequestOperation.swift in Sources */,
 				6DC34D101DDB26FB00FC3306 /* InstallationRequestOperation.swift in Sources */,
-				6DC34CF11DDB26FB00FC3306 /* NSData+Intelligence.swift in Sources */,
+				6DC34CF11DDB26FB00FC3306 /* Data+Intelligence.swift in Sources */,
 				6DC34D231DDB26FB00FC3306 /* IntelligenceAPIOperation.swift in Sources */,
 				6DC34D011DDB26FB00FC3306 /* Event.swift in Sources */,
 				6DC34CEF1DDB26FB00FC3306 /* MutableCollectionType.swift in Sources */,
 				6DC34CFE1DDB26FB00FC3306 /* Intelligence.swift in Sources */,
 				6DC34D241DDB26FB00FC3306 /* IntelligenceAPIPipeline.swift in Sources */,
-				6DC34CF21DDB26FB00FC3306 /* NSDateFormatterIRFC3339.swift in Sources */,
+				6DC34CF21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift in Sources */,
 				6DC34CF81DDB26FB00FC3306 /* SequenceType+Intelligence.swift in Sources */,
 				6DC34CFF1DDB26FB00FC3306 /* IntelligenceError.swift in Sources */,
 				6DC34D041DDB26FB00FC3306 /* OpenApplicationEvent.swift in Sources */,
-				6DC34CF31DDB26FB00FC3306 /* NSJSONSerializationHelpers.swift in Sources */,
+				6DC34CF31DDB26FB00FC3306 /* JSONSerializationHelpers.swift in Sources */,
 				6DC34D0B1DDB26FB00FC3306 /* DeleteIdentifierOnBehalfRequestOperation.swift in Sources */,
 				6DC34D131DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift in Sources */,
 				6DC34D1C1DDB26FB00FC3306 /* GeofenceQuery.swift in Sources */,
 				6DC34D141DDB26FB00FC3306 /* CreateUserRequestOperation.swift in Sources */,
 				6DC34D091DDB26FB00FC3306 /* TimeTracker.swift in Sources */,
 				6DC34CEC1DDB26FB00FC3306 /* IntelligenceConfiguration.swift in Sources */,
-				6DC34CF71DDB26FB00FC3306 /* NSUserDefaultsInstallation.swift in Sources */,
+				6DC34CF71DDB26FB00FC3306 /* UserDefaultsInstallation.swift in Sources */,
 				6DC34D0D1DDB26FB00FC3306 /* IdentityModule.swift in Sources */,
 				6DC34D2A1DDB26FB00FC3306 /* IntelligenceOAuthStorage.swift in Sources */,
 				6DC34D051DDB26FB00FC3306 /* ScreenViewedEvent.swift in Sources */,
@@ -766,7 +766,7 @@
 				6DC34D071DDB26FB00FC3306 /* EventQueue.swift in Sources */,
 				6DC34D1A1DDB26FB00FC3306 /* Geofence+JSON.swift in Sources */,
 				6DC34D221DDB26FB00FC3306 /* NetworkAuthenticationChallengeDelegate.swift in Sources */,
-				6DC34CF41DDB26FB00FC3306 /* NSURL+Intelligence.swift in Sources */,
+				6DC34CF41DDB26FB00FC3306 /* URL+Intelligence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,7 +822,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = LZV346N8B3;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -837,6 +837,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Debug;
 		};
@@ -848,7 +849,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = LZV346N8B3;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -861,6 +862,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Release;
 		};
@@ -881,6 +883,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Debug;
 		};
@@ -899,6 +902,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.IntelligenceSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Release;
 		};

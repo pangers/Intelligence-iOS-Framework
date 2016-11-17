@@ -17,8 +17,8 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
             print("\(oauth!.tokenType) Validate Token Skipped")
             return
         }
-        let request = NSURLRequest.int_URLRequestForValidate(oauth!, configuration: configuration!, network: network!)
-        output = session.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForValidate(oauth: oauth!, configuration: configuration!, network: network!)
+        output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             print("\(oauth!.tokenType) Validate Failed \(output?.error)")
@@ -26,12 +26,11 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
         }
         
         // Assumption: 200 status code means our token is valid, otherwise invalid.
-        guard let httpResponse = output?.response as? NSHTTPURLResponse
-            where httpResponse.statusCode == HTTPStatusCode.Success.rawValue &&
+        guard let httpResponse = output?.response as? HTTPURLResponse, httpResponse.statusCode == HTTPStatusCode.success.rawValue &&
                 output?.data?.int_jsonDictionary?[OAuthAccessTokenKey] != nil else
         {
             if output?.error == nil {
-                output?.error = NSError(code: RequestError.ParseError.rawValue)
+                output?.error = NSError(code: RequestError.parseError.rawValue)
             }
             print("\(oauth!.tokenType) Validate Token Failed \(output?.error)")
             self.shouldBreak = true

@@ -22,7 +22,7 @@ internal let OAuthRefreshTokenKey = "refresh_token"
 @objc internal protocol IntelligenceOAuthStorage {
     
     // Basic subscript implementation
-    subscript(index: String) -> AnyObject? {get set}
+    subscript(index: String) -> Any? {get set}
     
 }
 

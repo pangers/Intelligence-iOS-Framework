@@ -11,13 +11,14 @@ import Foundation
 
 internal extension String {
     
-    subscript (index: Int) -> Character {
-        return self[self.startIndex.advancedBy(index)]
+    subscript(i: Int) -> Character {
+//        return self[startIndex.advancedBy(index)]
+        return self[index(startIndex, offsetBy: i)]
     }
     
     /// - Returns: true if self contains the passed string.
     func contains(string:String) -> Bool {
-        return rangeOfString(string) != nil
+        return range(of: string) != nil
     }
     
     /// - Returns: true if string passed contains self string.

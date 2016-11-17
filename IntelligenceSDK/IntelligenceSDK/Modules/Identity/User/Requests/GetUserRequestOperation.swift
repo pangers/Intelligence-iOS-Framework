@@ -13,7 +13,7 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     
     let userId: Int
     
-    init(userId: Int, user: Intelligence.User? = nil, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    init(userId: Int, user: Intelligence.User? = nil, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.userId = userId
         super.init(user: user, oauth: oauth, configuration: configuration, network: network, callback: callback)
     }
@@ -21,13 +21,13 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         
-        let request = NSURLRequest.int_URLRequestForGetUser(userId, oauth: oauth!, configuration: configuration!, network: network!)
-        output = session.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: oauth!, configuration: configuration!, network: network!)
+        output = session?.int_executeSynchronousDataTask(with: request)
         parse()
     }
     
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(userId:userId, user: user, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(userId:userId, user: user, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

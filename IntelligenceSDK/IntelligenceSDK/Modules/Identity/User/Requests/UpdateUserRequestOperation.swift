@@ -15,13 +15,13 @@ internal final class UpdateUserRequestOperation: UserRequestOperation {
         super.main()
         assert(network!.oauthProvider.developerLoggedIn, "Update can only be called explicitly by developers currently, and only on an account they have logged into.")
         assert(sentUser != nil)
-        let request = NSURLRequest.int_URLRequestForUserUpdate(sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForUserUpdate(user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         parse()
     }
 
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

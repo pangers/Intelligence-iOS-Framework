@@ -14,13 +14,13 @@ internal final class GetUserMeRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         assert(oauth?.tokenType != .Application)
-        let request = NSURLRequest.int_URLRequestForUserMe(oauth!, configuration: configuration!, network: network!)
-        output = session.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForUserMe(oauth: oauth!, configuration: configuration!, network: network!)
+        output = session?.int_executeSynchronousDataTask(with: request)
         parse()
     }
 
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

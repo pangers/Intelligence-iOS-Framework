@@ -10,7 +10,7 @@ import Foundation
 
 @objc public protocol ModuleProtocol {
     
-    func startup(completion: (success: Bool) -> ())
+    func startup(completion: @escaping (_ success: Bool) -> ())
     
     func shutdown()
     
@@ -39,8 +39,8 @@ internal class IntelligenceModule : NSObject, ModuleProtocol {
     }
     
     /// Initialise this module, called for each module on SDK startup.
-    func startup(completion: (success: Bool) -> ()) {
-        completion(success: true)
+    func startup(completion: @escaping (_ success: Bool) -> ()) {
+        completion(true)
     }
     
     /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.

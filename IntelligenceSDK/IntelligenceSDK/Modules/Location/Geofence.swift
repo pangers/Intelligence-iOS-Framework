@@ -33,13 +33,13 @@ import Foundation
     internal(set) public var address = ""
     
     /// Date this geofence was modified last on the server. (Unused)
-    internal(set) public var modifyDate: NSTimeInterval = 0.0
+    internal(set) public var modifyDate: TimeInterval = 0.0
     
     /// Date this geofence was created on the server. (Unused)
-    internal(set) public var createDate: NSTimeInterval = 0.0
+    internal(set) public var createDate: TimeInterval = 0.0
     
     // Equatable
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         guard let object = object as? Geofence else {
             return false
         }

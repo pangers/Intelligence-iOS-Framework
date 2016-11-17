@@ -14,16 +14,16 @@ public extension Intelligence {
     @objc public enum Region : Int {
         
         /// US Region
-        case UnitedStates
+        case unitedStates
         
         /// AU Region
-        case Australia
+        case australia
         
         /// EU Region
-        case Europe
+        case europe
         
         /// SG Region
-        case Singapore
+        case singapore
         
         
         /// This init method should be used to extract the region from a configuration file and turn it into an enum value
@@ -32,13 +32,13 @@ public extension Intelligence {
         init?(code: String) {
             switch code {
             case "US":
-                self = .UnitedStates
+                self = .unitedStates
             case "AU":
-                self = .Australia
+                self = .australia
             case "EU":
-                self = .Europe
+                self = .europe
             case "SG":
-                self = .Singapore
+                self = .singapore
             default:
                 return nil
             }

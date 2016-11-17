@@ -10,7 +10,7 @@ import Foundation
 
 /// Callback used for propogating events up for another class to manage sending them. 
 /// Takes a JSONDictionaryArray and relies on callee returning success/failure on response from server.
-typealias EventQueueCallback = (events: JSONDictionaryArray, completion: (error: NSError?) -> ()) -> ()
+typealias EventQueueCallback = (JSONDictionaryArray, @escaping (NSError?) -> ()) -> ()
 
 internal class EventQueue: NSObject {
     
@@ -21,7 +21,7 @@ internal class EventQueue: NSObject {
     internal lazy var eventArray = JSONDictionaryArray()
     
     /// How often we should attempt to send events.
-    private let eventInterval: NSTimeInterval = 10
+    private let eventInterval: TimeInterval = 10
     
     /// Callback used for propogating events up for another class to manage sending them.
     private let callback: EventQueueCallback
@@ -35,12 +35,12 @@ internal class EventQueue: NSObject {
     /// True if we are sending items.
     private var isSending = false
     
-    private var timer: NSTimer?
+    private var timer: Timer?
     
     /// Create new Event queue, loading any items on disk.
     /// - parameter callback: Callback used for propogating events back for sending.
     /// - returns: Instance of Event Queue.
-    init(withCallback callback: EventQueueCallback) {
+    init(withCallback callback: @escaping EventQueueCallback) {
         self.callback = callback
         super.init()
         loadEvents()
@@ -54,24 +54,24 @@ internal class EventQueue: NSObject {
     
     /// - returns: Path to Events json file.
     internal func jsonPath() -> String? {
-        guard let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first else { return nil }
+        guard let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else { return nil }
         return "\(path)/Events.json"
     }
     
     /// Clear contents of file at `jsonPath()` (only used for testing).
     internal func clearEvents() {
-        synced(semaphore) {
+        synced(lock: semaphore) {
             if let path = self.jsonPath() {
-                _ = try? NSFileManager.defaultManager().removeItemAtPath(path)
+                _ = try? FileManager.default.removeItem(atPath: path)
             }
         }
     }
     
     /// Load events present in file at `jsonPath()`.
     internal func loadEvents() {
-        synced(semaphore) {
-            if let path = self.jsonPath(), data = NSData(contentsOfFile: path)?.int_jsonDictionaryArray {
-                self.eventArray = data
+        synced(lock: semaphore) {
+            if let path = self.jsonPath(), let url = URL(string: path), let data = try? Data(contentsOf: url).int_jsonDictionaryArray {
+                self.eventArray = data!
             }
         }
     }
@@ -80,8 +80,8 @@ internal class EventQueue: NSObject {
     /// The caller is responsible to sync the call.
     private func storeEvents() {
         // Store to disk.
-        if let path = self.jsonPath(), data = self.eventArray.int_toJSONData() {
-            data.writeToFile(path, atomically: true)
+        if let path = self.jsonPath(), let url = URL(string: path), let data = self.eventArray.int_toJSONData() {
+            try! data.write(to: url, options: .atomic)
         }
     }
     
@@ -89,20 +89,20 @@ internal class EventQueue: NSObject {
     
     /// Start queue if it was paused.
     func startQueue() {
-        synced(semaphore) {
+        synced(lock: semaphore) {
             if !self.isPaused {
                 return
             }
             
             self.isPaused = false
-            self.timer = NSTimer(timeInterval: self.eventInterval, target: self, selector: #selector(EventQueue.runTimer(_:)), userInfo: nil, repeats: true)
-            NSRunLoop.mainRunLoop().addTimer(self.timer!, forMode: NSRunLoopCommonModes)
+            self.timer = Timer(timeInterval: self.eventInterval, target: self, selector: #selector(EventQueue.runTimer(timer:)), userInfo: nil, repeats: true)
+            RunLoop.main.add(self.timer!, forMode: .commonModes)
         }
     }
     
     /// Stop queue if it is currently running.
     func stopQueue() {
-        synced(semaphore) {
+        synced(lock: semaphore) {
             if self.isPaused {
                 return
             }
@@ -113,13 +113,13 @@ internal class EventQueue: NSObject {
     }
     
     /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
-    internal func runTimer(timer: NSTimer) {
+    internal func runTimer(timer: Timer) {
         fire(withCompletion: nil)
     }
     
     /// Add the JSON representation of an Event to the queue.
     func enqueueEvent(event: JSONDictionary) {
-        synced(semaphore) {
+        synced(lock: semaphore) {
             // Add event and store
             self.eventArray.append(event)
             self.storeEvents()
@@ -130,10 +130,11 @@ internal class EventQueue: NSObject {
     /// Won't execute if queue is paused, already sending, or there are no events to send.
     /// - parameter completion: Returns optional error if request fails. If nil, assume successful.
     /// - returns: Returns True if queue is not paused/sending and contains items.
-    internal func fire(withCompletion completion: ((error: NSError?) -> ())?) -> Bool {
+    @discardableResult
+    internal func fire(withCompletion completion: ((_ error: NSError?) -> ())?) -> Bool {
         var result = false
         
-        synced(semaphore) {
+        synced(lock: semaphore) {
             // Ensure we aren't already sending, paused, and have events to send.
             if self.isSending || self.isPaused || self.eventArray.count == 0 {
                 return
@@ -151,22 +152,22 @@ internal class EventQueue: NSObject {
             self.isSending = true
             
             // Send events to function.
-            let eventsToSend = Array(self.eventArray.prefixUpTo(endIndex))
+            let eventsToSend = Array(self.eventArray.prefix(upTo: endIndex))
             
-            self.callback(events: eventsToSend) { [weak self] (error) in
+            self.callback(eventsToSend) { [weak self] (error) in
                 guard let this = self else {
                     return
                 }
                 
-                synced(this.semaphore) {
+                synced(lock: this.semaphore) {
                     // If successful or outdated events, remove this range.
-                    if error == nil || error?.code == AnalyticsError.OldEventsError.rawValue {
+                    if error == nil || error?.code == AnalyticsError.oldEventsError.rawValue {
                         // Remove items in range we just sent and store again
-                        this.eventArray.removeRange(range)
+                        this.eventArray.removeSubrange(range)
                         this.storeEvents()
                     }
                     
-                    completion?(error: error)
+                    completion?(error)
                     
                     // No longer sending items.
                     this.isSending = false

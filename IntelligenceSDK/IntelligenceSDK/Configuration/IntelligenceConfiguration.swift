@@ -10,24 +10,24 @@ import Foundation
 
 // Constants used to parse the JSON file.
 private enum ConfigurationKey: String {
-    case ClientID = "client_id"
-    case ClientSecret = "client_secret"
-    case ApplicationID = "application_id"
-    case ProjectID = "project_id"
-    case Region = "region"
-    case Environment = "environment"
-    case CompanyId = "company_id"
-    case SDKUserRole = "sdk_user_role"
-    case CertificateTrustPolicy = "certificate_trust_policy"
+    case clientID = "client_id"
+    case clientSecret = "client_secret"
+    case applicationID = "application_id"
+    case projectID = "project_id"
+    case region = "region"
+    case environment = "environment"
+    case companyId = "company_id"
+    case sdkUserRole = "sdk_user_role"
+    case certificateTrustPolicy = "certificate_trust_policy"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
 /// Certificate validity is defined by iOS and not by the SDK.
 /// When receiving a certificate challenge from iOS, the SDK will apply the selected policy.
 @objc public enum CertificateTrustPolicy: Int {
-    case Valid /// Trust only certificates that are considered valid by iOS. This is the default value
-    case Any /// Trust any certificate, independently of iOS considering it valid or invalid
-    case AnyNonProduction /// Trust only non-production certificates, which implies that the certificates in the production server will need to be considered valid by iOS and any other will be trusted
+    case valid /// Trust only certificates that are considered valid by iOS. This is the default value
+    case any /// Trust any certificate, independently of iOS considering it valid or invalid
+    case anyNonProduction /// Trust only non-production certificates, which implies that the certificates in the production server will need to be considered valid by iOS and any other will be trusted
 
     
     /// This init method should be used to extract certificate_trust_policy from a configuration file (if it exists) and turn it into an enum value
@@ -36,11 +36,11 @@ private enum ConfigurationKey: String {
     init?(key: String) {
         switch key {
             case "valid":
-                self = .Valid
+                self = .valid
             case "any":
-                self = .Any
+                self = .any
             case "any_non_production":
-                self = .AnyNonProduction
+                self = .anyNonProduction
             default:
                 return nil
         }
@@ -77,7 +77,7 @@ public extension Intelligence {
         
         /// The trust policy to apply to server certificates.
         /// By default we will only trust valid certificates.
-        public var certificateTrustPolicy = CertificateTrustPolicy.Valid
+        public var certificateTrustPolicy = CertificateTrustPolicy.valid
         
         /// The region
         public var region:Region?
@@ -90,9 +90,9 @@ public extension Intelligence {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Throws: A **ConfigurationError** if the configuration file is incorrectly formatted.
-        public convenience init(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws {
+        public convenience init(fromFile file:String, inBundle bundle:Bundle=Bundle.main) throws {
             self.init()
-            try self.readFromFile(file, inBundle: bundle)
+            try self.readFromFile(fileName: file, inBundle: bundle)
         }
         
         /// Factory method to initialize a configuration and return it.
@@ -101,9 +101,9 @@ public extension Intelligence {
         ///     - fromFile: The file name to read. The .json extension is appended to it.
         ///     - inBundle: The bundle that contains the given file.
         /// - Returns: A configuration with the contents of the file.
-        public class func configuration(fromFile file:String, inBundle bundle:NSBundle=NSBundle.mainBundle()) throws -> Configuration {
+        public class func configuration(fromFile file:String, inBundle bundle:Bundle=Bundle.main) throws -> Configuration {
             let configuration = Configuration()
-            try configuration.readFromFile(file, inBundle: bundle)
+            try configuration.readFromFile(fileName: file, inBundle: bundle)
             return configuration
         }
         
@@ -127,51 +127,52 @@ public extension Intelligence {
         /// - Parameters:
         ///     - fileName: The name of the JSON file containing the configuration.
         ///     - inBundle: The bundle in which we will look for the file.
-        public func readFromFile(fileName: String, inBundle bundle: NSBundle=NSBundle.mainBundle()) throws {
+        public func readFromFile(fileName: String, inBundle bundle: Bundle=Bundle.main) throws {
             
-            guard let path = bundle.pathForResource(fileName, ofType: "json"),
-                data = NSData(contentsOfFile: path)  else
+            guard let path = bundle.path(forResource: fileName, ofType: "json"),
+                let url = URL(string: path),
+                let data = try? Data(contentsOf: url) else
             {
-                throw ConfigurationError.FileNotFoundError
+                throw ConfigurationError.fileNotFoundError
             }
             
             // Guard that we have the json data parsed correctly
             guard let contents = data.int_jsonDictionary else {
-                throw ConfigurationError.InvalidFileError
+                throw ConfigurationError.invalidFileError
             }
             
             // Helper function to load a value from a dictionary.
-            func value<T>(forKey key: ConfigurationKey, inContents contents: NSDictionary) throws -> T {
+            func value<T>(forKey key: ConfigurationKey, inContents contents: [String: Any]) throws -> T {
                 guard let output = contents[key.rawValue] as? T else {
-                    throw ConfigurationError.MissingPropertyError
+                    throw ConfigurationError.missingPropertyError
                 }
                 return output
             }
             
             // Fetch from the contents dictionary
-            self.clientID = try value(forKey: .ClientID, inContents:contents)
-            self.clientSecret = try value(forKey: .ClientSecret, inContents:contents)
-            self.projectID = try value(forKey: .ProjectID, inContents:contents)
-            self.applicationID = try value(forKey: .ApplicationID, inContents:contents)
+            self.clientID = try value(forKey: .clientID, inContents:contents)
+            self.clientSecret = try value(forKey: .clientSecret, inContents:contents)
+            self.projectID = try value(forKey: .projectID, inContents:contents)
+            self.applicationID = try value(forKey: .applicationID, inContents:contents)
             
-            guard let region = try Intelligence.Region(code: value(forKey: .Region, inContents:contents)) else {
-                throw ConfigurationError.InvalidPropertyError
+            guard let region = try Intelligence.Region(code: value(forKey: .region, inContents:contents)) else {
+                throw ConfigurationError.invalidPropertyError
             }
             
             self.region = region
             
-            guard let environment = try Intelligence.Environment(code: value(forKey: .Environment, inContents:contents)) else {
-                throw ConfigurationError.InvalidPropertyError
+            guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents:contents)) else {
+                throw ConfigurationError.invalidPropertyError
             }
             
             self.environment = environment
             
-            self.companyId = try value(forKey: .CompanyId, inContents:contents)
-            self.sdkUserRole = try value(forKey: .SDKUserRole, inContents: contents)
+            self.companyId = try value(forKey: .companyId, inContents:contents)
+            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
             
-            guard let certificateTrustPolicyKey = contents[ConfigurationKey.CertificateTrustPolicy.rawValue] as? String,
+            guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
                 let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                    throw ConfigurationError.InvalidPropertyError
+                    throw ConfigurationError.invalidPropertyError
             }
             
             self.certificateTrustPolicy = certificateTrustPolicy

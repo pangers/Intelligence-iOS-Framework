@@ -9,30 +9,30 @@
 import Foundation
 
 enum Module : String {
-    case NoModule = ""
-    case Authentication = "authentication"
-    case Identity = "identity"
-    case Analytics = "analytics"
-    case Location = "location"
+    case noModule = ""
+    case authentication = "authentication"
+    case identity = "identity"
+    case analytics = "analytics"
+    case location = "location"
 }
 
 /// This extension is used to map the enum to the url, not for any other purpose
-private extension Intelligence.Environment {
-    private func urlComponent() -> String? {
+fileprivate extension Intelligence.Environment {
+    fileprivate func urlComponent() -> String? {
         let urlComponent: String
         
         switch (self) {
-            case .Local:
+            case .local:
                 urlComponent = "local"
-            case .Development:
+            case .development:
                 urlComponent = "dev"
-            case .Integration:
+            case .integration:
                 urlComponent = "int"
-            case .UAT:
+            case .uat:
                 urlComponent = "uat"
-            case .Staging:
+            case .staging:
                 urlComponent = "staging"
-            case .Production:
+            case .production:
                 urlComponent = ""
         }
         
@@ -46,28 +46,28 @@ private extension Intelligence.Environment {
 }
 
 /// This extension is used to map the enum to the url, not for any other purpose
-private extension Intelligence.Region {
-    private func urlComponent() -> String? {
+fileprivate extension Intelligence.Region {
+    fileprivate func urlComponent() -> String? {
         switch (self) {
-            case .UnitedStates:
+            case .unitedStates:
                 return ".com"
-            case .Australia:
+            case .australia:
                 return ".com.au"
-            case .Europe:
+            case .europe:
                 return ".eu"
-            case .Singapore:
+            case .singapore:
                 return ".com.sg"
         }
     }
 }
 
 /// This extension is intended to provide all the various path components required to compose urls for enpoints.
-internal extension NSURL {
-    convenience init?(module: Module, configuration: Intelligence.Configuration) {
+internal extension URL {
+    init?(module: Module, configuration: Intelligence.Configuration) {
         self.init(module: module, environment: configuration.environment, region: configuration.region)
     }
     
-    convenience init?(module: Module, environment: Intelligence.Environment?, region: Intelligence.Region?) {
+    init?(module: Module, environment: Intelligence.Environment?, region: Intelligence.Region?) {
         let moduleInURL = module.rawValue
         
         guard let environmentInURL = environment?.urlComponent() else {
@@ -82,98 +82,99 @@ internal extension NSURL {
         let url = String(format: "https://\(moduleInURL)\(environmentInURL).phoenixplatform\(regionInURL)/v2",
             arguments: [moduleInURL, environmentInURL, regionInURL])
         
+        
         self.init(string: url)
     }
     
     /// - Returns: NSURL to obtain or refresh an OAuth token.
-    func int_URLByAppendingOAuthTokenPath() -> NSURL! {
-        return URLByAppendingPathComponent("/token")
+    func int_URLByAppendingOAuthTokenPath() -> URL {
+        return appendingPathComponent("/token")
     }
     
     /// - Returns: NSURL for validation of current OAuth token.
-    func int_URLByAppendingOAuthValidatePath() -> NSURL! {
-        return URLByAppendingPathComponent("/validate")
+    func int_URLByAppendingOAuthValidatePath() -> URL {
+        return appendingPathComponent("/validate")
     }
     
     /// - Returns: NSURL with appended identifiers path.
-    func int_URLByAppendingIdentifiers(tokenID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingIdentifiers(tokenID: Int? = nil) -> URL {
         if let tokenID = tokenID {
-            return URLByAppendingPathComponent("/identifiers/\(tokenID)")
+            return appendingPathComponent("/identifiers/\(tokenID)")
         }
-        return URLByAppendingPathComponent("/identifiers")
+        return appendingPathComponent("/identifiers")
     }
     
     /// - Returns: NSURL with appended installations path.
-    func int_URLByAppendingInstallations() -> NSURL! {
-        return URLByAppendingPathComponent("/installations")
+    func int_URLByAppendingInstallations() -> URL {
+        return appendingPathComponent("/installations")
     }
     
     /// - Returns: NSURL with appended installations path.
-    func int_URLByAppendingEvents() -> NSURL! {
-        return URLByAppendingPathComponent("/events")
+    func int_URLByAppendingEvents() -> URL {
+        return appendingPathComponent("/events")
     }
     
     /// - Returns: NSURL with appended geofences path.
-    func int_URLByAppendingGeofences() -> NSURL! {
-        return URLByAppendingPathComponent("/geofences")
+    func int_URLByAppendingGeofences() -> URL {
+        return appendingPathComponent("/geofences")
     }
     
     /// - Returns: NSURL with appended assign role path.
-    func int_URLByAppendingAssignRole() -> NSURL! {
-        return URLByAppendingPathComponent("/assignrole")
+    func int_URLByAppendingAssignRole() -> URL {
+        return appendingPathComponent("/assignrole")
     }
     
     /// - Returns: NSURL with appended revoke role path.
-    func int_URLByAppendingRevokeRole() -> NSURL! {
-        return URLByAppendingPathComponent("/revokerole")
+    func int_URLByAppendingRevokeRole() -> URL {
+        return appendingPathComponent("/revokerole")
     }
     
     /// - Returns: NSURL with appended providers path.
-    func int_URLByAppendingProviders(providerId: Int? = nil) -> NSURL! {
+    func int_URLByAppendingProviders(providerId: Int? = nil) -> URL {
         if let providerId = providerId {
-            return URLByAppendingPathComponent("/providers/\(providerId)")
+            return appendingPathComponent("/providers/\(providerId)")
         }
-        return URLByAppendingPathComponent("/providers")
+        return appendingPathComponent("/providers")
     }
     
     /// - Returns: NSURL with appended companies path.
-    func int_URLByAppendingCompanies(companyID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingCompanies(companyID: Int? = nil) -> URL {
         if let companyID = companyID {
-            return URLByAppendingPathComponent("/companies/\(companyID)")
+            return appendingPathComponent("/companies/\(companyID)")
         }
-        return URLByAppendingPathComponent("/companies")
+        return appendingPathComponent("/companies")
     }
     
     /// - Returns: NSURL with appended projects path.
-    func int_URLByAppendingProjects(projectID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingProjects(projectID: Int? = nil) -> URL {
         if let projectID = projectID {
-            return URLByAppendingPathComponent("/projects/\(projectID)")
+            return appendingPathComponent("/projects/\(projectID)")
         }
-        return URLByAppendingPathComponent("/projects")
+        return appendingPathComponent("/projects")
     }
     
     /// - Returns: NSURL with appended users path.
-    func int_URLByAppendingUsers(userID: Int? = nil) -> NSURL! {
+    func int_URLByAppendingUsers(userID: Int? = nil) -> URL {
         if let userID = userID {
-            return URLByAppendingPathComponent("/users/\(userID)")
+            return appendingPathComponent("/users/\(userID)")
         }
-        return URLByAppendingPathComponent("/users")
+        return appendingPathComponent("/users")
     }
     
     /// - Returns: NSURL with appended '/users/me' path.
-    func int_URLByAppendingUsersMe() -> NSURL! {
-        return URLByAppendingPathComponent("/users/me")
+    func int_URLByAppendingUsersMe() -> URL {
+        return appendingPathComponent("/users/me")
     }
     
 
-    func int_URLByAppendingQueryString(queryString:String) -> NSURL! {
+    func int_URLByAppendingQueryString(queryString:String) -> URL? {
         if queryString.characters.count == 0 {
             return self
         }
         let separator = (query?.isEmpty ?? true) ? "?" : "&"
-        let URLString = "\(absoluteString!)\(separator)\(queryString)"
+        let URLString = "\(absoluteString)\(separator)\(queryString)"
         
-        return NSURL(string: URLString)
+        return URL(string: URLString)
     }
 
 }

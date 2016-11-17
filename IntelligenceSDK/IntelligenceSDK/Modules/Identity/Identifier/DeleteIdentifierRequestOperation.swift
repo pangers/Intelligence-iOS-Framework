@@ -13,7 +13,7 @@ class DeleteIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     let tokenId: Int
     
-    required init(tokenId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: IntelligenceAPICallback) {
+    required init(tokenId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network, callback: @escaping IntelligenceAPICallback) {
         self.tokenId = tokenId
         super.init()
         self.callback = callback
@@ -24,11 +24,11 @@ class DeleteIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     
     override func main() {
         super.main()
-        let request = NSURLRequest.int_URLRequestForIdentifierDeletion(tokenId, oauth: oauth!, configuration: configuration!, network: network!)
-        output = network!.sessionManager!.int_executeSynchronousDataTaskWithRequest(request)
+        let request = URLRequest.int_URLRequestForIdentifierDeletion(tokenId: tokenId, oauth: oauth!, configuration: configuration!, network: network!)
+        output = network!.sessionManager!.int_executeSynchronousDataTask(with: request)
         
         if errorInData() == "object_notfound" {
-            output?.error = NSError(code: IdentityError.DeviceTokenNotRegisteredError.rawValue)
+            output?.error = NSError(code: IdentityError.deviceTokenNotRegisteredError.rawValue)
             return
         }
         
@@ -37,16 +37,16 @@ class DeleteIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
         }
         
         guard let jsonDictionary = self.output?.data?.int_jsonDictionary,
-            let data = jsonDictionary["Data"],
-            let dataObject = data.lastObject,
-            let returnedId = dataObject?["Id"] as? Int where returnedId == tokenId else {
-                output?.error = NSError(code: RequestError.ParseError.rawValue)
+            let data = jsonDictionary["Data"] as? [Any],
+            let dataObject = data.last as? JSONDictionary,
+            let returnedId = dataObject["Id"] as? Int, returnedId == tokenId else {
+                output?.error = NSError(code: RequestError.parseError.rawValue)
                 return
             }
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = self.dynamicType.init(tokenId: tokenId, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = type(of: self).init(tokenId: tokenId, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
         
         return copy
     }

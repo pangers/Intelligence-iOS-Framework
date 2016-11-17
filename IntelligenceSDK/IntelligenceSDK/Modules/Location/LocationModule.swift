@@ -10,9 +10,9 @@ import Foundation
 import CoreLocation
 
 /// A generic DownloadGeofencesCallback in which error will be populated if something went wrong, geofences will be empty if no geofences exist (or error occurs).
-public typealias DownloadGeofencesCallback = (geofences: [Geofence]?, error:NSError?) -> Void
+public typealias DownloadGeofencesCallback = ([Geofence]?, NSError?) -> Void
 
-func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
+func ==(lhs: Coordinate, rhs: Coordinate) -> Bool {
     return lhs.longitude == rhs.longitude && lhs.latitude == rhs.latitude
 }
 
@@ -29,7 +29,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that was entered.
     */
-    optional func intelligenceLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
+    @objc optional func intelligenceLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence)
     
     /**
     Called when the user exits a monitored geofence.
@@ -37,7 +37,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that was exited.
     */
-    optional func intelligenceLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence)
+    @objc optional func intelligenceLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence)
     
     /**
     Called when the a geofence has successfully started its monitoring.
@@ -45,7 +45,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that started the monitoring.
     */
-    optional func intelligenceLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence)
+    @objc optional func intelligenceLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence)
     
     /**
     Called when an error occured while we tried to start monitoring a geofence. This is likely to
@@ -55,7 +55,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that failed to be monitored.
     */
-    optional func intelligenceLocation(location: LocationModuleProtocol, didFailMonitoringGeofence: Geofence)
+    @objc optional func intelligenceLocation(location: LocationModuleProtocol, didFailMonitoringGeofence: Geofence)
     
     /**
     Called when a geofence is no longer monitored.
@@ -63,7 +63,7 @@ public protocol LocationModuleDelegate {
     - parameter location: The location module.
     - parameter geofence: The geofence that stopped being monitored
     */
-    optional func intelligenceLocation(location: LocationModuleProtocol, didStopMonitoringGeofence: Geofence)
+    @objc optional func intelligenceLocation(location: LocationModuleProtocol, didStopMonitoringGeofence: Geofence)
 }
 
 /**
@@ -145,7 +145,7 @@ public class Coordinate : NSObject {
         self.latitude = latitude
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         return self == (object as? Coordinate)
     }
 }
@@ -176,12 +176,12 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     internal var geofences: [Geofence]? {
         didSet {
-            guard let geofences = geofences where geofences.count > 0 else {
+            guard let geofences = geofences, geofences.count > 0 else {
                 self.locationManager.stopMonitoringGeofences()
                 return
             }
             
-            self.locationManager.startMonitoringGeofences(geofences)
+            self.locationManager.startMonitoringGeofences(geofences: geofences)
         }
     }
     
@@ -213,9 +213,8 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     // MARK:- Startup and shutdown methods.
-    
-    override func startup(completion: (success: Bool) -> ()) {
-        super.startup(completion)
+    override func startup(completion: @escaping (Bool) -> ()) {
+        super.startup(completion: completion)
     }
     
     /**
@@ -235,11 +234,11 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
             let downloadGeofencesOperation = returnedOperation as! DownloadGeofencesRequestOperation
             let error = downloadGeofencesOperation.output?.error
             let geofences = downloadGeofencesOperation.geofences
-            callback?(geofences: geofences, error: error)
+            callback?(geofences, error)
         })
         
         // Execute the network operation
-        network.enqueueOperation(operation)
+        network.enqueueOperation(operation: operation)
     }
     
     func isMonitoringGeofences() -> Bool {
@@ -247,7 +246,7 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     func startMonitoringGeofences(geofences:[Geofence]) {
-        self.locationManager.startMonitoringGeofences(geofences)
+        self.locationManager.startMonitoringGeofences(geofences: geofences)
     }
     
     func stopMonitoringGeofences() {
@@ -255,7 +254,7 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     func setLocationAccuracy(accuracy:CLLocationAccuracy) {
-        self.locationManager.setLocationAccuracy(accuracy)
+        self.locationManager.setLocationAccuracy(accuracy: accuracy)
     }
     
     
@@ -273,7 +272,7 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     */
     func trackGeofenceEntered(geofence:Geofence) {
         let geofenceEvent = GeofenceEnterEvent(geofence: geofence)
-        analytics?.track(geofenceEvent)
+        analytics?.track(event: geofenceEvent)
     }
     
     /**
@@ -282,21 +281,21 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     */
     func trackGeofenceExited(geofence:Geofence) {
         let geofenceEvent = GeofenceExitEvent(geofence: geofence)
-        analytics?.track(geofenceEvent)
+        analytics?.track(event: geofenceEvent)
     }
     
     // MARK:- LocationManagerDelegate
     
     func didEnterGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
-        self.locationDelegate?.intelligenceLocation?(self, didEnterGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(location: self, didEnterGeofence: geofence)
         self.enteredGeofences[geofence.id] = geofence
-        self.trackGeofenceEntered(geofence)
+        self.trackGeofenceEntered(geofence: geofence)
     }
     
     func didExitGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
-        self.locationDelegate?.intelligenceLocation?(self, didExitGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(location: self, didExitGeofence: geofence)
         self.enteredGeofences[geofence.id] = nil
-        self.trackGeofenceExited(geofence)
+        self.trackGeofenceExited(geofence: geofence)
     }
     
     func didUpdateLocationWithCoordinate(coordinate:Coordinate) {
@@ -304,15 +303,15 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     func didStartMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.intelligenceLocation?(self, didStartMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(location: self, didStartMonitoringGeofence: geofence)
     }
     
     func didFailMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.intelligenceLocation?(self, didFailMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(location: self, didFailMonitoringGeofence: geofence)
     }
     
     func didStopMonitoringGeofence(geofence:Geofence) {
-        self.locationDelegate?.intelligenceLocation?(self, didStopMonitoringGeofence: geofence)
+        self.locationDelegate?.intelligenceLocation?(location: self, didStopMonitoringGeofence: geofence)
     }
 
 }
