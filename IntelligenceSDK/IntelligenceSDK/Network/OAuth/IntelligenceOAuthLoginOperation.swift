@@ -16,7 +16,7 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
 
         // If the password is unset and the token type is not 'Application'
         // (which doesn't require a password for Login). Lets raise an error.
-        if oauth?.tokenType != .Application && oauth?.password == nil {
+        if oauth?.tokenType != .application && oauth?.password == nil {
             // We need an output object, so let's make a dummy one
             output = (data: nil, response: nil, error: nil)
             output?.error = NSError(code: RequestError.unauthorized.rawValue)

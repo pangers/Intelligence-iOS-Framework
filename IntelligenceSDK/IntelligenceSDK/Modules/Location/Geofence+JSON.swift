@@ -54,15 +54,15 @@ internal extension Geofence {
     /// Writes JSONDictionary to file.
     /// - Parameter json: Optional JSONDictionary object.
     internal class func storeJSON(json: JSONDictionary?) throws {
-        guard let path = jsonPath(), let url = URL(string: path), let json = json?.int_toJSONData() else {
+        guard let path = jsonPath(), let json = json?.int_toJSONData() else {
             throw RequestError.parseError
         }
-        try json.write(to: url, options: .atomic)
+        try json.write(to: URL(fileURLWithPath: path), options: .atomic)
     }
     
     /// - Returns: Cached array of Geofence objects or nil.
     private class func readJSON() throws -> JSONDictionary? {
-        guard let path = jsonPath(), let url = URL(string: path), let json = try? Data.init(contentsOf: url).int_jsonDictionary else {
+        guard let path = jsonPath(), let json = try? Data.init(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped).int_jsonDictionary else {
             throw RequestError.parseError
         }
         return json

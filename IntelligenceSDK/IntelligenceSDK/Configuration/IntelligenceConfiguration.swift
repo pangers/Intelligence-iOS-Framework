@@ -130,8 +130,7 @@ public extension Intelligence {
         public func readFromFile(fileName: String, inBundle bundle: Bundle=Bundle.main) throws {
             
             guard let path = bundle.path(forResource: fileName, ofType: "json"),
-                let url = URL(string: path),
-                let data = try? Data(contentsOf: url) else
+                let data = try? Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped) else
             {
                 throw ConfigurationError.fileNotFoundError
             }

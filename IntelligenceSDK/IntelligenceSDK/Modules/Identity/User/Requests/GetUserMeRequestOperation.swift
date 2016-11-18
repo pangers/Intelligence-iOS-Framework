@@ -13,7 +13,7 @@ internal final class GetUserMeRequestOperation : UserRequestOperation {
     
     override func main() {
         super.main()
-        assert(oauth?.tokenType != .Application)
+        assert(oauth?.tokenType != .application)
         let request = URLRequest.int_URLRequestForUserMe(oauth: oauth!, configuration: configuration!, network: network!)
         output = session?.int_executeSynchronousDataTask(with: request)
         parse()

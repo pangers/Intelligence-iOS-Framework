@@ -269,7 +269,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             let returnedPipeline = returnedOperation as! IntelligenceAPIPipeline
             
             // Clear password from memory.
-            if oauth.tokenType == .LoggedInUser {
+            if oauth.tokenType == .loggedInUser {
                 oauth.password = nil
             }
             

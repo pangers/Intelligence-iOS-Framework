@@ -13,10 +13,10 @@ import XCTest
 class IntelligenceRegionTestCase: IntelligenceBaseTestCase {
     func testRegionFromString() {
         let correctAssignments = [
-            "US" : Intelligence.Region.UnitedStates,
-            "EU" : Intelligence.Region.Europe,
-            "SG" : Intelligence.Region.Singapore,
-            "AU" : Intelligence.Region.Australia,
+            "US" : Intelligence.Region.unitedStates,
+            "EU" : Intelligence.Region.europe,
+            "SG" : Intelligence.Region.singapore,
+            "AU" : Intelligence.Region.australia,
         ]
         
         for (code, value) in correctAssignments {

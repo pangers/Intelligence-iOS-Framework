@@ -104,7 +104,7 @@ internal extension URLRequest {
         var body = [String: String]()
         body[HTTPBodyClientIDKey] = configuration.clientID
         body[HTTPBodyClientSecretKey] = configuration.clientSecret
-        if oauth.tokenType == .Application {
+        if oauth.tokenType == .application {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
         } else {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword

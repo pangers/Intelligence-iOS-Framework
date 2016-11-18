@@ -41,7 +41,7 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
     }
     
     override func handleUnauthorizedError() {
-        if self.oauth?.tokenType == .LoggedInUser {
+        if self.oauth?.tokenType == .loggedInUser {
             // Token is no longer valid and cannot be refreshed without user input.
             // Do not try again. Alert developer.
             network?.delegate?.userLoginRequired()

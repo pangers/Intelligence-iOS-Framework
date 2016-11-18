@@ -19,11 +19,11 @@ internal protocol IntelligenceOAuthProvider {
 internal final class IntelligenceOAuthDefaultProvider: IntelligenceOAuthProvider {
     
     /// grant_type 'client_credentials' OAuth type.
-    internal var applicationOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .Application)
+    internal var applicationOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .application)
     
     /// grant_type 'password' OAuth types.
-    internal var sdkUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .SDKUser)
-    internal var loggedInUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .LoggedInUser)
+    internal var sdkUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .sdkUser)
+    internal var loggedInUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .loggedInUser)
     
     /// Best OAuth we have for grant_type 'password'.
     internal var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {

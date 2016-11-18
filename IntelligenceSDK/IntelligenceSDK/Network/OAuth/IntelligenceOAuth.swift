@@ -9,9 +9,9 @@
 import Foundation
 
 enum IntelligenceOAuthTokenType: String {
-    case Application = "ApplicationUser"
-    case SDKUser = "SDKUser"
-    case LoggedInUser = "LoggedInUser"
+    case application = "ApplicationUser"
+    case sdkUser = "SDKUser"
+    case loggedInUser = "LoggedInUser"
 }
 
 protocol IntelligenceOAuthProtocol {
@@ -53,12 +53,12 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         self.storage = storage
         accessToken = self.storage.accessToken
         // Application User only has 'accessToken' they don't care about refresh tokens.
-        if tokenType != .Application {
+        if tokenType != .application {
             // SDKUser and LoggedInUser have 'username', 'refreshToken' and optionally 'userId'
             refreshToken = self.storage.refreshToken
             username = self.storage.username
             userId = self.storage.userId
-            if tokenType == .SDKUser {
+            if tokenType == .sdkUser {
                 // SDKUser also has a 'password'
                 password = self.storage.password
             }
@@ -67,7 +67,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
     
     func isAuthenticated() -> Bool {
         if accessToken == nil { return false }
-        if tokenType != .Application {
+        if tokenType != .application {
             if refreshToken == nil { return false }
         }
         return true
@@ -83,7 +83,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
     }
     
     func updateCredentials(withUsername username: String, password: String) {
-        assert(tokenType != .Application, "Invalid method for Application tokens")
+        assert(tokenType != .application, "Invalid method for Application tokens")
         // Compare usernames, if they differ we must clear tokens so login will not validate as
         // incorrect user. Usernames are case insensitive.
         if self.username != nil && self.username?.lowercased() != username.lowercased() {
@@ -105,7 +105,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
             return false
         }
         accessToken = updatedAccessToken
-        if tokenType != .Application {
+        if tokenType != .application {
             // We also require a refresh token
             guard let updatedRefreshToken = response?[OAuthRefreshTokenKey] as? String else {
                 return false
@@ -118,12 +118,12 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
     
     func store() {
         storage.accessToken = accessToken
-        if tokenType != .Application {
+        if tokenType != .application {
             // Assert we have required information.
             storage.refreshToken = refreshToken
             storage.username = username
             storage.userId = userId
-            if tokenType == .SDKUser {
+            if tokenType == .sdkUser {
                 // Only store SDKUser passwords.
                 storage.password = password
             }
