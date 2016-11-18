@@ -36,7 +36,7 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("resignResponders")))
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(IntelligenceLocationGeofenceQueryViewController.resignResponders)))
         
         self.latitudeText.text = latitude != nil ? String(latitude!) : ""
         self.longitudeText.text = longitude != nil ? String(longitude!) : ""
@@ -60,7 +60,7 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
         
         let latitude : Double
         
-        if let latitudeFromText = Double(latitudeText.text!) where latitudeText.text?.characters.count > 0 {
+        if let text = latitudeText.text, text.characters.count > 0, let latitudeFromText = Double(text) {
             latitude = latitudeFromText
         }
         else {
@@ -69,8 +69,7 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
         
         
         let longitude : Double
-        
-        if let longitudeFromText = Double(longitudeText.text!) where longitudeText.text?.characters.count > 0 {
+        if let text = longitudeText.text, text.characters.count > 0, let longitudeFromText = Double(text) {
             longitude = longitudeFromText
         }
         else {
@@ -80,7 +79,7 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
         
         let radius : Double
         
-        if let radiusFromText = Double(radiusText.text!) where radiusText.text?.characters.count > 0 {
+        if let text = radiusText.text, text.characters.count > 0, let radiusFromText = Double(text) {
             radius = radiusFromText
         }
         else {
@@ -90,15 +89,16 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
         
         let query = GeofenceQuery(location: Coordinate(withLatitude: latitude, longitude: longitude),
             radius: radius)
-        query.pageSize = pageSizeText.text?.characters.count > 0 ? Int(pageSizeText.text!) : nil
-        query.pageNumber = pageText.text?.characters.count > 0 ? Int(pageText.text!) : nil
+
+        query.pageSize = (pageSizeText.text ?? "").characters.count > 0 ? Int(pageSizeText.text!) : nil
+        query.pageNumber = (pageText.text ?? "").characters.count > 0 ? Int(pageText.text!) : nil
             
-        delegate?.didSelectGeofenceQuery(query)
-        dismissViewControllerAnimated(true, completion: nil)
+        delegate?.didSelectGeofenceQuery(geofenceQuery: query)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func didTapCancel(sender: AnyObject) {
         resignResponders()
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

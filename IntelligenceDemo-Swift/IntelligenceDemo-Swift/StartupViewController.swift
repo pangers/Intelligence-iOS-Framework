@@ -9,23 +9,23 @@
 import UIKit
 
 enum StartupState {
-    case Starting
-    case Started
-    case Failed
+    case starting
+    case started
+    case failed
 }
 
 class StartupViewController : UIViewController {
 
     @IBOutlet weak var loadingLabel: UILabel?
 
-    var state: StartupState = .Starting {
+    var state: StartupState = .starting {
         didSet {
             switch (state) {
-            case .Starting:
+            case .starting:
                 loadingLabel?.text = "Wait while we startup Intelligence..."
-            case .Started:
-                performSegueWithIdentifier("intelligenceStartedUp", sender: self)
-            case .Failed:
+            case .started:
+                performSegue(withIdentifier: "intelligenceStartedUp", sender: self)
+            case .failed:
                 loadingLabel?.text = "Unable to startup Intelligence."
             }
         }

@@ -30,24 +30,25 @@ class ViewUserViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         displayUser()
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "tappedScreen:"))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewUserViewController.tappedScreen(tap:))))
     }
     
     @objc func tappedScreen(tap: UITapGestureRecognizer) {
         let fields = [username, password, firstname, lastname, avatarURL]
         fields.forEach {
-            if $0.isFirstResponder() {
-                $0.resignFirstResponder()
+            guard let control = $0 else { return }
+            if control.isFirstResponder {
+                control.resignFirstResponder()
             }
         }
     }
     
     func displayMe(user: Intelligence.User?, error: NSError?) {
-        NSOperationQueue.mainQueue().addOperationWithBlock({ [weak self] in
+        OperationQueue.main.addOperation({ [weak self] in
             guard let user = user else {
-                let alert = UIAlertController(title: "Error", message: error?.description ?? "Unknown error", preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
-                self?.presentViewController(alert, animated: true, completion: nil)
+                let alert = UIAlertController(title: "Error", message: error?.description ?? "Unknown error", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
                 return
             }
             self?.user = user
@@ -56,7 +57,7 @@ class ViewUserViewController : UIViewController {
     
     func displayUser() {
         guard let user = self.user else { return }
-        NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
+        OperationQueue.main.addOperation(BlockOperation(block: { () -> Void in
             self.idLabel.text = "\(user.userId)"
             self.username.text = user.username
             
@@ -80,20 +81,20 @@ class ViewUserViewController : UIViewController {
         user.firstName = firstname.text ?? ""
         user.lastName = lastname.text
         user.avatarURL = avatarURL.text
-        IntelligenceManager.intelligence?.identity.updateUser(user, callback: { (user, error) -> Void in
+        IntelligenceManager.intelligence?.identity.update(user: user, callback: { (user, error) -> Void in
             if let user = user {
                 self.user = user
-                self.showInformation(" ")
+                self.show(information: " ")
             } else if let error = error {
-                self.showInformation("There was an error while getting the user: \(error)")
+                self.show(information: "There was an error while getting the user: \(error)")
             }
         })
     }
     
     // the beta 4 has an issue with empty labels in a stack layout, so use a space instead.
-    func showInformation(information:String) {
-        NSOperationQueue.mainQueue().addOperation(NSBlockOperation(block: { () -> Void in
-            self.infoLabel.text = information ?? " "
+    func show(information:String) {
+        OperationQueue.main.addOperation(BlockOperation(block: { () -> Void in
+            self.infoLabel.text = information
         }))
     }
 
