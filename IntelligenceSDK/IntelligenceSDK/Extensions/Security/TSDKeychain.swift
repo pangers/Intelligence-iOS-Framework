@@ -9,11 +9,11 @@
 import Foundation
 
 internal enum TSDKeychainRequestType {
-    case Delete, Update, Read
+    case delete, update, read
 }
 
-internal enum TSDKeychainError: ErrorType {
-    case ErrorCode(Int), NotFoundError
+internal enum TSDKeychainError: Error {
+    case errorCode(Int), notFoundError
 }
 
 internal class TSDKeychain {
@@ -32,34 +32,34 @@ internal class TSDKeychain {
     
     private func performRequest(request: NSMutableDictionary, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
         let type = requestType
-        let requestReference = request as CFDictionaryRef
+        let requestReference = request as CFDictionary
         var result: AnyObject?
         var status: OSStatus?
         
         switch type {
-        case .Read:
-            status = withUnsafeMutablePointer(&result) { SecItemCopyMatching(requestReference, UnsafeMutablePointer($0)) }
-        case .Delete:
+        case .read:
+            status = withUnsafeMutablePointer(to: &result) { SecItemCopyMatching(requestReference, UnsafeMutablePointer($0)) }
+        case .delete:
             status = SecItemDelete(requestReference)
-        case .Update:
+        case .update:
             SecItemDelete(requestReference)
-            status = withUnsafeMutablePointer(&result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
+            status = withUnsafeMutablePointer(to: &result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
         }
         
         if let status = status {
             let statusCode = Int(status)
             if statusCode != Int(errSecSuccess) {
-                throw TSDKeychainError.ErrorCode(statusCode)
+                throw TSDKeychainError.errorCode(statusCode)
             }
             var resultsDictionary: NSDictionary?
-            if result != nil && type == .Read && status == errSecSuccess {
-                if let data = result as? NSData {
-                    resultsDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDictionary
+            if result != nil && type == .read && status == errSecSuccess {
+                if let data = result as? Data {
+                    resultsDictionary = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSDictionary
                 }
             }
             return resultsDictionary
         } else {
-            throw TSDKeychainError.NotFoundError
+            throw TSDKeychainError.notFoundError
         }
     }
     
@@ -70,11 +70,11 @@ internal class TSDKeychain {
         options[String(kSecAttrSynchronizable)] = false
         options[String(kSecClass)] = kSecClassGenericPassword
         switch requestType {
-        case .Update:
+        case .update:
             if let keyValues = keyValues {
-                options[String(kSecValueData)] = NSKeyedArchiver.archivedDataWithRootObject(keyValues)
+                options[String(kSecValueData)] = NSKeyedArchiver.archivedData(withRootObject: keyValues)
             }
-        case .Read:
+        case .read:
             options[String(kSecReturnData)] = kCFBooleanTrue
             options[String(kSecMatchLimit)] = kSecMatchLimitOne
         default:
@@ -89,8 +89,9 @@ internal class TSDKeychain {
     ///     - requestType: Update, Read, or Delete request
     ///     - keyValues: Dictionary containing archivable key-values
     /// - Returns: Previously stored key-values or error
+    @discardableResult
     func executeRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) throws -> NSDictionary? {
-        return try performRequest(createRequest(requestType, keyValues: keyValues), requestType: requestType)
+        return try performRequest(request: createRequest(requestType: requestType, keyValues: keyValues), requestType: requestType)
     }
     
     /// Execute a new keychain storage request optionally providing key-values.
@@ -100,9 +101,10 @@ internal class TSDKeychain {
     ///     - requestType: Update, Read, or Delete request
     ///     - keyValues: Dictionary containing archivable key-values
     /// - Returns: Previously stored key-values
+    @discardableResult
     func executeManagedRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSDictionary? {
         do {
-            return try executeRequest(requestType, keyValues: keyValues)
+            return try executeRequest(requestType: requestType, keyValues: keyValues)
         }
         catch { }
         return nil

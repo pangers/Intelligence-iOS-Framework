@@ -13,34 +13,34 @@ import Foundation
 public protocol IntelligenceDelegate {
     /// Credentials provided are incorrect.
     /// Will not distinguish between incorrect client or user credentials.
-    func credentialsIncorrectForIntelligence(intelligence: Intelligence)
+    func credentialsIncorrect(for intelligence: Intelligence)
     
     /// Account has been disabled and no longer active.
     /// Credentials are no longer valid.
-    func accountDisabledForIntelligence(intelligence: Intelligence)
+    func accountDisabled(for intelligence: Intelligence)
     
     /// Account has failed to authentication multiple times and is now locked.
     /// Requires an administrator to unlock the account.
-    func accountLockedForIntelligence(intelligence: Intelligence)
+    func accountLocked(for intelligence: Intelligence)
     
     /// This error and description is only returned from the Validate endpoint
     /// if providing an invalid or expired token.
-    func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence)
+    func tokenInvalidOrExpired(for intelligence: Intelligence)
     
     /// Unable to create SDK user, this may occur if a user with the randomized
     /// credentials already exists (highly unlikely) or your Application is
     /// configured incorrectly and has the wrong permissions.
-    func userCreationFailedForIntelligence(intelligence: Intelligence)
+    func userCreationFailed(for intelligence: Intelligence)
     
     /// User is required to login again, developer must implement this method
     /// you may present a 'Login Screen' or silently call identity.login with
     /// stored credentials.
-    func userLoginRequiredForIntelligence(intelligence: Intelligence)
+    func userLoginRequired(for intelligence: Intelligence)
     
     /// Unable to assign provided sdk_user_role to your newly created user.
     /// This may occur if the Application is configured incorrectly in the backend
     /// and doesn't have the correct permissions or the role doesn't exist.
-    func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence)
+    func userRoleAssignmentFailed(for intelligence: Intelligence)
 }
 
 /// Wrapping protocol used by modules to pass back errors to Intelligence.
@@ -69,31 +69,31 @@ internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
     // MARK:- IntelligenceInternalDelegate
 
     internal func credentialsIncorrect() {
-        delegate.credentialsIncorrectForIntelligence(intelligence)
+        delegate.credentialsIncorrect(for: intelligence)
     }
     
     internal func accountDisabled() {
-        delegate.accountDisabledForIntelligence(intelligence)
+        delegate.accountDisabled(for: intelligence)
     }
     
     internal func accountLocked() {
-        delegate.accountLockedForIntelligence(intelligence)
+        delegate.accountLocked(for: intelligence)
     }
     
     internal func tokenInvalidOrExpired() {
-        delegate.tokenInvalidOrExpiredForIntelligence(intelligence)
+        delegate.tokenInvalidOrExpired(for: intelligence)
     }
     
     internal func userCreationFailed() {
-        delegate.userCreationFailedForIntelligence(intelligence)
+        delegate.userCreationFailed(for: intelligence)
     }
     
     internal func userLoginRequired() {
-        delegate.userLoginRequiredForIntelligence(intelligence)
+        delegate.userLoginRequired(for: intelligence)
     }
     
     internal func userRoleAssignmentFailed() {
-        delegate.userRoleAssignmentFailedForIntelligence(intelligence)
+        delegate.userRoleAssignmentFailed(for: intelligence)
     }
     
 }
@@ -155,11 +155,11 @@ public final class Intelligence: NSObject {
         let network = network ?? Network(delegate: delegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: configuration), oauthProvider: oauthProvider)
         
         if intelligenceConfiguration.hasMissingProperty {
-            throw ConfigurationError.MissingPropertyError
+            throw ConfigurationError.missingPropertyError
         }
         
         if !intelligenceConfiguration.isValid {
-            throw ConfigurationError.InvalidPropertyError
+            throw ConfigurationError.invalidPropertyError
         }
         
         // Create shared objects for modules
@@ -195,8 +195,8 @@ public final class Intelligence: NSObject {
             configuration: intelligenceConfiguration,
             oauthProvider: oauthProvider,
             installation: Installation(configuration: intelligenceConfiguration.clone(),
-            applicationVersion: NSBundle.mainBundle(),
-            installationStorage: NSUserDefaults(),
+            applicationVersion: Bundle.main,
+            installationStorage: UserDefaults(),
             oauthProvider: oauthProvider),
             locationManager: LocationManager())
     }
@@ -211,7 +211,7 @@ public final class Intelligence: NSObject {
     convenience internal init(
         withDelegate delegate: IntelligenceDelegate,
         file: String,
-        inBundle: NSBundle=NSBundle.mainBundle(),
+        inBundle: Bundle = Bundle.main,
         oauthProvider: IntelligenceOAuthProvider) throws
     {
         try self.init(
@@ -248,7 +248,7 @@ public final class Intelligence: NSObject {
     convenience public init(
         withDelegate delegate: IntelligenceDelegate,
         file: String,
-        inBundle: NSBundle=NSBundle.mainBundle()) throws
+        inBundle: Bundle = Bundle.main) throws
     {
         // This let is here to avoid the swift garbage collector from releasing
         // this memory immediately after initialization, and before calling the
@@ -266,7 +266,8 @@ public final class Intelligence: NSObject {
     /// whether the startup was successful or not. This call has to finish successfully
     /// before using any of the intelligence modules. If any action is performed while startup
     /// has not yet finished fully, an unexpected error is likely to occur.
-    public func startup(completion: (success: Bool) -> ()) {
+    @objc(startup:)
+    public func startup(completion: @escaping (_ success: Bool) -> ()) {
         // Anonymously logins into the SDK then:
         // - Cannot request anything on behalf of the user.
         // - Calls Application Installed/Updated/Opened.
@@ -275,21 +276,21 @@ public final class Intelligence: NSObject {
         
         func moduleToStartup(module:Int) {
             if module >= modules.count {
-                completion(success: true)
+                completion(true)
                 return
             }
             
             modules[module].startup { (success) -> () in
                 if ( success ) {
-                    moduleToStartup(module + 1)
+                    moduleToStartup(module: module + 1)
                 }
                 else {
-                    completion(success: false)
+                    completion(false)
                 }
             }
         }
         
-        moduleToStartup(0)
+        moduleToStartup(module: 0)
     }
     
     /// Shutdowns the Intelligence SDK modules. After shutting down, you'll have to

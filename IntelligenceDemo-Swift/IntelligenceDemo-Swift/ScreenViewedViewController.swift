@@ -15,7 +15,7 @@ class ScreenViewedViewController : UIViewController {
 	@IBOutlet weak var clockLabel: UILabel!
 	
 	var startDate:NSDate? = nil
-	var timer:NSTimer? = nil
+	var timer:Timer? = nil
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -23,51 +23,53 @@ class ScreenViewedViewController : UIViewController {
 		self.title = "Screen Viewed Event Timer"
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("restoreTimeAndStartClock"), name: UIApplicationDidBecomeActiveNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("stopClockAndStoreTime"), name: UIApplicationWillResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScreenViewedViewController.restoreTimeAndStartClock), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(ScreenViewedViewController.stopClockAndStoreTime), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
 		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("sendAnalytics"), name: UIApplicationWillTerminateNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(ScreenViewedViewController.sendAnalytics), name: NSNotification.Name.UIApplicationWillTerminate, object: nil)
 		
 		self.clearTimeAndStartClock()
 	}
 	
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		self.stopClockAndStoreTime()
 		self.sendAnalytics()
 		
-		NSNotificationCenter.defaultCenter().removeObserver(self);
+		NotificationCenter.default.removeObserver(self);
 		
 		super.viewDidDisappear(animated)
 	}
 	
 	// MARK: - NSTimer
 	
-	func timerFired(timer: NSTimer) {
+	func timerFired(timer: Timer) {
 		guard let startDate = self.startDate else {
 			return
 		}
 
-		let previousSeconds = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
-		self.clockLabel.text = self.clockTime(fromSeconds: -startDate.timeIntervalSinceNow + previousSeconds)
+		let previousSeconds = UserDefaults.standard.double(forKey: self.title!)
+		self.clockLabel.text = self.clockTime(from: -startDate.timeIntervalSinceNow + previousSeconds)
 	}
 	
 	// MARK: - Internal
 	
 	internal func restoreTimeAndStartClock() {
-		let previousSeconds = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
-		self.clockLabel.text = self.clockTime(fromSeconds: previousSeconds)
+		let previousSeconds = UserDefaults.standard.double(forKey:
+            self.title!)
+		self.clockLabel.text = self.clockTime(from: previousSeconds)
 		
 		self.startClock()
 	}
 	
 	internal func clearTimeAndStartClock() {
-		NSUserDefaults.standardUserDefaults().setDouble(0.0, forKey: self.title!)
-		NSUserDefaults.standardUserDefaults().synchronize()
+		UserDefaults.standard.set(0.0, forKey: self.title!)
+		UserDefaults.standard.synchronize()
 		
-		self.clockLabel.text = self.clockTime(fromSeconds: 0.0)
+		self.clockLabel.text = self.clockTime(from: 0.0)
 		
 		self.startClock()
 	}
@@ -76,7 +78,7 @@ class ScreenViewedViewController : UIViewController {
 		self.startDate = NSDate()
 		
 		self.timer?.invalidate()
-		self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("timerFired:"), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(ScreenViewedViewController.timerFired(timer:)), userInfo: nil, repeats: true)
 	}
 	
 	internal func stopClock() {
@@ -91,17 +93,19 @@ class ScreenViewedViewController : UIViewController {
 			return
 		}
 		
-		let previousSeconds = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
+		let previousSeconds = UserDefaults.standard.double(forKey:
+            self.title!)
 		let viewingDuration = -startDate.timeIntervalSinceNow + previousSeconds
 		
 		self.stopClock()
 		
-		NSUserDefaults.standardUserDefaults().setDouble(viewingDuration, forKey: self.title!)
-		NSUserDefaults.standardUserDefaults().synchronize()
+		UserDefaults.standard.set(viewingDuration, forKey: self.title!)
+		UserDefaults.standard.synchronize()
 	}
 	
-	internal func clockTime(var fromSeconds seconds: NSTimeInterval) -> String {
-		let minutes = floor(seconds / 60.0)
+    internal func clockTime(from seconds: TimeInterval) -> String {
+        var seconds = seconds
+        let minutes = floor(seconds / 60.0)
 		
 		seconds -= minutes * 60
 		
@@ -109,9 +113,9 @@ class ScreenViewedViewController : UIViewController {
 	}
 	
 	internal func sendAnalytics() {
-		let viewingDuration = NSUserDefaults.standardUserDefaults().doubleForKey(self.title!)
+		let viewingDuration = UserDefaults.standard.double(forKey: self.title!)
 		
         let event = ScreenViewedEvent(screenName: self.title!, viewingDuration: viewingDuration)
-		IntelligenceManager.intelligence?.analytics.track(event)
+		IntelligenceManager.intelligence?.analytics.track(event: event)
 	}
 }

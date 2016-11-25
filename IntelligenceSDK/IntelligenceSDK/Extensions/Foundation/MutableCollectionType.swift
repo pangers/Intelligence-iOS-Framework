@@ -8,32 +8,26 @@
 
 import Foundation
 
-internal extension CollectionType where Index == Int {
-    
-    func shuffle() -> [Generator.Element] {
-        // A concrete CollectionType is required so convert to an Array
-        var copy = Array(self)
-        copy.shuffle()
-        return copy
+internal extension MutableCollection where Indices.Iterator.Element == Index {
+    /// Shuffles the contents of this collection.
+    mutating func shuffle() {
+        let c = count
+        guard c > 1 else { return }
+        
+        for (unshuffledCount, firstUnshuffled) in zip(stride(from: c, to: 1, by: -1), indices) {
+            let d: IndexDistance = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
+            guard d != 0 else { continue }
+            let i = index(firstUnshuffled, offsetBy: d)
+            swap(&self[firstUnshuffled], &self[i])
+        }
     }
-    
 }
 
-internal extension MutableCollectionType where Index == Int {
-    mutating func shuffle() {
-        if count < 2 {
-            // Collection with 0 or 1 element(s) are already shuffled
-            return
-        }
-        
-        for index in 0..<count - 1 {
-            let unsortedIndex = Int(arc4random_uniform(UInt32(count - index))) + index
-            
-            guard index != unsortedIndex else {
-                continue
-            }
-            
-            swap(&self[index], &self[unsortedIndex])
-        }
+internal extension Sequence {
+    /// Returns an array with the contents of this sequence, shuffled.
+    func shuffled() -> [Iterator.Element] {
+        var result = Array(self)
+        result.shuffle()
+        return result
     }
 }
