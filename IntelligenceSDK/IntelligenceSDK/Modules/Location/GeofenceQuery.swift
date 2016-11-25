@@ -45,7 +45,8 @@ import CoreLocation
             
         queryString.appendUrlQueryParameter(parameterName: "longitude", parameterValue: longitude, isFirst: true)
         queryString.appendUrlQueryParameter(parameterName: "latitude", parameterValue: latitude)
-        queryString.appendUrlQueryParameter(parameterName: "radius", parameterValue: radius)
+        //Server accepts radius as integer.
+        queryString.appendUrlQueryParameter(parameterName: "radius", parameterValue: Int(radius))
         
         if let pagenum = pageNumber {
             queryString.appendUrlQueryParameter(parameterName: "pagenumber", parameterValue: pagenum)
