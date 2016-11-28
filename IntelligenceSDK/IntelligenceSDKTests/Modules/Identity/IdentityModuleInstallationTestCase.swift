@@ -33,7 +33,7 @@ class InstallationStorage: InstallationStorageProtocol {
         return int_applicationVersion == nil
     }
     func int_isInstallationUpdated(applicationVersion: String?) -> Bool {
-        guard let version = applicationVersion, stored = int_applicationVersion else { return false }
+        guard let version = applicationVersion, let stored = int_applicationVersion else { return false }
         return version != stored // Assumption: any version change is considered an update
     }
     var int_installationID: String? {
@@ -108,10 +108,10 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         }
         
         if let projectID = json[Installation.ProjectId] as? Int,
-            appID = json[Installation.ApplicationId] as? Int,
-            installed = json[Installation.InstalledVersion] as? String,
-            OSVer = json[Installation.OperatingSystemVersion] as? String
-            where projectID == 20 &&
+            let appID = json[Installation.ApplicationId] as? Int,
+            let installed = json[Installation.InstalledVersion] as? String,
+            let OSVer = json[Installation.OperatingSystemVersion] as? String
+            , projectID == 20 &&
                 appID == 10 &&
                 OSVer == UIDevice.currentDevice().systemVersion &&
                 installed == "1.0.1" {
@@ -244,9 +244,9 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             
             let json = self.mockInstallation.toJSON()
             if let id = json[Installation.Id] as? Int,
-                installed = json[Installation.InstalledVersion] as? String,
-                OSVer = json[Installation.OperatingSystemVersion] as? String
-                where OSVer == UIDevice.currentDevice().systemVersion &&
+                let installed = json[Installation.InstalledVersion] as? String,
+                let OSVer = json[Installation.OperatingSystemVersion] as? String
+                , OSVer == UIDevice.currentDevice().systemVersion &&
                     installed == "1.0.2" &&
                     id == 1054 {
                         XCTAssert(true)
