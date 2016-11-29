@@ -17,12 +17,11 @@ extension NSError {
     /// Convenience method to create an NSError with a code, and optionally a httpStatusCode.
     /// The domain will be set to the SDK's bundleIdentifier, and the httpStatusCode will be added as the userInfo.
     convenience init(code: Int, httpStatusCode: Int? = nil) {
-        let domain = NSBundle(forClass: Intelligence.self).bundleIdentifier!
+        let domain = Bundle(for: Intelligence.self).bundleIdentifier!
+        let userInfo : [String : Any]?
         
-        let userInfo : [NSObject : AnyObject]?
-        
-        if httpStatusCode != nil {
-            userInfo = [HTTPStatusCodeNSErrorUserInfoKey: httpStatusCode!]
+        if let httpStatusCode = httpStatusCode {
+            userInfo = [HTTPStatusCodeNSErrorUserInfoKey: httpStatusCode]
         }
         else {
             userInfo = nil
@@ -45,93 +44,93 @@ extension NSError {
 /// Enumeration that defines the possible errors that can occur during
 /// the initial setup of Intelligence's configuration.
 /// Refer to the Readme file to obtain further instructions on setup.
-@objc public enum ConfigurationError: Int, ErrorType {
+@objc public enum ConfigurationError: Int, Error {
     /// Configuration file does not exist.
-    case FileNotFoundError = 1001
+    case fileNotFoundError = 1001
     
     /// A property is invalid.
-    case InvalidPropertyError
+    case invalidPropertyError
     
     /// Configuration file is invalid
     /// (Couldn't parse into a JSON or had an issue while reading it)
-    case InvalidFileError
+    case invalidFileError
     
     /// There is a missing property in the configuration.
-    case MissingPropertyError
+    case missingPropertyError
 }
 
 /// Enumeration to list the errors that can occur in any request.
-@objc public enum RequestError: Int, ErrorType {
+@objc public enum RequestError: Int, Error {
     /// Error to return when parsing JSON fails.
-    case ParseError = 2001
+    case parseError = 2001
     
     /// Error to return if user doesn't have access to a particular API.
-    case AccessDeniedError
+    case accessDeniedError
     
     /// Error to return if user is offline.
-    case InternetOfflineError
+    case internetOfflineError
     
     /// Error to return if the user is not authenticated.
-    case Unauthorized
+    case unauthorized
     
     /// Error to return if the user's role does not grant them access to this method.
-    case Forbidden
+    case forbidden
     
     /// Error to return if an error occurs that we can not handle.
-    case UnhandledError
+    case unhandledError
 }
 
 /// Enumeration to list the errors that can occur in the authentication module.
-@objc public enum AuthenticationError: Int, ErrorType {
+@objc public enum AuthenticationError: Int, Error {
     /// The client or user credentials are incorrect.
-    case CredentialError = 3001
+    case credentialError = 3001
     
     /// The account has been disabled.
-    case AccountDisabledError
+    case accountDisabledError
     
     /// The account has been locked due to multiple authentication failures.
     /// An Administration is required to unlock.
-    case AccountLockedError
+    case accountLockedError
     
     /// The token is invalid or has expired.
-    case TokenInvalidOrExpired
+    case tokenInvalidOrExpired
 }
 
 /// Enumeration to list the errors that can occur in the identity module.
-@objc public enum IdentityError: Int, ErrorType {
+@objc public enum IdentityError: Int, Error {
     /// The user is invalid.
-    case InvalidUserError = 4001
+    case invalidUserError = 4001
     
     /// The password provided is too weak. See `Intelligence.User` password field to see
     /// the security requirements of the password.
-    case WeakPasswordError
+    case weakPasswordError
     
     /// The device token is invalid (zero length).
-    case DeviceTokenInvalidError
+    case deviceTokenInvalidError
     
     /// Device token has not been registered yet.
-    case DeviceTokenNotRegisteredError
+    case deviceTokenNotRegisteredError
 }
 
 /// Enumeration to list the errors that can occur in the installation module
-internal enum InstallationError: Int, ErrorType {
+internal enum InstallationError: Int, Error {
     /// Called 'create' method unnecessarily.
-    case AlreadyInstalledError = 5001
+    case alreadyInstalledError = 5001
     
     /// Called 'update' method unnecessarily.
-    case AlreadyUpdatedError
+    case alreadyUpdatedError
 }
 
 /// These are internal errors thrown by the Geofence class.
-internal enum GeofenceError: ErrorType {
+internal enum GeofenceError: Error {
     
     /// Error to return when we have a property error. Internal use only.
-    case InvalidPropertyError(GeofenceKey)
+    case invalidPropertyError(GeofenceKey)
 }
 
 /// These are internal errors thrown by the Analytics class.
-internal enum AnalyticsError: Int, ErrorType {
+internal enum AnalyticsError: Int, Error {
     /// Request contains outdated events.
-    case OldEventsError = 6001
+    case oldEventsError = 6001
 }
 

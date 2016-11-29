@@ -81,7 +81,7 @@ static NSString * const INTViewUserSegue = @"ViewUser";
         // logout before we login to clear the previous token (which means we check the login credentials, not just the token)
         [INTIntelligenceManager.intelligence.identity logout];
         
-        [INTIntelligenceManager.intelligence.identity loginWithUsername:username password:password callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
+        [INTIntelligenceManager.intelligence.identity loginWith:username password:password callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -123,7 +123,7 @@ static NSString * const INTViewUserSegue = @"ViewUser";
                                                           
                                                           NSString *userId = alertController.textFields.firstObject.text;
                                                           
-                                                          [INTIntelligenceManager.intelligence.identity getUser:[userId integerValue] callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity getUserWith:[userId integerValue] callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   __strong typeof(weakSelf) strongSelf = weakSelf;
                                                                   

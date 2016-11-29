@@ -102,7 +102,7 @@ static NSString * const INTUnwindOnLogoutSegue = @"UnwindOnLogout";
         return;
     }
     
-    [[[INTIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+    [[[INTIntelligenceManager intelligence] identity] unregisterDeviceTokenWith:tokenId callback:^(NSError * _Nullable error) {
         BOOL notRegisteredError = [IdentityErrorDomain rangeOfString:error.domain].location != NSNotFound && error.code == IdentityErrorDeviceTokenNotRegisteredError;
         
         if (error != nil && !notRegisteredError) {
@@ -137,7 +137,7 @@ static NSString * const INTUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [INTIntelligenceManager.intelligence.identity assignRole:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity assignRoleTo:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
@@ -176,7 +176,7 @@ static NSString * const INTUnwindOnLogoutSegue = @"UnwindOnLogout";
                                                           
                                                           NSString *roleId = alertController.textFields.firstObject.text;
                                                           
-                                                          [INTIntelligenceManager.intelligence.identity revokeRole:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
+                                                          [INTIntelligenceManager.intelligence.identity revokeRoleWith:[roleId integerValue] user:weakSelf.user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   UIApplication *application = UIApplication.sharedApplication;
                                                                   AppDelegate *delegate = application.delegate;
