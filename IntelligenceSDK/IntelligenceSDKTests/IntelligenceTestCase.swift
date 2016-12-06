@@ -15,7 +15,7 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         
         do {
-            let intelligence = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: NSBundle(forClass: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
+            let intelligence = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: Bundle(for: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
             XCTAssert(intelligence.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
         }
         catch {
@@ -25,7 +25,7 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
     
     func testIntelligenceConfigurationInitializer(){
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
-        let bundle = NSBundle(forClass: IntelligenceTestCase.self)
+        let bundle = Bundle(for: IntelligenceTestCase.self)
         
         do {
             let configuration = try Intelligence.Configuration(fromFile: "config", inBundle: bundle)
@@ -60,7 +60,7 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         
         do {
-            _ = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: NSBundle(forClass: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
+            _ = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: Bundle(for: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
         }
         catch {
             XCTAssert(false, "There was an error reading the file or initializing intelligence.")

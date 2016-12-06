@@ -16,7 +16,7 @@ typealias MockResponse = (data: String?, statusCode: HTTPStatusCode, headers: [S
 
 class IntelligenceBaseTestCase : XCTestCase {
     
-    let expectationTimeout:NSTimeInterval = 2
+    let expectationTimeout:TimeInterval = 2
     
     var mockOAuthProvider: MockOAuthProvider!
     var mockDelegateWrapper: MockIntelligenceDelegateWrapper!
@@ -31,20 +31,20 @@ class IntelligenceBaseTestCase : XCTestCase {
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"\(applicationAccessToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"\(userAccessToken)=\",\"refresh_token\":\"\(userRefreshToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let tokenMethod = HTTPRequestMethod.POST
-    var tokenUrl: NSURL? {
-        return NSURLRequest.int_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+    var tokenUrl: URL? {
+        return URLRequest.int_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
     }
     
     override func setUp() {
         super.setUp()
         do {
-            try mockConfiguration = IntelligenceSDK.Intelligence.Configuration(fromFile: "config", inBundle:NSBundle(forClass: IntelligenceBaseTestCase.self))
-            mockConfiguration.region = .Europe
+            try mockConfiguration = IntelligenceSDK.Intelligence.Configuration(fromFile: "config", inBundle:Bundle(for: IntelligenceBaseTestCase.self))
+            mockConfiguration.region = .europe
             mockOAuthProvider = MockOAuthProvider()
             mockDelegateWrapper = MockIntelligenceDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: mockConfiguration), oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
-            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
+            mockInstallation = MockInstallation.newInstance(configuration: mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
             
             try intelligence = Intelligence(
                 withDelegate: mockDelegateWrapper.mockDelegate,
@@ -62,7 +62,7 @@ class IntelligenceBaseTestCase : XCTestCase {
             
             let fakeModule = IntelligenceModule(withDelegate: mockDelegateWrapper, network: mockNetwork, configuration: mockConfiguration)
             
-            let expectation = expectationWithDescription("Immediate Expectation")
+            let expectation = expectation(description: "Immediate Expectation")
             fakeModule.startup { (success) in
                 XCTAssertTrue(success)
                 fakeModule.shutdown()
@@ -84,11 +84,11 @@ class IntelligenceBaseTestCase : XCTestCase {
     
     // MARK: URL Mock
     
-    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, response:MockResponse, identifier: String? = nil, expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
+    func mockResponseForURL(_ url:URL!, method:HTTPRequestMethod?, response:MockResponse, identifier: String? = nil, expectation: XCTestExpectation? = nil, callback:MockCallback? = nil) {
         mockResponseForURL(url, method: method, responses: [response], identifier: identifier, expectations: [expectation], callbacks: [callback])
     }
     
-    func mockResponseForURL(url:NSURL!, method:HTTPRequestMethod?, responses:[MockResponse], identifier: String? = nil, expectations:[XCTestExpectation?]? = nil, callbacks: [MockCallback?]? = nil) {
+    func mockResponseForURL(_ url:URL!, method:HTTPRequestMethod?, responses:[MockResponse], identifier: String? = nil, expectations:[XCTestExpectation?]? = nil, callbacks: [MockCallback?]? = nil) {
         
         print("Mock URL: \(url)")
         
@@ -96,23 +96,23 @@ class IntelligenceBaseTestCase : XCTestCase {
         var runs = [(MockCallback?, MockResponse, XCTestExpectation)]()
         for i in 0..<count {
             runs += [ (callbacks?[i], responses[i], expectations?[i] ??
-                expectationWithDescription("mock \(url) iteration \(i)")) ]
+                expectation(description: "mock \(url) iteration \(i)")) ]
         }
         let stub = OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                if let method = method?.rawValue where method != request.HTTPMethod {
+                if let method = method?.rawValue , method != request.HTTPMethod {
                     return false
                 }
                 return request.URL! == url
             },
             withStubResponse: { _ in
                 let (callback, response, expectation) = runs.first!
-                runs.removeAtIndex(0)
+                runs.remove(at: 0)
                 // Execute callback before fulfilling expectation so we can chain multiple expectations together
                 callback?()
                 print("expectation fulfilled: ", expectation.description)
                 expectation.fulfill()
-                let stubData = ((response.data) ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
+                let stubData = ((response.data) ?? "").data(using: String.Encoding.utf8)!
                 return OHHTTPStubsResponse(
                     data: stubData,
                     statusCode: Int32(response.statusCode.rawValue),
@@ -126,23 +126,23 @@ class IntelligenceBaseTestCase : XCTestCase {
     
     // MARK: - Authentication Mock
     
-    func getResponse(status: HTTPStatusCode, body: String) -> MockResponse {
-        return MockResponse(data: status == .Success ? body : nil,
+    func getResponse(_ status: HTTPStatusCode, body: String) -> MockResponse {
+        return MockResponse(data: status == .success ? body : nil,
             statusCode: status,
             headers: nil)
     }
     
-    func mockAuthenticationResponse(response: MockResponse) {
+    func mockAuthenticationResponse(_ response: MockResponse) {
         mockAuthenticationResponses([response])
     }
     
-    func mockAuthenticationResponses(responses: [MockResponse]) {
+    func mockAuthenticationResponses(_ responses: [MockResponse]) {
         mockResponseForURL(tokenUrl, method: tokenMethod, responses: responses)
     }
     
     /// Mock the authentication response
-    func mockResponseForAuthentication(statusCode:HTTPStatusCode, anonymous: Bool? = true, callback:MockCallback? = nil) {
-        let responseData = (statusCode == .Success) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
+    func mockResponseForAuthentication(_ statusCode:HTTPStatusCode, anonymous: Bool? = true, callback:MockCallback? = nil) {
+        let responseData = (statusCode == .success) ? (anonymous == true ? anonymousTokenSuccessfulResponse : loggedInTokenSuccessfulResponse) : ""
         
         mockResponseForURL(tokenUrl,
             method: tokenMethod,
@@ -150,10 +150,10 @@ class IntelligenceBaseTestCase : XCTestCase {
             callback: callback)
     }
     
-    func assertURLNotCalled(url:NSURL, method:HTTPRequestMethod? = .GET) {
+    func assertURLNotCalled(_ url:URL, method:HTTPRequestMethod? = .get) {
         OHHTTPStubs.stubRequestsPassingTest(
             { request in
-                if let method = method?.rawValue where method != request.HTTPMethod {
+                if let method = method?.rawValue , method != request.HTTPMethod {
                     return false
                 }
                 

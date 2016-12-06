@@ -27,8 +27,8 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
         
     // MARK:- Helpers
     
-    func mockDownloadGeofencesResponse(status: HTTPStatusCode = .Success, query: GeofenceQuery, body: String? = nil) {
-        mockResponseForURL(NSURLRequest.int_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
+    func mockDownloadGeofencesResponse(_ status: HTTPStatusCode = .success, query: GeofenceQuery, body: String? = nil) {
+        mockResponseForURL(URLRequest.int_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
             method: .GET,
             response: getResponse(status, body: body ?? geofencesResponse))
     }
@@ -36,10 +36,10 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     
     /// Test a valid response is parsed correctly
     func testDownloadGeofencesSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
         
-        mockDownloadGeofencesResponse(.Success, query: query)
+        mockDownloadGeofencesResponse(.success, query: query)
         
         // Mock a valid token
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
@@ -56,14 +56,14 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test that network errors are caught and handled properly
     func testDownloadGeofencesFailure() {
         let query = GeofenceQuery(location: Coordinate(withLatitude: 2, longitude: 2), radius: 2)
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
-        mockDownloadGeofencesResponse(.Success, query: query, body: errorResponse)
+        mockDownloadGeofencesResponse(.success, query: query, body: errorResponse)
         
         // Mock a valid token
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
         
-        location!.downloadGeofences(query) { (geofences, error) -> Void in
+        location!.downloadGeofences(queryDetails: query) { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
         }
@@ -78,7 +78,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
             XCTAssert(false, "Cannot load with nil")
         }
         catch let err as RequestError {
-            XCTAssert(err == RequestError.ParseError, "Expected parse error")
+            XCTAssert(err == RequestError.parseError, "Expected parse error")
         }
         catch {
             XCTAssert(false, "Unexpected")
@@ -88,7 +88,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test valid read
     func testStoreGeofences() {
         do {
-            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
+            try Geofence.storeJSON(json: geofencesResponse.data(using: String.Encoding.utf8)?.int_jsonDictionary)
         } catch {
             XCTAssert(false)
         }
@@ -97,7 +97,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Store holds more than one geofence.
     func testStoreReadGeofences() {
         do {
-            try Geofence.storeJSON(geofencesResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
+            try Geofence.storeJSON(json: geofencesResponse.data(using: String.Encoding.utf8)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 2)
         } catch {
@@ -108,13 +108,13 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Missing data key from response. InvalidPropertyError
     func testStoreReadMissingDataKeyGeofences() {
         do {
-            try Geofence.storeJSON(geofencesInvalidResponse.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
+            try Geofence.storeJSON(json: geofencesInvalidResponse.data(using: String.Encoding.utf8)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 0)
         }
         catch let err as GeofenceError {
             switch err {
-            case .InvalidPropertyError(_):
+            case .invalidPropertyError(_):
                 XCTAssert(true)
             }
         }
@@ -126,13 +126,13 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Data is invalid, cannot be loaded as JSON. InvalidJSONError
     func testInvalidJSONGeofences() {
         do {
-            NSData().writeToFile(Geofence.jsonPath()!, atomically: true)
+            Data().write(to: Geofence.jsonPath()!, options: true)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 0)
         }
         catch let err as RequestError {
             switch err {
-            case .ParseError:
+            case .parseError:
                 XCTAssert(true)
             default:
                 XCTAssert(false)
@@ -146,7 +146,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test One of these responses will be invalid
     func testGeofenceStore() {
         do {
-            try Geofence.storeJSON(geofencesInvalidResponseKey.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary)
+            try Geofence.storeJSON(json: geofencesInvalidResponseKey.data(using: String.Encoding.utf8)?.int_jsonDictionary)
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 1)
         } catch {

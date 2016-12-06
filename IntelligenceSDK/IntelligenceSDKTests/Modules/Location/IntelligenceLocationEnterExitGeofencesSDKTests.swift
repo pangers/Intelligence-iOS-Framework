@@ -40,18 +40,18 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         location.locationDelegate = self
         
         // Start monitoring with an expectation.
-        startMonitorGeofenceExpectation = expectationWithDescription("Start monitoring")
-        location.startMonitoringGeofences(geofences)
-        waitForExpectationsWithTimeout(2, handler: nil)
+        startMonitorGeofenceExpectation = expectation(description: "Start monitoring")
+        location.startMonitoringGeofences(geofences: geofences)
+        waitForExpectations(timeout: 2, handler: nil)
 
         // After notifying of didStartMonitoring, there's a brief period in which we don't have
         // the correct monitoredRegions in the CLLocationManager. This sleeps helps sort that out.
 //        NSThread.sleepForTimeInterval(1)
 
         // Fire the enter geofence with an expectation.
-        enterGeofenceExpectation = expectationWithDescription("Enter geofence")
-        mockLocationManager.fireEnterGeofence(geofence)
-        waitForExpectationsWithTimeout(2, handler: nil)
+        enterGeofenceExpectation = expectation(description: "Enter geofence")
+        mockLocationManager.fireEnterGeofence(geofence: geofence)
+        waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testExitGeofenceNotify() {
@@ -68,18 +68,18 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         location.locationDelegate = self
 
         // Start monitoring with an expectation.
-        startMonitorGeofenceExpectation = expectationWithDescription("Start monitoring")
-        location.startMonitoringGeofences(geofences)
-        waitForExpectationsWithTimeout(2, handler: nil)
+        startMonitorGeofenceExpectation = expectation(description: "Start monitoring")
+        location.startMonitoringGeofences(geofences: geofences)
+        waitForExpectations(timeout: 2, handler: nil)
         
         // After notifying of didStartMonitoring, there's a brief period in which we don't have 
         // the correct monitoredRegions in the CLLocationManager. This sleeps helps sort that out.
 //        NSThread.sleepForTimeInterval(1)
         
         // Fire the exit geofence with an expectation.
-        exitGeofenceExpectation = expectationWithDescription("Exit geofence")
-        mockLocationManager.fireExitGeofence(geofence)
-        waitForExpectationsWithTimeout(2, handler: nil)
+        exitGeofenceExpectation = expectation(description: "Exit geofence")
+        mockLocationManager.fireExitGeofence(geofence: geofence)
+        waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testGeofencesNotNotifiedWhenNotMonitoring() {
@@ -87,11 +87,11 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         location.locationDelegate = self
         location.stopMonitoringGeofences()
         
-        mockLocationManager.fireEnterGeofence(Geofence())
-        mockLocationManager.fireExitGeofence(Geofence())
+        mockLocationManager.fireEnterGeofence(geofence: Geofence())
+        mockLocationManager.fireExitGeofence(geofence: Geofence())
     }
 
-    func intelligenceLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
+    func intelligenceLocation(_ location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = enterGeofenceExpectation else {
@@ -102,7 +102,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         enterGeofenceExpectation = nil
     }
     
-    func intelligenceLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
+    func intelligenceLocation(_ location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = exitGeofenceExpectation else {
@@ -114,7 +114,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
     }
     
     
-    func intelligenceLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
+    func intelligenceLocation(_ location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
         guard let expectation = startMonitorGeofenceExpectation else {
             return
         }

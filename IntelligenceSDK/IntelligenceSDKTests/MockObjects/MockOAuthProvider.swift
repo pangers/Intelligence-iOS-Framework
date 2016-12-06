@@ -38,16 +38,18 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
     internal var developerLoggedIn = false
     
     init() {
-        applicationOAuth = IntelligenceOAuth(tokenType: .Application, storage: MockSimpleStorage())
-        sdkUserOAuth = IntelligenceOAuth(tokenType: .SDKUser, storage: MockSimpleStorage())
-        loggedInUserOAuth = IntelligenceOAuth(tokenType: .LoggedInUser, storage: MockSimpleStorage())
+        applicationOAuth = IntelligenceOAuth(tokenType: .application, storage: MockSimpleStorage())
+        sdkUserOAuth = IntelligenceOAuth(tokenType: .sdkUser, storage: MockSimpleStorage())
+        loggedInUserOAuth = IntelligenceOAuth(tokenType: .loggedInUser, storage: MockSimpleStorage())
     }
     
-    func fakeAccessToken(var oauth: IntelligenceOAuthProtocol) {
+    func fakeAccessToken(_ oauth: IntelligenceOAuthProtocol) {
+        var oauth = oauth
         oauth.accessToken = applicationAccessToken
     }
     
-    func fakeLoggedIn(var oauth: IntelligenceOAuthProtocol, fakeUser: Intelligence.User) {
+    func fakeLoggedIn(_ oauth: IntelligenceOAuthProtocol, fakeUser: Intelligence.User) {
+        var oauth = oauth
         oauth.username = fakeUser.username
         oauth.password = fakeUser.password
         oauth.userId = fakeUser.userId
@@ -64,7 +66,8 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
         reset(loggedInUserOAuth)
     }
     
-    func reset(var oauth: IntelligenceOAuthProtocol) {
+    func reset(_ oauth: IntelligenceOAuthProtocol) {
+        var oauth = oauth
         IntelligenceOAuth.reset(oauth)
         if oauth.tokenType == .LoggedInUser {
             developerLoggedIn = false
@@ -79,7 +82,7 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
         
     }
     
-    func updateWithResponse(response: JSONDictionary?) -> Bool {
+    func updateWithResponse(_ response: JSONDictionary?) -> Bool {
         return true
     }
     

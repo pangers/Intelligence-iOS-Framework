@@ -14,7 +14,7 @@ import XCTest
 class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testConfigurationFromFileAndBundle() {
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         let cfg = genericConfiguration()
         do {
             let config = Intelligence.Configuration()
@@ -53,7 +53,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let config = Intelligence.Configuration()
         
         do {
-            try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
+            try config.readFromFile("Does not exist", inBundle: Bundle.mainBundle())
             XCTAssert(false, "File not found, but exception not thrown")
         }
         catch let err as ConfigurationError where err == .FileNotFoundError {
@@ -65,7 +65,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testFileInvalidFileConfiguration() {
         let config = Intelligence.Configuration()
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
             try config.readFromFile("wrongjson", inBundle: bundle)
@@ -81,7 +81,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testFileMissingPropertyConfiguration() {
         let config = Intelligence.Configuration()
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
             try config.readFromFile("missingproperty", inBundle: bundle)
@@ -96,7 +96,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     }
     
     func testConfigurationIsValid() {
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         do {
             let config = try Intelligence.Configuration(fromFile: "config", inBundle: bundle);
             XCTAssert(config.isValid, "The configuration provided is invalid")
@@ -107,7 +107,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         }
     }
     
-    func testConfigurationMissingPropertyError(cfg: Intelligence.Configuration) {
+    func testConfigurationMissingPropertyError(_ cfg: Intelligence.Configuration) {
         XCTAssertFalse(cfg.isValid)
         XCTAssertTrue(cfg.hasMissingProperty)
         do {

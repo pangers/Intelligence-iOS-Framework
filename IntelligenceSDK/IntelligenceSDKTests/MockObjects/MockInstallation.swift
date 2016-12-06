@@ -12,7 +12,7 @@ import XCTest
 
 class MockInstallation {
     
-    class func newInstance(configuration: Intelligence.Configuration, storage: InstallationStorageProtocol, oauthProvider: IntelligenceOAuthProvider) -> Installation {
+    class func newInstance(_ configuration: Intelligence.Configuration, storage: InstallationStorageProtocol, oauthProvider: IntelligenceOAuthProvider) -> Installation {
         let installation = Installation(configuration: configuration, applicationVersion: VersionClass(), installationStorage: storage, oauthProvider: oauthProvider)
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
@@ -22,7 +22,7 @@ class MockInstallation {
         XCTAssert(installation.toJSON()[Installation.CreateDate] as? String == nil, "Create date must be nil")
         XCTAssert(installation.toJSON()[Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
         XCTAssert(installation.toJSON()[Installation.DeviceTypeId] as? Int == 1, "Device type must be 1 (Smartphone)")
-        XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
+        XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.current.systemVersion, "OS must be \(UIDevice.current.systemVersion)")
         return installation
     }
     

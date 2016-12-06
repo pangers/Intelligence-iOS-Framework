@@ -37,7 +37,7 @@ class MockIntelligenceDelegateWrapper: IntelligenceDelegateWrapper {
 }
 
 class MockIntelligenceDelegate: IntelligenceDelegate {
-    private var credentials = true, disabled = true, locked = true, token = true, creation = true, login = true, role = true
+    fileprivate var credentials = true, disabled = true, locked = true, token = true, creation = true, login = true, role = true
     init(
         expectCredentialsIncorrect: Bool = true,
         expectDisabled: Bool = true,
@@ -56,31 +56,31 @@ class MockIntelligenceDelegate: IntelligenceDelegate {
         role = expectRoleFailed
     }
     
-    @objc func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
+    @objc func credentialsIncorrectForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(credentials)
     }
     
-    @objc func accountDisabledForIntelligence(intelligence: Intelligence) {
+    @objc func accountDisabledForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(disabled)
     }
     
-    @objc func accountLockedForIntelligence(intelligence: Intelligence) {
+    @objc func accountLockedForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(locked)
     }
     
-    @objc func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
+    @objc func tokenInvalidOrExpiredForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(token)
     }
     
-    @objc func userCreationFailedForIntelligence(intelligence: Intelligence) {
+    @objc func userCreationFailedForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(creation)
     }
     
-    @objc func userLoginRequiredForIntelligence(intelligence: Intelligence) {
+    @objc func userLoginRequiredForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(login)
     }
     
-    @objc func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
+    @objc func userRoleAssignmentFailedForIntelligence(_ intelligence: Intelligence) {
         XCTAssertTrue(role)
     }
 }

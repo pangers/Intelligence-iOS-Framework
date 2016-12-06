@@ -12,7 +12,7 @@ import Foundation
 
 class MockSimpleStorage: IntelligenceOAuthStorage {
     
-    private var storage: [String: AnyObject?] = [:]
+    fileprivate var storage: [String: AnyObject?] = [:]
     
     @objc subscript(index: String) -> AnyObject? {
         get {

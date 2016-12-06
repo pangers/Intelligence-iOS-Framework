@@ -26,33 +26,33 @@ class InstallationStorage: InstallationStorageProtocol {
     var int_applicationVersion: String? {
         return dictionary["appVer"] as? String
     }
-    func int_storeApplicationVersion(version: String?) {
-        dictionary["appVer"] = version
+    func int_storeApplicationVersion(_ version: String?) {
+        dictionary["appVer"] = version as AnyObject?
     }
     var int_isNewInstallation: Bool {
         return int_applicationVersion == nil
     }
-    func int_isInstallationUpdated(applicationVersion: String?) -> Bool {
+    func int_isInstallationUpdated(_ applicationVersion: String?) -> Bool {
         guard let version = applicationVersion, let stored = int_applicationVersion else { return false }
         return version != stored // Assumption: any version change is considered an update
     }
     var int_installationID: String? {
         return dictionary["installID"] as? String
     }
-    func int_storeInstallationID(newID: String?) {
-        dictionary["installID"] = newID
+    func int_storeInstallationID(_ newID: String?) {
+        dictionary["installID"] = newID as? AnyObject
     }
     var int_installationRequestID: Int? {
         return dictionary["requestID"] as? Int
     }
-    func int_storeInstallationRequestID(newID: Int?) {
-        dictionary["requestID"] = newID
+    func int_storeInstallationRequestID(_ newID: Int?) {
+        dictionary["requestID"] = newID as? AnyObject
     }
     var int_installationCreateDateString: String? {
         return dictionary["date"] as? String
     }
-    func int_storeInstallationCreateDate(newDate: String?) {
-        dictionary["date"] = newDate
+    func int_storeInstallationCreateDate(_ newDate: String?) {
+        dictionary["date"] = newDate as? AnyObject
     }
 }
 
@@ -113,7 +113,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
             let OSVer = json[Installation.OperatingSystemVersion] as? String
             , projectID == 20 &&
                 appID == 10 &&
-                OSVer == UIDevice.currentDevice().systemVersion &&
+                OSVer == UIDevice.current.systemVersion &&
                 installed == "1.0.1" {
                     XCTAssert(true)
         } else {
@@ -127,19 +127,19 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForCreateInstallation()
         
-        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = URLRequest.int_URLRequestForInstallationCreate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
         
         mockResponseForURL(URL,
             method: .POST,
             response: (data: successfulInstallationResponse, statusCode:.NotFound, headers:nil))
         
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        
-        identity?.createInstallation() { (installation, error) -> Void in
-            XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error!.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
-            expectation.fulfill()
+        if  let expectation = expectation(description: "Was expecting a callback to be notified"){
+            identity?.createInstallation() { (installation, error) -> Void in
+                XCTAssert(error != nil, "Expected error")
+                XCTAssert(error!.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+                XCTAssert(error!.httpStatusCode() == HTTPStatusCode.notFound.rawValue, "Expected a NotFound (404) error")
+                expectation.fulfill()
+            }
         }
         
         waitForExpectations()
@@ -152,19 +152,19 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForCreateInstallation()
         
-        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = URLRequest.int_URLRequestForInstallationCreate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
         
         mockResponseForURL(URL,
             method: .POST,
-            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
+            response: (data: failedInstallationResponse, statusCode: .success, headers:nil))
         
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.createInstallation() { (installation, error) -> Void in
-            XCTAssertNotNil(error, "Expected error")
-            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
-            expectation.fulfill()
+        if let expectation = expectation(description: "Was expecting a callback to be notified"){
+            identity?.createInstallation() { (installation, error) -> Void in
+                XCTAssertNotNil(error, "Expected error")
+                XCTAssert(error?.code == RequestError.parseError.rawValue, "Expected parse error")
+                expectation.fulfill()
+            }
         }
-        
         waitForExpectations()
     }
     
@@ -176,26 +176,28 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         mockPrepareForCreateInstallation()
         
         // Mock installation request
-        let jsonData = successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray
+        let jsonData = successfulInstallationResponse.data(using: String.Encoding.utf8)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray
         let data = jsonData.first!
-        mockInstallation.updateWithJSON(data)
+        mockInstallation.updateWithJSON(json: data)
         
         XCTAssert(mockInstallation.isNewInstallation == false, "Should not be new installation")
         
-        let URL = NSURLRequest.int_URLRequestForInstallationCreate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
+        let URL = URLRequest.int_URLRequestForInstallationCreate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
         
-        assertURLNotCalled(URL)
+        assertURLNotCalled(url: URL as NSURL)
         
         identity?.createInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == InstallationError.AlreadyInstalledError.rawValue, "Expected create error")
+            XCTAssert(error!.code == InstallationError.alreadyInstalledError.rawValue, "Expected create error")
         }
     }
     
     // MARK: - Update Installation
     
     func mockPrepareForCreateInstallation() {
-        let installation = mockInstallation
+        guard let installation = mockInstallation else{
+            return
+        }
         
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
         XCTAssert(installation.isNewInstallation == true, "Should be new installation")
@@ -205,17 +207,19 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         XCTAssert(installation.toJSON()[Installation.CreateDate] as? String == nil, "Create date must be nil")
         XCTAssert(installation.toJSON()[Installation.InstalledVersion] as? String == "1.0.1", "Installation version must be 1.0.1")
         XCTAssert(installation.toJSON()[Installation.DeviceTypeId] as? Int == 1, "Device type must be 1 (Smartphone)")
-        XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.currentDevice().systemVersion, "OS must be \(UIDevice.currentDevice().systemVersion)")
+        XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.current.systemVersion, "OS must be \(UIDevice.current.systemVersion)")
     }
     
     func mockPrepareForUpdateInstallation() {
-        var installation = mockInstallation
+        guard var installation = mockInstallation else {
+            return
+        }
         
         mockPrepareForCreateInstallation()
         
         // Mock installation request
-        let jsonData = (successfulInstallationResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
-        installation.updateWithJSON(jsonData)
+        let jsonData = (successfulInstallationResponse.data(using: String.Encoding.utf8)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        installation.updateWithJSON(json: jsonData)
         XCTAssert(installation.isNewInstallation == false, "Should not be new installation")
         
         (installation.applicationVersion as? VersionClass)?.fakeVersion = "1.0.2"
@@ -232,32 +236,32 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = URLRequest.int_URLRequestForInstallationUpdate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url
         
         mockResponseForURL(URL,
             method: .PUT,
-            response: (data: successfulInstallationUpdateResponse, statusCode: .Success, headers:nil))
+            response: (data: successfulInstallationUpdateResponse, statusCode: .success, headers:nil))
         
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.updateInstallation() { (installation, error) -> Void in
-            XCTAssert(error == nil, "Unexpected error")
-            
-            let json = self.mockInstallation.toJSON()
-            if let id = json[Installation.Id] as? Int,
-                let installed = json[Installation.InstalledVersion] as? String,
-                let OSVer = json[Installation.OperatingSystemVersion] as? String
-                , OSVer == UIDevice.currentDevice().systemVersion &&
-                    installed == "1.0.2" &&
-                    id == 1054 {
-                        XCTAssert(true)
-            } else {
-                XCTAssert(false)
+        if let expectation = expectation(description: "Was expecting a callback to be notified"){
+            identity?.updateInstallation() { (installation, error) -> Void in
+                XCTAssert(error == nil, "Unexpected error")
+                
+                let json = self.mockInstallation.toJSON()
+                if let id = json[Installation.Id] as? Int,
+                    let installed = json[Installation.InstalledVersion] as? String,
+                    let OSVer = json[Installation.OperatingSystemVersion] as? String
+                    , OSVer == UIDevice.current.systemVersion &&
+                        installed == "1.0.2" &&
+                        id == 1054 {
+                    XCTAssert(true)
+                } else {
+                    XCTAssert(false)
+                }
+                
+                XCTAssert(self.mockInstallation.isUpdatedInstallation == false)
+                expectation.fulfill()
             }
-            
-            XCTAssert(self.mockInstallation.isUpdatedInstallation == false)
-            expectation.fulfill()
         }
-        
         waitForExpectations()
     }
     
@@ -268,20 +272,20 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = URLRequest.int_URLRequestForInstallationUpdate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url
         
         mockResponseForURL(URL,
             method:.PUT,
             response: (data: successfulInstallationUpdateResponse, statusCode:.NotFound, headers:nil))
         
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
+        if let expectation = expectation(description: "Was expecting a callback to be notified"){
         identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error!.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
+            XCTAssert(error!.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error!.httpStatusCode() == HTTPStatusCode.notFound.rawValue, "Expected a NotFound (404) error")
             expectation.fulfill()
         }
-        
+        }
         waitForExpectations()
     }
     
@@ -292,19 +296,19 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = URLRequest.int_URLRequestForInstallationUpdate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url
         
         mockResponseForURL(URL,
-            method: .PUT,
-            response: (data: failedInstallationResponse, statusCode: .Success, headers:nil))
+                           method: .PUT,
+                           response: (data: failedInstallationResponse, statusCode: .success, headers:nil))
         
-        let expectation = expectationWithDescription("Was expecting a callback to be notified")
-        identity?.updateInstallation() { (installation, error) -> Void in
-            XCTAssert(error != nil, "Expected error")
-            XCTAssert(error!.code == RequestError.ParseError.rawValue, "Expected parse error")
-            expectation.fulfill()
+        if let expectation = expectation(description: "Was expecting a callback to be notified"){
+            identity?.updateInstallation() { (installation, error) -> Void in
+                XCTAssert(error != nil, "Expected error")
+                XCTAssert(error!.code == RequestError.parseError.rawValue, "Expected parse error")
+                expectation.fulfill()
+            }
         }
-        
         waitForExpectations()
     }
     
@@ -315,17 +319,17 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
         
         mockPrepareForUpdateInstallation()
         
-        let jsonData = (successfulInstallationUpdateResponse.dataUsingEncoding(NSUTF8StringEncoding)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
-        mockInstallation.updateWithJSON(jsonData)
+        let jsonData = (successfulInstallationUpdateResponse.data(using: String.Encoding.utf8)!.int_jsonDictionary!["Data"] as! JSONDictionaryArray).first!
+        mockInstallation.updateWithJSON(json: jsonData)
         XCTAssert(mockInstallation.isUpdatedInstallation == false, "Should not be updated version")
         
         
-        let URL = NSURLRequest.int_URLRequestForInstallationUpdate(mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).URL!
-        assertURLNotCalled(URL)
+        let URL = URLRequest.int_URLRequestForInstallationUpdate(installation: mockInstallation, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
+        assertURLNotCalled(url: URL as NSURL)
         
         identity?.updateInstallation() { (installation, error) -> Void in
             XCTAssert(error != nil, "Expected error")
-            XCTAssert(error?.code == InstallationError.AlreadyUpdatedError.rawValue, "Expected update error")
+            XCTAssert(error?.code == InstallationError.alreadyUpdatedError.rawValue, "Expected update error")
         }
     }
 }

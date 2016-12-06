@@ -655,7 +655,7 @@
 					6D51483F1DDB26C2002E056E = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = LZV346N8B3;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 				};
