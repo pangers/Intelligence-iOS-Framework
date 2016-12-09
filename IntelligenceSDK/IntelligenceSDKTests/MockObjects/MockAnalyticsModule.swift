@@ -11,6 +11,11 @@ import UIKit
 @testable import IntelligenceSDK
 
 class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
+    
+    public func startup(completion: @escaping (Bool) -> ()) {
+        completion(true)
+    }
+
 
     var trackedEvents:[Event] = []
     
@@ -22,7 +27,7 @@ class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
         
     }
     
-    func track(_ event: Event) {
+    func track(event: Event) {
         trackedEvents += [event]
     }
     
@@ -33,9 +38,9 @@ class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
         
     }
     
-    func startup(_ completion: (_ success: Bool) -> ()) {
-        completion(true)
-    }
+//    func startup(_ completion: (_ success: Bool) -> ()) {
+//        completion(true)
+//    }
     
     func shutdown() {
         

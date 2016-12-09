@@ -28,8 +28,8 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     // MARK:- Helpers
     
     func mockDownloadGeofencesResponse(_ status: HTTPStatusCode = .success, query: GeofenceQuery, body: String? = nil) {
-        mockResponseForURL(URLRequest.int_URLRequestForDownloadGeofences(mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).URL!,
-            method: .GET,
+        mockResponseForURL(URLRequest.int_URLRequestForDownloadGeofences(oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).url!,
+            method: .get,
             response: getResponse(status, body: body ?? geofencesResponse))
     }
     
@@ -44,7 +44,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
         // Mock a valid token
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
         
-        location!.downloadGeofences(query) { (geofences, error) -> Void in
+        location!.downloadGeofences(queryDetails: query) { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
             XCTAssert(error == nil, "Error occured while parsing a success request")
             expectCallback.fulfill()
@@ -126,7 +126,12 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test Data is invalid, cannot be loaded as JSON. InvalidJSONError
     func testInvalidJSONGeofences() {
         do {
-            Data().write(to: Geofence.jsonPath()!, options: true)
+            guard let path = Geofence.jsonPath() else {
+                return
+            }
+            
+            try Data().write(to: URL(fileURLWithPath: path), options: .atomic)
+            
             let fences = try Geofence.geofencesFromCache()
             XCTAssert(fences.count == 0)
         }

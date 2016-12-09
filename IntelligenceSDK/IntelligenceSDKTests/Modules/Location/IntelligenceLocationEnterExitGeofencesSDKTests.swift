@@ -50,7 +50,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
 
         // Fire the enter geofence with an expectation.
         enterGeofenceExpectation = expectation(description: "Enter geofence")
-        mockLocationManager.fireEnterGeofence(geofence: geofence)
+        mockLocationManager.fireEnterGeofence(geofence)
         waitForExpectations(timeout: 2, handler: nil)
     }
     
@@ -78,7 +78,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         
         // Fire the exit geofence with an expectation.
         exitGeofenceExpectation = expectation(description: "Exit geofence")
-        mockLocationManager.fireExitGeofence(geofence: geofence)
+        mockLocationManager.fireExitGeofence(geofence)
         waitForExpectations(timeout: 2, handler: nil)
     }
     
@@ -87,8 +87,8 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         location.locationDelegate = self
         location.stopMonitoringGeofences()
         
-        mockLocationManager.fireEnterGeofence(geofence: Geofence())
-        mockLocationManager.fireExitGeofence(geofence: Geofence())
+        mockLocationManager.fireEnterGeofence(Geofence())
+        mockLocationManager.fireExitGeofence(Geofence())
     }
 
     func intelligenceLocation(_ location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {

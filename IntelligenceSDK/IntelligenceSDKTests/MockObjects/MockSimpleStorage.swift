@@ -13,14 +13,14 @@ import Foundation
 class MockSimpleStorage: IntelligenceOAuthStorage {
     
     fileprivate var storage: [String: AnyObject?] = [:]
-    
-    @objc subscript(index: String) -> AnyObject? {
+
+    @objc subscript(index: String) -> Any? {
         get {
             guard let obj = storage[index] else { return nil }
             return obj
         }
         set {
-            storage[index] = newValue
+            storage[index] = newValue as AnyObject??
         }
     }
     

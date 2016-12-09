@@ -47,7 +47,7 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
             let _ = try Intelligence(withDelegate:delegateTester, configuration: config, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
-        catch IntelligenceSDK.ConfigurationError.MissingPropertyError {
+        catch IntelligenceSDK.ConfigurationError.missingPropertyError {
             // correct path
         }
         catch {

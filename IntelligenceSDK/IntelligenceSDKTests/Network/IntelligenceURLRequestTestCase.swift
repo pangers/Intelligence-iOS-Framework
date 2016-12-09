@@ -23,9 +23,9 @@ class IntelligenceURLRequestTestCase: IntelligenceBaseTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let user = Intelligence.User(companyId: companyId, username: username, password: password, firstName: firstname, lastName: lastname, avatarURL: avatarURL)
         
-        let request = URLRequest.int_URLRequestForUserCreation(user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
+        let request = URLRequest.int_URLRequestForUserCreation(user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork)
         
-        guard let userDictionary = request.HTTPBody?.int_jsonDictionaryArray?.first else {
+        guard let userDictionary = request.httpBody?.int_jsonDictionaryArray?.first else {
             XCTAssert(false,"Couldn't parse the HTTP Body")
             return
         }

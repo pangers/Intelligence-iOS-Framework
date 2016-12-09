@@ -18,7 +18,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let cfg = genericConfiguration()
         do {
             let config = Intelligence.Configuration()
-            try config.readFromFile("config", inBundle: bundle);
+            try config.readFromFile(fileName: "config", inBundle: bundle);
             XCTAssert(config.clientID == cfg.clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == cfg.clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == cfg.region, "The region is incorrect")
@@ -37,8 +37,8 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let configuration = Intelligence.Configuration()
         configuration.clientID = "CLIENT_ID" // as in file
         configuration.clientSecret = "CLIENT_SECRET" // as in file
-        configuration.region = .Europe
-        configuration.environment = .Production
+        configuration.region = .europe
+        configuration.environment = .production
         
         configuration.applicationID = 10
         configuration.projectID = 20
@@ -53,10 +53,10 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let config = Intelligence.Configuration()
         
         do {
-            try config.readFromFile("Does not exist", inBundle: Bundle.mainBundle())
+            try config.readFromFile(fileName: "Does not exist", inBundle: Bundle.main)
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch let err as ConfigurationError where err == .FileNotFoundError {
+        catch let err as ConfigurationError where err == .fileNotFoundError {
         }
         catch {
             XCTAssert(false, "Unexpected exception type.")
@@ -68,10 +68,10 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
-            try config.readFromFile("wrongjson", inBundle: bundle)
+            try config.readFromFile(fileName: "wrongjson", inBundle: bundle)
             XCTAssert(false, "File is invalid, but the exception is not thrown")
         }
-        catch ConfigurationError.InvalidFileError {
+        catch ConfigurationError.invalidFileError {
             // correct path
         }
         catch {
@@ -84,10 +84,10 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
-            try config.readFromFile("missingproperty", inBundle: bundle)
+            try config.readFromFile(fileName: "missingproperty", inBundle: bundle)
             XCTAssert(false, "File has missing properties, but the exception is not thrown")
         }
-        catch ConfigurationError.MissingPropertyError {
+        catch ConfigurationError.missingPropertyError {
             // correct path
         }
         catch {
@@ -114,7 +114,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
             let _ = try Intelligence(withDelegate: MockIntelligenceDelegate(), configuration: cfg, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
-        catch ConfigurationError.MissingPropertyError {
+        catch ConfigurationError.missingPropertyError {
             // Correct path
             XCTAssertTrue(true)
         }

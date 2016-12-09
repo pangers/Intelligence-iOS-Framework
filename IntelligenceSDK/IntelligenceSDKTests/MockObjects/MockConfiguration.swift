@@ -10,7 +10,7 @@ import Foundation
 
 import IntelligenceSDK
 
-open class MockConfiguration: Intelligence.Configuration {
+  class MockConfiguration: Intelligence.Configuration {
 
     open var mockInvalid:Bool = false
     open var mockMissingProperty: Bool = false
@@ -23,7 +23,7 @@ open class MockConfiguration: Intelligence.Configuration {
         self.applicationID = 123
         self.companyId = 12
         self.region = .europe
-        self.environment = .UAT
+        self.environment = .uat
     }
     
     /// - Returns: A copy of the configuration object.

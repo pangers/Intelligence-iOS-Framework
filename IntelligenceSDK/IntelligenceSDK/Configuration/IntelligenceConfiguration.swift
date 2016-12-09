@@ -47,12 +47,12 @@ private enum ConfigurationKey: String {
     }
 }
 
-public extension Intelligence {
+extension Intelligence {
     
     /// This class holds the data to configure the intelligence SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Intelligence SDK.
-    @objc(INTConfiguration) public class Configuration: NSObject {
+    @objc(INTConfiguration) open class Configuration: NSObject {
 
         /// The client ID
         public var clientID = ""
@@ -108,7 +108,7 @@ public extension Intelligence {
         }
         
         /// - Returns: A copy of the configuration object.
-        public func clone() -> Configuration {
+        open func clone() -> Configuration {
             let copy = Configuration()
             copy.region = self.region
             copy.environment = self.environment
@@ -179,13 +179,13 @@ public extension Intelligence {
         
         /// - Returns: True if the configuration is correct and can be used to initialize
         /// the Intelligence SDK.
-        @objc public var isValid: Bool {
+        @objc open var isValid: Bool {
             // For now only check if there is a missing property.
             return !self.hasMissingProperty
         }
         
         /// - Returns: True if there is a missing property in the configuration
-        @objc public var hasMissingProperty: Bool {
+        @objc open var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
                 applicationID <= 0 || region == nil || environment == nil || companyId <= 0 || sdkUserRole <= 0
         }

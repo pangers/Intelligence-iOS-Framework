@@ -55,7 +55,7 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
         oauth.userId = fakeUser.userId
         oauth.refreshToken = userRefreshToken
         oauth.accessToken = userAccessToken
-        if oauth.tokenType == .LoggedInUser {
+        if oauth.tokenType == .loggedInUser {
             developerLoggedIn = true
         }
     }
@@ -68,8 +68,8 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
     
     func reset(_ oauth: IntelligenceOAuthProtocol) {
         var oauth = oauth
-        IntelligenceOAuth.reset(oauth)
-        if oauth.tokenType == .LoggedInUser {
+        IntelligenceOAuth.reset(oauth: &oauth)
+        if oauth.tokenType == .loggedInUser {
             developerLoggedIn = false
         }
     }

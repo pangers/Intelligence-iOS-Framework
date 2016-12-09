@@ -17,7 +17,7 @@ class MockTimeTrackerStorage: TimeTrackerStorageProtocol {
         duration = nil
     }
     
-    func update(_ seconds: UInt64) {
+    func update(seconds: UInt64) {
         duration = seconds
     }
     

@@ -78,7 +78,8 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         analytics.pause()
         analytics.resume()
         
-        XCTAssert(analytics.timeTracker!.seconds - seconds > 0)
+        let updatedSecond = analytics.timeTracker!.seconds
+        XCTAssert((Int)(updatedSecond - seconds) > 0)
         
         analytics.pause()
         
@@ -127,7 +128,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         
         let actualStorage = TimeTrackerStorage(userDefaults: UserDefaults())
         actualStorage.reset()
-        actualStorage.update(10)
+        actualStorage.update(seconds: 10)
         XCTAssert(actualStorage.seconds() == 10)
         actualStorage.reset()
         XCTAssert(actualStorage.seconds() == nil)
@@ -156,7 +157,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         }
         XCTAssert(myQueue.maxEvents == 100, "Expected 100 max")
         XCTAssert(myQueue.isPaused, "Expected to start paused")
-        myQueue.runTimer(Timer())
+        myQueue.runTimer(timer: Timer())
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
         myQueue.startQueue()    // Call second time to check 'isPaused'.
@@ -181,7 +182,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: String.Encoding.utf8.rawValue) as! String
         let URL = URLRequest.int_URLRequestForAnalytics(json: eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
         mockResponseForURL(URL,
-            method: .POST,
+            method: .post,
             response: (data: status == .success ? successfulResponse : nil, statusCode: status, headers:nil))
         analytics.sendEvents(events: eventsJSON, completion: completion)
     }
@@ -332,12 +333,12 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.NotFound,
+        mockSendAnalytics(.notFound,
             event: genericEvent(),
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
+            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.notFound.rawValue, "Expected a NotFound (404) error")
             expectCallback.fulfill()
         })
         
@@ -355,7 +356,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
 
         // Mock the 400 response with error invalid_request.
         mockResponseForURL(URL,
-            method: .POST,
+            method: .post,
             response: (data: failureResponse, statusCode: .badRequest, headers:nil))
         
         analytics.sendEvents(events: []) { (error) -> () in

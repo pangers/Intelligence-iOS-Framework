@@ -30,9 +30,9 @@ class IntelligenceBaseTestCase : XCTestCase {
     
     let anonymousTokenSuccessfulResponse = "{\"access_token\":\"\(applicationAccessToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
     let loggedInTokenSuccessfulResponse = "{\"access_token\":\"\(userAccessToken)=\",\"refresh_token\":\"\(userRefreshToken)=\",\"token_type\":\"bearer\",\"expires_in\":7200}"
-    let tokenMethod = HTTPRequestMethod.POST
+    let tokenMethod = HTTPRequestMethod.post
     var tokenUrl: URL? {
-        return URLRequest.int_URLRequestForLogin(mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        return URLRequest.int_URLRequestForLogin(oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url
     }
     
     override func setUp() {
@@ -44,7 +44,7 @@ class IntelligenceBaseTestCase : XCTestCase {
             mockDelegateWrapper = MockIntelligenceDelegateWrapper(expectCreationFailed: true, expectLoginFailed: true, expectRoleFailed: true)
             mockNetwork = Network(delegate: mockDelegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: mockConfiguration), oauthProvider: mockOAuthProvider)
             mockInstallationStorage = InstallationStorage()
-            mockInstallation = MockInstallation.newInstance(configuration: mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
+            mockInstallation = MockInstallation.newInstance(mockConfiguration, storage: mockInstallationStorage, oauthProvider: mockOAuthProvider)
             
             try intelligence = Intelligence(
                 withDelegate: mockDelegateWrapper.mockDelegate,
@@ -62,11 +62,12 @@ class IntelligenceBaseTestCase : XCTestCase {
             
             let fakeModule = IntelligenceModule(withDelegate: mockDelegateWrapper, network: mockNetwork, configuration: mockConfiguration)
             
-            let expectation = expectation(description: "Immediate Expectation")
+            let testExpectation = expectation(description: "Immediate Expectation")
+           
             fakeModule.startup { (success) in
                 XCTAssertTrue(success)
                 fakeModule.shutdown()
-                expectation.fulfill()
+                testExpectation.fulfill()
             }
             waitForExpectations()
             
@@ -98,12 +99,12 @@ class IntelligenceBaseTestCase : XCTestCase {
             runs += [ (callbacks?[i], responses[i], expectations?[i] ??
                 expectation(description: "mock \(url) iteration \(i)")) ]
         }
-        let stub = OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                if let method = method?.rawValue , method != request.HTTPMethod {
+        let stub = OHHTTPStubs.stubRequests(
+            passingTest: { request in
+                if let method = method?.rawValue , method != request.httpMethod {
                     return false
                 }
-                return request.URL! == url
+                return request.url! == url
             },
             withStubResponse: { _ in
                 let (callback, response, expectation) = runs.first!
@@ -151,13 +152,13 @@ class IntelligenceBaseTestCase : XCTestCase {
     }
     
     func assertURLNotCalled(_ url:URL, method:HTTPRequestMethod? = .get) {
-        OHHTTPStubs.stubRequestsPassingTest(
-            { request in
-                if let method = method?.rawValue , method != request.HTTPMethod {
+        OHHTTPStubs.stubRequests(
+            passingTest: { request in
+                if let method = method?.rawValue , method != request.httpMethod {
                     return false
                 }
                 
-                XCTAssertFalse(request.URL! == url,"URL \(url) was called.")
+                XCTAssertFalse(request.url! == url,"URL \(url) was called.")
                 return false
             },
             withStubResponse: { _ in
@@ -166,7 +167,7 @@ class IntelligenceBaseTestCase : XCTestCase {
     }
     
     func waitForExpectations() {
-        waitForExpectationsWithTimeout(expectationTimeout) { (error:NSError?) -> Void in
+        waitForExpectations(timeout: expectationTimeout) { (error) -> Void in
             XCTAssertNil(error, "Error in expectation: \(error)")
         }
     }
