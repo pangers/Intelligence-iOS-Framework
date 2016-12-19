@@ -4,11 +4,32 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Intell
 
 # Getting Started #
 
-In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
+# Importing SDK #
 
-## Importing SDK ##
+#### For Cocoapods project ####
 
-First of all, create a new Workspace to embed both your project and the IntelligenceSDK framework project.
+For Cocoapods project Intelligence SDK uses private CocoaPods to install and manage dependencies. Open a terminal window and navigate to the location of the Xcode project for your application. If you have not already created a Podfile for your application, create one now:
+
+    pod init
+
+Open the Podfile created for your application and add the following:
+
+    pod 'IntelligenceSDK', :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git
+    
+Save the file and run:
+    
+    pod install
+        
+This creates an .xcworkspace file for your application. Use this file for all future development on your application.
+
+To support Swift 2.0 and IOS deployment target 7.0 add the following amd run pod install:
+    
+    pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+
+
+#### For Non-Cocoapods project ####
+
+Create a new Workspace to embed both your project and the IntelligenceSDK framework project. If your project already have Workspace,add IntelligenceSDK framework project into your workspace.
 
 Once you get a workspace with both projects coexisting in it, add the SDK in the list of Linked Frameworks and Libraries so that it is accessible from your own project:
 
