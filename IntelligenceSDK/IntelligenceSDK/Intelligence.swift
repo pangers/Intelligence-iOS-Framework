@@ -9,34 +9,35 @@
 import Foundation
 
 /// Mandatory public protocol developers must implement in order to respond to events correctly.
+
 @objc(INTDelegate)
 public protocol IntelligenceDelegate {
     /// Credentials provided are incorrect.
     /// Will not distinguish between incorrect client or user credentials.
     func credentialsIncorrect(for intelligence: Intelligence)
-    
+
     /// Account has been disabled and no longer active.
     /// Credentials are no longer valid.
     func accountDisabled(for intelligence: Intelligence)
-    
+
     /// Account has failed to authentication multiple times and is now locked.
     /// Requires an administrator to unlock the account.
     func accountLocked(for intelligence: Intelligence)
-    
+
     /// This error and description is only returned from the Validate endpoint
     /// if providing an invalid or expired token.
     func tokenInvalidOrExpired(for intelligence: Intelligence)
-    
+
     /// Unable to create SDK user, this may occur if a user with the randomized
     /// credentials already exists (highly unlikely) or your Application is
     /// configured incorrectly and has the wrong permissions.
     func userCreationFailed(for intelligence: Intelligence)
-    
+
     /// User is required to login again, developer must implement this method
     /// you may present a 'Login Screen' or silently call identity.login with
     /// stored credentials.
     func userLoginRequired(for intelligence: Intelligence)
-    
+
     /// Unable to assign provided sdk_user_role to your newly created user.
     /// This may occur if the Application is configured incorrectly in the backend
     /// and doesn't have the correct permissions or the role doesn't exist.
@@ -44,6 +45,7 @@ public protocol IntelligenceDelegate {
 }
 
 /// Wrapping protocol used by modules to pass back errors to Intelligence.
+
 internal protocol IntelligenceInternalDelegate {
     // Implementation will call credentialsIncorrectForIntelligence
     func credentialsIncorrect()
@@ -62,70 +64,71 @@ internal protocol IntelligenceInternalDelegate {
 }
 
 internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
-    
+
     var intelligence: Intelligence!
     var delegate: IntelligenceDelegate!
-    
+
     // MARK:- IntelligenceInternalDelegate
 
     internal func credentialsIncorrect() {
         delegate.credentialsIncorrect(for: intelligence)
     }
-    
+
     internal func accountDisabled() {
         delegate.accountDisabled(for: intelligence)
     }
-    
+
     internal func accountLocked() {
         delegate.accountLocked(for: intelligence)
     }
-    
+
     internal func tokenInvalidOrExpired() {
         delegate.tokenInvalidOrExpired(for: intelligence)
     }
-    
+
     internal func userCreationFailed() {
         delegate.userCreationFailed(for: intelligence)
     }
-    
+
     internal func userLoginRequired() {
         delegate.userLoginRequired(for: intelligence)
     }
-    
+
     internal func userRoleAssignmentFailed() {
         delegate.userRoleAssignmentFailed(for: intelligence)
     }
-    
+
 }
 
 
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
+
 public final class Intelligence: NSObject {
-    
+
     /// - Returns: A **copy** of the configuration.
     public let configuration: Intelligence.Configuration
-    
+
     /// Responsible for propogating events back to App.
     internal var delegateWrapper: IntelligenceDelegateWrapper!
-    
+
     // MARK: - Modules
-    
+
     /// The identity module, enables user management in the Intelligence backend.
     @objc public internal(set) var identity: IdentityModuleProtocol!
-    
+
     /// Analytics instance that can be used for posting Events.
     @objc public internal(set) var analytics: AnalyticsModuleProtocol!
-    
+
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
     @objc public internal(set) var location: LocationModuleProtocol!
-    
+
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [ModuleProtocol] {
         return [identity, location, analytics]
     }
-    
+
     // MARK: - Initializers
-    
+
     /// (INTERNAL) Initializes the Intelligence entry point with all objects necessary.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter delegateWrapper: The delegate wrapper so we intercept calls to it.
@@ -137,46 +140,45 @@ public final class Intelligence: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Intelligence SDK base class.
     internal init(
-        withDelegate delegate: IntelligenceDelegate,
-        delegateWrapper: IntelligenceDelegateWrapper,
-        network: Network? = nil,
-        configuration intelligenceConfiguration: Intelligence.Configuration,
-        oauthProvider: IntelligenceOAuthProvider,
-        installation: Installation,
-        locationManager: LocationManager
-        ) throws
-    {
+            withDelegate delegate: IntelligenceDelegate,
+            delegateWrapper: IntelligenceDelegateWrapper,
+            network: Network? = nil,
+            configuration intelligenceConfiguration: Intelligence.Configuration,
+            oauthProvider: IntelligenceOAuthProvider,
+            installation: Installation,
+            locationManager: LocationManager
+    ) throws {
         self.configuration = intelligenceConfiguration.clone()
         super.init()
-        
+
         delegateWrapper.delegate = delegate
         delegateWrapper.intelligence = self
-        
+
         let network = network ?? Network(delegate: delegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: configuration), oauthProvider: oauthProvider)
-        
+
         if intelligenceConfiguration.hasMissingProperty {
             throw ConfigurationError.missingPropertyError
         }
-        
+
         if !intelligenceConfiguration.isValid {
             throw ConfigurationError.invalidPropertyError
         }
-        
+
         // Create shared objects for modules
         let internalConfiguration = intelligenceConfiguration.clone()    // Copy for SDK
-        
+
         // Modules
         identity = IdentityModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
         analytics = AnalyticsModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, installation: installation)
         location = LocationModule(withDelegate: delegateWrapper, network: network, configuration: internalConfiguration, locationManager: locationManager)
-        
+
         let internalAnalytics = analytics as! AnalyticsModule
         let internalLocation = location as! LocationModule
-        
+
         internalAnalytics.locationProvider = (location as? LocationModuleProvider)
         internalLocation.analytics = analytics
     }
-    
+
     /// (INTERNAL) Initializes the Intelligence entry point with a configuration object.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter configuration: Configuration object to configure instance of Intelligence with, will fail if configured incorrectly.
@@ -184,23 +186,22 @@ public final class Intelligence: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Intelligence SDK base class.
     internal convenience init(
-        withDelegate delegate: IntelligenceDelegate,
-        configuration intelligenceConfiguration: Intelligence.Configuration,
-        oauthProvider: IntelligenceOAuthProvider) throws
-    {
+            withDelegate delegate: IntelligenceDelegate,
+            configuration intelligenceConfiguration: Intelligence.Configuration,
+            oauthProvider: IntelligenceOAuthProvider) throws {
         try self.init(
-            withDelegate: delegate,
-            delegateWrapper: IntelligenceDelegateWrapper(),
-            network: nil,
-            configuration: intelligenceConfiguration,
-            oauthProvider: oauthProvider,
-            installation: Installation(configuration: intelligenceConfiguration.clone(),
-            applicationVersion: Bundle.main,
-            installationStorage: UserDefaults(),
-            oauthProvider: oauthProvider),
-            locationManager: LocationManager())
+                withDelegate: delegate,
+                delegateWrapper: IntelligenceDelegateWrapper(),
+                network: nil,
+                configuration: intelligenceConfiguration,
+                oauthProvider: oauthProvider,
+                installation: Installation(configuration: intelligenceConfiguration.clone(),
+                        applicationVersion: Bundle.main,
+                        installationStorage: UserDefaults(),
+                        oauthProvider: oauthProvider),
+                locationManager: LocationManager())
     }
-    
+
     /// (INTERNAL) Provides a convenience initializer to load the configuration from a JSON file.
     /// - parameter delegate:      Object that responds to delegate events.
     /// - parameter file:          The JSON file name (no extension) of the configuration.
@@ -209,36 +210,35 @@ public final class Intelligence: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Intelligence SDK base class.
     convenience internal init(
-        withDelegate delegate: IntelligenceDelegate,
-        file: String,
-        inBundle: Bundle = Bundle.main,
-        oauthProvider: IntelligenceOAuthProvider) throws
-    {
+            withDelegate delegate: IntelligenceDelegate,
+            file: String,
+            inBundle: Bundle = Bundle.main,
+            oauthProvider: IntelligenceOAuthProvider) throws {
         try self.init(
-            withDelegate: delegate,
-            configuration: Configuration.configuration(fromFile: file, inBundle: inBundle),
-            oauthProvider: oauthProvider)
+                withDelegate: delegate,
+                configuration: Configuration.configuration(fromFile: file, inBundle: inBundle),
+                oauthProvider: oauthProvider)
     }
-    
+
     /// Initializes the Intelligence entry point with a configuration object.
     /// - parameter delegate: The delegate to call for events propagated by Intelligence modules.
     /// - parameter configuration: Instance of the Configuration class, object will be copied to avoid mutability.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Intelligence SDK base class.
     convenience public init(
-        withDelegate delegate: IntelligenceDelegate,
-        configuration intelligenceConfiguration: Intelligence.Configuration) throws
-    {
+            withDelegate delegate: IntelligenceDelegate,
+            configuration intelligenceConfiguration: Intelligence.Configuration) throws {
         // This let is here to avoid the swift garbage collector from releasing
         // this memory immediately after initialization, and before calling the
         // self.init method. Seems to be a bug in Swift.
         let provider = IntelligenceOAuthDefaultProvider()
         try self.init(
-            withDelegate: delegate,
-            configuration:intelligenceConfiguration,
-            oauthProvider: provider)
+                withDelegate: delegate,
+                configuration: intelligenceConfiguration,
+                oauthProvider: provider)
+        validateConfigration(config: intelligenceConfiguration, oauthProvider: provider)
     }
-    
+
     /// Initialize Intelligence with a configuration file.
     /// - parameter delegate: The delegate to call for events propagated by Intelligence modules.
     /// - parameter file:     The JSON file name (no extension) of the configuration.
@@ -246,21 +246,21 @@ public final class Intelligence: NSObject {
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Intelligence SDK base class.
     convenience public init(
-        withDelegate delegate: IntelligenceDelegate,
-        file: String,
-        inBundle: Bundle = Bundle.main) throws
-    {
+            withDelegate delegate: IntelligenceDelegate,
+            file: String,
+            inBundle: Bundle = Bundle.main) throws {
         // This let is here to avoid the swift garbage collector from releasing
         // this memory immediately after initialization, and before calling the
         // self.init method. Seems to be a bug in Swift.
         let provider = IntelligenceOAuthDefaultProvider()
         try self.init(
-            withDelegate: delegate,
-            file:file,
-            inBundle:inBundle,
-            oauthProvider: provider)
+                withDelegate: delegate,
+                file: file,
+                inBundle: inBundle,
+                oauthProvider: provider)
+        validateConfigration(config: self.configuration, oauthProvider: provider)
     }
-    
+
     /// Starts up the Intelligence SDK modules.
     /// - parameter callback: Called when the startup of Intelligence finishes. Receives in a boolean 
     /// whether the startup was successful or not. This call has to finish successfully
@@ -273,30 +273,64 @@ public final class Intelligence: NSObject {
         // - Calls Application Installed/Updated/Opened.
         // - Initialises Geofence load/download.
         // - Startup Events module, send stored events.
-        
-        func moduleToStartup(module:Int) {
+
+        func moduleToStartup(module: Int) {
             if module >= modules.count {
                 completion(true)
                 return
             }
-            
+
             modules[module].startup { (success) -> () in
-                if ( success ) {
+                if (success) {
                     moduleToStartup(module: module + 1)
-                }
-                else {
+                } else {
                     completion(false)
                 }
             }
         }
-        
+
         moduleToStartup(module: 0)
     }
-    
+
+    //If there is a change in configuration.This method will reset all the token from the keychain.
+    private func validateConfigration(config: Intelligence.Configuration, oauthProvider: IntelligenceOAuthDefaultProvider) {
+
+        guard  let configData = UserDefaults.standard.object(forKey: "IntelligenceConfiguations") as? Data else {
+            guard  let data = config.getJsonData() else {
+                return
+            }
+            UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
+            return
+        }
+
+        //read data from use default
+        if let configuration = try? Configuration.init(fromData: configData) {
+            if (config != configuration) {
+                var keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.application.rawValue)
+                keyChain.clearAllData()
+
+                keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.sdkUser.rawValue)
+                keyChain.clearAllData()
+
+                keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.loggedInUser.rawValue)
+                keyChain.clearAllData()
+
+                IntelligenceOAuth.reset(oauth: &oauthProvider.applicationOAuth)
+                IntelligenceOAuth.reset(oauth: &oauthProvider.sdkUserOAuth)
+                IntelligenceOAuth.reset(oauth: &oauthProvider.loggedInUserOAuth)
+
+                if let data = config.getJsonData() {
+                    UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
+                    UserDefaults.standard.synchronize()
+                }
+            }
+        }
+    }
+
     /// Shutdowns the Intelligence SDK modules. After shutting down, you'll have to
     /// startup again before being able to use Intelligence reliably again.
     public func shutdown() {
-        modules.forEach{
+        modules.forEach {
             $0.shutdown()
         }
     }
