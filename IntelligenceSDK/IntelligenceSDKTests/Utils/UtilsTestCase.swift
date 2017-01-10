@@ -155,7 +155,8 @@ class UtilsTestCase: XCTestCase {
         XCTAssert("1".isContained(string: "123"), "A substring of the string contains the second string.")
         XCTAssert(!"PADDING123PADDING".isContained(string: "123"), "Strings contain.")
     }
-    
+    //This init test is failing because of IOS 10.x simulator issue.
+    //http://stackoverflow.com/questions/20344255/secitemadd-and-secitemcopymatching-returns-error-code-34018-errsecmissingentit/22305193#22305193
     func testKeychainSubscript() {
         let defaults = IntelligenceKeychain()
         let key = "test"
