@@ -42,7 +42,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         // Start monitoring with an expectation.
         startMonitorGeofenceExpectation = expectation(description: "Start monitoring")
         location.startMonitoringGeofences(geofences: geofences)
-        waitForExpectations(timeout: 2, handler: nil)
+        waitForExpectations(timeout: 20, handler: nil)
 
         // After notifying of didStartMonitoring, there's a brief period in which we don't have
         // the correct monitoredRegions in the CLLocationManager. This sleeps helps sort that out.
@@ -51,7 +51,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         // Fire the enter geofence with an expectation.
         enterGeofenceExpectation = expectation(description: "Enter geofence")
         mockLocationManager.fireEnterGeofence(geofence)
-        waitForExpectations(timeout: 2, handler: nil)
+        waitForExpectations(timeout: 20, handler: nil)
     }
     
     func testExitGeofenceNotify() {
@@ -91,7 +91,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         mockLocationManager.fireExitGeofence(Geofence())
     }
 
-    func intelligenceLocation(_ location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
+    @objc(intelligenceLocationWithLocation:didEnterGeofence:) func intelligenceLocation(location: LocationModuleProtocol, didEnterGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = enterGeofenceExpectation else {
@@ -102,7 +102,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
         enterGeofenceExpectation = nil
     }
     
-    func intelligenceLocation(_ location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
+    @objc(intelligenceLocationWithLocation:didExitGeofence:) func intelligenceLocation(location: LocationModuleProtocol, didExitGeofence geofence: Geofence) {
         XCTAssertFalse(assertNotCalled)
         
         guard let expectation = exitGeofenceExpectation else {
@@ -114,7 +114,7 @@ class IntelligenceLocationEnterExitGeofencesSDKTests: IntelligenceLocationBaseTe
     }
     
     
-    func intelligenceLocation(_ location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
+    @objc(intelligenceLocationWithLocation:didStartMonitoringGeofence:) func intelligenceLocation(location: LocationModuleProtocol, didStartMonitoringGeofence: Geofence) {
         guard let expectation = startMonitorGeofenceExpectation else {
             return
         }
