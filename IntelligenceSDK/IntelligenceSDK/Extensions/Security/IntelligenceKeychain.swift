@@ -9,33 +9,32 @@
 import Foundation
 
 internal final class IntelligenceKeychain: TSDKeychain, IntelligenceOAuthStorage {
-    
+
     init(account: String = "IntelligenceSDK") {
         super.init(account, service: "com.tigerspike.IntelligenceSDK")
     }
-    
+
     private func keyValues() -> NSMutableDictionary {
         return executeManagedRequest(requestType: .read)?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
     }
-    
+
     private func object(for key: String) -> Any? {
         let value = keyValues()[key]
         return value
     }
-    
+
     private func setObject(value: Any, for key: String) {
         let values = keyValues()
         values[key] = value
         executeManagedRequest(requestType: .update, keyValues: values)
     }
-    
+
     private func removeObject(for key: String) {
         let values = keyValues()
-        values.removeObject(forKey:
-            key)
+        values.removeObject(forKey: key)
         executeManagedRequest(requestType: .update, keyValues: values)
     }
-    
+
     // Subscript implementation
     @objc subscript(index: String) -> Any? {
         get {
@@ -48,8 +47,13 @@ internal final class IntelligenceKeychain: TSDKeychain, IntelligenceOAuthStorage
                 removeObject(for: index)
                 return
             }
-            
+
             setObject(value: value, for: index)
         }
+    }
+
+    public func clearAllData() {
+        let values = keyValues()
+        executeManagedRequest(requestType: .delete, keyValues: values)
     }
 }
