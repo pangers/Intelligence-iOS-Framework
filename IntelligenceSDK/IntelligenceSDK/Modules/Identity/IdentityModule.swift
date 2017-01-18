@@ -115,6 +115,9 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 // Store credentials in keychain.
                 oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
                 oauth.userId = serverUser?.userId
+                
+                //Post the sdk user created event.
+                EventTypes.UserCreated.saveToUserDefault(Obj: true)
             }
         }
     }
@@ -183,9 +186,20 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                             
                             return
                         }
-                    
+                        
                         // Installation can succeed without a user id
-                        identity.createInstallation(callback: nil)
+                        identity.createInstallation(callback: { (installation, error) in
+                            if nil == error {
+                                EventTypes.ApplicationInstall.saveToUserDefault(Obj: true)
+                            }
+                        })
+                    
+                        identity.updateInstallation(callback: { (installation, error) in
+                            if nil == error {
+                                EventTypes.ApplicationUpdate.saveToUserDefault(Obj: true)
+                            }
+                        })
+                        
                         identity.updateInstallation(callback: nil)
                         
                         // Grab our user ID.
