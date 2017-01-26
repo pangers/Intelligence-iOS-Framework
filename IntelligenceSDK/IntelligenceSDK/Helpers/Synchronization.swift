@@ -17,7 +17,7 @@ to deadlocks.
 - parameter lock:    The lock to use as a semaphore
 - parameter closure: The closure to run thread safely.
 */
-internal func synced(lock: Any, closure: () -> Void) {
+internal func synced(lock: AnyObject, closure: () -> Void) {
     objc_sync_enter(lock)
     closure()
     objc_sync_exit(lock)

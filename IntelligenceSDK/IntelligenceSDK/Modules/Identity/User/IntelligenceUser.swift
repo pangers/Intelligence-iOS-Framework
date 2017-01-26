@@ -161,6 +161,15 @@ public extension Intelligence {
             return ""
         }
         
+        var hashPassWord : String? {
+            
+            guard  let password = password else {
+                return nil
+            }
+            
+            return MD5(password)
+        }
+        
         /// The user type will always be User.
         var userTypeId: Int {
             return UserType.User.rawValue
@@ -186,7 +195,7 @@ public extension Intelligence {
             
             // Optionally add a bunch of key-values to the dictionary...
             dictionary <-? (lastNameKey, lastName)
-            dictionary <-? (passwordKey, password)
+            dictionary <-? (passwordKey, hashPassWord)
             dictionary <-? (avatarURLKey, avatarURL)
             
             return dictionary

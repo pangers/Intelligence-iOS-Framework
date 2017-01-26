@@ -109,7 +109,7 @@ internal extension URLRequest {
         } else {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
             body[HTTPBodyUsernameKey] = oauth.username!
-            body[HTTPBodyPasswordKey] = oauth.password!
+            body[HTTPBodyPasswordKey] = MD5(oauth.password!)
         }
         
         request.allHTTPHeaderFields = int_HTTPHeaders()

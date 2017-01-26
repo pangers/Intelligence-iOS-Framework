@@ -26,7 +26,6 @@
 		6DC34CFA1DDB26FB00FC3306 /* TSDOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CAA1DDB26FB00FC3306 /* TSDOperation.swift */; };
 		6DC34CFB1DDB26FB00FC3306 /* IntelligenceKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CAC1DDB26FB00FC3306 /* IntelligenceKeychain.swift */; };
 		6DC34CFC1DDB26FB00FC3306 /* TSDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CAD1DDB26FB00FC3306 /* TSDKeychain.swift */; };
-		6DC34CFD1DDB26FB00FC3306 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CAF1DDB26FB00FC3306 /* Synchronization.swift */; };
 		6DC34CFE1DDB26FB00FC3306 /* Intelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CB01DDB26FB00FC3306 /* Intelligence.swift */; };
 		6DC34CFF1DDB26FB00FC3306 /* IntelligenceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CB11DDB26FB00FC3306 /* IntelligenceError.swift */; };
 		6DC34D001DDB26FB00FC3306 /* AnalyticsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CB41DDB26FB00FC3306 /* AnalyticsModule.swift */; };
@@ -102,6 +101,8 @@
 		6DC34D6C1DDB288000FC3306 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D691DDB288000FC3306 /* config.json */; };
 		6DC34D6D1DDB288000FC3306 /* missingproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6A1DDB288000FC3306 /* missingproperty.json */; };
 		6DC34D6E1DDB288000FC3306 /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6B1DDB288000FC3306 /* wrongjson.json */; };
+		D635304E1E39CB64005110DE /* MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = D635304C1E39CB64005110DE /* MD5.swift */; };
+		D635304F1E39CB64005110DE /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D635304D1E39CB64005110DE /* Synchronization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,7 +138,6 @@
 		6DC34CAA1DDB26FB00FC3306 /* TSDOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDOperation.swift; sourceTree = "<group>"; };
 		6DC34CAC1DDB26FB00FC3306 /* IntelligenceKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceKeychain.swift; sourceTree = "<group>"; };
 		6DC34CAD1DDB26FB00FC3306 /* TSDKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSDKeychain.swift; sourceTree = "<group>"; };
-		6DC34CAF1DDB26FB00FC3306 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		6DC34CB01DDB26FB00FC3306 /* Intelligence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Intelligence.swift; sourceTree = "<group>"; };
 		6DC34CB11DDB26FB00FC3306 /* IntelligenceError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceError.swift; sourceTree = "<group>"; };
 		6DC34CB41DDB26FB00FC3306 /* AnalyticsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsModule.swift; sourceTree = "<group>"; };
@@ -213,6 +213,8 @@
 		6DC34D691DDB288000FC3306 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		6DC34D6A1DDB288000FC3306 /* missingproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = missingproperty.json; sourceTree = "<group>"; };
 		6DC34D6B1DDB288000FC3306 /* wrongjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wrongjson.json; sourceTree = "<group>"; };
+		D635304C1E39CB64005110DE /* MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MD5.swift; sourceTree = "<group>"; };
+		D635304D1E39CB64005110DE /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,9 +245,9 @@
 				6DC34CB11DDB26FB00FC3306 /* IntelligenceError.swift */,
 				6DC34C991DDB26FB00FC3306 /* Configuration */,
 				6DC34C9D1DDB26FB00FC3306 /* Extensions */,
-				6DC34CAE1DDB26FB00FC3306 /* Helper */,
 				6DC34CB21DDB26FB00FC3306 /* Modules */,
 				6DC34CDF1DDB26FB00FC3306 /* Network */,
+				D635304B1E39CB64005110DE /* Helpers */,
 			);
 			path = IntelligenceSDK;
 			sourceTree = "<group>";
@@ -311,14 +313,6 @@
 				6DC34CAD1DDB26FB00FC3306 /* TSDKeychain.swift */,
 			);
 			path = Security;
-			sourceTree = "<group>";
-		};
-		6DC34CAE1DDB26FB00FC3306 /* Helper */ = {
-			isa = PBXGroup;
-			children = (
-				6DC34CAF1DDB26FB00FC3306 /* Synchronization.swift */,
-			);
-			path = Helper;
 			sourceTree = "<group>";
 		};
 		6DC34CB21DDB26FB00FC3306 /* Modules */ = {
@@ -586,6 +580,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D635304B1E39CB64005110DE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D635304C1E39CB64005110DE /* MD5.swift */,
+				D635304D1E39CB64005110DE /* Synchronization.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -727,10 +730,10 @@
 				6DC34CED1DDB26FB00FC3306 /* IntelligenceEnvironment.swift in Sources */,
 				6DC34CF91DDB26FB00FC3306 /* String.swift in Sources */,
 				6DC34CF61DDB26FB00FC3306 /* URLSession+Intelligence.swift in Sources */,
-				6DC34CFD1DDB26FB00FC3306 /* Synchronization.swift in Sources */,
 				6DC34D081DDB26FB00FC3306 /* AnalyticsRequestOperation.swift in Sources */,
 				6DC34CFC1DDB26FB00FC3306 /* TSDKeychain.swift in Sources */,
 				6DC34D0C1DDB26FB00FC3306 /* DeleteIdentifierRequestOperation.swift in Sources */,
+				D635304F1E39CB64005110DE /* Synchronization.swift in Sources */,
 				6DC34D1B1DDB26FB00FC3306 /* Geofence.swift in Sources */,
 				6DC34D0A1DDB26FB00FC3306 /* CreateIdentifierRequestOperation.swift in Sources */,
 				6DC34D161DDB26FB00FC3306 /* GetUserRequestOperation.swift in Sources */,
@@ -746,6 +749,7 @@
 				6DC34D241DDB26FB00FC3306 /* IntelligenceAPIPipeline.swift in Sources */,
 				6DC34CF21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift in Sources */,
 				6DC34CF81DDB26FB00FC3306 /* SequenceType+Intelligence.swift in Sources */,
+				D635304E1E39CB64005110DE /* MD5.swift in Sources */,
 				6DC34CFF1DDB26FB00FC3306 /* IntelligenceError.swift in Sources */,
 				6DC34D041DDB26FB00FC3306 /* OpenApplicationEvent.swift in Sources */,
 				6DC34CF31DDB26FB00FC3306 /* JSONSerializationHelpers.swift in Sources */,
