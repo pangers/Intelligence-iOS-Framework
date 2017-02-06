@@ -317,9 +317,10 @@ public final class Intelligence: NSObject {
             guard  let data = config.getJsonData() else {
                 return
             }
-          
+            //Cases like,user deleted the app and install it back. Since data from 
+            //Keychain nor get cleared.
             clearAllData()
-
+            
             UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
             UserDefaults.standard.synchronize()
             return
