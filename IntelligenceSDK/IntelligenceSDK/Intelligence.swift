@@ -295,29 +295,42 @@ public final class Intelligence: NSObject {
     //If there is a change in configuration.This method will reset all the token from the keychain.
     private func validateConfigration(config: Intelligence.Configuration, oauthProvider: IntelligenceOAuthDefaultProvider) {
 
+        
+        func clearAllData(){
+            
+            var keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.application.rawValue)
+            keyChain.clearAllData()
+            
+            keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.sdkUser.rawValue)
+            keyChain.clearAllData()
+            
+            keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.loggedInUser.rawValue)
+            keyChain.clearAllData()
+            
+            IntelligenceOAuth.reset(oauth: &oauthProvider.applicationOAuth)
+            IntelligenceOAuth.reset(oauth: &oauthProvider.sdkUserOAuth)
+            IntelligenceOAuth.reset(oauth: &oauthProvider.loggedInUserOAuth)
+        }
+        
+        
         guard  let configData = UserDefaults.standard.object(forKey: "IntelligenceConfiguations") as? Data else {
             guard  let data = config.getJsonData() else {
                 return
             }
+            //Cases like,user deleted the app and install it back. Since data from 
+            //Keychain nor get cleared.
+            clearAllData()
+            
             UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
+            UserDefaults.standard.synchronize()
             return
         }
 
         //read data from use default
         if let configuration = try? Configuration.init(fromData: configData) {
-            if (config != configuration) {
-                var keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.application.rawValue)
-                keyChain.clearAllData()
-
-                keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.sdkUser.rawValue)
-                keyChain.clearAllData()
-
-                keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.loggedInUser.rawValue)
-                keyChain.clearAllData()
-
-                IntelligenceOAuth.reset(oauth: &oauthProvider.applicationOAuth)
-                IntelligenceOAuth.reset(oauth: &oauthProvider.sdkUserOAuth)
-                IntelligenceOAuth.reset(oauth: &oauthProvider.loggedInUserOAuth)
+            if (!(config == configuration)) {
+               
+                clearAllData()
 
                 if let data = config.getJsonData() {
                     UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
