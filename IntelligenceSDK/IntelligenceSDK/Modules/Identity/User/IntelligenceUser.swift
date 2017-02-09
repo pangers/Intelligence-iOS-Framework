@@ -216,7 +216,7 @@ public extension Intelligence {
             let hasAvatarURL = avatarURL?.isEmpty == false
             
             return (userId != invalidUserId && hasCompanyId &&
-                hasUsername && hasFirstName && hasLastName && hasAvatarURL)
+                hasUsername && hasFirstName && hasLastName )
         }
         
         /// A password is considered secure if it has at least 8 characters, and uses
