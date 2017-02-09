@@ -66,6 +66,26 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
             
             this.track(event: OpenApplicationEvent(applicationID: this.configuration.applicationID))
             
+            //Posting the SDK user Event
+            if let obj =  EventTypes.UserCreated.object(){
+                let sdkUser = Intelligence.User(companyId: this.configuration.companyId)
+                let userCreatedEvent = UserCreatedEvent(user: sdkUser)
+                this.track(event: userCreatedEvent)
+                EventTypes.UserCreated.reset()
+            }
+     
+            //Posting app Install Event
+            if let obj =  EventTypes.ApplicationInstall.object(){
+                 this.track(event: ApplicationInstall())
+                EventTypes.ApplicationInstall.reset()
+            }
+            
+            //Posting app update Event
+            if let obj =  EventTypes.ApplicationUpdate.object(){
+                this.track(event: ApplicationUpdate())
+                EventTypes.ApplicationUpdate.reset()
+            }
+            
             this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: UserDefaults.standard), callback: { [weak self] (event) -> () in
                 self?.track(event: event)
             })
