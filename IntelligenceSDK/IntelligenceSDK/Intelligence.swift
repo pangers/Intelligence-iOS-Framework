@@ -75,30 +75,95 @@ internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
     }
 
     internal func accountDisabled() {
+        sharedIntelligenceLogger.log(message: "Account disabled");
         delegate.accountDisabled(for: intelligence)
     }
 
     internal func accountLocked() {
+        sharedIntelligenceLogger.log(message: "Account Locked");
         delegate.accountLocked(for: intelligence)
     }
 
     internal func tokenInvalidOrExpired() {
+        sharedIntelligenceLogger.log(message: "Token invalid/Expired");
         delegate.tokenInvalidOrExpired(for: intelligence)
     }
 
     internal func userCreationFailed() {
+        sharedIntelligenceLogger.log(message: "SDK User creation failed");
         delegate.userCreationFailed(for: intelligence)
     }
 
     internal func userLoginRequired() {
+        sharedIntelligenceLogger.log(message: "User login required");
         delegate.userLoginRequired(for: intelligence)
     }
 
     internal func userRoleAssignmentFailed() {
+        sharedIntelligenceLogger.log(message: "User Role assignment failed");
         delegate.userRoleAssignmentFailed(for: intelligence)
     }
 
 }
+
+
+public let sharedIntelligenceLogger:IntelligenceLogger = IntelligenceLogger(enableLogging:false)
+
+public class IntelligenceLogger : NSObject {
+    
+    internal var logger : XCGLogger?
+
+    public var isLoggingEnabled : Bool
+
+    public var enableLogging : Bool {
+        
+        get{
+            guard  let logger = self.logger else {
+                return false
+            }
+            return self.isLoggingEnabled
+        }
+        set{
+            if (self.logger == nil && newValue){
+                self.logger = XCGLogger.default
+            }
+            else if (!newValue){
+                self.logger = nil
+            }
+            self.isLoggingEnabled = newValue;
+        }
+    }
+
+    internal init(enableLogging:Bool) {
+        self.isLoggingEnabled = false;
+        super.init()
+    }
+
+    public func setupLogger (){
+    
+        guard let logger = self.logger else{
+            return
+        }
+        
+        logger.setup(level: .debug,
+                     showThreadName: false,
+                     showLevel: false,
+                     showFileNames: false,
+                     showLineNumbers: false,
+                     writeToFile: nil,
+                     fileLevel: .none)
+
+    }
+    
+    public func log(message: String){
+       
+        guard let logger = self.logger else {
+            return
+        }
+        logger.debug(message)
+    }
+}
+
 
 
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
@@ -122,6 +187,9 @@ public final class Intelligence: NSObject {
     /// The location module, used to internally manages geofences and user location. Hidden from developers.
     @objc public internal(set) var location: LocationModuleProtocol!
 
+    //Logger methods
+    public var IntelligenceLogger : IntelligenceLogger = sharedIntelligenceLogger
+    
     /// Array of modules used for calling startup/shutdown methods easily.
     internal var modules: [ModuleProtocol] {
         return [identity, location, analytics]
@@ -164,6 +232,8 @@ public final class Intelligence: NSObject {
             throw ConfigurationError.invalidPropertyError
         }
 
+        let log = XCGLogger.default
+        
         // Create shared objects for modules
         let internalConfiguration = intelligenceConfiguration.clone()    // Copy for SDK
 
@@ -290,6 +360,10 @@ public final class Intelligence: NSObject {
         }
 
         moduleToStartup(module: 0)
+    }
+    
+    private func instantiateLoging() {
+        
     }
 
     //If there is a change in configuration.This method will reset all the token from the keychain.

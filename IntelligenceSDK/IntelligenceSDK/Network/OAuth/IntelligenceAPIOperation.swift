@@ -60,14 +60,20 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
         if let httpResponse = output?.response as? HTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.unauthorized.rawValue {
                 handleUnauthorizedError()
+                let str = String(format: "UnAutherized error for request -- %@", (self.session?.description)!)
+                sharedIntelligenceLogger.log(message: str)
                 return true
             }
             else if httpResponse.statusCode == HTTPStatusCode.forbidden.rawValue {
                 handleForbbiddenError()
+                let str = String(format: "Handle forbbidden error -- %@", (self.session?.description)!)
+                sharedIntelligenceLogger.log(message: str)
                 return true
             }
             else if httpResponse.statusCode / 100 != 2 {
                 handleUnhandledError(httpStatusCode: httpResponse.statusCode)
+                let str = String(format: "UnHandled Error -- %@", (self.session?.description)!)
+                sharedIntelligenceLogger.log(message: str)
                 return true
             }
         }
@@ -89,7 +95,8 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
             // Pipeline will be nil if it already exists in the queue.
             guard let pipeline = pipeline else {
                 self.output?.error = NSError(code: RequestError.unauthorized.rawValue)
-                
+                let str = String(format: "OAuth Error -- %@", (self.output?.error?.description)!)
+                sharedIntelligenceLogger.log(message: str)
                 semaphore.signal()
                 return
             }
@@ -99,12 +106,18 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     guard let timesToRetry = self?.timesToRetry else {
                         self?.output?.error = NSError(code: RequestError.unauthorized.rawValue)
                         
+                        let str = String(format: "OAuth Error -- %@", (self?.output?.error?.description)!)
+                        sharedIntelligenceLogger.log(message: str)
+                        
                         semaphore.signal()
                         return
                     }
                     
                     if timesToRetry == 0 {
                         self?.output?.error = NSError(code: RequestError.unauthorized.rawValue)
+                        
+                        let str = String(format: "OAuth Error -- %@", (self?.output?.error?.description)!)
+                        sharedIntelligenceLogger.log(message: str)
                         
                         semaphore.signal()
                         return
@@ -132,6 +145,9 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
                     // Forward the error from the OAuth pipeline to this pipeline
                     self?.output?.error = pipeline?.output?.error
                     
+                    let str = String(format: "OAuth Error -- %@", (self?.output?.error?.description)!)
+                    sharedIntelligenceLogger.log(message: str)
+                    
                     semaphore.signal()
                 }
             }
@@ -144,10 +160,16 @@ internal class IntelligenceAPIOperation: TSDOperation<IntelligenceAPIResponse, I
     
     private func handleForbbiddenError() {
         output?.error = NSError(code: RequestError.forbidden.rawValue)
+        
+        let str = String(format: "OAuth Error -- %@", (output?.error?.description)!)
+        sharedIntelligenceLogger.log(message: str)
     }
     
     private func handleUnhandledError(httpStatusCode: Int) {
         output?.error = NSError(code: RequestError.unhandledError.rawValue, httpStatusCode:httpStatusCode)
+        
+        let str = String(format: "OAuth Error -- %@", (output?.error?.description)!)
+        sharedIntelligenceLogger.log(message: str)
     }
     
     /// Returns error if response contains an error in the data.

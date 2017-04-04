@@ -29,6 +29,8 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         super.main()
         assert(network != nil && configuration != nil)
         let request = URLRequest.int_URLRequestForAnalytics(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
+        sharedIntelligenceLogger.log(message: request.description);
+        
         output = session?.int_executeSynchronousDataTask(with: request)
         
         // Swallowing the invalid request so that the events sent are cleared.
@@ -36,6 +38,11 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         if let httpResponse = output?.response as? HTTPURLResponse {
             if httpResponse.statusCode == HTTPStatusCode.badRequest.rawValue && errorInData() == InvalidRequestErrorCode {
                 output?.error = NSError(code: AnalyticsError.oldEventsError.rawValue)
+                
+                if let error = output?.error{
+                    sharedIntelligenceLogger.log(message: error.descriptionWith(urlRequest: request, response:httpResponse));
+                }
+                
                 return
             }
         }
@@ -46,7 +53,16 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         
         if outputArray()?.count != eventsJSON.count {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+           
+            if let msg = output?.error?.descriptionWith(urlRequest: request){
+                sharedIntelligenceLogger.log(message: msg);
+            }
+            
             return
+        }
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+               sharedIntelligenceLogger.log(message: httpResponse.description);
         }
     }
     

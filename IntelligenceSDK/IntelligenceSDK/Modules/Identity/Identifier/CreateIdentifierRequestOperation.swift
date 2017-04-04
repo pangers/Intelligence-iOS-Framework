@@ -27,6 +27,9 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
     override func main() {
         super.main()
         let request = URLRequest.int_URLRequestForIdentifierCreation(tokenString: tokenString, oauth: oauth!, configuration: configuration!, network: network!)
+
+        sharedIntelligenceLogger.log(message: request.description);
+
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
@@ -35,10 +38,19 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
         
         guard let data = outputArrayFirstDictionary(), let returnedId = data["Id"] as? Int else {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+           
+            if let msg = output?.error?.descriptionWith(urlRequest: request){
+                sharedIntelligenceLogger.log(message: msg);
+            }
+            
             return
         }
         
         tokenId = returnedId
+    
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.log(message: httpResponse.description);
+        }
     }
     
     func copy(with zone: NSZone? = nil) -> Any {

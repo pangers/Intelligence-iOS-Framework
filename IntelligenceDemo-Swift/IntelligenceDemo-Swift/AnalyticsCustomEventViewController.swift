@@ -30,7 +30,8 @@ class AnalyticsCustomEventViewController: UIViewController {
         
         if let eventType = txtEventType.text, let eventValue = Double(txtEventValue.text ?? "0") {
             
-            let event = Event(withType: eventType, value: eventValue)
+            let dict:[String:AnyObject] = ["company.id.code":"TS Sing" as AnyObject]
+            let event = Event(withType: eventType, value: eventValue,metadata:dict)
             IntelligenceManager.intelligence?.analytics.track(event: event)
             
         } else {

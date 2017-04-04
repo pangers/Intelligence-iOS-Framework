@@ -15,6 +15,9 @@ internal final class UpdateInstallationRequestOperation : InstallationRequestOpe
     override func main() {
         super.main()
         let request = URLRequest.int_URLRequestForInstallationUpdate(installation: installation, oauth: oauth!, configuration: configuration!, network: network!)
+        
+        sharedIntelligenceLogger.log(message: request.description);
+
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         parse()
     }

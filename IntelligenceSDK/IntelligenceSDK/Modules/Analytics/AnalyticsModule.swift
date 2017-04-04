@@ -52,8 +52,11 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     
     
     override func startup(completion: @escaping (Bool) -> ()) {
+        sharedIntelligenceLogger.log(message:"Analytics Module startup....");
+        
         super.startup { [weak self] (success) -> () in
             if !success {
+                sharedIntelligenceLogger.log(message:"Analytics Module startup failed");
                 completion(false)
                 return
             }
@@ -89,21 +92,25 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
             this.timeTracker = TimeTracker(storage: TimeTrackerStorage(userDefaults: UserDefaults.standard), callback: { [weak self] (event) -> () in
                 self?.track(event: event)
             })
+            sharedIntelligenceLogger.log(message:"Analytics module start success****");
             completion(true)
         }
     }
     
     func pause() {
+        sharedIntelligenceLogger.log(message:"Pause Analytics Module....");
         eventQueue?.stopQueue()
         timeTracker?.pause()
     }
     
     func resume() {
+                sharedIntelligenceLogger.log(message:"Resume Analytics Module ....");
         eventQueue?.startQueue()
         timeTracker?.resume()
     }
     
     override func shutdown() {
+                sharedIntelligenceLogger.log(message:"Shutdown Analytics Module");
         eventQueue?.stopQueue()
         timeTracker = nil
         super.shutdown()

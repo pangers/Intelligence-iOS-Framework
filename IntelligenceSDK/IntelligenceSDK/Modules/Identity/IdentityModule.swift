@@ -216,12 +216,15 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
 
     
     override func startup(completion: @escaping (Bool) -> ()) {
+        sharedIntelligenceLogger.log(message:"Identity Module startup....");
         super.startup { [weak network, weak configuration] (success) -> () in
             if !success {
+                sharedIntelligenceLogger.log(message:"Identity Module startup failed");
                 completion(false)
                 return
             }
             guard let network = network, let configuration = configuration else {
+                                sharedIntelligenceLogger.log(message:"Identity Module startup failed");
                 completion(false)
                 return
             }
@@ -229,12 +232,14 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             // Get pipeline for grant_type 'client_credentials'.
             network.getPipeline(forOAuth: network.oauthProvider.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
                 guard let applicationPipeline = applicationPipeline, let identity = self else {
+                    sharedIntelligenceLogger.log(message:"Identity Module startup failed");
                     completion(false)
                     return
                 }
 
                 applicationPipeline.callback = { [weak self] (returnedOperation) in
                     guard let identity = self else {
+                        sharedIntelligenceLogger.log(message:"Identity Module startup failed");
                         completion(false)
                         return
                     }
@@ -251,12 +256,21 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                                 identity.delegate.tokenInvalidOrExpired()
                             default: break
                         }
-                        
+                        sharedIntelligenceLogger.log(message:"Identity Module startup failed");
                         completion(false)
                         return
                     }
                     
-                    identity.createSDKUserRecursively(counter: CreateSDKUserRetries,completion:completion)
+                    identity.createSDKUserRecursively(counter: CreateSDKUserRetries, completion: { (status) in
+                        
+                        if (status){
+                            sharedIntelligenceLogger.log(message:"Identity module start success****");
+                        }
+                        else{
+                            sharedIntelligenceLogger.log(message:"Identity Module Start Failed....");
+                        }
+                        completion(status)
+                    })
                 }
                 
                 identity.network.enqueueOperation(operation: applicationPipeline)
@@ -266,6 +280,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     
     override func shutdown() {
         // Nothing to do currently.
+        sharedIntelligenceLogger.log(message:"Identity Module Shutdown");
         super.shutdown()
     }
     

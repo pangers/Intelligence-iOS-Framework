@@ -15,13 +15,23 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
             print("\(oauth!.tokenType) Refresh Token Skipped")
+            
+            let str = String(format: "Refresh Token Skipped")
+            sharedIntelligenceLogger.log(message: str)
+            
             return
         }
         let request = URLRequest.int_URLRequestForRefresh(oauth: oauth!, configuration: configuration!, network: network!)
+        
+        sharedIntelligenceLogger.log(message: request.description);
+
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            
+            let str = String(format: "Refresh Token Failed")
+            sharedIntelligenceLogger.log(message: str)
             return
         }
         
@@ -33,11 +43,17 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
             print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            
+            let str = String(format: "Refresh Token Failed -- %@", (self.session?.description)!)
+            sharedIntelligenceLogger.log(message: str)
+            
             self.shouldBreak = true
             return
         }
         self.shouldBreak = true
         print("\(oauth!.tokenType) Refresh Token Passed")
+        sharedIntelligenceLogger.log(message: "Refresh Token Passed")
+
     }
     
     override func handleUnauthorizedError() {

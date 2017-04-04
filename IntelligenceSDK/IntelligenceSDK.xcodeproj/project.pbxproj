@@ -102,6 +102,30 @@
 		6DC34D6C1DDB288000FC3306 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D691DDB288000FC3306 /* config.json */; };
 		6DC34D6D1DDB288000FC3306 /* missingproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6A1DDB288000FC3306 /* missingproperty.json */; };
 		6DC34D6E1DDB288000FC3306 /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6B1DDB288000FC3306 /* wrongjson.json */; };
+		D629D7D31E91E363004C3D64 /* AppleSystemLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B41E91E363004C3D64 /* AppleSystemLogDestination.swift */; };
+		D629D7D41E91E363004C3D64 /* BaseDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B51E91E363004C3D64 /* BaseDestination.swift */; };
+		D629D7D51E91E363004C3D64 /* ConsoleDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B61E91E363004C3D64 /* ConsoleDestination.swift */; };
+		D629D7D61E91E363004C3D64 /* DestinationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B71E91E363004C3D64 /* DestinationProtocol.swift */; };
+		D629D7D71E91E363004C3D64 /* FileDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B81E91E363004C3D64 /* FileDestination.swift */; };
+		D629D7D81E91E363004C3D64 /* TestDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7B91E91E363004C3D64 /* TestDestination.swift */; };
+		D629D7D91E91E363004C3D64 /* DispatchQueue+XCGAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7BB1E91E363004C3D64 /* DispatchQueue+XCGAdditions.swift */; };
+		D629D7DA1E91E363004C3D64 /* DevFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7BD1E91E363004C3D64 /* DevFilter.swift */; };
+		D629D7DB1E91E363004C3D64 /* FileNameFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7BE1E91E363004C3D64 /* FileNameFilter.swift */; };
+		D629D7DC1E91E363004C3D64 /* FilterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7BF1E91E363004C3D64 /* FilterProtocol.swift */; };
+		D629D7DD1E91E363004C3D64 /* TagFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7C01E91E363004C3D64 /* TagFilter.swift */; };
+		D629D7DE1E91E363004C3D64 /* UserInfoFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7C11E91E363004C3D64 /* UserInfoFilter.swift */; };
+		D629D7DF1E91E363004C3D64 /* Info-iOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = D629D7C31E91E363004C3D64 /* Info-iOS.plist */; };
+		D629D7E01E91E363004C3D64 /* ANSIColorLogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7C51E91E363004C3D64 /* ANSIColorLogFormatter.swift */; };
+		D629D7E11E91E363004C3D64 /* Base64LogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7C61E91E363004C3D64 /* Base64LogFormatter.swift */; };
+		D629D7E21E91E363004C3D64 /* LogFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7C71E91E363004C3D64 /* LogFormatterProtocol.swift */; };
+		D629D7E31E91E363004C3D64 /* gitkeeper.txt in Resources */ = {isa = PBXBuildFile; fileRef = D629D7C91E91E363004C3D64 /* gitkeeper.txt */; };
+		D629D7E41E91E363004C3D64 /* PrePostFixLogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7CA1E91E363004C3D64 /* PrePostFixLogFormatter.swift */; };
+		D629D7E51E91E363004C3D64 /* XcodeColorsLogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7CB1E91E363004C3D64 /* XcodeColorsLogFormatter.swift */; };
+		D629D7E61E91E363004C3D64 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7CD1E91E363004C3D64 /* HelperFunctions.swift */; };
+		D629D7E71E91E363004C3D64 /* LogDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7CE1E91E363004C3D64 /* LogDetails.swift */; };
+		D629D7E81E91E363004C3D64 /* UserInfoHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7D01E91E363004C3D64 /* UserInfoHelpers.swift */; };
+		D629D7E91E91E363004C3D64 /* XCGLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = D629D7D11E91E363004C3D64 /* XCGLogger.h */; };
+		D629D7EA1E91E363004C3D64 /* XCGLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D629D7D21E91E363004C3D64 /* XCGLogger.swift */; };
 		D69B67DD1E2F1CF10087E585 /* UserCreated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DC1E2F1CF10087E585 /* UserCreated.swift */; };
 		D69B67DF1E2F45E30087E585 /* EventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DE1E2F45E30087E585 /* EventTypes.swift */; };
 		D69B67E11E2F4A6D0087E585 /* ApplicationInstall.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67E01E2F4A6D0087E585 /* ApplicationInstall.swift */; };
@@ -217,6 +241,30 @@
 		6DC34D691DDB288000FC3306 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		6DC34D6A1DDB288000FC3306 /* missingproperty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = missingproperty.json; sourceTree = "<group>"; };
 		6DC34D6B1DDB288000FC3306 /* wrongjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = wrongjson.json; sourceTree = "<group>"; };
+		D629D7B41E91E363004C3D64 /* AppleSystemLogDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSystemLogDestination.swift; sourceTree = "<group>"; };
+		D629D7B51E91E363004C3D64 /* BaseDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDestination.swift; sourceTree = "<group>"; };
+		D629D7B61E91E363004C3D64 /* ConsoleDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleDestination.swift; sourceTree = "<group>"; };
+		D629D7B71E91E363004C3D64 /* DestinationProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestinationProtocol.swift; sourceTree = "<group>"; };
+		D629D7B81E91E363004C3D64 /* FileDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDestination.swift; sourceTree = "<group>"; };
+		D629D7B91E91E363004C3D64 /* TestDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDestination.swift; sourceTree = "<group>"; };
+		D629D7BB1E91E363004C3D64 /* DispatchQueue+XCGAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+XCGAdditions.swift"; sourceTree = "<group>"; };
+		D629D7BD1E91E363004C3D64 /* DevFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevFilter.swift; sourceTree = "<group>"; };
+		D629D7BE1E91E363004C3D64 /* FileNameFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileNameFilter.swift; sourceTree = "<group>"; };
+		D629D7BF1E91E363004C3D64 /* FilterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterProtocol.swift; sourceTree = "<group>"; };
+		D629D7C01E91E363004C3D64 /* TagFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagFilter.swift; sourceTree = "<group>"; };
+		D629D7C11E91E363004C3D64 /* UserInfoFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoFilter.swift; sourceTree = "<group>"; };
+		D629D7C31E91E363004C3D64 /* Info-iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
+		D629D7C51E91E363004C3D64 /* ANSIColorLogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ANSIColorLogFormatter.swift; sourceTree = "<group>"; };
+		D629D7C61E91E363004C3D64 /* Base64LogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base64LogFormatter.swift; sourceTree = "<group>"; };
+		D629D7C71E91E363004C3D64 /* LogFormatterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFormatterProtocol.swift; sourceTree = "<group>"; };
+		D629D7C91E91E363004C3D64 /* gitkeeper.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gitkeeper.txt; sourceTree = "<group>"; };
+		D629D7CA1E91E363004C3D64 /* PrePostFixLogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrePostFixLogFormatter.swift; sourceTree = "<group>"; };
+		D629D7CB1E91E363004C3D64 /* XcodeColorsLogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeColorsLogFormatter.swift; sourceTree = "<group>"; };
+		D629D7CD1E91E363004C3D64 /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
+		D629D7CE1E91E363004C3D64 /* LogDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogDetails.swift; sourceTree = "<group>"; };
+		D629D7D01E91E363004C3D64 /* UserInfoHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoHelpers.swift; sourceTree = "<group>"; };
+		D629D7D11E91E363004C3D64 /* XCGLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCGLogger.h; sourceTree = "<group>"; };
+		D629D7D21E91E363004C3D64 /* XCGLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCGLogger.swift; sourceTree = "<group>"; };
 		D69B67DC1E2F1CF10087E585 /* UserCreated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCreated.swift; sourceTree = "<group>"; };
 		D69B67DE1E2F45E30087E585 /* EventTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypes.swift; sourceTree = "<group>"; };
 		D69B67E01E2F4A6D0087E585 /* ApplicationInstall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInstall.swift; sourceTree = "<group>"; };
@@ -583,6 +631,7 @@
 		A07FACA61B5D0C4200482BB7 = {
 			isa = PBXGroup;
 			children = (
+				D629D7B21E91E363004C3D64 /* Logging */,
 				6D5148391DDB26C2002E056E /* IntelligenceSDK */,
 				6D5148441DDB26C3002E056E /* IntelligenceSDKTests */,
 				A07FACB11B5D0C4200482BB7 /* Products */,
@@ -598,6 +647,101 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D629D7B21E91E363004C3D64 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7B31E91E363004C3D64 /* Destinations */,
+				D629D7BA1E91E363004C3D64 /* Extensions */,
+				D629D7BC1E91E363004C3D64 /* Filters */,
+				D629D7C21E91E363004C3D64 /* iOS */,
+				D629D7C41E91E363004C3D64 /* LogFormatters */,
+				D629D7CC1E91E363004C3D64 /* Misc */,
+				D629D7D11E91E363004C3D64 /* XCGLogger.h */,
+				D629D7D21E91E363004C3D64 /* XCGLogger.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		D629D7B31E91E363004C3D64 /* Destinations */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7B41E91E363004C3D64 /* AppleSystemLogDestination.swift */,
+				D629D7B51E91E363004C3D64 /* BaseDestination.swift */,
+				D629D7B61E91E363004C3D64 /* ConsoleDestination.swift */,
+				D629D7B71E91E363004C3D64 /* DestinationProtocol.swift */,
+				D629D7B81E91E363004C3D64 /* FileDestination.swift */,
+				D629D7B91E91E363004C3D64 /* TestDestination.swift */,
+			);
+			path = Destinations;
+			sourceTree = "<group>";
+		};
+		D629D7BA1E91E363004C3D64 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7BB1E91E363004C3D64 /* DispatchQueue+XCGAdditions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D629D7BC1E91E363004C3D64 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7BD1E91E363004C3D64 /* DevFilter.swift */,
+				D629D7BE1E91E363004C3D64 /* FileNameFilter.swift */,
+				D629D7BF1E91E363004C3D64 /* FilterProtocol.swift */,
+				D629D7C01E91E363004C3D64 /* TagFilter.swift */,
+				D629D7C11E91E363004C3D64 /* UserInfoFilter.swift */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
+		D629D7C21E91E363004C3D64 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7C31E91E363004C3D64 /* Info-iOS.plist */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		D629D7C41E91E363004C3D64 /* LogFormatters */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7C51E91E363004C3D64 /* ANSIColorLogFormatter.swift */,
+				D629D7C61E91E363004C3D64 /* Base64LogFormatter.swift */,
+				D629D7C71E91E363004C3D64 /* LogFormatterProtocol.swift */,
+				D629D7C81E91E363004C3D64 /* Optional */,
+				D629D7CA1E91E363004C3D64 /* PrePostFixLogFormatter.swift */,
+				D629D7CB1E91E363004C3D64 /* XcodeColorsLogFormatter.swift */,
+			);
+			path = LogFormatters;
+			sourceTree = "<group>";
+		};
+		D629D7C81E91E363004C3D64 /* Optional */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7C91E91E363004C3D64 /* gitkeeper.txt */,
+			);
+			path = Optional;
+			sourceTree = "<group>";
+		};
+		D629D7CC1E91E363004C3D64 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7CD1E91E363004C3D64 /* HelperFunctions.swift */,
+				D629D7CE1E91E363004C3D64 /* LogDetails.swift */,
+				D629D7CF1E91E363004C3D64 /* Optional */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
+		D629D7CF1E91E363004C3D64 /* Optional */ = {
+			isa = PBXGroup;
+			children = (
+				D629D7D01E91E363004C3D64 /* UserInfoHelpers.swift */,
+			);
+			path = Optional;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -606,6 +750,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D5148481DDB26C3002E056E /* IntelligenceSDK.h in Headers */,
+				D629D7E91E91E363004C3D64 /* XCGLogger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -695,6 +840,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D629D7DF1E91E363004C3D64 /* Info-iOS.plist in Resources */,
+				D629D7E31E91E363004C3D64 /* gitkeeper.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +864,7 @@
 			files = (
 				6DC34D021DDB26FB00FC3306 /* GeofenceEnterEvent.swift in Sources */,
 				6DC34D0E1DDB26FB00FC3306 /* Installation.swift in Sources */,
+				D629D7D81E91E363004C3D64 /* TestDestination.swift in Sources */,
 				6DC34D1D1DDB26FB00FC3306 /* LocationManager.swift in Sources */,
 				6DC34D261DDB26FB00FC3306 /* IntelligenceOAuthLoginOperation.swift in Sources */,
 				6DC34D001DDB26FB00FC3306 /* AnalyticsModule.swift in Sources */,
@@ -728,29 +876,38 @@
 				6DC34CEE1DDB26FB00FC3306 /* IntelligenceRegion.swift in Sources */,
 				6DC34D121DDB26FB00FC3306 /* IntelligenceUser.swift in Sources */,
 				D69B67E11E2F4A6D0087E585 /* ApplicationInstall.swift in Sources */,
+				D629D7D41E91E363004C3D64 /* BaseDestination.swift in Sources */,
 				6DC34CFA1DDB26FB00FC3306 /* TSDOperation.swift in Sources */,
+				D629D7DE1E91E363004C3D64 /* UserInfoFilter.swift in Sources */,
 				6DC34D0F1DDB26FB00FC3306 /* CreateInstallationRequestOperation.swift in Sources */,
+				D629D7E11E91E363004C3D64 /* Base64LogFormatter.swift in Sources */,
 				6DC34D281DDB26FB00FC3306 /* IntelligenceOAuthProvider.swift in Sources */,
 				6DC34D201DDB26FB00FC3306 /* ModuleProtocol.swift in Sources */,
+				D629D7E41E91E363004C3D64 /* PrePostFixLogFormatter.swift in Sources */,
 				6DC34CF51DDB26FB00FC3306 /* URLRequest.swift in Sources */,
 				D69B67DD1E2F1CF10087E585 /* UserCreated.swift in Sources */,
 				6DC34D171DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift in Sources */,
 				6DC34D2B1DDB26FB00FC3306 /* IntelligenceOAuthValidateOperation.swift in Sources */,
 				6DC34CFB1DDB26FB00FC3306 /* IntelligenceKeychain.swift in Sources */,
 				6DC34D151DDB26FB00FC3306 /* GetUserMeRequestOperation.swift in Sources */,
+				D629D7D61E91E363004C3D64 /* DestinationProtocol.swift in Sources */,
 				6DC34CED1DDB26FB00FC3306 /* IntelligenceEnvironment.swift in Sources */,
 				6DC34CF91DDB26FB00FC3306 /* String.swift in Sources */,
 				6DC34CF61DDB26FB00FC3306 /* URLSession+Intelligence.swift in Sources */,
 				6DC34CFD1DDB26FB00FC3306 /* Synchronization.swift in Sources */,
 				6DC34D081DDB26FB00FC3306 /* AnalyticsRequestOperation.swift in Sources */,
 				6DC34CFC1DDB26FB00FC3306 /* TSDKeychain.swift in Sources */,
+				D629D7E51E91E363004C3D64 /* XcodeColorsLogFormatter.swift in Sources */,
 				6DC34D0C1DDB26FB00FC3306 /* DeleteIdentifierRequestOperation.swift in Sources */,
 				6DC34D1B1DDB26FB00FC3306 /* Geofence.swift in Sources */,
 				6DC34D0A1DDB26FB00FC3306 /* CreateIdentifierRequestOperation.swift in Sources */,
+				D629D7E01E91E363004C3D64 /* ANSIColorLogFormatter.swift in Sources */,
 				6DC34D161DDB26FB00FC3306 /* GetUserRequestOperation.swift in Sources */,
 				6DC34D271DDB26FB00FC3306 /* IntelligenceOAuthOperation.swift in Sources */,
+				D629D7E21E91E363004C3D64 /* LogFormatterProtocol.swift in Sources */,
 				6DC34D111DDB26FB00FC3306 /* UpdateInstallationRequestOperation.swift in Sources */,
 				6DC34D191DDB26FB00FC3306 /* UserRequestOperation.swift in Sources */,
+				D629D7DC1E91E363004C3D64 /* FilterProtocol.swift in Sources */,
 				6DC34D101DDB26FB00FC3306 /* InstallationRequestOperation.swift in Sources */,
 				D69B67E31E2F4AC90087E585 /* ApplicationUpdate.swift in Sources */,
 				6DC34CF11DDB26FB00FC3306 /* Data+Intelligence.swift in Sources */,
@@ -758,30 +915,41 @@
 				6DC34D011DDB26FB00FC3306 /* Event.swift in Sources */,
 				6DC34CEF1DDB26FB00FC3306 /* MutableCollectionType.swift in Sources */,
 				6DC34CFE1DDB26FB00FC3306 /* Intelligence.swift in Sources */,
+				D629D7DB1E91E363004C3D64 /* FileNameFilter.swift in Sources */,
 				6DC34D241DDB26FB00FC3306 /* IntelligenceAPIPipeline.swift in Sources */,
 				D69B67DF1E2F45E30087E585 /* EventTypes.swift in Sources */,
 				6DC34CF21DDB26FB00FC3306 /* DateFormatterIRFC3339.swift in Sources */,
 				6DC34CF81DDB26FB00FC3306 /* SequenceType+Intelligence.swift in Sources */,
+				D629D7D91E91E363004C3D64 /* DispatchQueue+XCGAdditions.swift in Sources */,
+				D629D7DA1E91E363004C3D64 /* DevFilter.swift in Sources */,
 				6DC34CFF1DDB26FB00FC3306 /* IntelligenceError.swift in Sources */,
+				D629D7D71E91E363004C3D64 /* FileDestination.swift in Sources */,
+				D629D7D51E91E363004C3D64 /* ConsoleDestination.swift in Sources */,
 				6DC34D041DDB26FB00FC3306 /* OpenApplicationEvent.swift in Sources */,
 				6DC34CF31DDB26FB00FC3306 /* JSONSerializationHelpers.swift in Sources */,
 				6DC34D0B1DDB26FB00FC3306 /* DeleteIdentifierOnBehalfRequestOperation.swift in Sources */,
+				D629D7D31E91E363004C3D64 /* AppleSystemLogDestination.swift in Sources */,
 				6DC34D131DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift in Sources */,
 				6DC34D1C1DDB26FB00FC3306 /* GeofenceQuery.swift in Sources */,
 				6DC34D141DDB26FB00FC3306 /* CreateUserRequestOperation.swift in Sources */,
 				6DC34D091DDB26FB00FC3306 /* TimeTracker.swift in Sources */,
+				D629D7EA1E91E363004C3D64 /* XCGLogger.swift in Sources */,
+				D629D7DD1E91E363004C3D64 /* TagFilter.swift in Sources */,
 				6DC34CEC1DDB26FB00FC3306 /* IntelligenceConfiguration.swift in Sources */,
 				6DC34CF71DDB26FB00FC3306 /* UserDefaultsInstallation.swift in Sources */,
 				6DC34D0D1DDB26FB00FC3306 /* IdentityModule.swift in Sources */,
 				6DC34D2A1DDB26FB00FC3306 /* IntelligenceOAuthStorage.swift in Sources */,
 				6DC34D051DDB26FB00FC3306 /* ScreenViewedEvent.swift in Sources */,
+				D629D7E61E91E363004C3D64 /* HelperFunctions.swift in Sources */,
 				6DC34D061DDB26FB00FC3306 /* TrackApplicationTimeEvent.swift in Sources */,
 				6DC34D1E1DDB26FB00FC3306 /* LocationModule.swift in Sources */,
+				D629D7E71E91E363004C3D64 /* LogDetails.swift in Sources */,
 				6DC34D251DDB26FB00FC3306 /* IntelligenceOAuth.swift in Sources */,
 				6DC34D211DDB26FB00FC3306 /* Network.swift in Sources */,
 				6DC34D071DDB26FB00FC3306 /* EventQueue.swift in Sources */,
 				6DC34D1A1DDB26FB00FC3306 /* Geofence+JSON.swift in Sources */,
 				6DC34D221DDB26FB00FC3306 /* NetworkAuthenticationChallengeDelegate.swift in Sources */,
+				D629D7E81E91E363004C3D64 /* UserInfoHelpers.swift in Sources */,
 				6DC34CF41DDB26FB00FC3306 /* URL+Intelligence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

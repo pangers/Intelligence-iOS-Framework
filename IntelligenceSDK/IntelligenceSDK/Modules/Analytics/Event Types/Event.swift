@@ -65,4 +65,9 @@ public class Event: NSObject {
         
         return dictionary
     }
+    
+    override public var description : String {
+        return String(format:"EventName : %@, Event Value : %f, MetaData : %@",self.eventType,self.value,self.metadata ?? "Empty meta data..." )
+    }
+
 }

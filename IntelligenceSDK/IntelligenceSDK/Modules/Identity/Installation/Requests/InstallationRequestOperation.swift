@@ -33,7 +33,15 @@ class InstallationRequestOperation : IntelligenceAPIOperation, NSCopying {
         
         if installation.updateWithJSON(json: outputArrayFirstDictionary()) == false {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+           
+            let str = String(format: "Parse error -- %@", (self.session?.description)!)
+            sharedIntelligenceLogger.log(message: str)
+            
             return
+        }
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+                sharedIntelligenceLogger.log(message: httpResponse.description)
         }
     }
     

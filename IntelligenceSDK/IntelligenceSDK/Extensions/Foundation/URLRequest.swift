@@ -34,6 +34,48 @@ internal enum IdentifierType : Int {
 }
 
 
+internal extension NSError{
+    
+    public func descriptionWith(urlRequest:URLRequest? = nil, response:HTTPURLResponse? = nil) -> String {
+        
+        var dict:[String:Any] = [ : ]
+        
+        dict["error"] = self.description
+       
+        if let urlRequest = urlRequest {
+            dict["url"] = urlRequest.url?.absoluteString
+        }
+        
+        var str = String(format : "Response ---> %@",dict)
+
+        guard let response = response else {
+            return str
+        }
+        
+        str = str.appending(response.description)
+        return str
+    }
+        
+}
+
+internal extension HTTPURLResponse{
+    
+    open override var description : String {
+        get {
+            
+            let statusCode = self.statusCode;
+            let request = self.url?.absoluteString;
+            var headerFields:AnyObject? = self.allHeaderFields as AnyObject?;
+      
+            var dict : [String : Any] = ["statusCode":statusCode,
+                                         "httpHeaderFields" : headerFields,
+                                         "request":request];
+            return dict.description;
+        }
+    }
+}
+
+
 // MARK: - OAuth
 
 internal extension URLRequest {
@@ -118,6 +160,34 @@ internal extension URLRequest {
         request.httpMethod = HTTPRequestMethod.post.rawValue
         request.httpBody = int_HTTPBodyData(body: body)
         return request
+    }
+    
+    public var description : String {
+        
+        let postMethod = self.httpMethod;
+        let headerFields = self.allHTTPHeaderFields;
+        let request = self.url?.absoluteString;
+        var body:AnyObject? = nil;
+        
+        if let jsonObj = self.httpBody?.int_jsonDictionary{
+            body = jsonObj as AnyObject;
+        }
+        else if let jsonObj = self.httpBody?.int_jsonArray{
+            body = jsonObj as AnyObject;
+        }
+        else if let jsonObj = self.httpBody?.int_jsonDictionaryArray{
+            body = jsonObj as AnyObject;
+        }
+        
+        var dict : [String : Any] = ["httpMethod":postMethod,
+                    "httpHeaderFields" : headerFields,
+                    "request":request];
+        
+        if let body = body{
+            dict["body"] = body;
+        }
+        
+        return dict.description;
     }
 }
 

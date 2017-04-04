@@ -217,7 +217,9 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     // MARK:- Startup and shutdown methods.
     override func startup(completion: @escaping (Bool) -> ()) {
+                sharedIntelligenceLogger.log(message:"Location module startup....");
         super.startup(completion: completion)
+        sharedIntelligenceLogger.log(message:"Location module start success*****");
     }
     
     /**

@@ -22,6 +22,9 @@ internal final class GetUserRequestOperation : UserRequestOperation {
         super.main()
         
         let request = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: oauth!, configuration: configuration!, network: network!)
+        
+        sharedIntelligenceLogger.log(message: request.description);
+
         output = session?.int_executeSynchronousDataTask(with: request)
         parse()
     }

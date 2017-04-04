@@ -62,6 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
             intelligence.location.includeLocationInEvents = true
+            intelligence.IntelligenceLogger.enableLogging = true;
             
             // Startup all modules.
             intelligence.startup { (success) -> () in
