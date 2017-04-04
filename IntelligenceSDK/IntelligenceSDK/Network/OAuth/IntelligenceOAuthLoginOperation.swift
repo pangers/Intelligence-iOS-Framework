@@ -49,6 +49,9 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
             return
         }
+       
+        sharedIntelligenceLogger.log(message:httpResponse.description)
+        
         print("\(oauth!.tokenType) Login Passed")
     }
     

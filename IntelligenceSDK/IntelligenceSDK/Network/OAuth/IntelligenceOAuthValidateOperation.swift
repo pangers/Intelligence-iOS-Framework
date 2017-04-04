@@ -44,7 +44,7 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
             return
         }
         self.shouldBreak = true
-        sharedIntelligenceLogger.log(message: "Validate Token Passed");
+        sharedIntelligenceLogger.log(message: httpResponse.description);
 
         print("\(oauth!.tokenType) Validate Token Passed")
     }

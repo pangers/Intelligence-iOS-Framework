@@ -52,7 +52,7 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         }
         self.shouldBreak = true
         print("\(oauth!.tokenType) Refresh Token Passed")
-        sharedIntelligenceLogger.log(message: "Refresh Token Passed")
+        sharedIntelligenceLogger.log(message: httpResponse.description)
 
     }
     

@@ -14,7 +14,6 @@ import IntelligenceSDK
 
 extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("authorization status changed")
         if status == .authorizedAlways || status == .authorizedWhenInUse {
             startupIntelligence()
         }
@@ -49,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     }
     
     func segueToDemo()  {
-        self.window?.rootViewController?.performSegue(withIdentifier: "intelligenceStartedUp", sender: self)
+        //self.window?.rootViewController?.performSegue(withIdentifier: "intelligenceStartedUp", sender: self)
     }
 
     func startupIntelligence() {
@@ -62,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
             intelligence.location.includeLocationInEvents = true
-            intelligence.IntelligenceLogger.enableLogging = true;
+//            intelligence.IntelligenceLogger.enableLogging = true;
             
             // Startup all modules.
             intelligence.startup { (success) -> () in

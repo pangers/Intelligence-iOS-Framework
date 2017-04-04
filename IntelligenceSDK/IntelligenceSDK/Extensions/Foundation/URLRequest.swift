@@ -42,11 +42,11 @@ internal extension NSError{
         
         dict["error"] = self.description
        
-        if let urlRequest = urlRequest {
-            dict["url"] = urlRequest.url?.absoluteString
+        if let urlRequest = urlRequest, let url = urlRequest.url?.absoluteString{
+            dict["url"] = url
         }
         
-        var str = String(format : "Response ---> %@",dict)
+        var str = String(format : "Response : %@ ---> %@",(urlRequest?.url?.absoluteString) ?? "***", dict)
 
         guard let response = response else {
             return str
@@ -55,7 +55,6 @@ internal extension NSError{
         str = str.appending(response.description)
         return str
     }
-        
 }
 
 internal extension HTTPURLResponse{
@@ -63,14 +62,22 @@ internal extension HTTPURLResponse{
     open override var description : String {
         get {
             
+            var dict : [String : Any] = [:]
+           
             let statusCode = self.statusCode;
-            let request = self.url?.absoluteString;
-            var headerFields:AnyObject? = self.allHeaderFields as AnyObject?;
-      
-            var dict : [String : Any] = ["statusCode":statusCode,
-                                         "httpHeaderFields" : headerFields,
-                                         "request":request];
-            return dict.description;
+            dict["statusCode"] = statusCode
+
+            
+            if let url = self.url{
+                dict["request"] = url.absoluteString
+            }
+            
+            if let headerFields = self.allHeaderFields as AnyObject?{
+                dict["httpHeaderFields"] = headerFields
+            }
+            
+            var str = String(format : "Response : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
+            return str;
         }
     }
 }
@@ -164,9 +171,20 @@ internal extension URLRequest {
     
     public var description : String {
         
-        let postMethod = self.httpMethod;
-        let headerFields = self.allHTTPHeaderFields;
-        let request = self.url?.absoluteString;
+        var dict : [String : Any] = [:]
+        
+        if let postMethod = self.httpMethod {
+            dict["httpMethod"] = postMethod
+        }
+        
+        if let headerFields = self.allHTTPHeaderFields{
+            dict["httpHeaderFields"] = headerFields
+        }
+
+        if let urlStr = self.url?.absoluteString{
+            dict["request"] = urlStr
+        }
+        
         var body:AnyObject? = nil;
         
         if let jsonObj = self.httpBody?.int_jsonDictionary{
@@ -179,15 +197,13 @@ internal extension URLRequest {
             body = jsonObj as AnyObject;
         }
         
-        var dict : [String : Any] = ["httpMethod":postMethod,
-                    "httpHeaderFields" : headerFields,
-                    "request":request];
-        
         if let body = body{
             dict["body"] = body;
         }
         
-        return dict.description;
+        var str = String(format : "Request : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
+        
+        return str;
     }
 }
 

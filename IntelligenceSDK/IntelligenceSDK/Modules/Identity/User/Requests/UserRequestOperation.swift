@@ -49,8 +49,9 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
         }
         user = receivedUser
         
-        let str = String(format: "Parse error -- %@", (self.session?.description)!)
-        sharedIntelligenceLogger.log(message: str)
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.log(message: httpResponse.description)
+        }
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
