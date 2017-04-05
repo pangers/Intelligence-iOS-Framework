@@ -225,10 +225,12 @@ public final class Intelligence: NSObject {
         let network = network ?? Network(delegate: delegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: configuration), oauthProvider: oauthProvider)
 
         if intelligenceConfiguration.hasMissingProperty {
+            sharedIntelligenceLogger.log(message: "Missing Intelligence configration propery")
             throw ConfigurationError.missingPropertyError
         }
 
         if !intelligenceConfiguration.isValid {
+            sharedIntelligenceLogger.log(message: "Missing Intelligence configration propery")
             throw ConfigurationError.invalidPropertyError
         }
 
