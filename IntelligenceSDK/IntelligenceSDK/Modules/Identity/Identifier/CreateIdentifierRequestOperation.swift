@@ -28,7 +28,7 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
         super.main()
         let request = URLRequest.int_URLRequestForIdentifierCreation(tokenString: tokenString, oauth: oauth!, configuration: configuration!, network: network!)
 
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
@@ -40,7 +40,7 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
             output?.error = NSError(code: RequestError.parseError.rawValue)
            
             if let msg = output?.error?.descriptionWith(urlRequest: request){
-                sharedIntelligenceLogger.log(message: msg);
+                sharedIntelligenceLogger.logger?.error(msg)
             }
             
             return
@@ -49,7 +49,7 @@ class CreateIdentifierRequestOperation : IntelligenceAPIOperation, NSCopying {
         tokenId = returnedId
     
         if let httpResponse = output?.response as? HTTPURLResponse {
-            sharedIntelligenceLogger.log(message: httpResponse.description);
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

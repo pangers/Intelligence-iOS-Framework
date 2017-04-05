@@ -24,7 +24,7 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         
         let request = URLRequest.int_URLRequestForUserRoleAssignment(roleId: roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
@@ -36,7 +36,7 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
             output?.error = NSError(code: RequestError.parseError.rawValue)
             
             let str = String(format: "Parse error -- %@", (self.session?.description)!)
-            sharedIntelligenceLogger.log(message: str)
+            sharedIntelligenceLogger.logger?.error(str)
             
             return
         }
@@ -44,7 +44,7 @@ internal final class AssignUserRoleRequestOperation : UserRequestOperation {
         user = sentUser
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-            sharedIntelligenceLogger.log(message: httpResponse.description);
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

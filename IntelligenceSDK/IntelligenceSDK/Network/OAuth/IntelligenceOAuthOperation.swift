@@ -32,19 +32,19 @@ class IntelligenceOAuthOperation : IntelligenceAPIOperation {
                     output?.error = NSError(code: AuthenticationError.credentialError.rawValue)
                     
                     let str = String(format: "Credentials incorrect. -- %@", (output?.error?.description)!)
-                    sharedIntelligenceLogger.log(message: str)
+                    sharedIntelligenceLogger.logger?.error(str)
                 }
                 else if errorDescription == "Account disabled." {
                     output?.error = NSError(code: AuthenticationError.accountDisabledError.rawValue)
                     
                     let str = String(format: "Account disabled. -- %@", (output?.error?.description)!)
-                    sharedIntelligenceLogger.log(message: str)
+                    sharedIntelligenceLogger.logger?.error(str)
                 }
                 else if errorDescription == "Account locked." {
                     output?.error = NSError(code: AuthenticationError.accountLockedError.rawValue)
                     
                     let str = String(format: "Account locked. -- %@", (output?.error?.description)!)
-                    sharedIntelligenceLogger.log(message: str)
+                    sharedIntelligenceLogger.logger?.error(str)
                 }
             }
             else if error == "Invalid token." {
@@ -52,21 +52,21 @@ class IntelligenceOAuthOperation : IntelligenceAPIOperation {
                     output?.error = NSError(code: AuthenticationError.tokenInvalidOrExpired.rawValue)
                     
                     let str = String(format: "Token invalid or expired. -- %@", (output?.error?.description)!)
-                    sharedIntelligenceLogger.log(message: str)
+                    sharedIntelligenceLogger.logger?.error(str)
                 }
             }
             else
             {
                 output?.error = NSError(code: RequestError.unauthorized.rawValue)
                 let str = String(format: "Parse error -- %@", (output?.error?.description)!)
-                sharedIntelligenceLogger.log(message: str)
+                sharedIntelligenceLogger.logger?.error(str)
             }
         }
         else
         {
             output?.error = NSError(code: RequestError.unauthorized.rawValue)
             let str = String(format: "Parse error -- %@", (output?.error?.description)!)
-            sharedIntelligenceLogger.log(message: str)
+            sharedIntelligenceLogger.logger?.error(str)
         }
     }
 }

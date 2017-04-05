@@ -16,7 +16,7 @@ internal final class CreateUserRequestOperation : UserRequestOperation {
         assert(sentUser != nil)
         let request = URLRequest.int_URLRequestForUserCreation(user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
         
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description);
 
         output = network!.sessionManager!.int_executeSynchronousDataTask(with: request)
         parse()

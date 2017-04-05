@@ -35,13 +35,12 @@ class InstallationRequestOperation : IntelligenceAPIOperation, NSCopying {
             output?.error = NSError(code: RequestError.parseError.rawValue)
            
             let str = String(format: "Parse error -- %@", (self.session?.description)!)
-            sharedIntelligenceLogger.log(message: str)
-            
+            sharedIntelligenceLogger.logger?.error(str)
             return
         }
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-                sharedIntelligenceLogger.log(message: httpResponse.description)
+                sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

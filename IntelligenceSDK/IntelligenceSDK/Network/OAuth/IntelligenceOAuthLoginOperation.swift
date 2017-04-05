@@ -24,16 +24,15 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
         }
 
         let request = URLRequest.int_URLRequestForLogin(oauth: oauth!, configuration: configuration!, network: network!)
-        
-        sharedIntelligenceLogger.log(message: request.description);
+
+        // sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
-            
-            sharedIntelligenceLogger.log(message: (output?.error?.description)!)
-            
+            sharedIntelligenceLogger.logger?.error(self.output?.error?.description)
             return
         }
         
@@ -44,14 +43,11 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
-            sharedIntelligenceLogger.log(message: (output?.error?.description)!)
-
+            sharedIntelligenceLogger.logger?.error(self.output?.error?.description)
             print("\(oauth!.tokenType) Login Failed \(output?.error)")
             return
         }
-       
-        sharedIntelligenceLogger.log(message:httpResponse.description)
-        
+        sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         print("\(oauth!.tokenType) Login Passed")
     }
     

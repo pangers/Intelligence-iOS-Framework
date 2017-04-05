@@ -28,8 +28,7 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
     override func main() {
         super.main()
         let request = URLRequest.int_URLRequestForDownloadGeofences(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails)
-
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
@@ -41,15 +40,14 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
             output?.error = NSError(code: RequestError.parseError.rawValue)
             
             let str = String(format: "Parse error -- %@", (self.session?.description)!)
-            sharedIntelligenceLogger.log(message: str)
-            
+            sharedIntelligenceLogger.logger?.error(str)            
             return
         }
         
         geofences = downloaded
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-            sharedIntelligenceLogger.log(message: httpResponse.description);
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

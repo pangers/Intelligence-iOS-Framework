@@ -150,20 +150,20 @@ public extension Intelligence {
 
             guard let path = bundle.path(forResource: fileName, ofType: "json"),
                   let data = try? Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped) else {
-                sharedIntelligenceLogger.log(message: "Intelligence configuration file not found")
+                sharedIntelligenceLogger.logger?.error("Intelligence configuration file not found")
                 throw ConfigurationError.fileNotFoundError
             }
 
             // Guard that we have the json data parsed correctly
             guard let contents = data.int_jsonDictionary else {
-                sharedIntelligenceLogger.log(message: "Invalid file Configuration/Content")
+                sharedIntelligenceLogger.logger?.error("Invalid file Configuration/Content")
                 throw ConfigurationError.invalidFileError
             }
 
             // Helper function to load a value from a dictionary.
             func value<T>(forKey key: ConfigurationKey, inContents contents: [String: Any]) throws -> T {
                 guard let output = contents[key.rawValue] as? T else {
-                    sharedIntelligenceLogger.log(message: "Missing project property")
+                    sharedIntelligenceLogger.logger?.error("Missing project property")
                     throw ConfigurationError.missingPropertyError
                 }
                 return output
@@ -176,14 +176,14 @@ public extension Intelligence {
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
 
             guard let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents)) else {
-                sharedIntelligenceLogger.log(message: "Invalid Intelligence propery")
+                sharedIntelligenceLogger.logger?.error("Invalid Intelligence propery")
                 throw ConfigurationError.invalidPropertyError
             }
 
             self.region = region
 
             guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                sharedIntelligenceLogger.log(message: "Invalid Intelligence propery")
+                sharedIntelligenceLogger.logger?.error("Invalid Intelligence propery")
                 throw ConfigurationError.invalidPropertyError
             }
 
@@ -194,7 +194,7 @@ public extension Intelligence {
 
             guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
                   let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                sharedIntelligenceLogger.log(message: "Invalid Intelligence configration propery")
+                sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration propery")
                 throw ConfigurationError.invalidPropertyError
             }
             self.certificateTrustPolicy = certificateTrustPolicy
@@ -205,14 +205,14 @@ public extension Intelligence {
 
             // Guard that we have the json data parsed correctly
             guard let contents = data.int_jsonDictionary else {
-                sharedIntelligenceLogger.log(message: "Invalid Configuration/Content file")
+                sharedIntelligenceLogger.logger?.error("Invalid Configuration/Content file")
                 throw ConfigurationError.invalidFileError
             }
 
             // Helper function to load a value from a dictionary.
             func value<T>(forKey key: ConfigurationKey, inContents contents: [String: Any]) throws -> T {
                 guard let output = contents[key.rawValue] as? T else {
-                    sharedIntelligenceLogger.log(message: "Missing Intelligence configration propery")
+                    sharedIntelligenceLogger.logger?.error("Missing Intelligence configration propery")
                     throw ConfigurationError.missingPropertyError
                 }
                 return output
@@ -225,14 +225,14 @@ public extension Intelligence {
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
 
             guard let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents)) else {
-                sharedIntelligenceLogger.log(message: "Invalid Intelligence configration property")
+                sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration property")
                 throw ConfigurationError.invalidPropertyError
             }
 
             self.region = region
 
             guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                sharedIntelligenceLogger.log(message: "Invalid Intelligence configration property")
+                sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration property")
                 throw ConfigurationError.invalidPropertyError
             }
 
@@ -243,7 +243,7 @@ public extension Intelligence {
 
             guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
                   let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                  sharedIntelligenceLogger.log(message: "Invalid Intelligence configration propery")
+                  sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration propery")
                   throw ConfigurationError.invalidPropertyError
             }
 

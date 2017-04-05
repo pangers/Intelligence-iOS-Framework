@@ -14,11 +14,9 @@ internal final class CreateInstallationRequestOperation : InstallationRequestOpe
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
-                sharedIntelligenceLogger.log(message:"Installation Request Operation");
+        sharedIntelligenceLogger.logger?.info("Installation Request Operation")
         let request = URLRequest.int_URLRequestForInstallationCreate(installation: installation, oauth: oauth!, configuration: configuration!, network: network!)
-        
-        sharedIntelligenceLogger.log(message: request.description);
-
+        sharedIntelligenceLogger.logger?.debug(request.description)
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         parse()
     }

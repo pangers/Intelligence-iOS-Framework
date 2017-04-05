@@ -29,7 +29,7 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         super.main()
         assert(network != nil && configuration != nil)
         let request = URLRequest.int_URLRequestForAnalytics(json: eventsJSON, oauth: oauth!, configuration: configuration!, network: network!)
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
         
         output = session?.int_executeSynchronousDataTask(with: request)
         
@@ -40,9 +40,8 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
                 output?.error = NSError(code: AnalyticsError.oldEventsError.rawValue)
                 
                 if let error = output?.error{
-                    sharedIntelligenceLogger.log(message: error.descriptionWith(urlRequest: request, response:httpResponse));
+                    sharedIntelligenceLogger.logger?.error(error.descriptionWith(urlRequest: request, response:httpResponse))
                 }
-                
                 return
             }
         }
@@ -55,7 +54,7 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
             output?.error = NSError(code: RequestError.parseError.rawValue)
            
             if let msg = output?.error?.descriptionWith(urlRequest: request){
-                sharedIntelligenceLogger.log(message: msg);
+                sharedIntelligenceLogger.logger?.error(msg)
             }
             
             return
@@ -74,10 +73,10 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         
         //info
         var str = String(format:"Sending Events Sucessfull : %@",eventNames.description)
-        sharedIntelligenceLogger.log(message:str)
+        sharedIntelligenceLogger.logger?.info(str)
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-               sharedIntelligenceLogger.log(message: httpResponse.description);
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

@@ -18,7 +18,7 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
             return
         }
         let request = URLRequest.int_URLRequestForValidate(oauth: oauth!, configuration: configuration!, network: network!)
-        sharedIntelligenceLogger.log(message: request.description);
+        sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = session?.int_executeSynchronousDataTask(with: request)
         
@@ -38,13 +38,13 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
             print("\(oauth!.tokenType) Validate Token Failed \(output?.error)")
 
             let str = String(format: "Validate Token Failed -- %@", (output?.error?.description)!)
-            sharedIntelligenceLogger.log(message: str);
+            sharedIntelligenceLogger.logger?.error(str)
 
             self.shouldBreak = true
             return
         }
         self.shouldBreak = true
-        sharedIntelligenceLogger.log(message: httpResponse.description);
+        sharedIntelligenceLogger.logger?.debug(httpResponse.description)
 
         print("\(oauth!.tokenType) Validate Token Passed")
     }

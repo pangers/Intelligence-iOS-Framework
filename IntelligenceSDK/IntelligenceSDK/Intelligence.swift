@@ -75,32 +75,32 @@ internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
     }
 
     internal func accountDisabled() {
-        sharedIntelligenceLogger.log(message: "Account disabled");
+        sharedIntelligenceLogger.logger?.error("Account disabled")
         delegate.accountDisabled(for: intelligence)
     }
 
     internal func accountLocked() {
-        sharedIntelligenceLogger.log(message: "Account Locked");
+        sharedIntelligenceLogger.logger?.error("Account Locked")
         delegate.accountLocked(for: intelligence)
     }
 
     internal func tokenInvalidOrExpired() {
-        sharedIntelligenceLogger.log(message: "Token invalid/Expired");
+        sharedIntelligenceLogger.logger?.error("Token invalid/Expired")
         delegate.tokenInvalidOrExpired(for: intelligence)
     }
 
     internal func userCreationFailed() {
-        sharedIntelligenceLogger.log(message: "SDK User creation failed");
+        sharedIntelligenceLogger.logger?.error("SDK User creation failed")
         delegate.userCreationFailed(for: intelligence)
     }
 
     internal func userLoginRequired() {
-        sharedIntelligenceLogger.log(message: "User login required");
+        sharedIntelligenceLogger.logger?.error("User login required")
         delegate.userLoginRequired(for: intelligence)
     }
 
     internal func userRoleAssignmentFailed() {
-        sharedIntelligenceLogger.log(message: "User Role assignment failed");
+        sharedIntelligenceLogger.logger?.error("User Role assignment failed")
         delegate.userRoleAssignmentFailed(for: intelligence)
     }
 
@@ -114,6 +114,15 @@ public class IntelligenceLogger : NSObject {
     internal var logger : XCGLogger?
 
     public var isLoggingEnabled : Bool
+    
+    public var logLevel : XCGLogger.Level = .debug {
+         didSet {
+            guard let logger = self.logger else {
+                return
+            }
+            logger.outputLevel = logLevel
+        }
+    }
 
     public var enableLogging : Bool {
         
@@ -160,14 +169,6 @@ public class IntelligenceLogger : NSObject {
                      writeToFile: path,
                      fileLevel: .none)
 
-    }
-    
-    public func log(message: String){
-       
-        guard let logger = self.logger else {
-            return
-        }
-        logger.debug(message)
     }
 }
 
@@ -232,12 +233,12 @@ public final class Intelligence: NSObject {
         let network = network ?? Network(delegate: delegateWrapper, authenticationChallengeDelegate: NetworkAuthenticationChallengeDelegate(configuration: configuration), oauthProvider: oauthProvider)
 
         if intelligenceConfiguration.hasMissingProperty {
-            sharedIntelligenceLogger.log(message: "Missing Intelligence configration propery")
+            sharedIntelligenceLogger.logger?.error("Missing Intelligence configration propery")
             throw ConfigurationError.missingPropertyError
         }
 
         if !intelligenceConfiguration.isValid {
-            sharedIntelligenceLogger.log(message: "Missing Intelligence configration propery")
+            sharedIntelligenceLogger.logger?.error("Missing Intelligence configration propery")
             throw ConfigurationError.invalidPropertyError
         }
 

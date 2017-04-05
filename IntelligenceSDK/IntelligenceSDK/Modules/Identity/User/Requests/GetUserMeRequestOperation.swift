@@ -15,9 +15,7 @@ internal final class GetUserMeRequestOperation : UserRequestOperation {
         super.main()
         assert(oauth?.tokenType != .application)
         let request = URLRequest.int_URLRequestForUserMe(oauth: oauth!, configuration: configuration!, network: network!)
-        
-        sharedIntelligenceLogger.log(message: request.description);
-
+        sharedIntelligenceLogger.logger?.debug(request.description)
         output = session?.int_executeSynchronousDataTask(with: request)
         parse()
     }

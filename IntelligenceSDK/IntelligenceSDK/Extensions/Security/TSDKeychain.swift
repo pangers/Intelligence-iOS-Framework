@@ -49,7 +49,7 @@ internal class TSDKeychain {
         if let status = status {
             let statusCode = Int(status)
             if statusCode != Int(errSecSuccess) {
-                sharedIntelligenceLogger.log(message: "Intelligence keychain error")
+                sharedIntelligenceLogger.logger?.error("Intelligence keychain error")
                 throw TSDKeychainError.errorCode(statusCode)
             }
             var resultsDictionary: NSDictionary?
@@ -60,7 +60,7 @@ internal class TSDKeychain {
             }
             return resultsDictionary
         } else {
-            sharedIntelligenceLogger.log(message: "Intelligence keychain item not found")
+            sharedIntelligenceLogger.logger?.error("Intelligence keychain item not found")
             throw TSDKeychainError.notFoundError
         }
     }
