@@ -34,6 +34,89 @@ internal enum IdentifierType : Int {
 }
 
 
+internal extension Date {
+    
+    public var  stringValue : String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let dateString = dateFormatter.string(from:self)
+        return dateString
+    }
+
+    func dateByAddingDays(days: Int) -> Date {
+        let interval : TimeInterval = Double(days)*24*60*60;
+        let date = self.addingTimeInterval(interval)
+        return date
+    }
+}
+
+internal extension IntelligenceLogger{
+    
+    private var daysToKeeplogs:Int {
+        return 5;
+    }
+    
+    private var folderPath :String {
+        return (NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString).appendingPathComponent("Intelligence")
+    }
+    
+    public func filePath(forDate:Date) -> String{
+        let filePath = folderPath
+        let dateStr =  forDate.stringValue
+        let fullPath = (filePath as NSString).appendingPathComponent(dateStr)
+        return fullPath
+    }
+    
+    public func clearOldLogFiles(){
+        
+        var allNames:[String] = []
+        let directoryContents = try? FileManager.default.contentsOfDirectory(at:URL.init(fileURLWithPath: folderPath), includingPropertiesForKeys: nil, options: [])
+        
+        if let directoryContents = directoryContents{
+            allNames = directoryContents.map { (dirPath) -> String in
+                return dirPath.lastPathComponent
+            }
+        }
+        
+        guard  allNames.count > 0  else {
+            return
+        }
+        
+        var recentFiles:[String] = []
+        for i in 0..<self.daysToKeeplogs{
+            let date = Date().dateByAddingDays(days: -i)
+            recentFiles.append(date.stringValue)
+        }
+        
+        for name in allNames{
+            if (!recentFiles.contains(name)){
+                let path = (folderPath as NSString).appendingPathComponent(name)
+                if (FileManager.default.fileExists(atPath: path)){
+                    try? FileManager.default.removeItem(atPath: path)
+                }
+            }
+        }
+    }
+    
+    public func createLogFile(forDate:Date) -> String{
+        
+        let fileManager = FileManager.default
+        var isDir : ObjCBool = false
+        
+        if (!fileManager.fileExists(atPath: folderPath, isDirectory: &isDir)){
+            if !isDir.boolValue{
+                do{
+                    try fileManager.createDirectory(atPath: folderPath, withIntermediateDirectories: true, attributes: nil)
+                }
+                catch{
+                    print("Failed to create folder");
+                }
+            }
+        }
+        return filePath(forDate: forDate)
+    }
+}
+
 internal extension NSError{
     
     public func descriptionWith(urlRequest:URLRequest? = nil, response:HTTPURLResponse? = nil) -> String {

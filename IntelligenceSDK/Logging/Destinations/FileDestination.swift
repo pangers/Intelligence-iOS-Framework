@@ -43,7 +43,7 @@ open class FileDestination: BaseDestination {
     internal var appendMarker: String?
 
     // MARK: - Life Cycle
-    public init(owner: XCGLogger? = nil, writeToFile: Any, identifier: String = "", shouldAppend: Bool = false, appendMarker: String? = "-- ** ** ** --") {
+    public init(owner: XCGLogger? = nil, writeToFile: Any, identifier: String = "", shouldAppend: Bool = true, appendMarker: String? = "-- ** ** ** --") {
         self.shouldAppend = shouldAppend
         self.appendMarker = appendMarker
 
@@ -99,12 +99,13 @@ open class FileDestination: BaseDestination {
                     if let appendMarker = appendMarker,
                         let encodedData = "\(appendMarker)\n".data(using: String.Encoding.utf8) {
 
-                        _try({
-                            self.logFileHandle?.write(encodedData)
-                        },
-                        catch: { (exception: NSException) in
-                            owner._logln("Objective-C Exception occurred: \(exception)", level: .error)
-                        })
+                        self.logFileHandle?.write(encodedData)
+//                        _try({
+//                            self.logFileHandle?.write(encodedData)
+//                        },
+//                        catch: { (exception: NSException) in
+//                            owner._logln("Objective-C Exception occurred: \(exception)", level: .error)
+//                        })
                     }
                 }
             }
@@ -206,12 +207,13 @@ open class FileDestination: BaseDestination {
             self.applyFormatters(logDetails: &logDetails, message: &message)
 
             if let encodedData = "\(message)\n".data(using: String.Encoding.utf8) {
-                _try({
-                    self.logFileHandle?.write(encodedData)
-                },
-                catch: { (exception: NSException) in
-                    self.owner?._logln("Objective-C Exception occurred: \(exception)", level: .error)
-                })
+                 self.logFileHandle?.write(encodedData)
+//                _try({
+//                    self.logFileHandle?.write(encodedData)
+//                },
+//                catch: { (exception: NSException) in
+//                    self.owner?._logln("Objective-C Exception occurred: \(exception)", level: .error)
+//                })
             }
         }
         

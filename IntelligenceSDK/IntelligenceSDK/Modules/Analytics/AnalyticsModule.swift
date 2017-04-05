@@ -155,7 +155,15 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     internal func sendEvents(events: JSONDictionaryArray, completion: @escaping (NSError?) -> ()) {
         
         var eventNames = events.map { (event) -> String in
-            return event["eventType"] as! String;
+            
+            var type:String = ""
+            for (key, value) in event {
+                if (key == "EventType"){
+                    type = value as! String;
+                    break
+                }
+            }
+            return type;
         }
         
         var str = String(format:"Sending Events : %@",eventNames.description)

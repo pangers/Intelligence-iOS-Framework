@@ -62,7 +62,14 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         }
         
         var eventNames = eventsJSON.map { (event) -> String in
-            return event["eventType"] as! String;
+            var type:String = ""
+            for (key, value) in event {
+                if (key == "EventType"){
+                    type = value as! String;
+                    break
+                }
+            }
+            return type;
         }
         
         //info

@@ -28,4 +28,12 @@ extension DateFormatter {
         return dateFormatter
     }
     
+    class func standatrdFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'"
+        return dateFormatter
+    }
 }

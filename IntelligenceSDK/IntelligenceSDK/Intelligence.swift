@@ -124,13 +124,16 @@ public class IntelligenceLogger : NSObject {
             return self.isLoggingEnabled
         }
         set{
-            if (self.logger == nil && newValue){
-                self.logger = XCGLogger.default
-            }
-            else if (!newValue){
-                self.logger = nil
-            }
-            self.isLoggingEnabled = newValue;
+            #if DEBUG
+                if (self.logger == nil && newValue){
+                    self.logger = XCGLogger.default
+                    setupLogger()
+                }
+                else if (!newValue){
+                    self.logger = nil
+                }
+                self.isLoggingEnabled = newValue;
+            #endif
         }
     }
 
@@ -145,12 +148,16 @@ public class IntelligenceLogger : NSObject {
             return
         }
         
+        clearOldLogFiles()
+        
+        let path = createLogFile(forDate: Date())
+        
         logger.setup(level: .debug,
                      showThreadName: false,
                      showLevel: false,
                      showFileNames: false,
                      showLineNumbers: false,
-                     writeToFile: nil,
+                     writeToFile: path,
                      fileLevel: .none)
 
     }
