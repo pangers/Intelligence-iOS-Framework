@@ -104,13 +104,13 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     }
     
     func resume() {
-                sharedIntelligenceLogger.log(message:"Resume Analytics Module ....");
+        sharedIntelligenceLogger.log(message:"Resume Analytics Module ....");
         eventQueue?.startQueue()
         timeTracker?.resume()
     }
     
     override func shutdown() {
-                sharedIntelligenceLogger.log(message:"Shutdown Analytics Module");
+        sharedIntelligenceLogger.log(message:"Shutdown Analytics Module");
         eventQueue?.stopQueue()
         timeTracker = nil
         super.shutdown()
@@ -153,6 +153,14 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     /// - parameter events:     Array of JSONified Events to send.
     /// - parameter completion: Must be called on completion to notify caller of success/failure.
     internal func sendEvents(events: JSONDictionaryArray, completion: @escaping (NSError?) -> ()) {
+        
+        var eventNames = events.map { (event) -> String in
+            return event["eventType"] as! String;
+        }
+        
+        var str = String(format:"Sending Events : %@",eventNames.description)
+        sharedIntelligenceLogger.log(message:str)
+        
         let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
             completion(analyticsOperation.output?.error)

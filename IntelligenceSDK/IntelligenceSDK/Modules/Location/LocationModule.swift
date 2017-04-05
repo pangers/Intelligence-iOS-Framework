@@ -217,7 +217,7 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     // MARK:- Startup and shutdown methods.
     override func startup(completion: @escaping (Bool) -> ()) {
-                sharedIntelligenceLogger.log(message:"Location module startup....");
+        sharedIntelligenceLogger.log(message:"Location module startup....");
         super.startup(completion: completion)
         sharedIntelligenceLogger.log(message:"Location module start success*****");
     }
@@ -228,13 +228,18 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     override func shutdown() {
         // Clear geofences.
         geofences = nil
-        
+      
+        sharedIntelligenceLogger.log(message:"Location Module Shutdown");
+
         super.shutdown()
     }
     
     // MARK:- Download geofences
     
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?) {
+        
+        sharedIntelligenceLogger.log(message:"Downloading of geofenses");
+        
         let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) in
             let downloadGeofencesOperation = returnedOperation as! DownloadGeofencesRequestOperation
             let error = downloadGeofencesOperation.output?.error
@@ -251,10 +256,12 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     func startMonitoringGeofences(geofences:[Geofence]) {
+        sharedIntelligenceLogger.log(message: "Start Monitoring Geofences")
         self.locationManager.startMonitoringGeofences(geofences: geofences)
     }
     
     func stopMonitoringGeofences() {
+        sharedIntelligenceLogger.log(message: "Stop Monitoring Geofences")
         self.locationManager.stopMonitoringGeofences()
     }
     
@@ -264,10 +271,12 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     
     internal func startMonitoringLocation() {
+        sharedIntelligenceLogger.log(message: "Start monitoring location")
         self.locationManager.startUpdatingLocation()
     }
     
     internal func stopMonitoringLocation() {
+        sharedIntelligenceLogger.log(message: "Stop monitoring location")
         self.locationManager.stopUpdatingLocation()
     }
     
@@ -292,30 +301,35 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     // MARK:- LocationManagerDelegate
     
     func didEnterGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
+        sharedIntelligenceLogger.log(message: "Did enter geofence")
         self.locationDelegate?.intelligenceLocation?(location: self, didEnterGeofence: geofence)
         self.enteredGeofences[geofence.id] = geofence
         self.trackGeofenceEntered(geofence: geofence)
     }
     
     func didExitGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
+        sharedIntelligenceLogger.log(message: "Did exit geofence")
         self.locationDelegate?.intelligenceLocation?(location: self, didExitGeofence: geofence)
         self.enteredGeofences[geofence.id] = nil
         self.trackGeofenceExited(geofence: geofence)
     }
     
     func didUpdateLocationWithCoordinate(coordinate:Coordinate) {
-        
+        sharedIntelligenceLogger.log(message: "Did update geofence location")
     }
     
     func didStartMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.log(message: "Did start monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didStartMonitoringGeofence: geofence)
     }
     
     func didFailMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.log(message: "Did fail monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didFailMonitoringGeofence: geofence)
     }
     
     func didStopMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.log(message: "Did stop monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didStopMonitoringGeofence: geofence)
     }
 

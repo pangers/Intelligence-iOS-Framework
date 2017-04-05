@@ -61,6 +61,14 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
             return
         }
         
+        var eventNames = eventsJSON.map { (event) -> String in
+            return event["eventType"] as! String;
+        }
+        
+        //info
+        var str = String(format:"Sending Events Sucessfull : %@",eventNames.description)
+        sharedIntelligenceLogger.log(message:str)
+        
         if let httpResponse = output?.response as? HTTPURLResponse {
                sharedIntelligenceLogger.log(message: httpResponse.description);
         }
