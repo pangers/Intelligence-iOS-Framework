@@ -30,13 +30,13 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     "}"
     
     func fakeGeofence() -> Geofence {
-        let data = fakeGeofenceString.dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonDictionary
+        let data = fakeGeofenceString.data(using: String.Encoding.utf8)?.int_jsonDictionary
         return try! Geofence.geofences(withJSON: data).first!
     }
     
     override func tearDown() {
         super.tearDown()
-        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (_ error: NSError?) -> ()) -> () in
             
         }
         queue.clearEvents()
@@ -51,7 +51,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     func testAnalyticsModule() {
         let analytics = intelligence.analytics as! AnalyticsModule
         analytics.eventQueue = EventQueue { (events, completion) -> () in
-            completion(error: nil)
+            completion(nil)
         }
         let storage = MockTimeTrackerStorage()
         analytics.timeTracker = TimeTracker(storage: storage, callback: { (event) -> () in
@@ -78,20 +78,21 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         analytics.pause()
         analytics.resume()
         
-        XCTAssert(analytics.timeTracker!.seconds - seconds > 0)
+        let updatedSecond = analytics.timeTracker!.seconds
+        XCTAssert((Int)(updatedSecond - seconds) > 0)
         
         analytics.pause()
         
         analytics.eventQueue?.clearEvents()
         
         let testEvent = Event(withType: "TestType")
-        analytics.track(testEvent)
+        analytics.track(event: testEvent)
         
         XCTAssert(analytics.eventQueue?.eventArray.count == 1)
         let dictionary = analytics.eventQueue!.eventArray.first as JSONDictionary!
-        ensureJSONIncludesMandatoryPopulatedData(dictionary)
+        ensureJSONIncludesMandatoryPopulatedData(dictionary!)
         
-        guard let rootGeo = dictionary[Event.GeolocationKey] as? JSONDictionary else {
+        guard let rootGeo = dictionary?[Event.GeolocationKey] as? JSONDictionary else {
             XCTFail("Invalid event, expected user location")
             return
         }
@@ -101,8 +102,8 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     }
     
     func testTimeTracker() {
-        var expectCallbacks = [expectationWithDescription("Was expecting a callback to be notified"),
-        expectationWithDescription("Was expecting a callback to be notified 2")]
+        var expectCallbacks = [expectation(description: "Was expecting a callback to be notified"),
+        expectation(description: "Was expecting a callback to be notified 2")]
         let storage = MockTimeTrackerStorage()
         storage.duration = 10
         var timeTracker: TimeTracker? = TimeTracker(storage: storage, callback: { (event) -> () in
@@ -115,19 +116,19 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         })
         sleep(1)
         timeTracker?.pause()
-        XCTAssert(timeTracker?.seconds > 0)
+        XCTAssert((timeTracker?.seconds)! > 0)
         
         timeTracker?.backgroundThreshold = 1
         sleep(2)
         
         timeTracker?.resume()
-        timeTracker?.runTimer(NSTimer())
+        timeTracker?.runTimer(timer: Timer())
         
         waitForExpectations()
         
-        let actualStorage = TimeTrackerStorage(userDefaults: NSUserDefaults())
+        let actualStorage = TimeTrackerStorage(userDefaults: UserDefaults())
         actualStorage.reset()
-        actualStorage.update(10)
+        actualStorage.update(seconds: 10)
         XCTAssert(actualStorage.seconds() == 10)
         actualStorage.reset()
         XCTAssert(actualStorage.seconds() == nil)
@@ -143,10 +144,10 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         return event
     }
     
-    func ensureJSONIncludesMandatoryPopulatedData(json: JSONDictionary) {
+    func ensureJSONIncludesMandatoryPopulatedData(_ json: JSONDictionary) {
         XCTAssert(json[Event.ApplicationIdKey] as! Int == mockConfiguration.applicationID, "Expected application ID to match configuration")
-        XCTAssert(json[Event.DeviceTypeKey] as! String == UIDevice.currentDevice().model, "Expected device model to match")
-        XCTAssert(json[Event.OperationSystemVersionKey] as! String == UIDevice.currentDevice().systemVersion, "Expected system version to match")
+        XCTAssert(json[Event.DeviceTypeKey] as! String == UIDevice.current.model, "Expected device model to match")
+        XCTAssert(json[Event.OperationSystemVersionKey] as! String == UIDevice.current.systemVersion, "Expected system version to match")
         XCTAssert(json[Event.EventDateKey] as? String != nil, "Expected time interval")
     }
     
@@ -156,7 +157,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         }
         XCTAssert(myQueue.maxEvents == 100, "Expected 100 max")
         XCTAssert(myQueue.isPaused, "Expected to start paused")
-        myQueue.runTimer(NSTimer())
+        myQueue.runTimer(timer: Timer())
         myQueue.fire(withCompletion: nil)
         myQueue.startQueue()
         myQueue.startQueue()    // Call second time to check 'isPaused'.
@@ -172,23 +173,23 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     // MARK:- Geofences
     
-    func mockSendAnalytics(status: HTTPStatusCode = .Success, event: Event, eventsJSONResponse: JSONDictionary? = nil, completion: (error: NSError?) -> ()) {
+    func mockSendAnalytics(_ status: HTTPStatusCode = .success, event: Event, eventsJSONResponse: JSONDictionary? = nil, completion: @escaping (_ error: NSError?) -> ()) {
         let analytics = (intelligence?.analytics as! AnalyticsModule)
-        let eventJSON = analytics.prepareEvent(event)
+        let eventJSON = analytics.prepareEvent(event: event)
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         let eventsJSON: JSONDictionaryArray = [eventJSON]
         let eventsResponse = eventsJSONResponse ?? ["TotalRecords": 1, "Data": eventsJSON]
-        let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: NSUTF8StringEncoding) as! String
-        let URL = NSURLRequest.int_URLRequestForAnalytics(eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: String.Encoding.utf8.rawValue) as! String
+        let URL = URLRequest.int_URLRequestForAnalytics(json: eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
         mockResponseForURL(URL,
-            method: .POST,
-            response: (data: status == .Success ? successfulResponse : nil, statusCode: status, headers:nil))
-        analytics.sendEvents(eventsJSON, completion: completion)
+            method: .post,
+            response: (data: status == .success ? successfulResponse : nil, statusCode: status, headers:nil))
+        analytics.sendEvents(events: eventsJSON, completion: completion)
     }
     
     /// Test if event type is correct and id matches.
     func testGeofenceEnterSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
@@ -198,7 +199,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         XCTAssert(event.value == 0)
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
@@ -210,7 +211,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test if event type is correct and id matches.
     func testGeofenceExitSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         // Create event, avoiding queueing/storage system.
         let geofence = fakeGeofence()
@@ -220,7 +221,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         XCTAssert(event.value == 0)
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
@@ -234,7 +235,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test a valid response is parsed correctly
     func testOpenApplicationSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         // Create event, avoiding queueing/storage system.
         let event = OpenApplicationEvent(applicationID: mockConfiguration.applicationID)
@@ -243,7 +244,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         XCTAssert(event.value == 0)
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: event,
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
@@ -257,7 +258,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
 	
 	/// Test if event type is correct and id matches.
 	func testScreenViewedSuccess() {
-		let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+		let expectCallback = expectation(description: "Was expecting a callback to be notified")
 		
 		// Create event, avoiding queueing/storage system.
 		let screenName = "Unit Test Screen"
@@ -280,10 +281,10 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test a valid response is parsed correctly
     func testAnalyticsSuccess() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: genericEvent(),
             completion: { (error) -> () in
             XCTAssertNil(error, "Expected success")
@@ -295,15 +296,15 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test a invalid number of events is returned
     func testAnalyticsInvalidCount() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: genericEvent(),
             eventsJSONResponse: ["TotalRecords": 2, "Data": [genericEvent().toJSON(), genericEvent().toJSON()]],
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            XCTAssert(error?.code == RequestError.parseError.rawValue, "Expected parse error")
             expectCallback.fulfill()
         })
         
@@ -312,15 +313,15 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test a invalid response
     func testAnalyticsInvalidResponse() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.Success,
+        mockSendAnalytics(.success,
             event: genericEvent(),
             eventsJSONResponse: ["Blah": "123"],
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.ParseError.rawValue, "Expected parse error")
+            XCTAssert(error?.code == RequestError.parseError.rawValue, "Expected parse error")
             expectCallback.fulfill()
         })
         
@@ -329,15 +330,15 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test an error
     func testAnalyticsError404() {
-        let expectCallback = expectationWithDescription("Was expecting a callback to be notified")
+        let expectCallback = expectation(description: "Was expecting a callback to be notified")
         
         mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.loggedInUserOAuth, fakeUser: fakeUser)
-        mockSendAnalytics(.NotFound,
+        mockSendAnalytics(.notFound,
             event: genericEvent(),
             completion: { (error) -> () in
             XCTAssertNotNil(error, "Expected failure")
-            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.NotFound.rawValue, "Expected a NotFound (404) error")
+            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.notFound.rawValue, "Expected a NotFound (404) error")
             expectCallback.fulfill()
         })
         
@@ -348,17 +349,17 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     func testAnalyticsError400InvalidRequest() {
         let analytics = intelligence.analytics as! AnalyticsModule
         let failureResponse = "{ \"error\": \"invalid_request\", \"error_description\": \"Invalid parameter.\" }"
-        let URL = NSURLRequest.int_URLRequestForAnalytics([], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).URL
+        let URL = URLRequest.int_URLRequestForAnalytics(json: [], oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
         
         // Expect the analytics response.
-        let expectation = expectationWithDescription("Expected analytics callback")
+        let expectation = self.expectation(description: "Expected analytics callback")
 
         // Mock the 400 response with error invalid_request.
         mockResponseForURL(URL,
-            method: .POST,
-            response: (data: failureResponse, statusCode: .BadRequest, headers:nil))
+            method: .post,
+            response: (data: failureResponse, statusCode: .badRequest, headers:nil))
         
-        analytics.sendEvents([]) { (error) -> () in
+        analytics.sendEvents(events: []) { (error) -> () in
             // The operation should throw the error for the callback to handle.
             XCTAssertNotNil(error)
             expectation.fulfill()
@@ -372,29 +373,29 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test events queue saving/loading
     func testEventsQueueLoad() {
-        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (_ error: NSError?) -> ()) -> () in
             
         }
         let analytics = (intelligence?.analytics as! AnalyticsModule)
-        let eventJSON = analytics.prepareEvent(genericEvent())
+        let eventJSON = analytics.prepareEvent(event: genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        queue.enqueueEvent(eventJSON)
+        queue.enqueueEvent(event: eventJSON)
         queue.loadEvents()
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
     }
     
     /// Test events queue sending
     func testEventsQueueFire() {
-        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (_ error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
-            completion(error: nil)
+            completion(nil)
         }
         let analytics = (intelligence?.analytics as! AnalyticsModule)
-        let eventJSON = analytics.prepareEvent(genericEvent())
+        let eventJSON = analytics.prepareEvent(event: genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        queue.enqueueEvent(eventJSON)
+        queue.enqueueEvent(event: eventJSON)
         queue.isPaused = false
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
@@ -407,20 +408,20 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     
     /// Test events queue sending failure
     func testEventsQueueFireFailed() {
-        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (_ error: NSError?) -> ()) -> () in
             XCTAssert(events.count == 1)
-            completion(error: NSError(code: RequestError.UnhandledError.rawValue))
+            completion(NSError(code: RequestError.unhandledError.rawValue))
         }
         let analytics = (intelligence?.analytics as! AnalyticsModule)
-        let eventJSON = analytics.prepareEvent(genericEvent())
+        let eventJSON = analytics.prepareEvent(event: genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        queue.enqueueEvent(eventJSON)
+        queue.enqueueEvent(event: eventJSON)
         queue.isPaused = false
         XCTAssert(queue.eventArray.count == 1, "Expected 1 event to be saved")
         queue.fire { (error) -> () in
             XCTAssertNotNil(error, "Expected error")
-            XCTAssert(error?.code == RequestError.UnhandledError.rawValue, "Expected an unhandleable error")
+            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in array")
             queue.loadEvents()
             XCTAssert(queue.eventArray.count == 1, "Expected event to stay in file")
@@ -430,15 +431,15 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
     /// Test that having over 100 events in the queue will fire two calls.
     func test101EventsInQueueRequiresTwoCalls() {
         var comparisonCount: Int = 0
-        let queue = EventQueue { (events, completion: (error: NSError?) -> ()) -> () in
+        let queue = EventQueue { (events, completion: (_ error: NSError?) -> ()) -> () in
             XCTAssert(events.count == comparisonCount)
-            completion(error: nil)
+            completion(nil)
         }
         let analytics = (intelligence?.analytics as! AnalyticsModule)
-        let eventJSON = analytics.prepareEvent(genericEvent())
+        let eventJSON = analytics.prepareEvent(event: genericEvent())
         queue.clearEvents() // Empty file first
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
-        (0...queue.maxEvents).forEach({ n -> Void in queue.enqueueEvent(eventJSON) })
+        (0...queue.maxEvents).forEach({ n -> Void in queue.enqueueEvent(event: eventJSON) })
         var remaining = queue.eventArray.count
         XCTAssert(remaining == queue.maxEvents + 1, "Expected 101 events to be saved")
         queue.isPaused = false

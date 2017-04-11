@@ -11,6 +11,11 @@ import UIKit
 @testable import IntelligenceSDK
 
 class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
+    
+    public func startup(completion: @escaping (Bool) -> ()) {
+        completion(true)
+    }
+
 
     var trackedEvents:[Event] = []
     
@@ -29,13 +34,13 @@ class MockAnalyticsModule: NSObject, AnalyticsModuleProtocol {
     /// Track user engagement and behavioral insight.
     /// - parameter screenName: An identifier for the screen.
     /// - parameter viewingDuration: The time (in seconds) spent on the screen.
-    func trackScreenViewed(screenName: String, viewingDuration: NSTimeInterval) {
+    func trackScreenViewed(_ screenName: String, viewingDuration: TimeInterval) {
         
     }
     
-    func startup(completion: (success: Bool) -> ()) {
-        completion(success: true)
-    }
+//    func startup(_ completion: (_ success: Bool) -> ()) {
+//        completion(true)
+//    }
     
     func shutdown() {
         

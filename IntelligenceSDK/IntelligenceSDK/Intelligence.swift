@@ -103,11 +103,11 @@ internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
 
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
 
-public final class Intelligence: NSObject {
-
+open class Intelligence: NSObject {
+    
     /// - Returns: A **copy** of the configuration.
-    public let configuration: Intelligence.Configuration
-
+    open let configuration: Intelligence.Configuration
+    
     /// Responsible for propogating events back to App.
     internal var delegateWrapper: IntelligenceDelegateWrapper!
 

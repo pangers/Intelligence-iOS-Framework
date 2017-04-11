@@ -10,10 +10,10 @@ import Foundation
 
 import IntelligenceSDK
 
-public class MockConfiguration: Intelligence.Configuration {
+  class MockConfiguration: Intelligence.Configuration {
 
-    public var mockInvalid:Bool = false
-    public var mockMissingProperty: Bool = false
+    open var mockInvalid:Bool = false
+    open var mockMissingProperty: Bool = false
     
     override init() {
         super.init()
@@ -22,12 +22,12 @@ public class MockConfiguration: Intelligence.Configuration {
         self.projectID = 123
         self.applicationID = 123
         self.companyId = 12
-        self.region = .Europe
-        self.environment = .UAT
+        self.region = .europe
+        self.environment = .uat
     }
     
     /// - Returns: A copy of the configuration object.
-    override public func clone() -> MockConfiguration {
+    override open func clone() -> MockConfiguration {
         let copy = MockConfiguration()
         copy.region = self.region
         copy.environment = self.environment
@@ -43,7 +43,7 @@ public class MockConfiguration: Intelligence.Configuration {
 
     /// - Returns: True if the configuration is correct and can be used to initialize
     /// the Intelligence SDK.
-    override public var isValid: Bool {
+    override open var isValid: Bool {
         if mockInvalid {
             return false
         }
@@ -52,7 +52,7 @@ public class MockConfiguration: Intelligence.Configuration {
     }
     
     /// - Returns: True if there is a missing property in the configuration
-    override public var hasMissingProperty: Bool {
+    override open var hasMissingProperty: Bool {
         if mockMissingProperty {
             return true
         }
