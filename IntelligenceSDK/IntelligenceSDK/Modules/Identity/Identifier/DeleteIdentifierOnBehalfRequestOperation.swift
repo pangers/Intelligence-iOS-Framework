@@ -28,10 +28,16 @@ class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCop
         super.main()
         let request = URLRequest.int_URLRequestForIdentifierDeletionOnBehalf(token: token, oauth: oauth!, configuration: configuration!, network: network!)
         
+        sharedIntelligenceLogger.logger?.debug(request.description)
+
         output = network!.sessionManager!.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
             return
+        }
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
         }
     }
     

@@ -43,9 +43,15 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
         
         guard let receivedUser = Intelligence.User(withJSON: outputArrayFirstDictionary(), configuration: configuration!) else {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+            let str = String(format: "Parse error -- %@", (self.session?.description)!)
+            sharedIntelligenceLogger.logger?.error(str)
             return
         }
         user = receivedUser
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+        }
     }
     
     func copy(with zone: NSZone? = nil) -> Any {

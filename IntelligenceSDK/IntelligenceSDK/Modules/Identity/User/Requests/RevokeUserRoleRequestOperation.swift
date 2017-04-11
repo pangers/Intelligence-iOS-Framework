@@ -23,6 +23,8 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         assert(sentUser != nil)
         
         let request = URLRequest.int_URLRequestForUserRoleRevoke(roleId: roleId, user: sentUser!, oauth: oauth!, configuration: configuration!, network: network!)
+        sharedIntelligenceLogger.logger?.debug(request.description)
+
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
@@ -31,11 +33,18 @@ internal final class RevokeUserRoleRequestOperation : UserRequestOperation {
         
         guard let _ = outputArrayFirstDictionary() else {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+            
+            let str = String(format: "Parse error -- %@", (self.session?.description)!)
+            sharedIntelligenceLogger.logger?.error(str)
             return
         }
         
         // For revoke, we don't actually receive a user, lets return the user we sent so this method adheres to the Identity-type requests.
         user = sentUser
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+        }
     }
     
     override func copy(with zone: NSZone? = nil) -> Any {

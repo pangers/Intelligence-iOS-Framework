@@ -34,6 +34,138 @@ internal enum IdentifierType : Int {
 }
 
 
+internal extension Date {
+    
+    public var  stringValue : String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let dateString = dateFormatter.string(from:self)
+        return dateString
+    }
+
+    func dateByAddingDays(days: Int) -> Date {
+        let interval : TimeInterval = Double(days)*24*60*60;
+        let date = self.addingTimeInterval(interval)
+        return date
+    }
+}
+
+internal extension IntelligenceLogger{
+    
+    private var daysToKeeplogs:Int {
+        return 5;
+    }
+    
+    private var folderPath :String {
+        return (NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString).appendingPathComponent("Intelligence")
+    }
+    
+    public func filePath(forDate:Date) -> String{
+        let filePath = folderPath
+        let dateStr =  forDate.stringValue
+        let fullPath = (filePath as NSString).appendingPathComponent(dateStr)
+        return fullPath
+    }
+    
+    public func clearOldLogFiles(){
+        
+        var allNames:[String] = []
+        let directoryContents = try? FileManager.default.contentsOfDirectory(at:URL.init(fileURLWithPath: folderPath), includingPropertiesForKeys: nil, options: [])
+        
+        if let directoryContents = directoryContents{
+            allNames = directoryContents.map { (dirPath) -> String in
+                return dirPath.lastPathComponent
+            }
+        }
+        
+        guard  allNames.count > 0  else {
+            return
+        }
+        
+        var recentFiles:[String] = []
+        for i in 0..<self.daysToKeeplogs{
+            let date = Date().dateByAddingDays(days: -i)
+            recentFiles.append(date.stringValue)
+        }
+        
+        for name in allNames{
+            if (!recentFiles.contains(name)){
+                let path = (folderPath as NSString).appendingPathComponent(name)
+                if (FileManager.default.fileExists(atPath: path)){
+                    try? FileManager.default.removeItem(atPath: path)
+                }
+            }
+        }
+    }
+    
+    public func createLogFile(forDate:Date) -> String{
+        
+        let fileManager = FileManager.default
+        var isDir : ObjCBool = false
+        
+        if (!fileManager.fileExists(atPath: folderPath, isDirectory: &isDir)){
+            if !isDir.boolValue{
+                do{
+                    try fileManager.createDirectory(atPath: folderPath, withIntermediateDirectories: true, attributes: nil)
+                }
+                catch{
+                    print("Failed to create folder");
+                }
+            }
+        }
+        return filePath(forDate: forDate)
+    }
+}
+
+internal extension NSError{
+    
+    public func descriptionWith(urlRequest:URLRequest? = nil, response:HTTPURLResponse? = nil) -> String {
+        
+        var dict:[String:Any] = [ : ]
+        
+        dict["error"] = self.description
+       
+        if let urlRequest = urlRequest, let url = urlRequest.url?.absoluteString{
+            dict["url"] = url
+        }
+        
+        var str = String(format : "Response : %@ ---> %@",(urlRequest?.url?.absoluteString) ?? "***", dict)
+
+        guard let response = response else {
+            return str
+        }
+        
+        str = str.appending(response.description)
+        return str
+    }
+}
+
+internal extension HTTPURLResponse{
+    
+    open override var description : String {
+        get {
+            
+            var dict : [String : Any] = [:]
+           
+            let statusCode = self.statusCode;
+            dict["statusCode"] = statusCode
+
+            
+            if let url = self.url{
+                dict["request"] = url.absoluteString
+            }
+            
+            if let headerFields = self.allHeaderFields as AnyObject?{
+                dict["httpHeaderFields"] = headerFields
+            }
+            
+            var str = String(format : "Response : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
+            return str;
+        }
+    }
+}
+
+
 // MARK: - OAuth
 
 internal extension URLRequest {
@@ -118,6 +250,43 @@ internal extension URLRequest {
         request.httpMethod = HTTPRequestMethod.post.rawValue
         request.httpBody = int_HTTPBodyData(body: body)
         return request
+    }
+    
+    public var description : String {
+        
+        var dict : [String : Any] = [:]
+        
+        if let postMethod = self.httpMethod {
+            dict["httpMethod"] = postMethod
+        }
+        
+        if let headerFields = self.allHTTPHeaderFields{
+            dict["httpHeaderFields"] = headerFields
+        }
+
+        if let urlStr = self.url?.absoluteString{
+            dict["request"] = urlStr
+        }
+        
+        var body:AnyObject? = nil;
+        
+        if let jsonObj = self.httpBody?.int_jsonDictionary{
+            body = jsonObj as AnyObject;
+        }
+        else if let jsonObj = self.httpBody?.int_jsonArray{
+            body = jsonObj as AnyObject;
+        }
+        else if let jsonObj = self.httpBody?.int_jsonDictionaryArray{
+            body = jsonObj as AnyObject;
+        }
+        
+        if let body = body{
+            dict["body"] = body;
+        }
+        
+        var str = String(format : "Request : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
+        
+        return str;
     }
 }
 

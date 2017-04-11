@@ -28,6 +28,8 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
     override func main() {
         super.main()
         let request = URLRequest.int_URLRequestForDownloadGeofences(oauth: oauth!, configuration: configuration!, network: network!, query:queryDetails)
+        sharedIntelligenceLogger.logger?.debug(request.description)
+
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
@@ -36,10 +38,17 @@ internal final class DownloadGeofencesRequestOperation: IntelligenceAPIOperation
         
         guard let downloaded = try? Geofence.geofences(withJSON: output?.data?.int_jsonDictionary) else {
             output?.error = NSError(code: RequestError.parseError.rawValue)
+            
+            let str = String(format: "Parse error -- %@", (self.session?.description)!)
+            sharedIntelligenceLogger.logger?.error(str)            
             return
         }
         
         geofences = downloaded
+        
+        if let httpResponse = output?.response as? HTTPURLResponse {
+            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+        }
     }
     
     func copy(with zone: NSZone? = nil) -> Any {

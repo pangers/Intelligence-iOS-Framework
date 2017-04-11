@@ -217,7 +217,9 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     // MARK:- Startup and shutdown methods.
     override func startup(completion: @escaping (Bool) -> ()) {
+        sharedIntelligenceLogger.logger?.info("Location module startup....")
         super.startup(completion: completion)
+        sharedIntelligenceLogger.logger?.info("Location module start success*****")
     }
     
     /**
@@ -226,13 +228,16 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     override func shutdown() {
         // Clear geofences.
         geofences = nil
-        
+        sharedIntelligenceLogger.logger?.info("Location Module Shutdown")
         super.shutdown()
     }
     
     // MARK:- Download geofences
     
     func downloadGeofences(queryDetails: GeofenceQuery, callback: DownloadGeofencesCallback?) {
+        
+        sharedIntelligenceLogger.logger?.info("Downloading of geofenses")
+        
         let operation = DownloadGeofencesRequestOperation(oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, query:queryDetails, callback: { (returnedOperation) in
             let downloadGeofencesOperation = returnedOperation as! DownloadGeofencesRequestOperation
             let error = downloadGeofencesOperation.output?.error
@@ -249,10 +254,12 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     }
     
     func startMonitoringGeofences(geofences:[Geofence]) {
+        sharedIntelligenceLogger.logger?.info("Start Monitoring Geofences")
         self.locationManager.startMonitoringGeofences(geofences: geofences)
     }
     
     func stopMonitoringGeofences() {
+        sharedIntelligenceLogger.logger?.info("Stop Monitoring Geofences")
         self.locationManager.stopMonitoringGeofences()
     }
     
@@ -262,10 +269,12 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     
     
     internal func startMonitoringLocation() {
+        sharedIntelligenceLogger.logger?.info("Start monitoring location")
         self.locationManager.startUpdatingLocation()
     }
     
     internal func stopMonitoringLocation() {
+        sharedIntelligenceLogger.logger?.info("Stop monitoring location")
         self.locationManager.stopUpdatingLocation()
     }
     
@@ -290,30 +299,35 @@ internal final class LocationModule: IntelligenceModule, LocationModuleProtocol,
     // MARK:- LocationManagerDelegate
     
     func didEnterGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
+        sharedIntelligenceLogger.logger?.info("Did enter geofence")
         self.locationDelegate?.intelligenceLocation?(location: self, didEnterGeofence: geofence)
         self.enteredGeofences[geofence.id] = geofence
         self.trackGeofenceEntered(geofence: geofence)
     }
     
     func didExitGeofence(geofence: Geofence, withUserCoordinate: Coordinate?) {
+        sharedIntelligenceLogger.logger?.info("Did exit geofence")
         self.locationDelegate?.intelligenceLocation?(location: self, didExitGeofence: geofence)
         self.enteredGeofences[geofence.id] = nil
         self.trackGeofenceExited(geofence: geofence)
     }
     
     func didUpdateLocationWithCoordinate(coordinate:Coordinate) {
-        
+//        sharedIntelligenceLogger.log(message: "Did update geofence location")
     }
     
     func didStartMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.logger?.info("Did start monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didStartMonitoringGeofence: geofence)
     }
     
     func didFailMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.logger?.info("Did fail monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didFailMonitoringGeofence: geofence)
     }
     
     func didStopMonitoringGeofence(geofence:Geofence) {
+        sharedIntelligenceLogger.logger?.info("Did stop monitor geofense")
         self.locationDelegate?.intelligenceLocation?(location: self, didStopMonitoringGeofence: geofence)
     }
 

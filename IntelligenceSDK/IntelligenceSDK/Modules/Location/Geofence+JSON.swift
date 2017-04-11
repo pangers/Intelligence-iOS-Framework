@@ -40,6 +40,7 @@ internal extension Geofence {
     /// - Returns: Value for a specific GeofenceKey in our JSONDictionary or throws a GeofenceError.
     private class func geoValue<T>(forKey key: GeofenceKey, dictionary: JSONDictionary) throws -> T {
         guard let output = dictionary[key.rawValue] as? T else {
+            //todo chethan
             throw GeofenceError.invalidPropertyError(key)
         }
         return output
