@@ -99,7 +99,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         var oauth = network.oauthProvider.sdkUserOAuth
         if oauth.username != nil && oauth.password != nil {
             
-            let str = String(format:"SDK user Created - %@",oauth.username!)
+            let str = String(format:"User Created: Name - %@",oauth.username!)
             sharedIntelligenceLogger.logger?.info(str)
             
             completion(true)
@@ -363,7 +363,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                                                         
                                                         let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
                                                         
-                                                        let str = (assignRoleOperation.output?.error == nil) ? String(format:"Assiged user role --- %d to user --- %d",roleId,user.userId) : String(format:"Assign user role failed")
+                                                        let str = (assignRoleOperation.output?.error == nil) ? String(format:"Assiged user role --- %d to userID --- %d userName --- %@",roleId,user.userId,user.username) : String(format:"Assign user role failed")
                                                         sharedIntelligenceLogger.logger?.info(str)
                                                         
                                                         callback(assignRoleOperation.user, assignRoleOperation.output?.error)
@@ -380,7 +380,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 
                 let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
                 
-                let str = (revokeRoleOperation.output?.error == nil) ? String(format:"Revoke Role sucess ---> %@",user.userId) : String(format:"Revoke Role failed")
+                let str = (revokeRoleOperation.output?.error == nil) ? String(format:"Revoke Role sucess ---> %d",user.userId) : String(format:"Revoke Role failed")
                 sharedIntelligenceLogger.logger?.info(str)
                 
                 callback(revokeRoleOperation.user, revokeRoleOperation.output?.error)
@@ -411,7 +411,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
    
                 let updateOperation = returnedOperation as! UpdateUserRequestOperation
                 
-                let str = (updateOperation.output?.error == nil) ? String(format:"Update User sucess ---> %@",user.userId) : String(format:"Update User failed")
+                let str = (updateOperation.output?.error == nil) ? String(format:"Update User sucess ---> %d",user.userId) : String(format:"Update User failed")
                 sharedIntelligenceLogger.logger?.info(str)
                 
                 callback(updateOperation.user, updateOperation.output?.error)
@@ -429,7 +429,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         
             let getUserOperation = returnedOperation as! GetUserRequestOperation
             
-            let str = (getUserOperation.output?.error == nil) ? String(format:"Get User sucess ---> %@",(getUserOperation.user?.userId)!) : String(format:"Get User failed")
+            let str = (getUserOperation.output?.error == nil) ? String(format:"Get User sucess ---> %d",(getUserOperation.user?.userId)!) : String(format:"Get User failed")
             sharedIntelligenceLogger.logger?.info(str)
             
             callback(getUserOperation.user, getUserOperation.output?.error)
