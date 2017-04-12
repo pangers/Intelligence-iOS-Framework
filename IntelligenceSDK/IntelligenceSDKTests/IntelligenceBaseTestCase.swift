@@ -168,7 +168,7 @@ class IntelligenceBaseTestCase : XCTestCase {
     
     func waitForExpectations() {
         waitForExpectations(timeout: expectationTimeout) { (error) -> Void in
-            XCTAssertNil(error, "Error in expectation: \(error)")
+            XCTAssertNil(error, "Error in expectation: \(String(describing: error))")
         }
     }
 }

@@ -14,9 +14,9 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         super.main()
         assert(oauth != nil && network != nil)
         if (oauth?.refreshToken == nil) {
-            print("\(oauth!.tokenType) Refresh Token Skipped")
             
-            sharedIntelligenceLogger.logger?.info("Refresh Token Skipped")
+            let str = "\(oauth!.tokenType) Refresh Token Skipped"
+            sharedIntelligenceLogger.logger?.info(str)
             
             return
         }
@@ -27,9 +27,8 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
-            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             
-            let str = String(format: "Refresh Token Failed")
+            let str = "\(oauth!.tokenType) Refresh Token Failed \(String(describing: output?.error))"
             sharedIntelligenceLogger.logger?.error(str)
             return
         }
@@ -41,9 +40,8 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
-            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
             
-            let str = String(format: "Refresh Token Failed -- %@", (self.session?.description)!)
+            let str = String("\(oauth!.tokenType) Refresh Token Failed \(String(describing: output?.error))")
             sharedIntelligenceLogger.logger?.error(str)
             
             self.shouldBreak = true
@@ -51,7 +49,7 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         }
         self.shouldBreak = true
         print("\(oauth!.tokenType) Refresh Token Passed")
-        sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+        sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
     }
     
     override func handleUnauthorizedError() {

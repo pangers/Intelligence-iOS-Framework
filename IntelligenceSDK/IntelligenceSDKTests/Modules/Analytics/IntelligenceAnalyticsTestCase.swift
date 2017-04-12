@@ -179,7 +179,7 @@ class IntelligenceAnalyticsTestCase: IntelligenceBaseTestCase {
         ensureJSONIncludesMandatoryPopulatedData(eventJSON)
         let eventsJSON: JSONDictionaryArray = [eventJSON]
         let eventsResponse = eventsJSONResponse ?? ["TotalRecords": 1, "Data": eventsJSON]
-        let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: String.Encoding.utf8.rawValue) as! String
+        let successfulResponse = NSString(data: eventsResponse.int_toJSONData()!, encoding: String.Encoding.utf8.rawValue)! as String
         let URL = URLRequest.int_URLRequestForAnalytics(json: eventsJSON, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
         mockResponseForURL(URL,
             method: .post,

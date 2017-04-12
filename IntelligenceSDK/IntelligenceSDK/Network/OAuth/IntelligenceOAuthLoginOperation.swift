@@ -31,7 +31,7 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
-            print("\(oauth!.tokenType) Login Failed \(output?.error)")
+//            print("\(oauth!.tokenType) Login Failed \(output?.error)")
             sharedIntelligenceLogger.logger?.error(self.output?.error?.description)
             return
         }
@@ -44,10 +44,10 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
             sharedIntelligenceLogger.logger?.error(self.output?.error?.description)
-            print("\(oauth!.tokenType) Login Failed \(output?.error)")
+//            print("\(oauth!.tokenType) Login Failed \(output?.error)")
             return
         }
-        sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+        sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
         print("\(oauth!.tokenType) Login Passed")
     }
     

@@ -37,7 +37,7 @@ class DeleteIdentifierOnBehalfRequestOperation : IntelligenceAPIOperation, NSCop
         }
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+            sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
         }
     }
     

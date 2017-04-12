@@ -60,7 +60,7 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
             return
         }
         
-        var eventNames = eventsJSON.map { (event) -> String in
+        let eventNames = eventsJSON.map { (event) -> String in
             var type:String = ""
             for (key, value) in event {
                 if (key == "EventType"){
@@ -72,11 +72,11 @@ internal final class AnalyticsRequestOperation: IntelligenceAPIOperation, NSCopy
         }
         
         //info
-        var str = String(format:"Sending Events Sucessfull : %@",eventNames.description)
+        let str = String(format:"Sending Events Sucessfull : %@",eventNames.description)
         sharedIntelligenceLogger.logger?.info(str)
         
         if let httpResponse = output?.response as? HTTPURLResponse {
-            sharedIntelligenceLogger.logger?.debug(httpResponse.description)
+            sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
         }
     }
     

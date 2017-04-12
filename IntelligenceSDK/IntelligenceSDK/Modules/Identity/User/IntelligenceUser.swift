@@ -213,7 +213,7 @@ public extension Intelligence {
             let hasUsername = !username.isEmpty
             let hasFirstName = !firstName.isEmpty
             let hasLastName = lastName?.isEmpty == false
-            let hasAvatarURL = avatarURL?.isEmpty == false
+            _ = avatarURL?.isEmpty == false
             
             return (userId != invalidUserId && hasCompanyId &&
                 hasUsername && hasFirstName && hasLastName )

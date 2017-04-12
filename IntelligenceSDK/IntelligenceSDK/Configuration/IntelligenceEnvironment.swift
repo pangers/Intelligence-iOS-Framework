@@ -63,9 +63,7 @@ public extension Intelligence {
             case .uat: return "uat"
             case .staging: return "staging"
             case .production: return "production"
-            default: return nil
             }
-            return nil
         }
     }
 

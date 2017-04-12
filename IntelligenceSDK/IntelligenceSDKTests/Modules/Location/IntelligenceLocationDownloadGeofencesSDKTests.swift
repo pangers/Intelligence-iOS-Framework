@@ -74,7 +74,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     /// Test loading the geofences with a missing json fails
     func testLoadGeofencesMissingJSON() {
         do {
-            try Geofence.geofences(withJSON: nil)
+             _ = try Geofence.geofences(withJSON: nil)
             XCTAssert(false, "Cannot load with nil")
         }
         catch let err as RequestError {

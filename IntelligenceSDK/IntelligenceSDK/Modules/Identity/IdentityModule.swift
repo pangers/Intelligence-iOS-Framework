@@ -512,7 +512,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         // We don't receive a unique error code, so just call the delegate on any error.
                         self?.delegate.userRoleAssignmentFailed()
                         
-                        var str = String(format:"User Role assignment failed. -- %@",(error?.description)!)
+                        let str = String(format:"User Role assignment failed. -- %@",(error?.description)!)
                         sharedIntelligenceLogger.logger?.error(str)
 
                         // Also call callback, so developer doesn't get stuck waiting for a response.
@@ -560,7 +560,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 (returnedOperation: IntelligenceAPIOperation) -> () in
                 let createIdentifierOperation = returnedOperation as! CreateIdentifierRequestOperation
                 
-                var str = (createIdentifierOperation.output?.error == nil) ? String(format:"Register device token sucess - %@",token) : String(format:"Register device token failed - %@",token)
+                let str = (createIdentifierOperation.output?.error == nil) ? String(format:"Register device token sucess - %@",token) : String(format:"Register device token failed - %@",token)
                 sharedIntelligenceLogger.logger?.info(str)
                 
                 callback(createIdentifierOperation.tokenId ?? InvalidDeviceTokenID, createIdentifierOperation.output?.error)
@@ -586,7 +586,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 
                 let deleteIdentifierOperation = returnedOperation as! DeleteIdentifierRequestOperation
                 
-                var str = (deleteIdentifierOperation.output?.error == nil) ? String(format:"UnRegister device token sucess - %d",tokenId) : String(format:"UnRegister device token failed - %d",tokenId)
+                let str = (deleteIdentifierOperation.output?.error == nil) ? String(format:"UnRegister device token sucess - %d",tokenId) : String(format:"UnRegister device token failed - %d",tokenId)
                 sharedIntelligenceLogger.logger?.info(str)
                 
                 callback(deleteIdentifierOperation.output?.error)
@@ -633,7 +633,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             
             let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
             
-            var str = (createInstallationOperation.output?.error == nil) ? "New-Installation event creation Failed" : "New-Installation event get Created";
+            let str = (createInstallationOperation.output?.error == nil) ? "New-Installation event creation Failed" : "New-Installation event get Created";
             sharedIntelligenceLogger.logger?.info(str)
 
             callback?(createInstallationOperation.installation, createInstallationOperation.output?.error)
@@ -657,7 +657,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             
             let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
             
-            var str = (updateInstallationOperation.output?.error == nil) ? "Update event creation Failed" : "Update event get Created";
+            let str = (updateInstallationOperation.output?.error == nil) ? "Update event creation Failed" : "Update event get Created";
             sharedIntelligenceLogger.logger?.info(str)
             
             callback?(updateInstallationOperation.installation, updateInstallationOperation.output?.error)

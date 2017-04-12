@@ -127,7 +127,7 @@ public class IntelligenceLogger : NSObject {
     public var enableLogging : Bool {
         
         get{
-            guard  let logger = self.logger else {
+            guard  let _ = self.logger else {
                 return false
             }
             return self.isLoggingEnabled
@@ -241,8 +241,6 @@ open class Intelligence: NSObject {
             sharedIntelligenceLogger.logger?.error("Missing Intelligence configration propery")
             throw ConfigurationError.invalidPropertyError
         }
-
-        let log = XCGLogger.default
         
         // Create shared objects for modules
         let internalConfiguration = intelligenceConfiguration.clone()    // Copy for SDK

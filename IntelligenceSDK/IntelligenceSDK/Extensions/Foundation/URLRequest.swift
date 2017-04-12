@@ -36,7 +36,7 @@ internal enum IdentifierType : Int {
 
 internal extension Date {
     
-    public var  stringValue : String{
+    internal var  stringValue : String{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
         let dateString = dateFormatter.string(from:self)
@@ -60,14 +60,14 @@ internal extension IntelligenceLogger{
         return (NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString).appendingPathComponent("Intelligence")
     }
     
-    public func filePath(forDate:Date) -> String{
+    internal func filePath(forDate:Date) -> String{
         let filePath = folderPath
         let dateStr =  forDate.stringValue
         let fullPath = (filePath as NSString).appendingPathComponent(dateStr)
         return fullPath
     }
     
-    public func clearOldLogFiles(){
+    internal func clearOldLogFiles(){
         
         var allNames:[String] = []
         let directoryContents = try? FileManager.default.contentsOfDirectory(at:URL.init(fileURLWithPath: folderPath), includingPropertiesForKeys: nil, options: [])
@@ -98,7 +98,7 @@ internal extension IntelligenceLogger{
         }
     }
     
-    public func createLogFile(forDate:Date) -> String{
+    internal func createLogFile(forDate:Date) -> String{
         
         let fileManager = FileManager.default
         var isDir : ObjCBool = false
@@ -119,7 +119,7 @@ internal extension IntelligenceLogger{
 
 internal extension NSError{
     
-    public func descriptionWith(urlRequest:URLRequest? = nil, response:HTTPURLResponse? = nil) -> String {
+    internal func descriptionWith(urlRequest:URLRequest? = nil, response:HTTPURLResponse? = nil) -> String {
         
         var dict:[String:Any] = [ : ]
         
@@ -135,31 +135,29 @@ internal extension NSError{
             return str
         }
         
-        str = str.appending(response.description)
+        str = str.appending(response.debugInfo)
         return str
     }
 }
 
 internal extension HTTPURLResponse{
     
-    open override var description : String {
+    
+     internal var debugInfo : String {
         get {
             
             var dict : [String : Any] = [:]
            
             let statusCode = self.statusCode;
             dict["statusCode"] = statusCode
-
             
             if let url = self.url{
                 dict["request"] = url.absoluteString
             }
             
-            if let headerFields = self.allHeaderFields as AnyObject?{
-                dict["httpHeaderFields"] = headerFields
-            }
+            dict["httpHeaderFields"] = self.allHeaderFields
             
-            var str = String(format : "Response : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
+            let str = String(format : "Response : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
             return str;
         }
     }
@@ -252,7 +250,7 @@ internal extension URLRequest {
         return request
     }
     
-    public var description : String {
+    internal var description : String {
         
         var dict : [String : Any] = [:]
         
@@ -284,8 +282,7 @@ internal extension URLRequest {
             dict["body"] = body;
         }
         
-        var str = String(format : "Request : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
-        
+        let str = String(format : "Request : %@ ---> %@",(url?.absoluteString) ?? "***", dict.description)
         return str;
     }
 }

@@ -33,7 +33,7 @@ class UtilsTestCase: XCTestCase {
             XCTAssert(original != values)
             XCTAssert(original == values.sorted())
             
-            var immutable = [1,2,3,4,5]
+            let immutable = [1,2,3,4,5]
             let originalNumbers = immutable
             
             //Chethan : Need to test
