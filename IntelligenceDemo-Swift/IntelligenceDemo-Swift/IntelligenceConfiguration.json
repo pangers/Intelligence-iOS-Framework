@@ -1,11 +1,10 @@
 {
-    "client_id": "Sydney_iOS_SDK_1458776025",
-    "client_secret": "t8ZYuj7Bxc8kLp0FUMROl6P",
-    "application_id": 4200,
-    "project_id": 40039,
+    "client_id": "Tsqa_Project_03_1490255084",
+    "client_secret": "mKN6SQF0pnTG1pql0kyepoA",
+    "application_id": 4247,
+    "project_id": 30127,
     "region": "SG",
-    "environment": "staging",
-    "company_id" : 9085,
-    "sdk_user_role" : 3149,
+    "company_id" : 9114,
+    "sdk_user_role" : 1170,
     "certificate_trust_policy": "any"
 }

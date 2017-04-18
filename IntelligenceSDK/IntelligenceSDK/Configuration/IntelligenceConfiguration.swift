@@ -177,12 +177,14 @@ public extension Intelligence {
             }
 
             self.region = region
-
-            guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                throw ConfigurationError.invalidPropertyError
+            
+            do {
+                let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
+                self.environment = environment
             }
-
-            self.environment = environment
+            catch {
+                self.environment = Environment.production
+            }
 
             self.companyId = try value(forKey: .companyId, inContents: contents)
             self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
@@ -223,11 +225,13 @@ public extension Intelligence {
 
             self.region = region
 
-            guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                throw ConfigurationError.invalidPropertyError
+            do {
+                let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
+                self.environment = environment
             }
-
-            self.environment = environment
+            catch {
+                self.environment = Environment.production
+            }
 
             self.companyId = try value(forKey: .companyId, inContents: contents)
             self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
