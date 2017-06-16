@@ -171,13 +171,19 @@ public extension Intelligence {
             self.clientSecret = try value(forKey: .clientSecret, inContents: contents)
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
+            self.companyId = try value(forKey: .companyId, inContents: contents)
+            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
 
-            guard let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents)) else {
-                throw ConfigurationError.invalidPropertyError
+            //Region
+            do {
+                let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents))
+                self.region = region
             }
-
-            self.region = region
+            catch {
+                self.region = Intelligence.Region.singapore
+            }
             
+            //Env
             do {
                 let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
                 self.environment = environment
@@ -186,15 +192,14 @@ public extension Intelligence {
                 self.environment = Environment.production
             }
 
-            self.companyId = try value(forKey: .companyId, inContents: contents)
-            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
-
-            guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
-                  let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                throw ConfigurationError.invalidPropertyError
+            //Certificate policy
+            if let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
+                let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey){
+                self.certificateTrustPolicy = certificateTrustPolicy
             }
-
-            self.certificateTrustPolicy = certificateTrustPolicy
+            else{
+                self.certificateTrustPolicy = CertificateTrustPolicy.any
+            }
         }
 
 
