@@ -413,32 +413,13 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             if createUserOperation.output?.error == nil && createUserOperation.user != nil {
                 // On successful operation, lets assign users role.
                 
-                guard let roleId = self?.configuration.sdkUserRole else {
-                    self?.delegate.userRoleAssignmentFailed()
-                    return
-                }
-                
                 guard let user = createUserOperation.user else {
                     self?.delegate.userRoleAssignmentFailed()
                     return
                 }
                 
-                self?.assignRole(to: roleId, user: user, callback: { (user, error) -> Void in
-                    // Execute original callback.
-                    // If assign role fails, the user will exist but not have any access, there is nothing we can do
-                    // if the developer is trying to assign a role that doesn't exist or the server changes in some
-                    // unexpected way.
-                    if error != nil {
-                        // Note: Assign role will also call a delegate method if it fails because the Intelligence
-                        // backend may be configured incorrectly.
-                        // We don't receive a unique error code, so just call the delegate on any error.
-                        self?.delegate.userRoleAssignmentFailed()
-                        // Also call callback, so developer doesn't get stuck waiting for a response.
-                        callback?(nil, error)
-                    } else {
-                        callback?(user, error)
-                    }
-                })
+                callback?(user, nil)
+                
             } else {
                 // On failure, simply execute callback.
                 callback?(createUserOperation.user, createUserOperation.output?.error)

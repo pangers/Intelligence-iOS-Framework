@@ -18,7 +18,6 @@ private enum ConfigurationKey: String {
     case region = "region"
     case environment = "environment"
     case companyId = "company_id"
-    case sdkUserRole = "sdk_user_role"
     case certificateTrustPolicy = "certificate_trust_policy"
 }
 
@@ -86,9 +85,6 @@ public extension Intelligence {
         /// The application ID
         public var applicationID = 0
 
-        /// The role ID to assign to users the SDK creates
-        public var sdkUserRole = 0
-
         /// The trust policy to apply to server certificates.
         /// By default we will only trust valid certificates.
         public var certificateTrustPolicy = CertificateTrustPolicy.valid
@@ -136,7 +132,6 @@ public extension Intelligence {
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
             copy.companyId = companyId
-            copy.sdkUserRole = sdkUserRole
             copy.certificateTrustPolicy = self.certificateTrustPolicy
             return copy
         }
@@ -172,7 +167,6 @@ public extension Intelligence {
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
             self.companyId = try value(forKey: .companyId, inContents: contents)
-            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
 
             //Region
             do {
@@ -239,7 +233,6 @@ public extension Intelligence {
             }
 
             self.companyId = try value(forKey: .companyId, inContents: contents)
-            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
 
             guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
                   let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
@@ -269,7 +262,6 @@ public extension Intelligence {
             dict[ConfigurationKey.certificateTrustPolicy.rawValue] = policyStr
 
             dict[ConfigurationKey.companyId.rawValue] = self.companyId
-            dict[ConfigurationKey.sdkUserRole.rawValue] = self.sdkUserRole
 
             let data = dict.int_toJSONData()
             return data
@@ -285,7 +277,7 @@ public extension Intelligence {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                    applicationID <= 0 || region == nil || environment == nil || companyId <= 0 || sdkUserRole <= 0
+                    applicationID <= 0 || region == nil || environment == nil || companyId <= 0
         }
 
         static func ==(lhs: Configuration, rhs: Configuration) -> Bool {
@@ -295,8 +287,7 @@ public extension Intelligence {
                     lhs.applicationID == rhs.applicationID &&
                     lhs.region == rhs.region &&
                     lhs.companyId == rhs.companyId &&
-                    lhs.environment == rhs.environment &&
-                    lhs.sdkUserRole == rhs.sdkUserRole
+                    lhs.environment == rhs.environment
         }
     }
 
