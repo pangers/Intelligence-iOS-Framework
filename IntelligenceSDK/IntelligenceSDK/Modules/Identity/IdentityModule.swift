@@ -40,32 +40,9 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// Logging out will no longer associate events with the authenticated user.
     func logout()
 
-    /// Get details about a user.
-    /// - parameter userId: The id of the user to retrieve details for.
-    /// - parameter callback: Will be called with either an error or a user.
-//    func getUser(with userId: Int, callback: @escaping UserCallback)
-    
-    /// Assign a role to a user.
-    /// - parameter roleId: The id of the role to assign.
-    /// - parameter user: The user to assign the role to.
-    /// - parameter callback: Will be called with either an error or a user.
-//    func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
-    
-    /// Revoke a role from a user.
-    /// - parameter roleId: The id of the role to revoke.
-    /// - parameter user: The user to revoke the role from.
-    /// - parameter callback: Will be called with either an error or a user.
-//    func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
-    
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
     func getMe(callback: @escaping UserCallback)
-    
-    /// Updates a user in the backend.
-    /// - Parameters:
-    ///     - user: Intelligence User instance containing information about the user we are trying to update.
-    ///     - callback: Will be called with either an error or a user.
-//    func update(user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Register a push notification token on the Intelligence platform.
     /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.

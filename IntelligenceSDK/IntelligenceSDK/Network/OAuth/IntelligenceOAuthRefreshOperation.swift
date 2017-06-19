@@ -21,7 +21,7 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
-            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            print("\(oauth!.tokenType) Refresh Token Failed \(String(describing: output?.error))")
             return
         }
         
@@ -32,7 +32,7 @@ internal class IntelligenceOAuthRefreshOperation : IntelligenceOAuthOperation {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
-            print("\(oauth!.tokenType) Refresh Token Failed \(output?.error)")
+            print("\(oauth!.tokenType) Refresh Token Failed \(String(describing: output?.error))")
             self.shouldBreak = true
             return
         }
