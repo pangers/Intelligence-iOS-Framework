@@ -46,7 +46,12 @@ internal struct Installation {
     private var installedVersion: String { return applicationVersion.int_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
     private var projectId: Int { return configuration.projectID }
-    private var userId: Int? { return oauthProvider.sdkUserOAuth.userId }
+    
+    //TODO : Chethan
+    private var userId: Int? {
+//        return oauthProvider.sdkUserOAuth.userId
+        return oauthProvider.loggedInUserOAuth.userId
+    }
     private var requestId: Int? { return installationStorage.int_installationRequestID }
     
     /// - Returns: True if valid to send an update with this object.

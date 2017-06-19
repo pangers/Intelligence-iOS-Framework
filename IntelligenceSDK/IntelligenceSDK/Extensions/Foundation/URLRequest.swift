@@ -284,9 +284,9 @@ internal extension URLRequest {
         if let userId = network.oauthProvider.loggedInUserOAuth.userId {
             json["UserId"] = userId
         }
-        else if let userId = network.oauthProvider.sdkUserOAuth.userId {
-            json["UserId"] = userId
-        }
+//        else if let userId = network.oauthProvider.sdkUserOAuth.userId {
+//            json["UserId"] = userId
+//        }
         
         request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)

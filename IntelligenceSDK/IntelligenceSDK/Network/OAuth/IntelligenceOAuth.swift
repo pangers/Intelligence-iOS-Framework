@@ -10,7 +10,6 @@ import Foundation
 
 enum IntelligenceOAuthTokenType: String {
     case application = "ApplicationUser"
-    case sdkUser = "SDKUser"
     case loggedInUser = "LoggedInUser"
 }
 
@@ -58,10 +57,6 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
             refreshToken = self.storage.refreshToken
             username = self.storage.username
             userId = self.storage.userId
-            if tokenType == .sdkUser {
-                // SDKUser also has a 'password'
-                password = self.storage.password
-            }
         }
     }
     
@@ -123,10 +118,6 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
             storage.refreshToken = refreshToken
             storage.username = username
             storage.userId = userId
-            if tokenType == .sdkUser {
-                // Only store SDKUser passwords.
-                storage.password = password
-            }
         }
     }
 }

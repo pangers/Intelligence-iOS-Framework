@@ -301,14 +301,10 @@ public final class Intelligence: NSObject {
             var keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.application.rawValue)
             keyChain.clearAllData()
             
-            keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.sdkUser.rawValue)
-            keyChain.clearAllData()
-            
             keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.loggedInUser.rawValue)
             keyChain.clearAllData()
             
             IntelligenceOAuth.reset(oauth: &oauthProvider.applicationOAuth)
-            IntelligenceOAuth.reset(oauth: &oauthProvider.sdkUserOAuth)
             IntelligenceOAuth.reset(oauth: &oauthProvider.loggedInUserOAuth)
         }
         

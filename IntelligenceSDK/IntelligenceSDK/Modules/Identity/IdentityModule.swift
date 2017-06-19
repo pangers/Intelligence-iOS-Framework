@@ -103,7 +103,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     - parameter counter:    The number of retries to perform.
     - parameter completion: A callback to notify on success or failure.
     */
-    private func createSDKUserRecursively(counter: Int, completion: @escaping (Bool) -> ()) {
+    private func updateModule(completion: @escaping (Bool) -> ()) {
         
             let identity = self
     
@@ -124,19 +124,10 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                             return
                         }
                         
-                        if let error = returnedOperation.output?.error {
-                            switch error.code {
-                                case AuthenticationError.credentialError.rawValue,
-                                AuthenticationError.accountDisabledError.rawValue,
-                                AuthenticationError.accountLockedError.rawValue,
-                                AuthenticationError.tokenInvalidOrExpired.rawValue:
-                                    IntelligenceOAuth.reset(oauth: &identity.network.oauthProvider.sdkUserOAuth)
-                                    identity.createSDKUserRecursively(counter: counter - 1, completion: completion)
-                                default:
-                                    completion(false)
-                            }
-                            
-                            return
+                        //TODO : Chethan
+                         if (returnedOperation.output?.error) != nil {
+                             completion(false)
+                             return
                         }
                         
                         // Installation can succeed without a user id
@@ -167,7 +158,6 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         
                     }
             }
-       // })
     }
 
     
@@ -212,8 +202,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         return
                     }
                 
-//                 completion(true)
-                   identity.createSDKUserRecursively(counter: CreateSDKUserRetries,completion:completion)
+                   identity.updateModule(completion:completion)
                 }
                 
                 identity.network.enqueueOperation(operation: applicationPipeline)
