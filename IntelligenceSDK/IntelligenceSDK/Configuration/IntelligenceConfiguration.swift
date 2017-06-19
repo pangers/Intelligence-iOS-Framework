@@ -19,7 +19,6 @@ private enum ConfigurationKey: String {
     //optionals
     case region = "region"
     case environment = "environment"
-//    case companyId = "company_id"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
@@ -77,9 +76,6 @@ public extension Intelligence {
         /// The provider Id
         public let providerId = 300
 
-        /// The company Id
-//        public var companyId = 0
-
         /// The project ID
         public var projectID = 0
 
@@ -132,7 +128,6 @@ public extension Intelligence {
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
-//            copy.companyId = companyId
             copy.certificateTrustPolicy = self.certificateTrustPolicy
             return copy
         }
@@ -167,7 +162,6 @@ public extension Intelligence {
             self.clientSecret = try value(forKey: .clientSecret, inContents: contents)
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
-//            self.companyId = try value(forKey: .companyId, inContents: contents)
 
             //Region
             do {
@@ -223,8 +217,6 @@ public extension Intelligence {
             catch {
                 self.environment = Environment.production
             }
-
-//            self.companyId = try value(forKey: .companyId, inContents: contents)
         }
 
         func getJsonData() -> Data? {
@@ -244,8 +236,6 @@ public extension Intelligence {
             dict[ConfigurationKey.region.rawValue] = code
             dict[ConfigurationKey.environment.rawValue] = envStr
             
-//            dict[ConfigurationKey.companyId.rawValue] = self.companyId
-
             let data = dict.int_toJSONData()
             return data
         }
