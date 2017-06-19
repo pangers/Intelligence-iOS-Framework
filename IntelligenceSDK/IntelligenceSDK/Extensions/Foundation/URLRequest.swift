@@ -177,6 +177,7 @@ internal extension URLRequest {
         return request
     }
     
+    /*
     /// Create a NSURLRequest for createUser.
     /// - parameter user: The user we are creating.
     /// - parameter oauth: The oauth values to use for this request.
@@ -197,7 +198,8 @@ internal extension URLRequest {
         
         return request
     }
-    
+    */
+    /*
     /// Create a NSURLRequest for getUser.
     /// - parameter userId: The id for the user we are getting.
     /// - parameter oauth: The oauth values to use for this request.
@@ -217,7 +219,7 @@ internal extension URLRequest {
         
         return request
     }
-    
+   */
     /// Create a NSURLRequest for getUserMe.
     /// - parameter oauth: The oauth values to use for this request.
     /// - parameter configuration: The configuration values to use for this request.
@@ -237,6 +239,7 @@ internal extension URLRequest {
         return request
     }
     
+    /*
     /// Create a NSURLRequest for updateUser.
     /// - parameter user: The user we are updating.
     /// - parameter oauth: The oauth values to use for this request.
@@ -257,6 +260,7 @@ internal extension URLRequest {
         
         return request
     }
+    */
     
     // MARK: Identifiers
     

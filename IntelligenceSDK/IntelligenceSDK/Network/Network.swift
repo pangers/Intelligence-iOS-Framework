@@ -83,7 +83,7 @@ internal final class Network: NSObject, URLSessionDelegate {
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return IntelligenceAPIPipeline for given token type.
     internal func getPipeline(forOAuth oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, shouldValidate: Bool = true, completion: (IntelligenceAPIPipeline?) -> ()) {
-
+//TODO:Chethan
 //        if oauth.tokenType == .sdkUser && (oauth.username == nil || oauth.password == nil) {
 //            assertionFailure("User should have been created in startup()")
 //            completion(nil)

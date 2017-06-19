@@ -131,7 +131,8 @@ public extension Intelligence {
                     return nil
             }
             let lastName = json[lastNameKey] as? String
-            self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+            //TODO:Chethan
+            self.init(userId:userId, companyId:0, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
         }
         
         /// Checks if the user Id provided is a valid user Id.

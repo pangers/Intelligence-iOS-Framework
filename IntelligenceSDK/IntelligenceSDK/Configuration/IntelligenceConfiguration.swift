@@ -15,10 +15,11 @@ private enum ConfigurationKey: String {
     case clientSecret = "client_secret"
     case applicationID = "application_id"
     case projectID = "project_id"
+    
+    //optionals
     case region = "region"
     case environment = "environment"
-    case companyId = "company_id"
-    case certificateTrustPolicy = "certificate_trust_policy"
+//    case companyId = "company_id"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
@@ -77,7 +78,7 @@ public extension Intelligence {
         public let providerId = 300
 
         /// The company Id
-        public var companyId = 0
+//        public var companyId = 0
 
         /// The project ID
         public var projectID = 0
@@ -131,7 +132,7 @@ public extension Intelligence {
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
-            copy.companyId = companyId
+//            copy.companyId = companyId
             copy.certificateTrustPolicy = self.certificateTrustPolicy
             return copy
         }
@@ -166,7 +167,7 @@ public extension Intelligence {
             self.clientSecret = try value(forKey: .clientSecret, inContents: contents)
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
-            self.companyId = try value(forKey: .companyId, inContents: contents)
+//            self.companyId = try value(forKey: .companyId, inContents: contents)
 
             //Region
             do {
@@ -184,15 +185,6 @@ public extension Intelligence {
             }
             catch {
                 self.environment = Environment.production
-            }
-
-            //Certificate policy
-            if let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
-                let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey){
-                self.certificateTrustPolicy = certificateTrustPolicy
-            }
-            else{
-                self.certificateTrustPolicy = CertificateTrustPolicy.any
             }
         }
 
@@ -232,21 +224,13 @@ public extension Intelligence {
                 self.environment = Environment.production
             }
 
-            self.companyId = try value(forKey: .companyId, inContents: contents)
-
-            guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
-                  let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                throw ConfigurationError.invalidPropertyError
-            }
-
-            self.certificateTrustPolicy = certificateTrustPolicy
+//            self.companyId = try value(forKey: .companyId, inContents: contents)
         }
 
         func getJsonData() -> Data? {
 
             guard let code = self.region?.regionCode,
-                  let envStr = self.environment?.envString,
-                  let policyStr = self.certificateTrustPolicy.stringType else {
+                  let envStr = self.environment?.envString else {
                 return nil
             }
 
@@ -259,9 +243,8 @@ public extension Intelligence {
 
             dict[ConfigurationKey.region.rawValue] = code
             dict[ConfigurationKey.environment.rawValue] = envStr
-            dict[ConfigurationKey.certificateTrustPolicy.rawValue] = policyStr
-
-            dict[ConfigurationKey.companyId.rawValue] = self.companyId
+            
+//            dict[ConfigurationKey.companyId.rawValue] = self.companyId
 
             let data = dict.int_toJSONData()
             return data
@@ -277,7 +260,7 @@ public extension Intelligence {
         /// - Returns: True if there is a missing property in the configuration
         @objc public var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                    applicationID <= 0 || region == nil || environment == nil || companyId <= 0
+                    applicationID <= 0 || region == nil || environment == nil
         }
 
         static func ==(lhs: Configuration, rhs: Configuration) -> Bool {
@@ -286,7 +269,6 @@ public extension Intelligence {
                     lhs.projectID == rhs.projectID &&
                     lhs.applicationID == rhs.applicationID &&
                     lhs.region == rhs.region &&
-                    lhs.companyId == rhs.companyId &&
                     lhs.environment == rhs.environment
         }
     }

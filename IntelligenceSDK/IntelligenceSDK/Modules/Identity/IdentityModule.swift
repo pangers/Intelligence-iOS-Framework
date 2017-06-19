@@ -43,19 +43,19 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// Get details about a user.
     /// - parameter userId: The id of the user to retrieve details for.
     /// - parameter callback: Will be called with either an error or a user.
-    func getUser(with userId: Int, callback: @escaping UserCallback)
+//    func getUser(with userId: Int, callback: @escaping UserCallback)
     
     /// Assign a role to a user.
     /// - parameter roleId: The id of the role to assign.
     /// - parameter user: The user to assign the role to.
     /// - parameter callback: Will be called with either an error or a user.
-    func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
+//    func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Revoke a role from a user.
     /// - parameter roleId: The id of the role to revoke.
     /// - parameter user: The user to revoke the role from.
     /// - parameter callback: Will be called with either an error or a user.
-    func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
+//    func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Get details about logged in user.
     /// - parameter callback: Will be called with either an error or a user.
@@ -65,7 +65,7 @@ public protocol IdentityModuleProtocol : ModuleProtocol {
     /// - Parameters:
     ///     - user: Intelligence User instance containing information about the user we are trying to update.
     ///     - callback: Will be called with either an error or a user.
-    func update(user: Intelligence.User, callback: @escaping UserCallback)
+//    func update(user: Intelligence.User, callback: @escaping UserCallback)
     
     /// Register a push notification token on the Intelligence platform.
     /// - parameter data: Data received from 'application:didRegisterForRemoteNotificationsWithDeviceToken:' response.
@@ -94,34 +94,6 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         self.installation = installation
     }
     
-    private func createSDKUserIfRequired(completion: @escaping (Bool) -> ()) {
-        var oauth = network.oauthProvider.sdkUserOAuth
-        if oauth.username != nil && oauth.password != nil {
-                completion(true)
-                return
-        }
-        
-        // Need to create user first.
-        let sdkUser = Intelligence.User(companyId: configuration.companyId)
-        let password = sdkUser.password
-        
-        createUser(user: sdkUser) { [weak self] (serverUser, error) -> Void in
-            // defer the completion callback call.
-            defer {
-                completion(serverUser != nil)
-            }
-            
-            if serverUser != nil {
-                // Store credentials in keychain.
-                oauth.updateCredentials(withUsername: serverUser!.username, password: password!)
-                oauth.userId = serverUser?.userId
-                
-                //Post the sdk user created event.
-                EventTypes.UserCreated.saveToUserDefault(Obj: true)
-            }
-        }
-    }
-    
     /**
     Creates an SDK user doing "counter" retries.
     
@@ -132,31 +104,11 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     - parameter completion: A callback to notify on success or failure.
     */
     private func createSDKUserRecursively(counter: Int, completion: @escaping (Bool) -> ()) {
-        if counter <= 1 {
-            
-            // Pass error back to developer (special case, use delegate).
-            // Probably means that user already exists, or perhaps Application is configured incorrectly
-            // and cannot create users.
-            self.delegate?.userCreationFailed()
-            
-            completion(false)
-            return
-        }
         
-        // Create user if their credentials are empty.
-        self.createSDKUserIfRequired(completion: { [weak self] (success: Bool) -> () in
-            guard let identity = self else {
-                completion(false)
-                return
-            }
-            
-            if !success {
-                identity.createSDKUserRecursively(counter: counter - 1, completion: completion)
-                return
-            }
-            
+            let identity = self
+    
             // Get pipeline if created or existing.
-            identity.network.getPipeline(forOAuth: identity.network.oauthProvider.sdkUserOAuth, configuration: identity.configuration) { [weak self] (sdkUserPipeline) -> () in
+            identity.network.getPipeline(forOAuth: identity.network.oauthProvider.applicationOAuth, configuration: identity.configuration) { [weak self] (sdkUserPipeline) -> () in
                     
                     guard let identity = self, let sdkUserPipeline = sdkUserPipeline else {
                         // Should not happen (user created above)
@@ -202,16 +154,20 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         
                         identity.updateInstallation(callback: nil)
                         
+                        /*
                         // Grab our user ID.
-                        identity.getMe(oauth: identity.network.oauthProvider.sdkUserOAuth) { [weak identity] (user, error) -> Void in
+                        identity.getMe(oauth: identity.network.oauthProvider.applicationOAuth) { [weak identity] (user, error) -> Void in
                             
                             // Update user id for SDKUser
                             identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
                             completion(error == nil)
                         }
+                        */
+                        completion(true)
+                        
                     }
             }
-        })
+       // })
     }
 
     
@@ -255,8 +211,9 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         completion(false)
                         return
                     }
-                    
-                    identity.createSDKUserRecursively(counter: CreateSDKUserRetries,completion:completion)
+                
+//                 completion(true)
+                   identity.createSDKUserRecursively(counter: CreateSDKUserRetries,completion:completion)
                 }
                 
                 identity.network.enqueueOperation(operation: applicationPipeline)
@@ -314,65 +271,6 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
     }
     
     
-    // MARK: - User Management
-
-    @objc func assignRole(to roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
-        let operation = AssignUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
-                let assignRoleOperation = returnedOperation as! AssignUserRoleRequestOperation
-                callback(assignRoleOperation.user, assignRoleOperation.output?.error)
-        })
-        
-        // Execute the network operation
-        network.enqueueOperation(operation: operation)
-    }
-    
-    @objc func revokeRole(with roleId: Int, user: Intelligence.User, callback: @escaping UserCallback) {
-        let operation = RevokeUserRoleRequestOperation(roleId: roleId, user: user, oauth: network.oauthProvider.applicationOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
-                let revokeRoleOperation = returnedOperation as! RevokeUserRoleRequestOperation
-                callback(revokeRoleOperation.user, revokeRoleOperation.output?.error)
-        })
-        
-        // Execute the network operation
-        network.enqueueOperation(operation: operation)
-    }
-    
-    
-    @objc func update(user: Intelligence.User, callback: @escaping UserCallback) {
-        if !user.isValidToUpdate {
-            callback(nil, NSError(code: IdentityError.invalidUserError.rawValue) )
-            return
-        }
-        
-        // The password can be nil due to the fact that getting a user does not retrieve the password
-        if user.password != nil && !user.isPasswordSecure() {
-            callback(nil, NSError(code: IdentityError.weakPasswordError.rawValue) )
-            return
-        }
-        
-        let operation = UpdateUserRequestOperation(user: user, oauth: network.oauthProvider.loggedInUserOAuth,
-            configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
-                let updateOperation = returnedOperation as! UpdateUserRequestOperation
-                callback(updateOperation.user, updateOperation.output?.error)
-        })
-        
-        // Execute the network operation
-        network.enqueueOperation(operation:
-            
-            operation)
-    }
-    
-    @objc func getUser(with userId: Int, callback: @escaping UserCallback) {
-        let operation = GetUserRequestOperation(userId: userId, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
-            let getUserOperation = returnedOperation as! GetUserRequestOperation
-            callback(getUserOperation.user, getUserOperation.output?.error)
-        })
-        
-        // Execute the network operation
-        network.enqueueOperation(operation: operation)
-    }
-    
     internal func getMe(oauth: IntelligenceOAuthProtocol, callback: @escaping UserCallback) {
         let operation = GetUserMeRequestOperation(oauth: oauth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let getMeOperation = returnedOperation as! GetUserMeRequestOperation
@@ -387,48 +285,6 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         getMe(oauth: network.oauthProvider.loggedInUserOAuth, callback: callback)
     }
     
-    // MARK: Internal
-    
-    /// Registers a user in the backend.
-    /// - Parameters:
-    ///     - user: Intelligence User instance containing information about the user we are trying to create.
-    ///     - callback: The user callback to pass. Will be called with either an error or a user.
-    /// The developer is responsible to dispatch the callback to the main thread using dispatch_async if necessary.
-    /// - Throws: Returns an NSError in the callback using as code IdentityError.InvalidUserError when the
-    /// user is invalid, or one of the RequestError errors.
-    internal func createUser(user: Intelligence.User, callback: UserCallback? = nil) {
-        if !user.isValidToCreate {
-            callback?(nil, NSError(code: IdentityError.invalidUserError.rawValue) )
-            return
-        }
-        
-        if !user.isPasswordSecure() {
-            callback?(nil, NSError(code: IdentityError.weakPasswordError.rawValue) )
-            return
-        }
-        
-        // Create user operation.
-        let operation = CreateUserRequestOperation(user: user, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
-            let createUserOperation = returnedOperation as! CreateUserRequestOperation
-            if createUserOperation.output?.error == nil && createUserOperation.user != nil {
-                // On successful operation, lets assign users role.
-                
-                guard let user = createUserOperation.user else {
-                    self?.delegate.userRoleAssignmentFailed()
-                    return
-                }
-                
-                callback?(user, nil)
-                
-            } else {
-                // On failure, simply execute callback.
-                callback?(createUserOperation.user, createUserOperation.output?.error)
-            }
-        })
-        
-        // Execute the network operation
-        network.enqueueOperation(operation: operation)
-    }
     
     // MARK:- Identifiers
     
@@ -510,7 +366,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
             return
         }
         
-        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
+        let operation = CreateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let createInstallationOperation = returnedOperation as! CreateInstallationRequestOperation
             callback?(createInstallationOperation.installation, createInstallationOperation.output?.error)
         })
@@ -529,7 +385,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         }
         
         // If this call fails, it will retry again the next time we open the app.
-        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
+        let operation = UpdateInstallationRequestOperation(installation: installation, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let updateInstallationOperation = returnedOperation as! UpdateInstallationRequestOperation
             callback?(updateInstallationOperation.installation, updateInstallationOperation.output?.error)
         })

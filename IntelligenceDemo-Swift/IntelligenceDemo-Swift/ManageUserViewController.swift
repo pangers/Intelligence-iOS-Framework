@@ -137,19 +137,19 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence?.identity.assignRole(to: roleId, user: strongSelf.user!) { (user, error) -> Void in
-                DispatchQueue.main.async{
-                    let application = UIApplication.shared
-                    let delegate = application.delegate as! AppDelegate
-                    
-                    if let error = error {
-                        delegate.alert(withMessage: "Failed with error: \(error.code)")
-                    }
-                    else {
-                        delegate.alert(withMessage: "Role Assigned!")
-                    }
-                }
-            }
+//            IntelligenceManager.intelligence?.identity.assignRole(to: roleId, user: strongSelf.user!) { (user, error) -> Void in
+//                DispatchQueue.main.async{
+//                    let application = UIApplication.shared
+//                    let delegate = application.delegate as! AppDelegate
+//                    
+//                    if let error = error {
+//                        delegate.alert(withMessage: "Failed with error: \(error.code)")
+//                    }
+//                    else {
+//                        delegate.alert(withMessage: "Role Assigned!")
+//                    }
+//                }
+//            }
             })
         
         present(alertController, animated: true) { }
@@ -173,19 +173,19 @@ class ManageUserViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence?.identity.revokeRole(with: roleId, user: strongSelf.user!) { (user, error) -> Void in
-                DispatchQueue.main.async{
-                    let application = UIApplication.shared
-                    let delegate = application.delegate as! AppDelegate
-                    
-                    if let error = error {
-                        delegate.alert(withMessage: "Failed with error: \(error.code)")
-                    }
-                    else {
-                        delegate.alert(withMessage: "Role Revoked!")
-                    }
-                }
-            }
+//            IntelligenceManager.intelligence?.identity.revokeRole(with: roleId, user: strongSelf.user!) { (user, error) -> Void in
+//                DispatchQueue.main.async{
+//                    let application = UIApplication.shared
+//                    let delegate = application.delegate as! AppDelegate
+//                    
+//                    if let error = error {
+//                        delegate.alert(withMessage: "Failed with error: \(error.code)")
+//                    }
+//                    else {
+//                        delegate.alert(withMessage: "Role Revoked!")
+//                    }
+//                }
+//            }
         })
         
         present(alertController, animated: true) { }

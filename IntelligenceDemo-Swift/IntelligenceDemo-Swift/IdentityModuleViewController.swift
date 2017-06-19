@@ -119,16 +119,16 @@ class IdentityModuleViewController : UITableViewController {
                     return
             }
             
-            IntelligenceManager.intelligence?.identity.getUser(with: userId, callback: { [weak strongSelf] (user, error) -> () in
-                guard let strongSelf = strongSelf else {
-                    return
-                }
-
-                DispatchQueue.main.async{
-                    strongSelf.user = user
-                    strongSelf.performSegue(withIdentifier: strongSelf.ViewUserSegue, sender: strongSelf)
-                }
-                })
+//            IntelligenceManager.intelligence?.identity.getUser(with: userId, callback: { [weak strongSelf] (user, error) -> () in
+//                guard let strongSelf = strongSelf else {
+//                    return
+//                }
+//
+//                DispatchQueue.main.async{
+//                    strongSelf.user = user
+//                    strongSelf.performSegue(withIdentifier: strongSelf.ViewUserSegue, sender: strongSelf)
+//                }
+//                })
             })
         
         present(alertController, animated: true) { }

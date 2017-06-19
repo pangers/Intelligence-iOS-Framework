@@ -66,22 +66,14 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
             
             this.track(event: OpenApplicationEvent(applicationID: this.configuration.applicationID))
             
-            //Posting the SDK user Event
-            if let obj =  EventTypes.UserCreated.object(){
-                let sdkUser = Intelligence.User(companyId: this.configuration.companyId)
-                let userCreatedEvent = UserCreatedEvent(user: sdkUser)
-                this.track(event: userCreatedEvent)
-                EventTypes.UserCreated.reset()
-            }
-     
             //Posting app Install Event
-            if let obj =  EventTypes.ApplicationInstall.object(){
+            if EventTypes.ApplicationInstall.object() != nil{
                  this.track(event: ApplicationInstall())
                 EventTypes.ApplicationInstall.reset()
             }
             
             //Posting app update Event
-            if let obj =  EventTypes.ApplicationUpdate.object(){
+            if EventTypes.ApplicationUpdate.object() != nil{
                 this.track(event: ApplicationUpdate())
                 EventTypes.ApplicationUpdate.reset()
             }
@@ -146,7 +138,7 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
     /// - parameter events:     Array of JSONified Events to send.
     /// - parameter completion: Must be called on completion to notify caller of success/failure.
     internal func sendEvents(events: JSONDictionaryArray, completion: @escaping (NSError?) -> ()) {
-        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
+        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
             let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
             completion(analyticsOperation.output?.error)
         })

@@ -48,12 +48,8 @@
 		6DC34D101DDB26FB00FC3306 /* InstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CCA1DDB26FB00FC3306 /* InstallationRequestOperation.swift */; };
 		6DC34D111DDB26FB00FC3306 /* UpdateInstallationRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CCB1DDB26FB00FC3306 /* UpdateInstallationRequestOperation.swift */; };
 		6DC34D121DDB26FB00FC3306 /* IntelligenceUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CCD1DDB26FB00FC3306 /* IntelligenceUser.swift */; };
-		6DC34D131DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CCF1DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift */; };
-		6DC34D141DDB26FB00FC3306 /* CreateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD01DDB26FB00FC3306 /* CreateUserRequestOperation.swift */; };
 		6DC34D151DDB26FB00FC3306 /* GetUserMeRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD11DDB26FB00FC3306 /* GetUserMeRequestOperation.swift */; };
 		6DC34D161DDB26FB00FC3306 /* GetUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD21DDB26FB00FC3306 /* GetUserRequestOperation.swift */; };
-		6DC34D171DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD31DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift */; };
-		6DC34D181DDB26FB00FC3306 /* UpdateUserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD41DDB26FB00FC3306 /* UpdateUserRequestOperation.swift */; };
 		6DC34D191DDB26FB00FC3306 /* UserRequestOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD51DDB26FB00FC3306 /* UserRequestOperation.swift */; };
 		6DC34D1A1DDB26FB00FC3306 /* Geofence+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD71DDB26FB00FC3306 /* Geofence+JSON.swift */; };
 		6DC34D1B1DDB26FB00FC3306 /* Geofence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC34CD81DDB26FB00FC3306 /* Geofence.swift */; };
@@ -163,12 +159,8 @@
 		6DC34CCA1DDB26FB00FC3306 /* InstallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstallationRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CCB1DDB26FB00FC3306 /* UpdateInstallationRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateInstallationRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CCD1DDB26FB00FC3306 /* IntelligenceUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceUser.swift; sourceTree = "<group>"; };
-		6DC34CCF1DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignUserRoleRequestOperation.swift; sourceTree = "<group>"; };
-		6DC34CD01DDB26FB00FC3306 /* CreateUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CD11DDB26FB00FC3306 /* GetUserMeRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserMeRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CD21DDB26FB00FC3306 /* GetUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetUserRequestOperation.swift; sourceTree = "<group>"; };
-		6DC34CD31DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RevokeUserRoleRequestOperation.swift; sourceTree = "<group>"; };
-		6DC34CD41DDB26FB00FC3306 /* UpdateUserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateUserRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CD51DDB26FB00FC3306 /* UserRequestOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRequestOperation.swift; sourceTree = "<group>"; };
 		6DC34CD71DDB26FB00FC3306 /* Geofence+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Geofence+JSON.swift"; sourceTree = "<group>"; };
 		6DC34CD81DDB26FB00FC3306 /* Geofence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geofence.swift; sourceTree = "<group>"; };
@@ -429,12 +421,8 @@
 		6DC34CCE1DDB26FB00FC3306 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
-				6DC34CCF1DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift */,
-				6DC34CD01DDB26FB00FC3306 /* CreateUserRequestOperation.swift */,
 				6DC34CD11DDB26FB00FC3306 /* GetUserMeRequestOperation.swift */,
 				6DC34CD21DDB26FB00FC3306 /* GetUserRequestOperation.swift */,
-				6DC34CD31DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift */,
-				6DC34CD41DDB26FB00FC3306 /* UpdateUserRequestOperation.swift */,
 				6DC34CD51DDB26FB00FC3306 /* UserRequestOperation.swift */,
 			);
 			path = Requests;
@@ -722,7 +710,6 @@
 				6DC34D001DDB26FB00FC3306 /* AnalyticsModule.swift in Sources */,
 				6DC34D031DDB26FB00FC3306 /* GeofenceExitEvent.swift in Sources */,
 				6DC34D291DDB26FB00FC3306 /* IntelligenceOAuthRefreshOperation.swift in Sources */,
-				6DC34D181DDB26FB00FC3306 /* UpdateUserRequestOperation.swift in Sources */,
 				6DC34CF01DDB26FB00FC3306 /* BundleInstallation.swift in Sources */,
 				6DC34D1F1DDB26FB00FC3306 /* DownloadGeofencesRequestOperation.swift in Sources */,
 				6DC34CEE1DDB26FB00FC3306 /* IntelligenceRegion.swift in Sources */,
@@ -734,7 +721,6 @@
 				6DC34D201DDB26FB00FC3306 /* ModuleProtocol.swift in Sources */,
 				6DC34CF51DDB26FB00FC3306 /* URLRequest.swift in Sources */,
 				D69B67DD1E2F1CF10087E585 /* UserCreated.swift in Sources */,
-				6DC34D171DDB26FB00FC3306 /* RevokeUserRoleRequestOperation.swift in Sources */,
 				6DC34D2B1DDB26FB00FC3306 /* IntelligenceOAuthValidateOperation.swift in Sources */,
 				6DC34CFB1DDB26FB00FC3306 /* IntelligenceKeychain.swift in Sources */,
 				6DC34D151DDB26FB00FC3306 /* GetUserMeRequestOperation.swift in Sources */,
@@ -766,9 +752,7 @@
 				6DC34D041DDB26FB00FC3306 /* OpenApplicationEvent.swift in Sources */,
 				6DC34CF31DDB26FB00FC3306 /* JSONSerializationHelpers.swift in Sources */,
 				6DC34D0B1DDB26FB00FC3306 /* DeleteIdentifierOnBehalfRequestOperation.swift in Sources */,
-				6DC34D131DDB26FB00FC3306 /* AssignUserRoleRequestOperation.swift in Sources */,
 				6DC34D1C1DDB26FB00FC3306 /* GeofenceQuery.swift in Sources */,
-				6DC34D141DDB26FB00FC3306 /* CreateUserRequestOperation.swift in Sources */,
 				6DC34D091DDB26FB00FC3306 /* TimeTracker.swift in Sources */,
 				6DC34CEC1DDB26FB00FC3306 /* IntelligenceConfiguration.swift in Sources */,
 				6DC34CF71DDB26FB00FC3306 /* UserDefaultsInstallation.swift in Sources */,

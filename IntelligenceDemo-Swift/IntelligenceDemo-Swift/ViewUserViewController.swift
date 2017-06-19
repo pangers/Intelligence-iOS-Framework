@@ -77,18 +77,18 @@ class ViewUserViewController : UIViewController {
     }
     
     @IBAction func updateUser() {
-        guard let user = self.user else { return }
-        user.firstName = firstname.text ?? ""
-        user.lastName = lastname.text
-        user.avatarURL = avatarURL.text
-        IntelligenceManager.intelligence?.identity.update(user: user, callback: { (user, error) -> Void in
-            if let user = user {
-                self.user = user
-                self.show(information: " ")
-            } else if let error = error {
-                self.show(information: "There was an error while getting the user: \(error)")
-            }
-        })
+//        guard let user = self.user else { return }
+//        user.firstName = firstname.text ?? ""
+//        user.lastName = lastname.text
+//        user.avatarURL = avatarURL.text
+//        IntelligenceManager.intelligence?.identity.update(user: user, callback: { (user, error) -> Void in
+//            if let user = user {
+//                self.user = user
+//                self.show(information: " ")
+//            } else if let error = error {
+//                self.show(information: "There was an error while getting the user: \(error)")
+//            }
+//        })
     }
     
     // the beta 4 has an issue with empty labels in a stack layout, so use a space instead.

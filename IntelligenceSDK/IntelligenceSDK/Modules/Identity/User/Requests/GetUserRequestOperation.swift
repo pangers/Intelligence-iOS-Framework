@@ -21,9 +21,9 @@ internal final class GetUserRequestOperation : UserRequestOperation {
     override func main() {
         super.main()
         
-        let request = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: oauth!, configuration: configuration!, network: network!)
-        output = session?.int_executeSynchronousDataTask(with: request)
-        parse()
+//        let request = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: oauth!, configuration: configuration!, network: network!)
+//        output = session?.int_executeSynchronousDataTask(with: request)
+//        parse()
     }
     
     override func copy(with zone: NSZone? = nil) -> Any {
