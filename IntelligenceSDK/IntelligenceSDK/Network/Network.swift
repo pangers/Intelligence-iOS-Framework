@@ -72,9 +72,9 @@ internal final class Network: NSObject, URLSessionDelegate {
     
     /// Return all queued operations (excluding pipeline operations).
     internal func queuedPipelines() -> [IntelligenceAPIPipeline] {
+        
         return queue.operations.filter({
-            $0 is IntelligenceAPIOperation })
-            .map({ $0 as! IntelligenceAPIPipeline })
+            $0 is IntelligenceAPIPipeline}) as! [IntelligenceAPIPipeline]
     }
     
     // MARK: Interception of responses

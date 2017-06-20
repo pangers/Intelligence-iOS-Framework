@@ -19,6 +19,8 @@ private enum ConfigurationKey: String {
     //optionals
     case region = "region"
     case environment = "environment"
+    case userName = "username"
+    case password = "password"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
@@ -91,6 +93,12 @@ public extension Intelligence {
 
         /// The environment to connect to
         public var environment: Environment?
+        
+        /// Intelligence Identity user.To track the events assosiated to user.
+        public var userName: String?
+        
+        /// password of Intelligence Identity user.To track the events assosiated to user.
+        public var userPassword: String?
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -129,6 +137,8 @@ public extension Intelligence {
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
             copy.certificateTrustPolicy = self.certificateTrustPolicy
+            copy.userName = self.userName
+            copy.userPassword = self.userPassword
             return copy
         }
 
@@ -180,6 +190,12 @@ public extension Intelligence {
             catch {
                 self.environment = Environment.production
             }
+            
+            //userName
+            self.userName = try? value(forKey: .userName, inContents: contents)
+          
+            //password
+            self.userPassword = try? value(forKey: .password, inContents: contents)
         }
 
 
@@ -217,6 +233,9 @@ public extension Intelligence {
             catch {
                 self.environment = Environment.production
             }
+            
+            self.userName = try? value(forKey: .userName, inContents: contents)
+            self.userPassword = try? value(forKey: .password, inContents: contents)
         }
 
         func getJsonData() -> Data? {
@@ -235,6 +254,14 @@ public extension Intelligence {
 
             dict[ConfigurationKey.region.rawValue] = code
             dict[ConfigurationKey.environment.rawValue] = envStr
+            
+            if let usrName = self.userName{
+                    dict[ConfigurationKey.userName.rawValue] = usrName
+            }
+            
+            if let password = self.userPassword{
+                dict[ConfigurationKey.password.rawValue] = password
+            }
             
             let data = dict.int_toJSONData()
             return data
@@ -259,7 +286,9 @@ public extension Intelligence {
                     lhs.projectID == rhs.projectID &&
                     lhs.applicationID == rhs.applicationID &&
                     lhs.region == rhs.region &&
-                    lhs.environment == rhs.environment
+                    lhs.environment == rhs.environment &&
+                    lhs.userName == rhs.userName &&
+                    lhs.userPassword == rhs.userPassword
         }
     }
 

@@ -2,5 +2,9 @@
     "client_id": "IOS_-_Automation_1495532816",
     "client_secret": "cfsMZNCx41YXHQp91X0k3Fdv",
     "application_id": 4308,
-    "project_id": 30189
+    "project_id": 30189,
+    "username" : "chethan.palaksha%2B88%40tigerspike.com",
+    "password": "742A9E0ACB664D6A84BBD7B13E4F79B9",
+    "region": "SG",
+    "certificate_trust_policy": "any"
 }
