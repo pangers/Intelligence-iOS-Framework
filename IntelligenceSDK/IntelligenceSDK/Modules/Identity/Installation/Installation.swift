@@ -47,9 +47,7 @@ internal struct Installation {
     private var applicationId: Int { return configuration.applicationID }
     private var projectId: Int { return configuration.projectID }
     
-    //TODO : Chethan
     private var userId: Int? {
-//        return oauthProvider.sdkUserOAuth.userId
         return oauthProvider.loggedInUserOAuth.userId
     }
     private var requestId: Int? { return installationStorage.int_installationRequestID }

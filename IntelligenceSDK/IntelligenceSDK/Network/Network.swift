@@ -83,22 +83,22 @@ internal final class Network: NSObject, URLSessionDelegate {
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return IntelligenceAPIPipeline for given token type.
     internal func getPipeline(forOAuth oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, shouldValidate: Bool = true, completion: (IntelligenceAPIPipeline?) -> ()) {
-//TODO:Chethan
-//        if oauth.tokenType == .sdkUser && (oauth.username == nil || oauth.password == nil) {
-//            assertionFailure("User should have been created in startup()")
-//            completion(nil)
-//            return
-//        }
+
+        if oauth.tokenType == .loggedInUser && (oauth.username == nil || oauth.password == nil) {
+            assertionFailure("loggedInUser must have username and password!")
+            completion(nil)
+            return
+        }
         
         // Check if queued operations doesn't already contain a pipeline for this OAuth token type.
-//        if self.queuedPipelines()
-//            .filter({ $0.oauth != nil && $0.oauth?.tokenType == oauth.tokenType })
-//            .count > 0
-//        {
-//            // Nothing we can do, we are already logging in with this token type.
-//            completion(nil)
-//            return
-//        }
+        if self.queuedPipelines()
+            .filter({ $0.oauth != nil && $0.oauth?.tokenType == oauth.tokenType })
+            .count > 0
+        {
+            // Nothing we can do, we are already logging in with this token type.
+            completion(nil)
+            return
+        }
         
         // If shouldValidate == false, the token is no longer valid, lets try and refresh, if that fails login again.
         var operations = [IntelligenceOAuthRefreshOperation(), IntelligenceOAuthLoginOperation()]

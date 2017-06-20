@@ -71,73 +71,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
         self.installation = installation
     }
     
-    /**
-    Creates an SDK user doing "counter" retries.
-    
-    It creates the user only if required, and makes sure to generate the OAuth calls
-    required to login using Network.getPipeline.
-    
-    - parameter counter:    The number of retries to perform.
-    - parameter completion: A callback to notify on success or failure.
-    */
-    private func updateModule(completion: @escaping (Bool) -> ()) {
-        
-            let identity = self
-    
-            // Get pipeline if created or existing.
-            identity.network.getPipeline(forOAuth: identity.network.oauthProvider.applicationOAuth, configuration: identity.configuration) { [weak self] (sdkUserPipeline) -> () in
-                    
-                    guard let identity = self, let sdkUserPipeline = sdkUserPipeline else {
-                        // Should not happen (user created above)
-                        completion(false)
-                        return
-                    }
-                    
-                    identity.network.enqueueOperation(operation: sdkUserPipeline)
-                    
-                    sdkUserPipeline.callback = { [weak self] (returnedOperation: IntelligenceAPIOperation) -> () in
-                        guard let identity = self else {
-                            completion(false)
-                            return
-                        }
-                        
-                        //TODO : Chethan
-                         if (returnedOperation.output?.error) != nil {
-                             completion(false)
-                             return
-                        }
-                        
-                        // Installation can succeed without a user id
-                        identity.createInstallation(callback: { (installation, error) in
-                            if nil == error {
-                                EventTypes.ApplicationInstall.saveToUserDefault(Obj: true)
-                            }
-                        })
-                    
-                        identity.updateInstallation(callback: { (installation, error) in
-                            if nil == error {
-                                EventTypes.ApplicationUpdate.saveToUserDefault(Obj: true)
-                            }
-                        })
-                        
-                        identity.updateInstallation(callback: nil)
-                        
-                        /*
-                        // Grab our user ID.
-                        identity.getMe(oauth: identity.network.oauthProvider.applicationOAuth) { [weak identity] (user, error) -> Void in
-                            
-                            // Update user id for SDKUser
-                            identity?.network.oauthProvider.sdkUserOAuth.userId = user?.userId
-                            completion(error == nil)
-                        }
-                        */
-                        completion(true)
-                        
-                    }
-            }
-    }
 
-    
     override func startup(completion: @escaping (Bool) -> ()) {
         super.startup { [weak network, weak configuration] (success) -> () in
             if !success {
@@ -149,8 +83,14 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 return
             }
             
+            var oauth = network.oauthProvider.loggedInUserOAuth
+          
+            if (oauth.username == nil && oauth.password == nil){
+                oauth = network.oauthProvider.applicationOAuth
+            }
+            
             // Get pipeline for grant_type 'client_credentials'.
-            network.getPipeline(forOAuth: network.oauthProvider.applicationOAuth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
+            network.getPipeline(forOAuth: oauth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
                 guard let applicationPipeline = applicationPipeline, let identity = self else {
                     completion(false)
                     return
@@ -178,8 +118,22 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                         completion(false)
                         return
                     }
-                
-                   identity.updateModule(completion:completion)
+                    
+                    
+                    // Installation can succeed without a user id
+                    identity.createInstallation(callback: { (installation, error) in
+                        if nil == error {
+                            EventTypes.ApplicationInstall.saveToUserDefault(Obj: true)
+                        }
+                    })
+                    
+                    identity.updateInstallation(callback: { (installation, error) in
+                        if nil == error {
+                            EventTypes.ApplicationUpdate.saveToUserDefault(Obj: true)
+                        }
+                    })
+                    
+                    completion(true)
                 }
                 
                 identity.network.enqueueOperation(operation: applicationPipeline)
