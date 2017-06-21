@@ -117,6 +117,7 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         dictionary[Event.ApplicationIdKey] = configuration.applicationID
         dictionary[Event.DeviceTypeKey] = UIDevice.current.model
         dictionary[Event.OperationSystemVersionKey] = UIDevice.current.systemVersion
+        dictionary[Event.DeviceIDKey] = UUID().uuidString
         
         // Set optional values (may fail for whatever reason).
         dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.int_applicationVersionString)
