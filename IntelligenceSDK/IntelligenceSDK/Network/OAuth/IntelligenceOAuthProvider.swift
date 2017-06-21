@@ -30,6 +30,6 @@ internal final class IntelligenceOAuthDefaultProvider: IntelligenceOAuthProvider
         return  loggedInUserOAuth
         //return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
     }
+   
     internal var developerLoggedIn = false
-    
 }

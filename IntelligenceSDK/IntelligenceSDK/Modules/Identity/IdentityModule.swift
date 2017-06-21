@@ -83,13 +83,7 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 return
             }
             
-            var oauth = network.oauthProvider.loggedInUserOAuth
-          
-            if (configuration.userName == nil || configuration.userPassword == nil){
-                oauth = network.oauthProvider.applicationOAuth
-            }else{
-                oauth.updateCredentials(withUsername: configuration.userName!, password: configuration.userPassword!)
-            }
+            let oauth = network.oauthProvider.applicationOAuth
             
             // Get pipeline for grant_type 'client_credentials'.
             network.getPipeline(forOAuth: oauth, configuration: configuration) { [weak self] (applicationPipeline) -> () in

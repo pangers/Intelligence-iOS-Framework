@@ -104,12 +104,13 @@ internal extension URLRequest {
         var body = [String: String]()
         body[HTTPBodyClientIDKey] = configuration.clientID
         body[HTTPBodyClientSecretKey] = configuration.clientSecret
-        if oauth.tokenType == .application {
+       
+        if (configuration.userName == nil || configuration.userPassword == nil) {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
         } else {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
-            body[HTTPBodyUsernameKey] = oauth.username!
-            body[HTTPBodyPasswordKey] = oauth.password!
+            body[HTTPBodyUsernameKey] = configuration.userName!
+            body[HTTPBodyPasswordKey] = configuration.userPassword!
         }
         
         request.allHTTPHeaderFields = int_HTTPHeaders()
@@ -215,12 +216,10 @@ internal extension URLRequest {
             "IsConfirmed": true,
             "Value": tokenString]
         
+        //TODO:Chethan
         if let userId = network.oauthProvider.loggedInUserOAuth.userId {
             json["UserId"] = userId
         }
-//        else if let userId = network.oauthProvider.sdkUserOAuth.userId {
-//            json["UserId"] = userId
-//        }
         
         request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
