@@ -32,14 +32,14 @@ class IntelligenceLocationAnalyticsCallsTestCase: IntelligenceLocationBaseTestCa
     }
     
     func testEnterRegion() {
-        (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
+        (location as! LocationModule).didEnterGeofence(geofence: geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
             return $0.eventType == GeofenceEnterEvent.EventType && $0.targetId == String(geofence.id)
         }.count == 1
     }
     
     func testExitRegion() {
-        (location as! LocationModule).didEnterGeofence(geofence, withUserCoordinate: nil)
+        (location as! LocationModule).didEnterGeofence(geofence: geofence, withUserCoordinate: nil)
         analytics.trackedEvents.filter {
             return $0.eventType == GeofenceExitEvent.EventType && $0.targetId == String(geofence.id)
         }.count == 1

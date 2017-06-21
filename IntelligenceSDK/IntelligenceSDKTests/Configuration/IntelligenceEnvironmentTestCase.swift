@@ -15,12 +15,12 @@ import XCTest
 class IntelligenceEnvironmentTestCase: IntelligenceBaseTestCase {
     func testInitWithCode() {
         let correctAssignments = [
-            "local" : Intelligence.Environment.Local,
-            "development" : Intelligence.Environment.Development,
-            "integration" : Intelligence.Environment.Integration,
-            "uat" : Intelligence.Environment.UAT,
-            "staging" : Intelligence.Environment.Staging,
-            "production" : Intelligence.Environment.Production,
+            "local" : Intelligence.Environment.local,
+            "development" : Intelligence.Environment.development,
+            "integration" : Intelligence.Environment.integration,
+            "uat" : Intelligence.Environment.uat,
+            "staging" : Intelligence.Environment.staging,
+            "production" : Intelligence.Environment.production,
         ]
         
         for (code, value) in correctAssignments {

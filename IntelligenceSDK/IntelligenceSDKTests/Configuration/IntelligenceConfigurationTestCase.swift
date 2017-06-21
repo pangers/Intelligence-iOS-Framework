@@ -14,18 +14,17 @@ import XCTest
 class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testConfigurationFromFileAndBundle() {
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         let cfg = genericConfiguration()
         do {
             let config = Intelligence.Configuration()
-            try config.readFromFile("config", inBundle: bundle);
+            try config.readFromFile(fileName: "config", inBundle: bundle);
             XCTAssert(config.clientID == cfg.clientID, "The client ID is incorrect")
             XCTAssert(config.clientSecret == cfg.clientSecret, "The client secret is incorrect")
             XCTAssert(config.region == cfg.region, "The region is incorrect")
             XCTAssert(config.environment == cfg.environment, "The environment is incorrect")
             XCTAssert(config.applicationID == cfg.applicationID , "The application Id is incorrect")
             XCTAssert(config.projectID == cfg.projectID, "The project Id is incorrect")
-            XCTAssert(config.sdkUserRole == cfg.sdkUserRole, "User role not read correctly")
         }
         catch {
             // nop
@@ -37,13 +36,11 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let configuration = Intelligence.Configuration()
         configuration.clientID = "CLIENT_ID" // as in file
         configuration.clientSecret = "CLIENT_SECRET" // as in file
-        configuration.region = .Europe
-        configuration.environment = .Production
+        configuration.region = .singapore
+        configuration.environment = .production
         
         configuration.applicationID = 10
         configuration.projectID = 20
-        configuration.companyId = 1
-        configuration.sdkUserRole = 1008
         
         return configuration
     }
@@ -53,10 +50,10 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let config = Intelligence.Configuration()
         
         do {
-            try config.readFromFile("Does not exist", inBundle: NSBundle.mainBundle())
+            try config.readFromFile(fileName: "Does not exist", inBundle: Bundle.main)
             XCTAssert(false, "File not found, but exception not thrown")
         }
-        catch let err as ConfigurationError where err == .FileNotFoundError {
+        catch let err as ConfigurationError where err == .fileNotFoundError {
         }
         catch {
             XCTAssert(false, "Unexpected exception type.")
@@ -65,13 +62,13 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testFileInvalidFileConfiguration() {
         let config = Intelligence.Configuration()
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
-            try config.readFromFile("wrongjson", inBundle: bundle)
+            try config.readFromFile(fileName: "wrongjson", inBundle: bundle)
             XCTAssert(false, "File is invalid, but the exception is not thrown")
         }
-        catch ConfigurationError.InvalidFileError {
+        catch ConfigurationError.invalidFileError {
             // correct path
         }
         catch {
@@ -81,13 +78,13 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     
     func testFileMissingPropertyConfiguration() {
         let config = Intelligence.Configuration()
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         
         do {
-            try config.readFromFile("missingproperty", inBundle: bundle)
+            try config.readFromFile(fileName: "missingproperty", inBundle: bundle)
             XCTAssert(false, "File has missing properties, but the exception is not thrown")
         }
-        catch ConfigurationError.MissingPropertyError {
+        catch ConfigurationError.missingPropertyError {
             // correct path
         }
         catch {
@@ -96,7 +93,7 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
     }
     
     func testConfigurationIsValid() {
-        let bundle = NSBundle(forClass: IntelligenceConfigurationTestCase.self)
+        let bundle = Bundle(for: IntelligenceConfigurationTestCase.self)
         do {
             let config = try Intelligence.Configuration(fromFile: "config", inBundle: bundle);
             XCTAssert(config.isValid, "The configuration provided is invalid")
@@ -107,14 +104,14 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         }
     }
     
-    func testConfigurationMissingPropertyError(cfg: Intelligence.Configuration) {
+    func testConfigurationMissingPropertyError(_ cfg: Intelligence.Configuration) {
         XCTAssertFalse(cfg.isValid)
         XCTAssertTrue(cfg.hasMissingProperty)
         do {
             let _ = try Intelligence(withDelegate: MockIntelligenceDelegate(), configuration: cfg, oauthProvider: mockOAuthProvider)
             XCTAssert(false, "No exception thrown")
         }
-        catch ConfigurationError.MissingPropertyError {
+        catch ConfigurationError.missingPropertyError {
             // Correct path
             XCTAssertTrue(true)
         }
@@ -133,19 +130,11 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.companyId = 0
-        testConfigurationMissingPropertyError(cfg)
-        
-        cfg = genericConfiguration()
         cfg.applicationID = 0
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
         cfg.projectID = 0
-        testConfigurationMissingPropertyError(cfg)
-        
-        cfg = genericConfiguration()
-        cfg.sdkUserRole = 0
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()

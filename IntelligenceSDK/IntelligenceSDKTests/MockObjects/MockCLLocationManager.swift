@@ -13,7 +13,7 @@ class MockCLLocationManager: CLLocationManager {
     
     var regions = Set<CLRegion>()
     
-    func fireEnterGeofence(geofence:Geofence) {
+    func fireEnterGeofence(_ geofence:Geofence) {
         guard let region = regionFromGeofence(geofence) else {
             return
         }
@@ -21,7 +21,7 @@ class MockCLLocationManager: CLLocationManager {
         self.delegate!.locationManager!(self, didEnterRegion: region)
     }
 
-    func fireExitGeofence(geofence:Geofence) {
+    func fireExitGeofence(_ geofence:Geofence) {
         guard let region = regionFromGeofence(geofence) else {
             return
         }
@@ -29,18 +29,18 @@ class MockCLLocationManager: CLLocationManager {
         self.delegate!.locationManager!(self, didExitRegion: region)
     }
 
-    func regionFromGeofence(geofence:Geofence) -> CLRegion? {
+    func regionFromGeofence(_ geofence:Geofence) -> CLRegion? {
         return regions.filter { (region) -> Bool in
             return region.identifier == String(geofence.id)
         }.first
     }
     
-    override func startMonitoringForRegion(region: CLRegion) {
+    override func startMonitoring(for region: CLRegion) {
         regions.insert(region)
-        self.delegate?.locationManager?(self, didStartMonitoringForRegion: region)
+        self.delegate?.locationManager?(self, didStartMonitoringFor: region)
     }
     
-    override func stopMonitoringForRegion(region: CLRegion) {
+    override func stopMonitoring(for region: CLRegion) {
         regions.remove(region)
     }
 }

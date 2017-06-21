@@ -2,10 +2,5 @@
     "client_id": "CLIENT_ID",
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
-    "project_id": 20,
-    "region": "EU",
-    "environment": "production",
-    "company_id":10,
-    "sdk_user_role": 1008,
-    "certificate_trust_policy": "any"
+    "project_id": 20
 }

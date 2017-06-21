@@ -14,7 +14,7 @@ class UtilsTestCase: XCTestCase {
 
     func testShuffle() {
         
-        measureBlock { () -> Void in
+        measure { () -> Void in
             var values = ["A"]
             var original = values
             values.shuffle()
@@ -31,15 +31,16 @@ class UtilsTestCase: XCTestCase {
                 values.shuffle()
             }
             XCTAssert(original != values)
-            XCTAssert(original == values.sort())
+            XCTAssert(original == values.sorted())
             
-            let immutable = [1,2,3,4,5]
+            var immutable = [1,2,3,4,5]
             let originalNumbers = immutable
             
-            while immutable.shuffle() == immutable {
-            }
+            //Chethan : Need to test
+//            while immutable.shuffle() == immutable {
+//            }
             
-            XCTAssert(immutable.sort() == originalNumbers)
+            XCTAssert(immutable.sorted() == originalNumbers)
             
             XCTAssert(true)
         }
@@ -47,30 +48,31 @@ class UtilsTestCase: XCTestCase {
     
     func testForEachInMainThreadFromSecondaryThread() {
         let expectationsArray = [
-            expectationWithDescription("1"),
-            expectationWithDescription("2"),
-            expectationWithDescription("3"),
-            expectationWithDescription("4"),
-            expectationWithDescription("5"),
-            expectationWithDescription("6"),
-            expectationWithDescription("7")
+            expectation(description: "1"),
+            expectation(description: "2"),
+            expectation(description: "3"),
+            expectation(description: "4"),
+            expectation(description: "5"),
+            expectation(description: "6"),
+            expectation(description: "7")
         ]
         
-        dispatch_async(dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) { // 1
+        //Chethan : Need to check this flow.
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async { // 1
             
             // Assert that we are not in the main thread, but forEachInMainThread will run in the main thread.
-            XCTAssertFalse(NSThread.isMainThread())
+            XCTAssertFalse(Thread.isMainThread)
             
             expectationsArray.forEachInMainThread {
                 // Assert that all runs in the main thread
-                XCTAssert(NSThread.isMainThread())
+                XCTAssert(Thread.isMainThread)
                 
                 // Fulfill all expectation so we can wait for them.
                 $0.fulfill()
             }
         }
         
-        waitForExpectationsWithTimeout(2) { (error) -> Void in
+        waitForExpectations(timeout: 2) { (error) -> Void in
             XCTAssertNil(error)
         }
     }
@@ -80,55 +82,55 @@ class UtilsTestCase: XCTestCase {
     */
     func testForEachInMainThreadFromMainThread() {
         let expectationsArray = [
-            expectationWithDescription("1"),
-            expectationWithDescription("2"),
-            expectationWithDescription("3"),
-            expectationWithDescription("4"),
-            expectationWithDescription("5"),
-            expectationWithDescription("6"),
-            expectationWithDescription("7")
+            expectation(description: "1"),
+            expectation(description: "2"),
+            expectation(description: "3"),
+            expectation(description: "4"),
+            expectation(description: "5"),
+            expectation(description: "6"),
+            expectation(description: "7")
         ]
         
         // Assert that all runs in the main thread
-        XCTAssert(NSThread.isMainThread())
+        XCTAssert(Thread.isMainThread)
 
         expectationsArray.forEachInMainThread {
             // Assert that all runs in the main thread
-            XCTAssert(NSThread.isMainThread())
+            XCTAssert(Thread.isMainThread)
             
             // Fulfill all expectation so we can wait for them.
             $0.fulfill()
         }
 
-        waitForExpectationsWithTimeout(2) { (error) -> Void in
+        waitForExpectations(timeout: 2) { (error) -> Void in
             XCTAssertNil(error)
         }
     }
 
     func testForEachInQueue() {
         let expectationsArray = [
-            expectationWithDescription("1"),
-            expectationWithDescription("2"),
-            expectationWithDescription("3"),
-            expectationWithDescription("4"),
-            expectationWithDescription("5"),
-            expectationWithDescription("6"),
-            expectationWithDescription("7")
+            expectation(description: "1"),
+            expectation(description: "2"),
+            expectation(description: "3"),
+            expectation(description: "4"),
+            expectation(description: "5"),
+            expectation(description: "6"),
+            expectation(description: "7")
         ]
         
         // Assert that we run in the main thread
-        XCTAssert(NSThread.isMainThread())
-
-        expectationsArray.forEach(asyncInQueue: dispatch_get_global_queue(Int(QOS_CLASS_USER_INITIATED.rawValue), 0)) {
+        XCTAssert(Thread.isMainThread)
+        //dispatch_get_global_queue(Int(DispatchQoS.QoSClass.userInitiated.rawValue), 0)
+        expectationsArray.forEach(asyncInQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)) {
             
             // Assert that we are not in the main thread
-            XCTAssertFalse(NSThread.isMainThread())
+            XCTAssertFalse(Thread.isMainThread)
 
             // Fulfill all expectation so we can wait for them.
             $0.fulfill()
         }
         
-        waitForExpectationsWithTimeout(2) { (error) -> Void in
+        waitForExpectations(timeout: 2) { (error) -> Void in
             XCTAssertNil(error)
         }
     }
@@ -145,15 +147,16 @@ class UtilsTestCase: XCTestCase {
         XCTAssert("123"[1] == "2")
         
         //  isContained
-        XCTAssert(!"".isContained(""), "Empty strings are contained")
-        XCTAssert(!"123".isContained(""), "A string does contain an empty string.")
-        XCTAssert(!"".isContained("123"), "An empty string contains a string.")
-        XCTAssert("123".isContained("123"), "Two equal strings are contained.")
+        XCTAssert(!"".isContained(string: ""), "Empty strings are contained")
+        XCTAssert(!"123".isContained(string: ""), "A string does contain an empty string.")
+        XCTAssert(!"".isContained(string: "123"), "An empty string contains a string.")
+        XCTAssert("123".isContained(string: "123"), "Two equal strings are contained.")
 
-        XCTAssert("1".isContained("123"), "A substring of the string contains the second string.")
-        XCTAssert(!"PADDING123PADDING".isContained("123"), "Strings contain.")
+        XCTAssert("1".isContained(string: "123"), "A substring of the string contains the second string.")
+        XCTAssert(!"PADDING123PADDING".isContained(string: "123"), "Strings contain.")
     }
-    
+    //This init test is failing because of IOS 10.x simulator issue.
+    //http://stackoverflow.com/questions/20344255/secitemadd-and-secitemcopymatching-returns-error-code-34018-errsecmissingentit/22305193#22305193
     func testKeychainSubscript() {
         let defaults = IntelligenceKeychain()
         let key = "test"
@@ -181,20 +184,20 @@ class UtilsTestCase: XCTestCase {
     func testDateFormatter() {
         let dateFormatter = RFC3339DateFormatter
         XCTAssert(dateFormatter.dateFormat == "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS'Z'")
-        XCTAssert(dateFormatter.timeZone == NSTimeZone(name: "UTC"))
-        XCTAssert(dateFormatter.calendar == NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian))
-        XCTAssert(dateFormatter.locale == NSLocale(localeIdentifier: "en_US_POSIX"))
+        XCTAssert(dateFormatter.timeZone == TimeZone(abbreviation: "UTC"))
+        XCTAssert(dateFormatter.calendar == Calendar(identifier: Calendar.Identifier.gregorian))
+        XCTAssert(dateFormatter.locale == Locale(identifier: "en_US_POSIX"))
     }
     
     func testDataToJSONArray() {
-        guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".dataUsingEncoding(NSUTF8StringEncoding)?.int_jsonArray else {
+        guard let _ = "[{\"0\":\"\",\"1\":\"\"}]".data(using: String.Encoding.utf8)?.int_jsonArray else {
             XCTAssert(false,"Couldn't load an array from the NSData")
             return
         }
     }
 
     func testGuardedJSONParsing() {
-        let wrongJSONData = "sadasda{\\".dataUsingEncoding(NSUTF8StringEncoding)!
+        let wrongJSONData = "sadasda{\\".data(using: String.Encoding.utf8)!
         
         XCTAssertNil(wrongJSONData.int_jsonDictionaryArray, "Json array loaded from wrong data")
         XCTAssertNil(wrongJSONData.int_jsonDictionary, "Json dictionary loaded from wrong data")
