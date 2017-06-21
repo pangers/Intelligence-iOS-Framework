@@ -27,7 +27,7 @@ internal final class IntelligenceOAuthDefaultProvider: IntelligenceOAuthProvider
     
     /// Best OAuth we have for grant_type 'password'.
     internal var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
-        return  loggedInUserOAuth
+        return  applicationOAuth
         //return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
     }
    

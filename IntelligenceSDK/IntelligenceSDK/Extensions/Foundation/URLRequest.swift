@@ -211,16 +211,11 @@ internal extension URLRequest {
             .int_URLByAppendingIdentifiers()
         var request = URLRequest(url: url)
         
-        var json : [String : Any] = ["ApplicationId": configuration.applicationID,
+        let json : [String : Any] = ["ApplicationId": configuration.applicationID,
             "IdentifierTypeId": IdentifierType.iOSDeviceToken.rawValue,
             "IsConfirmed": true,
             "Value": tokenString]
-        
-        //TODO:Chethan
-        if let userId = network.oauthProvider.loggedInUserOAuth.userId {
-            json["UserId"] = userId
-        }
-        
+ 
         request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         
