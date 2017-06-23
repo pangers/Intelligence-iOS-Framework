@@ -105,12 +105,13 @@ internal extension URLRequest {
         body[HTTPBodyClientIDKey] = configuration.clientID
         body[HTTPBodyClientSecretKey] = configuration.clientSecret
        
-        if (configuration.userName == nil || configuration.userPassword == nil) {
+        if ((configuration.userName == nil || configuration.userPassword == nil) &&
+            oauth.tokenType == IntelligenceOAuthTokenType.application) {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
         } else {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
-            body[HTTPBodyUsernameKey] = configuration.userName!
-            body[HTTPBodyPasswordKey] = configuration.userPassword!
+            body[HTTPBodyUsernameKey] = oauth.username!
+            body[HTTPBodyPasswordKey] = oauth.password!
         }
         
         request.allHTTPHeaderFields = int_HTTPHeaders()

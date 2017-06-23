@@ -83,7 +83,9 @@ final class IdentityModule : IntelligenceModule, IdentityModuleProtocol {
                 return
             }
             
-            let oauth = network.oauthProvider.applicationOAuth
+            var oauth = network.oauthProvider.applicationOAuth
+            oauth.username = configuration.userName
+            oauth.password = configuration.userPassword
             
             // Get pipeline for grant_type 'client_credentials'.
             network.getPipeline(forOAuth: oauth, configuration: configuration) { [weak self] (applicationPipeline) -> () in
