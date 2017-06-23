@@ -12,6 +12,8 @@ import CoreLocation
 import IntelligenceSDK
 
 
+
+
 extension AppDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         print("authorization status changed")
