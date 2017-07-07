@@ -9,46 +9,51 @@
 import Foundation
 
 internal final class IntelligenceKeychain: TSDKeychain, IntelligenceOAuthStorage {
-    
+
     init(account: String = "IntelligenceSDK") {
         super.init(account, service: "com.tigerspike.IntelligenceSDK")
     }
-    
+
     private func keyValues() -> NSMutableDictionary {
-        return executeManagedRequest(.Read)?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
+        return executeManagedRequest(requestType: .read)?.mutableCopy() as? NSMutableDictionary ?? NSMutableDictionary()
     }
-    
-    private func objectForKey(key: String) -> AnyObject? {
+
+    private func object(for key: String) -> Any? {
         let value = keyValues()[key]
         return value
     }
-    
-    private func setObject(value: AnyObject, forKey key: String) {
+
+    private func setObject(value: Any, for key: String) {
         let values = keyValues()
         values[key] = value
-        executeManagedRequest(.Update, keyValues: values)
+        executeManagedRequest(requestType: .update, keyValues: values)
     }
-    
-    private func removeObjectForKey(key: String) {
+
+    private func removeObject(for key: String) {
         let values = keyValues()
-        values.removeObjectForKey(key)
-        executeManagedRequest(.Update, keyValues: values)
+        values.removeObject(forKey: key)
+        executeManagedRequest(requestType: .update, keyValues: values)
     }
-    
+
     // Subscript implementation
-    @objc subscript(index: String) -> AnyObject? {
+    @objc subscript(index: String) -> Any? {
         get {
             // return an appropriate subscript value here
-            return objectForKey(index)
+            return object(for: index)
         }
         set(newValue) {
             // perform a suitable setting action here
             guard let value = newValue else {
-                removeObjectForKey(index)
+                removeObject(for: index)
                 return
             }
-            
-            setObject(value, forKey: index)
+
+            setObject(value: value, for: index)
         }
+    }
+
+    public func clearAllData() {
+        let values = keyValues()
+        executeManagedRequest(requestType: .delete, keyValues: values)
     }
 }

@@ -12,10 +12,12 @@ import CoreLocation
 import IntelligenceSDK
 
 
+
+
 extension AppDelegate: CLLocationManagerDelegate {
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         print("authorization status changed")
-        if status == .AuthorizedAlways || status == .AuthorizedWhenInUse {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
             startupIntelligence()
         }
     }
@@ -27,21 +29,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
 	var window: UIWindow?
     let locationManager: CLLocationManager = CLLocationManager()
     
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
-//        startupIntelligence()
+        //        startupIntelligence()
         locationManager.delegate = self
-        if CLLocationManager.authorizationStatus() == .NotDetermined {
+        if CLLocationManager.authorizationStatus() == .notDetermined {
             locationManager.requestAlwaysAuthorization()
         }
-
+        
         return true
     }
  
     func startupViewController() -> StartupViewController? {
         
-        if((self.window?.rootViewController?.isKindOfClass(StartupViewController)) != nil){
-            return self.window!.rootViewController as? StartupViewController
+        if let rootViewController = self.window?.rootViewController, rootViewController is StartupViewController {
+            return rootViewController as? StartupViewController
         }
         else{
             return nil
@@ -49,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     }
     
     func segueToDemo()  {
-        self.window?.rootViewController?.performSegueWithIdentifier("intelligenceStartedUp", sender: self)
+        self.window?.rootViewController?.performSegue(withIdentifier: "intelligenceStartedUp", sender: self)
     }
 
     func startupIntelligence() {
@@ -57,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             return
         }
 
-        self.startupViewController()?.state = .Starting
+        self.startupViewController()?.state = .starting
 
         do {
             let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
@@ -66,87 +68,87 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
             // Startup all modules.
             intelligence.startup { (success) -> () in
 
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation {
 
                     if success {
                         
                         // Register test event.
                         let testEvent = Event(withType: "Intelligence.Test.Event.Type")
-                        intelligence.analytics.track(testEvent)
-                        IntelligenceManager.startupWithIntelligence(intelligence)
+                        intelligence.analytics.track(event: testEvent)
+                        IntelligenceManager.startup(with: intelligence)
 
-                        self.startupViewController()?.state = .Started
+                        self.startupViewController()?.state = .started
                         self.registerForPush()
                         self.segueToDemo()
                     }
                     else {
-                        self.startupViewController()?.state = .Failed
+                        self.startupViewController()?.state = .failed
 
                         // Allow the user to retry to startup intelligence.
                         let message = "Intelligence was unable to initialise properly. This can lead to unexpected behaviour. Please restart the app to retry the Intelligence startup."
-                        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
-                        controller.addAction(UIAlertAction(title: "Retry", style: .Cancel, handler: { (action) -> Void in
+                        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                        controller.addAction(UIAlertAction(title: "Retry", style: .cancel, handler: { (action) -> Void in
                             // Try again to start intelligence
                             self.startupIntelligence()
                         }))
 
-                        self.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil)
+                        self.window?.rootViewController?.present(controller, animated: true, completion: nil)
                     }
                 }
             }
         }
-        catch IntelligenceSDK.ConfigurationError.FileNotFoundError {
-            unrecoverableAlert(withMessage: "The file you specified does not exist!")
+        catch IntelligenceSDK.ConfigurationError.fileNotFoundError {
+            unrecoverableAlert(with: "The file you specified does not exist!")
         }
-        catch IntelligenceSDK.ConfigurationError.InvalidFileError {
-            unrecoverableAlert(withMessage: "The file is invalid! Check that the JSON provided is correct.")
+        catch IntelligenceSDK.ConfigurationError.invalidFileError {
+            unrecoverableAlert(with: "The file is invalid! Check that the JSON provided is correct.")
         }
-        catch IntelligenceSDK.ConfigurationError.MissingPropertyError {
-            unrecoverableAlert(withMessage: "You missed a property!")
+        catch IntelligenceSDK.ConfigurationError.missingPropertyError {
+            unrecoverableAlert(with: "You missed a property!")
         }
-        catch IntelligenceSDK.ConfigurationError.InvalidPropertyError {
-            unrecoverableAlert(withMessage: "There is an invalid property!")
+        catch IntelligenceSDK.ConfigurationError.invalidPropertyError {
+            unrecoverableAlert(with: "There is an invalid property!")
         }
         catch {
-            unrecoverableAlert(withMessage: "Treat the error with care!")
+            unrecoverableAlert(with: "Treat the error with care!")
         }
     }
 
     func registerForPush() {
-        let application = UIApplication.sharedApplication()
+        let application = UIApplication.shared
         application.registerForRemoteNotifications()
-        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
+        application.registerUserNotificationSettings(UIUserNotificationSettings(types: .alert, categories: nil))
     }
     
-	func applicationDidEnterBackground(application: UIApplication) {
+	func applicationDidEnterBackground(_ application: UIApplication) {
         IntelligenceManager.intelligence?.analytics.pause()
 	}
 
-	func applicationWillEnterForeground(application: UIApplication) {
+	func applicationWillEnterForeground(_ application: UIApplication) {
         IntelligenceManager.intelligence?.analytics.resume()
 	}
 
-	func applicationWillTerminate(application: UIApplication) {
+	func applicationWillTerminate(_ application: UIApplication) {
         IntelligenceManager.intelligence?.shutdown()
 	}
 
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        IntelligenceManager.intelligence?.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        IntelligenceManager.intelligence?.identity.registerDeviceToken(with: deviceToken) { (tokenId, error) -> Void in
             if error != nil {
                 self.alert(withMessage: "Failed with error: \(error!.code)")
             } else {
                 // Store token id for unregistration. For this example I have stored it in user defaults.
                 // However, this should be stored in the keychain as the app may be uninstalled and reinstalled
                 // multiple times and may receive the same device token from Apple.
-                NSUserDefaults.standardUserDefaults().setInteger(tokenId, forKey: IntelligenceDemoStoredDeviceTokenKey)
-                NSUserDefaults.standardUserDefaults().synchronize()
-
+                UserDefaults.standard.set(tokenId, forKey: IntelligenceDemoStoredDeviceTokenKey)
+                UserDefaults.standard.synchronize()
+                
                 self.alert(withMessage: "Registration Succeeded!")
             }
         }
     }
 
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         alert(withMessage: "Unable to Register for Push Notifications")
     }
 
@@ -154,16 +156,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     /// startup or if one of the INTIntelligenceDelegate methods is invoked after calling startup.
     /// This method will present an alert and put the app into an unrecoverable state.
     /// You will need to run the app again in order to try startup again.
-    private func unrecoverableAlert(withMessage message: String) {
+    private func unrecoverableAlert(with message: String) {
         // Notify startup view controller of new state
-        startupViewController()?.state = .Failed
+        startupViewController()?.state = .failed
         // Present alert
         alert(withMessage: message)
     }
 
     func alert(withMessage message: String) {
-        if !NSThread.isMainThread() {
-            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+        if !Thread.isMainThread {
+            DispatchQueue.main.async(execute: { [weak self] in
                 self?.alert(withMessage: message)
                 })
             return
@@ -178,15 +180,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
         if let presenterViewController = presenterViewController {
             guard let _ = presenterViewController.view.window else {
                 // presenterViewController in not yet atttached to the window
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { [weak self] in
+                
+                
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1), execute: {
+                    [weak self] in
                     self?.alert(withMessage: message)
-                    })
+                })
                 return
             }
 
-            let controller = UIAlertController(title: "Intelligence Demo", message: message, preferredStyle: .Alert)
-            controller.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-            presenterViewController.presentViewController(controller, animated: true, completion: nil)
+            let controller = UIAlertController(title: "Intelligence Demo", message: message, preferredStyle: .alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            presenterViewController.present(controller, animated: true, completion: nil)
         }
         else {
             print("Unable to raise alert: " + message)
@@ -196,39 +201,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IntelligenceDelegate {
     // MARK:- IntelligenceDelegate
 
     /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
-    func credentialsIncorrectForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
+    func credentialsIncorrect(for intelligence:
+        Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during login, check credentials for Intelligence accounts.")
     }
 
     /// Account has been disabled and no longer active. Credentials are no longer valid.
-    func accountDisabledForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
+    func accountDisabled(for intelligence: Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during login, the Intelligence account is disabled.")
     }
 
     /// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
-    func accountLockedForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
+    func accountLocked(for intelligence: Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during login, the Intelligence account is locked. Contact an Intelligence Administrator")
     }
     
     /// Token is invalid or expired, this may occur if your Application is configured incorrectly.
-    func tokenInvalidOrExpiredForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
+    func tokenInvalidOrExpired(for intelligence: Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during user creation, check credentials for Intelligence accounts.")
     }
 
     /// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
-    func userCreationFailedForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
+    func userCreationFailed(for intelligence: Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during user creation, check Intelligence accounts are configured correctly.")
     }
     
     /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
-    func userLoginRequiredForIntelligence(intelligence: Intelligence) {
+    func userLoginRequired(for intelligence: Intelligence) {
         // Present login screen or call identity.login with credentials stored in Keychain.
-        unrecoverableAlert(withMessage: "Token expired, you will need to login again.")
+        unrecoverableAlert(with: "Token expired, you will need to login again.")
     }
 
     /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
-    func userRoleAssignmentFailedForIntelligence(intelligence: Intelligence) {
-        unrecoverableAlert(withMessage: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
+    func userRoleAssignmentFailed(for intelligence: Intelligence) {
+        unrecoverableAlert(with: "Unrecoverable error occurred during user role assignment, if this happens consistently please confirm that Intelligence accounts are configured correctly.")
     }
 }
 

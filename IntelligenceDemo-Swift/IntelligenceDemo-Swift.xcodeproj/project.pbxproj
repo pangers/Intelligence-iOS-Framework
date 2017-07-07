@@ -10,22 +10,18 @@
 		0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */; };
 		4531DEEE1C6BCAC90065025A /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; };
 		4531DEEF1C6BCAC90065025A /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454DA8091C69DE7500C13254 /* ManageUserViewController.swift */; };
 		455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */; };
 		455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */; };
 		7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */; };
 		7FDAAAE21B5D35AE00DF2BE6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */; };
 		7FDAAAE41B5D35AE00DF2BE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */; };
 		7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */; };
-		BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB0A23641B70ADD700CE0C81 /* Identity.storyboard */; };
 		BB2FD4691B6B9D46000E8070 /* IntelligenceConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = BB2FD4681B6B9D46000E8070 /* IntelligenceConfiguration.json */; };
 		BB3534871B6FAB5800C67500 /* IntelligenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534861B6FAB5800C67500 /* IntelligenceManager.swift */; };
-		BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */; };
 		BB61731E1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB61731D1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift */; };
 		BBBB63571BC27AE800802EF9 /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBB63551BC27AE800802EF9 /* Location.storyboard */; };
 		BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBBB63591BC27BF700802EF9 /* MapKit.framework */; };
 		BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */; };
-		FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */; };
 		FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE240A7E1C7623B700D2E336 /* StartupViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +42,6 @@
 /* Begin PBXFileReference section */
 		0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsCustomEventViewController.swift; sourceTree = "<group>"; };
 		4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		454DA8091C69DE7500C13254 /* ManageUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageUserViewController.swift; sourceTree = "<group>"; };
 		455D85EF1BC2BFC400A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
 		455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedViewController.swift; sourceTree = "<group>"; };
 		7FDAAAD91B5D35AE00DF2BE6 /* IntelligenceDemo-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IntelligenceDemo-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,15 +50,12 @@
 		7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FDAAAE61B5D35AE00DF2BE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BB0A23651B70ADD700CE0C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Identity.storyboard; sourceTree = "<group>"; };
 		BB2FD4681B6B9D46000E8070 /* IntelligenceConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = IntelligenceConfiguration.json; sourceTree = "<group>"; };
 		BB3534861B6FAB5800C67500 /* IntelligenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceManager.swift; sourceTree = "<group>"; };
-		BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUserViewController.swift; sourceTree = "<group>"; };
 		BB61731D1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationGeofenceQueryViewController.swift; sourceTree = "<group>"; };
 		BBBB63561BC27AE800802EF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Location.storyboard; sourceTree = "<group>"; };
 		BBBB63591BC27BF700802EF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationModuleViewController.swift; sourceTree = "<group>"; };
-		FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityModuleViewController.swift; sourceTree = "<group>"; };
 		FE240A7E1C7623B700D2E336 /* StartupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,7 +106,6 @@
 				BB0A23781B70B89600CE0C81 /* Intelligence */,
 				FE240A801C7623BB00D2E336 /* Startup */,
 				BBBB63581BC27AF500802EF9 /* Location */,
-				BB3534831B6FAAB900C67500 /* Identity */,
 				455D85F11BC2BFCB00A64B96 /* Analytics */,
 				BB2FD4681B6B9D46000E8070 /* IntelligenceConfiguration.json */,
 				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
@@ -132,17 +123,6 @@
 				BB3534861B6FAB5800C67500 /* IntelligenceManager.swift */,
 			);
 			name = Intelligence;
-			sourceTree = "<group>";
-		};
-		BB3534831B6FAAB900C67500 /* Identity */ = {
-			isa = PBXGroup;
-			children = (
-				BB0A23641B70ADD700CE0C81 /* Identity.storyboard */,
-				FE0C64DF1B724189008C02D7 /* IdentityModuleViewController.swift */,
-				454DA8091C69DE7500C13254 /* ManageUserViewController.swift */,
-				BB3534881B6FCC7E00C67500 /* ViewUserViewController.swift */,
-			);
-			name = Identity;
 			sourceTree = "<group>";
 		};
 		BBBB63581BC27AF500802EF9 /* Location */ = {
@@ -191,7 +171,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = Tigerspike;
 				TargetAttributes = {
 					7FDAAAD81B5D35AE00DF2BE6 = {
@@ -223,7 +203,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB0A23661B70ADD700CE0C81 /* Identity.storyboard in Resources */,
 				455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */,
 				BB2FD4691B6B9D46000E8070 /* IntelligenceConfiguration.json in Resources */,
 				7FDAAAE71B5D35AE00DF2BE6 /* LaunchScreen.storyboard in Resources */,
@@ -241,14 +220,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBBB635E1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift in Sources */,
-				BB3534891B6FCC7E00C67500 /* ViewUserViewController.swift in Sources */,
 				FE240A7F1C7623B700D2E336 /* StartupViewController.swift in Sources */,
 				BB61731E1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */,
 				BB3534871B6FAB5800C67500 /* IntelligenceManager.swift in Sources */,
 				7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */,
-				FE0C64E01B724189008C02D7 /* IdentityModuleViewController.swift in Sources */,
 				455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */,
-				454DA80A1C69DE7500C13254 /* ManageUserViewController.swift in Sources */,
 				0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,14 +256,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		BB0A23641B70ADD700CE0C81 /* Identity.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				BB0A23651B70ADD700CE0C81 /* Base */,
-			);
-			name = Identity.storyboard;
-			sourceTree = "<group>";
-		};
 		BBBB63551BC27AE800802EF9 /* Location.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -312,8 +280,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -340,7 +310,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -358,8 +328,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -378,7 +350,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 2.3;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -389,11 +362,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 5364AC7HJT;
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
 				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
+				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo Swift";
 			};
 			name = Debug;
 		};
@@ -402,11 +378,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: TigerSpike Pty Ltd";
+				DEVELOPMENT_TEAM = 5364AC7HJT;
 				INFOPLIST_FILE = "IntelligenceDemo-Swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tigerspike.intelligencedemo.swift;
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
-				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
+				PROVISIONING_PROFILE = "fcfae170-695f-4eb7-8f20-c3c50eb3bd0b";
+				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo Swift";
 			};
 			name = Release;
 		};

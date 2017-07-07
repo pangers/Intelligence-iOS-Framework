@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension SequenceType {
+extension Sequence {
  
     /**
     Synchronously iterates over all items in the main thread
@@ -16,14 +16,13 @@ extension SequenceType {
     
     - parameter body: The lambda to execute on each element
     */
-    func forEachInMainThread(body: (Self.Generator.Element) -> ()) {
-        if ( !NSThread.isMainThread() ) {
+    func forEachInMainThread(body: @escaping (Self.Iterator.Element) -> ()) {
+        if (!Thread.isMainThread ) {
             
-            let operation = NSBlockOperation() { () -> Void in
-                self.forEachInMainThread(body)
+            let operation = BlockOperation() { () -> Void in
+                self.forEachInMainThread(body: body)
             }
-            
-            NSOperationQueue.mainQueue().addOperations([operation], waitUntilFinished: true)
+            OperationQueue.main.addOperations([operation], waitUntilFinished: true)
         }
         else {
             forEach(body)
@@ -36,8 +35,8 @@ extension SequenceType {
     - parameter queue: The queue to use.
     - parameter body:  The lambda to to execute.
     */
-    func forEach(asyncInQueue queue:dispatch_queue_t, body: (Self.Generator.Element) -> ()) {
-        dispatch_async(queue) {
+    func forEach(asyncInQueue queue:DispatchQueue, body: @escaping(Self.Iterator.Element) -> ()) {
+        queue.async() {
             self.forEach(body)
         }
     }

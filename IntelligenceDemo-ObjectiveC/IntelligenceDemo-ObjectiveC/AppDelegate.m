@@ -133,7 +133,7 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     __weak __typeof(self) weakSelf = self;
-    [[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+    [[[INTIntelligenceManager intelligence] identity] registerDeviceTokenWith:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
         if (error != nil) {
             [weakSelf alertWithError:error];
         } else {
@@ -198,6 +198,36 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
     UIAlertController* controller = [UIAlertController alertControllerWithTitle:@"Intelligence Demo" message:message preferredStyle:UIAlertControllerStyleAlert];
     [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [presenterViewController presentViewController:controller animated:YES completion:nil];
+}
+
+
+-(void)accountLockedFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)tokenInvalidOrExpiredFor:(Intelligence *)intelligence{
+    
+}
+
+
+-(void)accountDisabledFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)credentialsIncorrectFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userCreationFailedFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userLoginRequiredFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userRoleAssignmentFailedFor:(Intelligence *)intelligence{
+    
 }
 
 #pragma mark - INTIntelligenceDelegate
