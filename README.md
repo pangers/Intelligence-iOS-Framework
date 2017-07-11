@@ -4,68 +4,94 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Intell
 
 # Getting Started #
 
-# Importing SDK #
+## Adding IntelligenceSDK ##
+
+In this section we detail how to Integrate IntelligenceSDK for both Objective-C and Swift based projects.
+
+We can import the SDK through Cocoapods, Carthage or Import Manually to your application
 
 #### For Cocoapods project ####
 
-Intelligence SDK uses private CocoaPods to install and manage dependencies. Open a terminal window and navigate to the location of the Xcode project for your application. If you have not already created a Podfile for your application, create one now:
+We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/CocoaPods/Swift/Intelligence/ReadMe.md). Open a terminal window and navigate to the root folder of your project.
 
-    pod init
+If you have not already created a Podfile for your application, create one now:
 
-Open the Podfile created for your application and add the following:
+            pod init
 
-    pod 'IntelligenceSDK', :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git
+Open the Podfile created for your application and add the following to your target:
+
+            target :YourTargetName do
+                pod 'IntelligenceSDK'
+            end
     
 Save the file and run:
     
-    pod install
+            pod install
         
 This creates an .xcworkspace file for your application. Use this file for all future development on your application.
 
+
 To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod install:
     
-    pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+            target :YourTargetName do
+                pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+            end
+
+#### Through Carthage ####
+
+Here what you need to add to your Cartfile. For more [detail](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/tree/Documentation/Examples/Carthage/Swift/Intelligence/ReadMe.md).
+
+    binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+
+If you're new to Carthage, check out their documentation first.
 
 
-#### For Non-Cocoapods project ####
+#### Manual Integration ####
 
-Create a new Workspace to embed both your project and the IntelligenceSDK framework project. If your project already has Workspace,add IntelligenceSDK framework project into your workspace.
+Integrating the Intelligence SDK through [Framework](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/Through_Framework/Swift/Intelligence/ReadMe.md)(Manual Integration).
 
-Once you get a workspace with both projects coexisting in it, add the SDK in the list of Linked Frameworks and Libraries so that it is accessible from your own project:
+1.	Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK).
 
-![Linked Frameworks and Libraries](https://bitbucket.org/repo/4z6Eb8/images/3275432151-Screen%20Shot%202015-07-22%20at%2017.55.51.png)
+2.	Drag and drop the Intelligence framework into your project, as shown in part-1.
+![Linked Frameworks and Libraries](Images/Framework-Link.png)
+
+3. Include the Intelligence framework in Embedded Binaries as shown in part-2.
+![Linked Frameworks and Libraries](Images/Framework-Link.png)
+
+    
+## Import SDK ##
 
 Next, import the IntelligenceSDK framework.
 
 *Swift:*
+
 ```
 #!swift
-
 import IntelligenceSDK
-
 ```
 
 *Objective-C:*
+
 ```
 #!objc
 @import IntelligenceSDK;
+
 ```
 
 ## Create & Configure your Account ##
 
-Before using the SDK you will need a Intelligence account. Instructions for creating and configuring this account can be found in [Intelligence - Getting Started](http://tgrs.pk/m9lq5).
+Before using the SDK you need a Intelligence account. If you do not have an Intelligence account please reach out to intelligence.support@tigerspike.com. For Tigerspiker please reach out [here](https://sites.google.com/tigerspike.com/intelligence/join-in?authuser=1).
+ 
 
 ## Configuration JSON File ##
 
+IntellignceSDK require cconfiguration JSON file for each project.
 All of these variables come from the Intelligence Platform and will need to be included in a JSON file bundled with your iOS App:
 
-1. "client_secret" (String): Only provided when you create a New Application, if you do not know this value you will need to get in contact with the Intelligence Platform team.
+1. "client_secret" (String): Only provided when you create a New Application, if you do not know this value you will need to get in contact with the Intelligence Platform team(intelligence.support@tigerspike.com).
 3. "client_id" (String): Can be found on your configured Application.
 2. "application_id" (Integer): Can be found on your configured Application.
 4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
-5. "region" (String): "US", "EU", "AU" or "SG"
-6. "company_id" (Integer): Can be obtained from the Dashboard.
-7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
 
 As an example, your configuration file should look something like:
 
@@ -76,10 +102,7 @@ As an example, your configuration file should look something like:
     "client_id": "CLIENT_ID",
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
-    "project_id": 20,
-    "region": "EU",
-    "company_id" : 10,
-    "sdk_user_role" : 1000
+    "project_id": 20    
 }
 
 ```
@@ -172,8 +195,6 @@ configuration.clientID = "YOUR_CLIENT_ID"
 configuration.clientSecret = "YOUR_CLIENT_SECRET"
 configuration.projectID = 123456789
 configuration.applicationID = 987654321
-configuration.region = Intelligence.Region.Europe
-configuration.sdk_user_role = 1000
 
 ```
 *Objective-C:*
@@ -186,65 +207,8 @@ configuration.clientID = @"YOUR_CLIENT_ID";
 configuration.clientSecret = @"YOUR_CLIENT_SECRET";
 configuration.projectID = 123456789;
 configuration.applicationID = 987654321;
-configuration.region = RegionEurope;                
-configuration.sdk_user_role = 1000;
-        
-
+                     
 ```
-
-
-
-4- Hybrid initialization of the configuration file, reading a file and customizing programmatically some of its properties:
-
-*Swift:*
-
-```
-#!swift
-
-do {
-	// Load from file
-	let configuration = try Intelligence.Configuration(fromFile: "config")
-            
-	// Change region programmatically
-	configuration.region = Intelligence.Region.Europe
-            
-	// Instantiate with hybrid configuration
-	intelligence = try Intelligence(withDelegate: self, configuration: configuration)
-}
-catch {
-	// Treat the error with care!
-}
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-// Attempt to instantiate Intelligence using a JSON file.
-NSError *err;
-INTConfiguration *configuration = [[INTConfiguration alloc] initFromFile:@"IntelligenceConfiguration" inBundle:[NSBundle mainBundle] error:&err];
-        
-// Change region programmatically
-configuration.region = RegionEurope;
-        
-Intelligence *intelligence = [[Intelligence alloc] initWithDelegate: self configuration:configuration error:&err];
-if (nil != err) {
-	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-	// and generally indicate that something has gone wrong and needs to be resolved.
-	NSLog(@"Error initialising Intelligence: %zd", err.code);
-}
-NSParameterAssert(err == nil && intelligence != nil);
-        
-
-```
-
-
-Consider that the Intelligence.Configuration can throw exceptions if you haven't configured properly your setup. Please refer to the class documentation for further information on what kind of errors it can throw.
-
-Also, check the Intelligence.Configuration and Intelligence classes to learn about more initializers available for you.
-
 
 ## Startup ##
 
@@ -413,7 +377,7 @@ Developers are responsible for calling the **pause** and **resume** methods when
 
 ## Identity Module ##
 
-This module provides methods for user management within the Intelligence platform. Allowing users to register, login, update, and retrieve information.
+This module provides methods for user management within the Intelligence platform. Allowing users to register, login, and retrieve information.
 
 *NOTE:* The below methods will either return a User object or an Error object (not both) depending on whether the request was successful.
 
@@ -465,39 +429,6 @@ intelligence.identity.logout()
 
 ```
 
-### Get User ###
-
-Request information for a specific user (by userId). The user calling this method must have a role with the permission to see other users.
-
-The following code snippets illustrate how to request a user's information in Objective-C and Swift.
-
-*Swift:*
-
-
-```
-#!swift
-
-intelligence.identity.getUser(userId) { (user, error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-[intelligence getUser:userId callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-
-```
-
 ### Get Me ###
 
 Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.
@@ -531,45 +462,6 @@ intelligence.identity.getMe { (user, error) -> Void in
 
 ```
 
-### Update User ###
-
-The code to update a user for each language is as follows:
-
-*Swift:*
-
-
-```
-#!swift
-let user = Intelligence.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
-firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-
-intelligence.identity.updateUser(user, callback: { (user, error) -> Void in
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-INTUser* user = [[INTUser alloc] initWithUserId:userID companyId:companyID username:username password:password
-firstName:firstname lastName:lastname avatarURL:avatarURL];
-
-[intelligence.identity updateUser:user callback:^(id<INTUser> _Nullable user, NSError * _Nullable error) {
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-The 'updateUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.WeakPasswordError : When the password provided does not meet Intelligence security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-Please note that you can not update the 'username' or the 'password' of a user
 
 ### Register Device Token ###
 
@@ -661,59 +553,6 @@ The 'unregisterDeviceTokenWithId' method can return the follow additional errors
 
 * IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Intelligence platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
 
-### Assign Role ###
-
-A user can have multiple roles (and multiple of the same role) and it may be necessary to assign another from within the SDK.
-
-*Swift:*
-```
-#!swift
-
-IntelligenceManager.intelligence.identity.assignRole(roleId, user: user, callback: { (error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-
-```
-
-*Objective-C:*
-```
-#!objc
-
-[[[INTIntelligenceManager intelligence] identity] assignRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-### Revoke Role ###
-
-A user can have multiple roles (and multiple of the same role) and it may be necessary to revoke these from within the SDK.
-
-*Swift:*
-```
-#!swift
-
-IntelligenceManager.intelligence.identity.revokeRole(roleId, user: user, callback: { (error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-
-```
-
-*Objective-C:*
-```
-#!objc
-
-[[[INTIntelligenceManager intelligence] identity] revokeRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-Note that revokeRole only revokes one copy of that role, so if a role has been assigned multiple times it will need to be revoked multiple times.
 
 ## Location Module ##
 

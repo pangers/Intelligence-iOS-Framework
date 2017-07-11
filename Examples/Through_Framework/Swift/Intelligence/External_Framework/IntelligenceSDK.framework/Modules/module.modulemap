@@ -1,0 +1,10 @@
+framework module IntelligenceSDK {
+  umbrella header "IntelligenceSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module IntelligenceSDK.Swift {
+    header "IntelligenceSDK-Swift.h"
+}
