@@ -6,21 +6,23 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Intell
 
 ## Adding IntelligenceSDK ##
 
-In this section we detail how to get up and running with the SDK for both Objective-C and Swift based projects.
+In this section we detail how to Integrate IntelligenceSDK for both Objective-C and Swift based projects.
 
-We can import the SDK through Cocoapods, Carthage or manually to your application
+We can import the SDK through Cocoapods, Carthage or Import manually to your application
 
 #### For Cocoapods project ####
 
-We can install Intelligence SDK through Cocoapods. Open a terminal window and navigate to the root folder of your project.
+We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/CocoaPods/Swift/Intelligence/ReadMe.md). Open a terminal window and navigate to the root folder of your project.
 
 If you have not already created a Podfile for your application, create one now:
 
             pod init
 
-Open the Podfile created for your application and add the following:
+Open the Podfile created for your application and add the following to your target:
 
-            pod 'IntelligenceSDK'
+            target :YourTargetName do
+                pod 'IntelligenceSDK'
+            end
     
 Save the file and run:
     
@@ -31,11 +33,13 @@ This creates an .xcworkspace file for your application. Use this file for all fu
 
 To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod install:
     
-            pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+            target :YourTargetName do
+                pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+            end
 
 #### Through Carthage ####
 
-Here what you need to add to your Cartfile.
+Here what you need to add to your Cartfile. For more [detail](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/tree/Documentation/Examples/Carthage/Swift/Intelligence/ReadMe.md).
 
     binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
 
@@ -44,7 +48,7 @@ If you're new to Carthage, check out their documentation first.
 
 #### manual Integration ####
 
-Integrating the Intelligence SDK through Framework(Manual Integration).
+Integrating the Intelligence SDK through [Framework](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/Through_Framework/Swift/Intelligence/ReadMe.md)(Manual Integration).
 
 1.	Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK/Swift-3.0/0.1_Compressed/IntelligenceSDK.framework.zip?raw=true).
 
