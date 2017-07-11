@@ -10,7 +10,7 @@ In this section we detail how to Integrate IntelligenceSDK for both Objective-C 
 
 We can import the SDK through Cocoapods, Carthage or Import Manually to your application
 
-#### For Cocoapods project ####
+#### Through Cocoapods ####
 
 We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/CocoaPods/Swift/Intelligence/ReadMe.md). Open a terminal window and navigate to the root folder of your project.
 
