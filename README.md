@@ -59,7 +59,7 @@ Integrating the Intelligence SDK through [Framework](https://git-apac.internal.t
 ![Linked Frameworks and Libraries](Images/Framework-Link.png)
 
     
-## import SDK ##
+## Import SDK ##
 
 Next, import the IntelligenceSDK framework.
 

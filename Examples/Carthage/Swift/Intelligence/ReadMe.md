@@ -21,4 +21,4 @@ binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/Intelligence
 ```
 Using the above Carthage will download the latest Intelligence framework of version 1.0.
 
-To Integrate Intelligence API, refer Intelligence [wiki](https://github.com/tigerspike/Intelligence-iOS-Framework/wiki/Intelligence-iOS-Framework).
+To Integrate Intelligence API, refer Intelligence [wiki](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK).
