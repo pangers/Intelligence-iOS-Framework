@@ -8,7 +8,7 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Intell
 
 In this section we detail how to Integrate IntelligenceSDK for both Objective-C and Swift based projects.
 
-We can import the SDK through Cocoapods, Carthage or Import manually to your application
+We can import the SDK through Cocoapods, Carthage or Import Manually to your application
 
 #### For Cocoapods project ####
 
@@ -46,17 +46,17 @@ Here what you need to add to your Cartfile. For more [detail](https://git-apac.i
 If you're new to Carthage, check out their documentation first.
 
 
-#### manual Integration ####
+#### Manual Integration ####
 
 Integrating the Intelligence SDK through [Framework](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/Through_Framework/Swift/Intelligence/ReadMe.md)(Manual Integration).
 
-1.	Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK/Swift-3.0/0.1_Compressed/IntelligenceSDK.framework.zip?raw=true).
+1.	Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK).
 
 2.	Drag and drop the Intelligence framework into your project, as shown in part-1.
-![Linked Frameworks and Libraries](../Images/Framework-Link.png)
+![Linked Frameworks and Libraries](Images/Framework-Link.png)
 
 3. Include the Intelligence framework in Embedded Binaries as shown in part-2.
-![Linked Frameworks and Libraries](../Images/Framework-Link.png)
+![Linked Frameworks and Libraries](Images/Framework-Link.png)
 
     
 ## import SDK ##
