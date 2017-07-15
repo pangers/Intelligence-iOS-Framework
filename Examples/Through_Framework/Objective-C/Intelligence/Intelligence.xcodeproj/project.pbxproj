@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48583B1D1F15F8B000F6FE0F /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48583B1C1F15F8B000F6FE0F /* IntelligenceSDK.framework */; };
+		48583B1F1F15F8B600F6FE0F /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48583B1C1F15F8B000F6FE0F /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D675A22F1EA72B3600949C4F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A22E1EA72B3600949C4F /* main.m */; };
 		D675A2321EA72B3600949C4F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A2311EA72B3600949C4F /* AppDelegate.m */; };
 		D675A2351EA72B3600949C4F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A2341EA72B3600949C4F /* ViewController.m */; };
 		D675A2381EA72B3600949C4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2361EA72B3600949C4F /* Main.storyboard */; };
 		D675A23A1EA72B3600949C4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D675A2391EA72B3600949C4F /* Assets.xcassets */; };
 		D675A23D1EA72B3600949C4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A23B1EA72B3600949C4F /* LaunchScreen.storyboard */; };
-		D675A26E1EA72C6B00949C4F /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D675A26D1EA72C6B00949C4F /* IntelligenceSDK.framework */; };
 		D675A2BA1EA730B000949C4F /* INTAnalyticsCustomEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A2A31EA730B000949C4F /* INTAnalyticsCustomEventViewController.m */; };
 		D675A2BB1EA730B000949C4F /* INTScreenViewedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A2A51EA730B000949C4F /* INTScreenViewedViewController.m */; };
 		D675A2BC1EA730B000949C4F /* IntelligenceConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = D675A2A71EA730B000949C4F /* IntelligenceConfiguration.json */; };
@@ -23,17 +24,16 @@
 		D675A2C31EA730B000949C4F /* INTStartupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D675A2B91EA730B000949C4F /* INTStartupViewController.m */; };
 		D675A2CA1EA730C600949C4F /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2C41EA730C600949C4F /* Analytics.storyboard */; };
 		D675A2CC1EA730C600949C4F /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2C81EA730C600949C4F /* Location.storyboard */; };
-		D675A2CE1EA7316C00949C4F /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D675A26D1EA72C6B00949C4F /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D675A2CF1EA7316C00949C4F /* Embed Frameworks */ = {
+		48583B201F15F8B600F6FE0F /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D675A2CE1EA7316C00949C4F /* IntelligenceSDK.framework in Embed Frameworks */,
+				48583B1F1F15F8B600F6FE0F /* IntelligenceSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,6 +41,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		48583B1C1F15F8B000F6FE0F /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = "<group>"; };
 		D675A22A1EA72B3600949C4F /* Intelligence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intelligence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D675A22E1EA72B3600949C4F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D675A2301EA72B3600949C4F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -51,7 +52,6 @@
 		D675A2391EA72B3600949C4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D675A23C1EA72B3600949C4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D675A23E1EA72B3600949C4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D675A26D1EA72C6B00949C4F /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = "<group>"; };
 		D675A2A21EA730B000949C4F /* INTAnalyticsCustomEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTAnalyticsCustomEventViewController.h; sourceTree = "<group>"; };
 		D675A2A31EA730B000949C4F /* INTAnalyticsCustomEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INTAnalyticsCustomEventViewController.m; sourceTree = "<group>"; };
 		D675A2A41EA730B000949C4F /* INTScreenViewedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INTScreenViewedViewController.h; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D675A26E1EA72C6B00949C4F /* IntelligenceSDK.framework in Frameworks */,
+				48583B1D1F15F8B000F6FE0F /* IntelligenceSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,7 +126,7 @@
 		D675A26C1EA72C6B00949C4F /* External_Framework */ = {
 			isa = PBXGroup;
 			children = (
-				D675A26D1EA72C6B00949C4F /* IntelligenceSDK.framework */,
+				48583B1C1F15F8B000F6FE0F /* IntelligenceSDK.framework */,
 			);
 			path = External_Framework;
 			sourceTree = "<group>";
@@ -203,7 +203,7 @@
 				D675A2261EA72B3600949C4F /* Sources */,
 				D675A2271EA72B3600949C4F /* Frameworks */,
 				D675A2281EA72B3600949C4F /* Resources */,
-				D675A2CF1EA7316C00949C4F /* Embed Frameworks */,
+				48583B201F15F8B600F6FE0F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -324,7 +324,7 @@
 		D675A23F1EA72B3600949C4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -373,7 +373,7 @@
 		D675A2401EA72B3600949C4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

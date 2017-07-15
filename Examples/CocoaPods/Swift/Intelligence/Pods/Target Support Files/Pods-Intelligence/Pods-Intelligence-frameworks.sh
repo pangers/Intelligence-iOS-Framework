@@ -89,10 +89,10 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${PODS_ROOT}/IntelligenceSDK/SDK/Swift-3.0/1.1.0/IntelligenceSDK.framework"
+  install_framework "${PODS_ROOT}/IntelligenceSDK/SDK/Swift-3.0/1.2.1/IntelligenceSDK.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${PODS_ROOT}/IntelligenceSDK/SDK/Swift-3.0/1.1.0/IntelligenceSDK.framework"
+  install_framework "${PODS_ROOT}/IntelligenceSDK/SDK/Swift-3.0/1.2.1/IntelligenceSDK.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

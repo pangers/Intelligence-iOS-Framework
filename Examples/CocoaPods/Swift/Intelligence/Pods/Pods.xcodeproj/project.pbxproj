@@ -18,7 +18,7 @@
 		182313BECB9A8611F608E1BE98436E76 /* Pods-Intelligence-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Intelligence-acknowledgements.plist"; sourceTree = "<group>"; };
 		1E7270F26AC86C0D3CA1C10DFF4134B7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B4ACF7B71B4A0C549D6B59A2D8498A0 /* Pods-Intelligence-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Intelligence-umbrella.h"; sourceTree = "<group>"; };
-		63903590A3092C92E0D1B726E4452914 /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntelligenceSDK.framework; path = "SDK/Swift-3.0/1.1.0/IntelligenceSDK.framework"; sourceTree = "<group>"; };
+		55031DC87C44D632ACF25955CEE5B23D /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntelligenceSDK.framework; path = "SDK/Swift-3.0/1.2.1/IntelligenceSDK.framework"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		6EBB7BE451C5B805A0C460DE543DE9A1 /* Pods-Intelligence-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Intelligence-resources.sh"; sourceTree = "<group>"; };
 		722C8F4C8D147F905F5325C8A25E0897 /* Pods-Intelligence.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Intelligence.modulemap"; sourceTree = "<group>"; };
@@ -47,6 +47,14 @@
 				2E87FEF27D852A356B2FEF60925EAB30 /* Pods-Intelligence */,
 			);
 			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		19E6458F116D5985FA0B6FEE516D6375 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				55031DC87C44D632ACF25955CEE5B23D /* IntelligenceSDK.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		2E87FEF27D852A356B2FEF60925EAB30 /* Pods-Intelligence */ = {
@@ -78,18 +86,10 @@
 		57617396887FE9F45A4974AD60306269 /* IntelligenceSDK */ = {
 			isa = PBXGroup;
 			children = (
-				5A3823959875B5ABA04DEFFCAFACB418 /* Frameworks */,
+				19E6458F116D5985FA0B6FEE516D6375 /* Frameworks */,
 			);
 			name = IntelligenceSDK;
 			path = IntelligenceSDK;
-			sourceTree = "<group>";
-		};
-		5A3823959875B5ABA04DEFFCAFACB418 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				63903590A3092C92E0D1B726E4452914 /* IntelligenceSDK.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
