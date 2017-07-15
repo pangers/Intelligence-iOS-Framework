@@ -16,17 +16,22 @@ We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.ti
 
 If you have not already created a Podfile for your application, create one now:
 
-pod init
+```
+    pod init
+```
 
 Open the Podfile created for your application and add the following to your target:
 
-target :YourTargetName do
-pod 'IntelligenceSDK'
-end
-
+```
+    target :YourTargetName do
+        pod 'IntelligenceSDK'
+    end
+```
 Save the file and run:
 
-pod install
+```
+    pod install
+```
 
 This creates a .xcworkspace file for your application. Use this file for all future development on your application.
 
@@ -41,7 +46,9 @@ end
 
 Here what you need to add to your Cartfile. For more [detail](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/tree/Documentation/Examples/Carthage/Swift/Intelligence/ReadMe.md).
 
-binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+```
+    binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+```
 
 If you're new to Carthage, check out their documentation first.
 
