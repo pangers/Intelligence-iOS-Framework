@@ -27,6 +27,7 @@ Open the Podfile created for your application and add the following to your targ
         pod 'IntelligenceSDK'
     end
 ```
+
 Save the file and run:
 
 ```
@@ -38,9 +39,11 @@ This creates a .xcworkspace file for your application. Use this file for all fut
 
 To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod install:
 
+```
 target :YourTargetName do
-pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+    pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
 end
+```
 
 #### Through Carthage ####
 
