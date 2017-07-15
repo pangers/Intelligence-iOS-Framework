@@ -6,7 +6,7 @@ The goal of this SDK is to encapsulate in a developer-friendly manner the Intell
 
 ## Adding IntelligenceSDK ##
 
-In this section we detail how to Integrate IntelligenceSDK for both Objective-C and Swift based projects.
+In this section, we detail how to Integrate IntelligenceSDK for both Objective-C and Swift based projects.
 
 We can import the SDK through Cocoapods, Carthage or Import Manually to your application
 
@@ -16,32 +16,32 @@ We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.ti
 
 If you have not already created a Podfile for your application, create one now:
 
-            pod init
+pod init
 
 Open the Podfile created for your application and add the following to your target:
 
-            target :YourTargetName do
-                pod 'IntelligenceSDK'
-            end
-    
+target :YourTargetName do
+pod 'IntelligenceSDK'
+end
+
 Save the file and run:
-    
-            pod install
-        
-This creates an .xcworkspace file for your application. Use this file for all future development on your application.
+
+pod install
+
+This creates a .xcworkspace file for your application. Use this file for all future development on your application.
 
 
 To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod install:
-    
-            target :YourTargetName do
-                pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
-            end
+
+target :YourTargetName do
+pod 'IntelligenceSDK’, :git => 'https://git.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK.git', :branch => 'Swift-2.0'
+end
 
 #### Through Carthage ####
 
 Here what you need to add to your Cartfile. For more [detail](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/tree/Documentation/Examples/Carthage/Swift/Intelligence/ReadMe.md).
 
-    binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
 
 If you're new to Carthage, check out their documentation first.
 
@@ -50,15 +50,15 @@ If you're new to Carthage, check out their documentation first.
 
 Integrating the Intelligence SDK through [Framework](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/Through_Framework/Swift/Intelligence/ReadMe.md)(Manual Integration).
 
-1.	Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK).
+1.    Download the Intelligence framework from the [Github](https://github.com/tigerspike/Intelligence-iOS-Framework/blob/master/SDK).
 
-2.	Drag and drop the Intelligence framework into your project, as shown in part-1.
+2.    Drag and drop the Intelligence framework into your project, as shown in part-1.
 ![Linked Frameworks and Libraries](Images/Framework-Link.png)
 
 3. Include the Intelligence framework in Embedded Binaries as shown in part-2.
 ![Linked Frameworks and Libraries](Images/Framework-Link.png)
 
-    
+
 ## Import SDK ##
 
 Next, import the IntelligenceSDK framework.
@@ -81,7 +81,7 @@ import IntelligenceSDK
 ## Create & Configure your Account ##
 
 Before using the SDK you need a Intelligence account. If you do not have an Intelligence account please reach out to intelligence.support@tigerspike.com. For Tigerspiker please reach out [here](https://sites.google.com/tigerspike.com/intelligence/join-in?authuser=1).
- 
+
 
 ## Configuration JSON File ##
 
@@ -99,10 +99,10 @@ As an example, your configuration file should look something like:
 #!JSON
 
 {
-    "client_id": "CLIENT_ID",
-    "client_secret": "CLIENT_SECRET",
-    "application_id": 10,
-    "project_id": 20    
+"client_id": "CLIENT_ID",
+"client_secret": "CLIENT_SECRET",
+"application_id": 10,
+"project_id": 20    
 }
 
 ```
@@ -122,10 +122,10 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 #!swift
 
 do {
-    intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
+intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
 }
 catch {
-    // Treat the error with care!
+// Treat the error with care!
 }
 
 ```
@@ -139,9 +139,9 @@ catch {
 NSError *err;
 Intelligence *intelligence = [[Intelligence alloc] initWithDelegate: self file:@"IntelligenceConfiguration" inBundle:[NSBundle mainBundle] error:&err];
 if (nil != err) {
-	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-	// and generally indicate that something has gone wrong and needs to be resolved.
-	NSLog(@"Error initialising Intelligence: %zd", err.code);
+// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+// and generally indicate that something has gone wrong and needs to be resolved.
+NSLog(@"Error initialising Intelligence: %zd", err.code);
 }
 NSParameterAssert(err == nil && intelligence != nil);
 
@@ -156,11 +156,11 @@ NSParameterAssert(err == nil && intelligence != nil);
 #!swift
 
 do {
-	let configuration = try Intelligence.Configuration(fromFile: "IntelligenceConfiguration")
-	intelligence = try Intelligence(withDelegate: self, configuration: configuration)
+let configuration = try Intelligence.Configuration(fromFile: "IntelligenceConfiguration")
+intelligence = try Intelligence(withDelegate: self, configuration: configuration)
 }
 catch {
-	// Treat the error with care!
+// Treat the error with care!
 }
 
 ```
@@ -175,12 +175,12 @@ NSError *err;
 INTConfiguration *configuration = [[INTConfiguration alloc] initFromFile:@"IntelligenceConfiguration" inBundle:[NSBundle mainBundle] error:&err];
 Intelligence *intelligence = [[Intelligence alloc] initWithDelegate: self configuration:configuration error:&err];
 if (nil != err) {
-	// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-	// and generally indicate that something has gone wrong and needs to be resolved.
-	NSLog(@"Error initialising Intelligence: %zd", err.code);
+// Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
+// and generally indicate that something has gone wrong and needs to be resolved.
+NSLog(@"Error initialising Intelligence: %zd", err.code);
 }
 NSParameterAssert(err == nil && intelligence != nil);
-        
+
 ```
 
 3- Programmatically set the required parameters in the configuration, and initialize Intelligence with it.
@@ -207,20 +207,20 @@ configuration.clientID = @"YOUR_CLIENT_ID";
 configuration.clientSecret = @"YOUR_CLIENT_SECRET";
 configuration.projectID = 123456789;
 configuration.applicationID = 987654321;
-                     
+
 ```
 
 ## Startup ##
 
-Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behaviour might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Intelligence object is initialised, but it can be deferred until a more convenient time. You will receive a 'success' flag in the completion block, if this returns false, something is probably incorrectly configured. You should receive an error from one of the IntelligenceDelegate methods.
+Importantly, the 'startup' method is responsible to bootstrap the SDK, without it, undefined behavior might occur, and thus it's the developer responsibility to call it before the SDK is used. It is suggested to do so right after the Intelligence object is initialised, but it can be deferred until a more convenient time. You will receive a 'success' flag in the completion block, if this returns false, something is probably incorrectly configured. You should receive an error from one of the IntelligenceDelegate methods.
 
 *Swift:*
 ```
 #!swift
-        
+
 // Startup all modules.
 intelligence.startup { (success) -> () in               
-	// Startup succeeded if success is true.
+// Startup succeeded if success is true.
 }
 
 ```
@@ -232,22 +232,22 @@ intelligence.startup { (success) -> () in
 
 // Startup the SDK...
 [intelligence startup:^(BOOL success) {        
-	// Startup succeeded if success is true.
+// Startup succeeded if success is true.
 }];
-        
+
 ```
 
 ## Shutdown ##
 
-When you app is terminated you should call the shutdown method in order for the SDK to do any cleanup and store anything relevant to the next session.
+When your app is terminated you should call the shutdown method in order for the SDK to do any cleanup and store anything relevant to the next session.
 
 *Swift:*
 ```
 #!swift
 
 func applicationWillTerminate(application: UIApplication) {
-	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    IntelligenceManager.intelligence.shutdown()
+// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+IntelligenceManager.intelligence.shutdown()
 }
 
 ```
@@ -258,11 +258,11 @@ func applicationWillTerminate(application: UIApplication) {
 #!objc
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    // Shutdown Intelligence in the applicationWillTerminate method so Intelligence has time
-    // to teardown properly.
-    [[INTIntelligenceManager intelligence] shutdown];
+// Shutdown Intelligence in the applicationWillTerminate method so Intelligence has time
+// to teardown properly.
+[[INTIntelligenceManager intelligence] shutdown];
 }
-        
+
 ```
 
 
@@ -275,10 +275,10 @@ Note: Developers are responsible for ensuring the callbacks are executed on the 
 
 In addition to the errors specified by each individual module, you may also get one of the following errors if the request fails:
 
-* RequestError.ParseError: Unable to parse the response of the call. Server is behaving unexpectedly, this is unrecoverable.
-* RequestError.AccessDeniedError: Unable to call particular method, your permissions on the Intelligence Platform are incorrectly configured. **Developer is responsible to fix these issues.**
+* RequestError.ParseError: Unable to parse the response of the call. The server is behaving unexpectedly, this is unrecoverable.
+* RequestError.AccessDeniedError: Unable to call a particular method, your permissions on the Intelligence Platform are incorrectly configured. **Developer is responsible for fixing these issues.**
 * RequestError.InternetOfflineError: Internet connectivity error, developer will need to wait until device has connected to the internet then try this request again.
-* RequestError.Unauthorized: The credentials are not authenicaticated for this call.
+* RequestError.Unauthorized: The credentials are not authenticated for this call.
 * RequestError.Forbidden: The role provided is forbidden from accessing this call.
 * RequestError.UnhandledError: The SDK could not handle this error. If the error came from the server an HTTP status code can be retrieved
 
@@ -287,7 +287,7 @@ These errors will be wrapped within an NSError.
 
 ## Analytics Module ##
 
-The analytics module allows developers to effortlessly track several predefined events or their own custom events which can be used to determine user engagement and behavioural insights.
+The analytics module allows developers to effortlessly track several predefined events or their own custom events which can be used to determine user engagement and behavioral insights.
 
 Tracking an event is as simple as accessing the track method on the analytics module, once you have initialised Intelligence.
 
@@ -352,13 +352,13 @@ Developers are responsible for calling the **pause** and **resume** methods when
 ```
 #!swift
 
-	func applicationDidEnterBackground(application: UIApplication) {
-        IntelligenceManager.intelligence.analytics.pause()
-	}
+func applicationDidEnterBackground(application: UIApplication) {
+IntelligenceManager.intelligence.analytics.pause()
+}
 
-	func applicationWillEnterForeground(application: UIApplication) {
-        IntelligenceManager.intelligence.analytics.resume()
-	}
+func applicationWillEnterForeground(application: UIApplication) {
+IntelligenceManager.intelligence.analytics.resume()
+}
 ```
 
 *Objective-C:*
@@ -366,11 +366,11 @@ Developers are responsible for calling the **pause** and **resume** methods when
 #!objc
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    [[[INTIntelligenceManager intelligence] analytics] pause];
+[[[INTIntelligenceManager intelligence] analytics] pause];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [[[INTIntelligenceManager intelligence] analytics] resume];
+[[[INTIntelligenceManager intelligence] analytics] resume];
 }
 
 ```
@@ -390,8 +390,8 @@ If you have a registered account on the Intelligence platform you will be able t
 #!swift
 
 intelligence.identity.login(withUsername: username, password: password, callback: { (user, error) -> () in
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
 })
 
 ```
@@ -402,8 +402,8 @@ intelligence.identity.login(withUsername: username, password: password, callback
 #!objc
 
 [intelligence.identity loginWithUsername:username password:password callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 ```
@@ -442,8 +442,8 @@ The following code snippets illustrate how to request a user's information in Ob
 #!swift
 
 intelligence.identity.getMe { (user, error) -> Void in
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
 }
 
 
@@ -455,8 +455,8 @@ intelligence.identity.getMe { (user, error) -> Void in
 #!objc
 
 [intelligence getMeWithCallback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
+// Treat the user and error appropriately. Notice that the callback might be performed
+// in a background thread. Use dispatch_async to handle it in the main thread.
 }];
 
 
@@ -465,7 +465,7 @@ intelligence.identity.getMe { (user, error) -> Void in
 
 ### Register Device Token ###
 
-As a developer you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token, since you would not want to send it multiple times.
+As a developer, you are responsible for managing the push notification token, if your app supports login you should register the device token after login succeeds. However, if your app doesn't have login/logout functionality you should register after startup has succeeded. You should also manage whether or not you have previously registered this device token since you would not want to send it multiple times.
 
 An example of how to request the push notification token from Apple:
 ```
@@ -484,15 +484,15 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 #!swift
 
 
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        IntelligenceManager.intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
-            if error != nil {
-                // Failed, handle error.
-            } else {
-				// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
-            }
-        }
-    }
+func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+IntelligenceManager.intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+if error != nil {
+// Failed, handle error.
+} else {
+// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+}
+}
+}
 
 ```
 
@@ -501,13 +501,13 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 #!objc
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
-        if (error != nil) {
-            // Failed, handle error.
-        } else {
-		    // Successful! Store tokenId in Keychain you will need the Id in order to unregister.
-        }
-    }];
+[[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+if (error != nil) {
+// Failed, handle error.
+} else {
+// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+}
+}];
 }
 
 
@@ -519,18 +519,18 @@ The 'registerDeviceToken' method can return the following additional errors:
 
 ### Unregister Device Token ###
 
-The developer is responsible for unregistering device tokens, they can only be assigned to one user at a time, so if you forget to unregister from the previous user you will continue receiving push notifications meant for another user. In order to unregister you will need to store the tokenId returned by the 'registerDeviceToken' method then send this before logging out. If your app does not implement the login/logout functionality you will most likely never need to call this method.
+The developer is responsible for unregistering device tokens, they can only be assigned to one user at a time, so if you forget to unregister from the previous user you will continue receiving push notifications meant for another user. In order to unregister, you will need to store the tokenId returned by the 'registerDeviceToken' method then send this before logging out. If your app does not implement the login/logout functionality you will most likely never need to call this method.
 
 *Swift:*
 ```
 #!swift
 
 IntelligenceManager.intelligence.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
-    if error != nil {
-        // Failed, handle error.
-    } else {
-        // Successfully unregistered, clear anything stored in the keychain.
-    }
+if error != nil {
+// Failed, handle error.
+} else {
+// Successfully unregistered, clear anything stored in the keychain.
+}
 })
 
 ```
@@ -540,245 +540,15 @@ IntelligenceManager.intelligence.identity.unregisterDeviceToken(withId: id, call
 #!objc
 
 [[[INTIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
-    if (error != nil) {
-        // Failed, handle error.
-    } else {
-        // Successfully unregistered, clear anything stored in the keychain.
-    }
+if (error != nil) {
+// Failed, handle error.
+} else {
+// Successfully unregistered, clear anything stored in the keychain.
+}
 }];
 
 ```
 
-The 'unregisterDeviceTokenWithId' method can return the follow additional errors:
+The 'unregisterDeviceTokenWithId' method can return the following additional errors:
 
 * IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Intelligence platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
-
-
-## Location Module ##
-
-The location module is responsible for managing a user's location in order to track entering/exiting geofences and add this information to analytics events. 
-
-Developers will need to request location permissions in order to use this module by adding the 'NSLocationAlwaysUsageDescription' to the Info.plist of their app.
-
-Developers are responsible to decide when is the most suitable time to start fetching geofences and monitoring the user, and also will need to request location permissions in order to be able to track the user's location by either adding the *NSLocationAlwaysUsageDescription* or the *NSLocationWhenInUseUsageDescription* to the Info.plist of their app. You can find documentation on those keys in [Info Plist Key Reference](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW18).
-
-In order to obtain permissions to track the user's location, follow Apple's documentation in:
-
-[CLLocationManager Class Reference](https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/#//apple_ref/doc/uid/TP40007125-CH3-SW62)
-
-The location module is available via the location property in the Intelligence object.
-
-### Download Geofences ###
-
-The first step before tracking a user is to obtain a list of Geofences created in the Intelligence Dashboard.
-
-To do so, you'll have to provide a GeofenceQuery object defining how you want to retrieve the geofences. The query can take the following parameters:
-
-* **longitude: Double**. The latitude to calculate the distance from. Must be provided.
-    
-* **latitude: Double**. The longitude to calculate the distance to. Must be provided.
-    
-* **radius: Double?**. The radius (in meters) to filter geofences from. Must be provided.
-    
-* **pageSize: Int?**. The number of geofences per page loaded.
-    
-* **pageNumber: Int?**. The page to load (starting at 0).
-
-The next sample code shows how to initialize a sample query:
-
-*Swift:*
-
-```
-#!swift
-
-let query = GeofenceQuery(location: Coordinate(withLatitude: 51.5200395, longitude: -0.1341359), radius: 40_075_000) // The circumference of the Earth
-query.pageSize = 100
-query.pageNumber = 0
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-INTCoordinate* coordinate = [[INTCoordinate alloc] initWithLatitude:51.5200395
-                                                          longitude:-0.1341359];
-
-INTGeofenceQuery* query = [[INTGeofenceQuery alloc] initWithLocation:coordinate radius:40075000]; // The circumference of the Earth
-[query setPageSize:100];
-[query setPage:0];
-
-```
-
-Once the Geofence query is created and configured, you can retrieve the geofences you need by using the following snippet:
-
-*Swift:*
-
-```
-#!swift
-let intelligence:Intelligence = ...
-intelligence.location.downloadGeofences(geofenceQuery) { (geofences, error) in
-    // Geofences loaded!
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-Intelligence* intelligence = ...;
-[intelligence.location downloadGeofences:query callback:^(NSArray<INTGeofence *>* _Nullable geofences, NSError*  _Nullable error) {
-     // Geofences loaded!
-    
-}];
-
-```
-
-### Start/Stop Monitoring Geofences ###
-
-Once you have Geofences you could start tracking the user's location and be notified of when a user enters or exits a given Geofence.
-
-When tracking a user's location, you have to keep in mind:
-
-* Privacy concerns.
-* Battery usage.
-* What value the user will receive when sacrificing the previous two.
-* When to stop tracking the user's location.
-
-The Intelligence SDK **won't** perform any tracking by default, since the developer is responsible to decide when is the best time to track the user for the user's benefit. For some apps, this will mean immediately after launching the app until it gets killed, for others it will be only when the user is performing a given action.
-
-Once all this is considered, and it has been decided when to start and stop tracking the user's location, you can start and stop the tracking by using the following code snippets:
-
-*Swift:*
-
-```
-#!swift
-
-// Start monitoring
-let geofences:[Geofence] = ...
-
-intelligence.location.startMonitoringGeofences(geofences)
-
-...
-
-// Stop monitoring
-intelligence.location.stopMonitoringGeofences()
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-// Start monitoring
-NSArray<INTGeofence*>* geofences = ...;
-[intelligence.location startMonitoringGeofences:geofences];
-
-...
-
-// Stop monitoring
-[intelligence.location stopMonitoringGeofences];
-
-```
-
-Notice that when you start monitoring a given set of geofences, you'll stop monitoring the previous monitored geofences. Also, bear in mind that iOS has a limit of simultaneous geofences that you can be tracking at a time (20). If your app requires the use of several geofences, consider downloading more geofences when the user's location changes or every once in a while. However, this techniques come at an expense of battery and data draining for the user.
-
-#### Listen for Location Events ####
-
-Given that you have started monitoring the use location, your app will probably want to be aware of when a user enters or leaves a geofence.
-
-The location module provides a locationDelegate so you can be notified of events. The following snippet displays an example implementation and how to set your object as delegate. All methods in the IntelligenceLocationDelegate protocol are optional, and thus you may only implement those that you need.
-
-*Swift:*
-
-```
-#!swift
-
-intelligence.location.locationDelegate = self
-        
-func intelligenceLocation(location:IntelligenceLocation, didEnterGeofence geofence:Geofence) {
-	print("Did enter a geofence")
-}
-
-func intelligenceLocation(location:IntelligenceLocation, didExitGeofence geofence:Geofence) {
-	print("Did exit a geofence")
-}
-    
-func intelligenceLocation(location:IntelligenceLocation, didStartMonitoringGeofence:Geofence) {
-	print("Did start monitoring a given geofence")
-}
-
-func intelligenceLocation(location:IntelligenceLocation, didFailMonitoringGeofence:Geofence) {
-	print("Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.")
-}
-
-func intelligenceLocation(location:IntelligenceLocation, didStopMonitoringGeofence:Geofence) {
-	print("Did stop monitoring a geofence")
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-intelligence.location.locationDelegate = self;
-
--(void)intelligenceLocation:(id<INTLocation>)location didEnterGeofence:(INTGeofence *)geofence {
-	NSLog(@"Did enter a geofence");
-}
-
--(void)intelligenceLocation:(id<INTLocation>)location didExitGeofence:(INTGeofence *)geofence {
-	NSLog(@"Did exit a geofence");
-}
-
--(void)intelligenceLocation:(id<INTLocation>)location didStartMonitoringGeofence:(INTGeofence *)geofence {
-	NSLog(@"Did start monitoring a given geofence");
-}
-
--(void)intelligenceLocation:(id<INTLocation>)location didFailMonitoringGeofence:(INTGeofence *)geofence {
-	NSLog(@"Did fail the monitoring of a geofence. This can occur when the user has not allowed your app to track its location or when the maximum number of geofences are already being tracked.");
-}
-
--(void)intelligenceLocation:(id<INTLocation>)location didStopMonitoringGeofence:(INTGeofence *)geofence {
-	NSLog(@"Did stop monitoring a geofence");
-}
-
-```
-
-#### Configuring Monitoring Accuracy ####
-
-Getting the user location is one of the most battery consuming action a mobile phone can perform. This can be alleviated by reducing the accuracy you use when getting the user position. This comes at the expense of missing some events or having false positives.
-
-When considering the accuracy to use, you have to consider what kind of regions are you working with. If your geofences represent a big region (a city, a country, 10km...) then you'll probably be fine with a lower accuracy.
-
-If, however, your geofences represent a small region (a street, a shop, 100m...) then you'll need to increase the accuracy in order to get a granular enough location to allow CoreLocation to detect the user entered the region.
-
-As a final note, consider checking the minimum radius of the geofences you are about to monitor and to set the location accuracy based on that.
-
-*Swift:*
-
-```
-#!swift
-
-intelligence.location.setLocationAccuracy(kCLLocationAccuracyBest)
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-[intelligence.location setLocationAccuracy:kCLLocationAccuracyBest];
-
-```
