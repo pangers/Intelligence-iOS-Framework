@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		48AA55861F1330D200DEB02F /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48AA55851F1330D200DEB02F /* IntelligenceSDK.framework */; };
+		48BAECF91F1CC67500AA33E1 /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BAECF81F1CC67500AA33E1 /* IntelligenceSDK.framework */; };
 		D675A1E01EA7123B00949C4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1DF1EA7123B00949C4F /* AppDelegate.swift */; };
 		D675A1E21EA7123B00949C4F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1E11EA7123B00949C4F /* ViewController.swift */; };
 		D675A1E51EA7123B00949C4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A1E31EA7123B00949C4F /* Main.storyboard */; };
@@ -39,7 +39,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		48AA55851F1330D200DEB02F /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntelligenceSDK.framework; path = Carthage/Build/iOS/IntelligenceSDK.framework; sourceTree = SOURCE_ROOT; };
+		48BAECF81F1CC67500AA33E1 /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = "<group>"; };
 		D675A1DC1EA7123B00949C4F /* Intelligence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intelligence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D675A1DF1EA7123B00949C4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D675A1E11EA7123B00949C4F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48AA55861F1330D200DEB02F /* IntelligenceSDK.framework in Frameworks */,
+				48BAECF91F1CC67500AA33E1 /* IntelligenceSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 		D675A1DE1EA7123B00949C4F /* Intelligence */ = {
 			isa = PBXGroup;
 			children = (
-				48AA55851F1330D200DEB02F /* IntelligenceSDK.framework */,
+				48BAECF81F1CC67500AA33E1 /* IntelligenceSDK.framework */,
 				D675A1F41EA7158000949C4F /* Classes */,
 				D675A1DF1EA7123B00949C4F /* AppDelegate.swift */,
 				D675A1E11EA7123B00949C4F /* ViewController.swift */,
@@ -170,6 +170,7 @@
 				D675A1D91EA7123B00949C4F /* Frameworks */,
 				D675A1DA1EA7123B00949C4F /* Resources */,
 				D675A2E31EA8646200949C4F /* Embed Frameworks */,
+				48BAECFA1F1CC69800AA33E1 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -231,6 +232,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		48BAECFA1F1CC69800AA33E1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/IntelligenceSDK.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D675A1D81EA7123B00949C4F /* Sources */ = {
@@ -396,6 +414,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/External_Framework",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Intelligence",
 				);
 				INFOPLIST_FILE = Intelligence/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -414,6 +433,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/External_Framework",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Intelligence",
 				);
 				INFOPLIST_FILE = Intelligence/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

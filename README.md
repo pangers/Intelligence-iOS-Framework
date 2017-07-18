@@ -132,7 +132,7 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 #!swift
 
 do {
-intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
+    let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
 }
 catch {
 // Treat the error with care!
@@ -154,6 +154,45 @@ if (nil != err) {
 NSLog(@"Error initialising Intelligence: %zd", err.code);
 }
 NSParameterAssert(err == nil && intelligence != nil);
+
+```
+
+The class which instantiating the Intelligence should confirms to IntelligenceDelegate.
+
+```
+extension CustomClass : IntelligenceDelegate {
+
+/// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
+func credentialsIncorrect(for intelligence:
+Intelligence) {
+}
+
+/// Account has been disabled and no longer active. Credentials are no longer valid.
+func accountDisabled(for intelligence: Intelligence) {
+}
+
+/// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
+func accountLocked(for intelligence: Intelligence) {
+}
+
+/// Token is invalid or expired, this may occur if your Application is configured incorrectly.
+func tokenInvalidOrExpired(for intelligence: Intelligence) {
+}
+
+/// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
+func userCreationFailed(for intelligence: Intelligence) {
+}
+
+/// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
+func userLoginRequired(for intelligence: Intelligence) {
+// Present login screen or call identity.login with credentials stored in Keychain.
+}
+
+/// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
+func userRoleAssignmentFailed(for intelligence: Intelligence) {
+}
+
+}
 
 ```
 
