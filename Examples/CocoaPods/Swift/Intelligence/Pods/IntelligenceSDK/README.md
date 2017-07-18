@@ -39,9 +39,6 @@ All of these variables come from the Intelligence Platform and will need to be i
 3. "client_id" (String): Can be found on your configured Application.
 2. "application_id" (Integer): Can be found on your configured Application.
 4. "project_id" (Integer): Can be seen in the URL when you're on the Dashboard.
-5. "region" (String): "US", "EU", "AU" or "SG"
-6. "company_id" (Integer): Can be obtained from the Dashboard.
-7. "sdk_user_role" (Integer): ID of SDK user role you have configured. This allows permission to use the SDK, so please ensure it is configured correctly.
 
 As an example, your configuration file should look something like:
 
@@ -52,10 +49,7 @@ As an example, your configuration file should look something like:
     "client_id": "CLIENT_ID",
     "client_secret": "CLIENT_SECRET",
     "application_id": 10,
-    "project_id": 20,
-    "region": "EU",
-    "company_id" : 10,
-    "sdk_user_role" : 1000
+    "project_id": 20    
 }
 
 ```
@@ -148,8 +142,6 @@ configuration.clientID = "YOUR_CLIENT_ID"
 configuration.clientSecret = "YOUR_CLIENT_SECRET"
 configuration.projectID = 123456789
 configuration.applicationID = 987654321
-configuration.region = Intelligence.Region.Europe
-configuration.sdk_user_role = 1000
 
 ```
 *Objective-C:*
@@ -162,10 +154,7 @@ configuration.clientID = @"YOUR_CLIENT_ID";
 configuration.clientSecret = @"YOUR_CLIENT_SECRET";
 configuration.projectID = 123456789;
 configuration.applicationID = 987654321;
-configuration.region = RegionEurope;                
-configuration.sdk_user_role = 1000;
-        
-
+                     
 ```
 
 
@@ -441,39 +430,6 @@ intelligence.identity.logout()
 
 ```
 
-### Get User ###
-
-Request information for a specific user (by userId). The user calling this method must have a role with the permission to see other users.
-
-The following code snippets illustrate how to request a user's information in Objective-C and Swift.
-
-*Swift:*
-
-
-```
-#!swift
-
-intelligence.identity.getUser(userId) { (user, error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}
-
-
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-[intelligence getUser:userId callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-
-```
-
 ### Get Me ###
 
 Request the latest information for the logged in user, developer is responsible for calling this only after a login has succeeded. This is automatically called by the SDK on login to return the state at that point in time, but the user may be modified in the backend so it's important to call it before calling the 'Update User' method to ensure you have the latest details.
@@ -507,45 +463,6 @@ intelligence.identity.getMe { (user, error) -> Void in
 
 ```
 
-### Update User ###
-
-The code to update a user for each language is as follows:
-
-*Swift:*
-
-
-```
-#!swift
-let user = Intelligence.User(userId: userId, companyId: companyId, username: usernameTxt,password: passwordTxt,
-firstName: firstNameTxt, lastName: lastNameTxt, avatarURL: avatarURLTxt)
-
-intelligence.identity.updateUser(user, callback: { (user, error) -> Void in
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-```
-
-*Objective-C:*
-
-```
-#!objc
-
-INTUser* user = [[INTUser alloc] initWithUserId:userID companyId:companyID username:username password:password
-firstName:firstname lastName:lastname avatarURL:avatarURL];
-
-[intelligence.identity updateUser:user callback:^(id<INTUser> _Nullable user, NSError * _Nullable error) {
-	// Treat the user and error appropriately. Notice that the callback might be performed
-	// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-The 'updateUser' method can return the following additional errors:
-
-* IdentityError.InvalidUserError : When the user provided is invalid (e.g. some fields are not populated correctly, are empty, or the password does not pass our security requirements)
-* IdentityError.WeakPasswordError : When the password provided does not meet Intelligence security requirements. The requirements are that your password needs to have at least 8 characters, containing a number, a lowercase letter and an uppercase letter.
-
-Please note that you can not update the 'username' or the 'password' of a user
 
 ### Register Device Token ###
 
@@ -637,59 +554,6 @@ The 'unregisterDeviceTokenWithId' method can return the follow additional errors
 
 * IdentityError.DeviceTokenNotRegisteredError: Device token is not registered in Intelligence platform. You will receive this error if you try to unregister a token twice, you should handle this as though it was a successful request.
 
-### Assign Role ###
-
-A user can have multiple roles (and multiple of the same role) and it may be necessary to assign another from within the SDK.
-
-*Swift:*
-```
-#!swift
-
-IntelligenceManager.intelligence.identity.assignRole(roleId, user: user, callback: { (error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-
-```
-
-*Objective-C:*
-```
-#!objc
-
-[[[INTIntelligenceManager intelligence] identity] assignRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-### Revoke Role ###
-
-A user can have multiple roles (and multiple of the same role) and it may be necessary to revoke these from within the SDK.
-
-*Swift:*
-```
-#!swift
-
-IntelligenceManager.intelligence.identity.revokeRole(roleId, user: user, callback: { (error) -> Void in
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-})
-
-```
-
-*Objective-C:*
-```
-#!objc
-
-[[[INTIntelligenceManager intelligence] identity] revokeRole:roleId user:user callback:^(INTUser * _Nullable user, NSError * _Nullable error) {
-// Treat the user and error appropriately. Notice that the callback might be performed
-// in a background thread. Use dispatch_async to handle it in the main thread.
-}];
-
-```
-
-Note that revokeRole only revokes one copy of that role, so if a role has been assigned multiple times it will need to be revoked multiple times.
 
 ## Location Module ##
 
