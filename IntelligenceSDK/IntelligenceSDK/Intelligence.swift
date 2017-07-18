@@ -150,7 +150,15 @@ open class Intelligence: NSObject {
     ) throws {
         self.configuration = intelligenceConfiguration.clone()
         super.init()
-
+        
+        if (intelligenceConfiguration.region == nil){
+            intelligenceConfiguration.region = Region.singapore
+        }
+        
+        if (intelligenceConfiguration.environment == nil){
+            intelligenceConfiguration.environment = Environment.production
+        }
+        
         delegateWrapper.delegate = delegate
         delegateWrapper.intelligence = self
 
