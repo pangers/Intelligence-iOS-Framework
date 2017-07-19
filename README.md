@@ -199,9 +199,9 @@ As an example, create your configuration file(intelligence.json) should look som
 The Intelligence SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
 
 
-#### A). There are a few different ways of providing configuration to the SDK: ####
+#### 1. There are a few different ways of providing configuration to the SDK: ####
 
-1- Initialize Intelligence with a configuration file:
+A)  Initialize Intelligence with a configuration file:
 
 *Swift:*
 
@@ -234,7 +234,7 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 
 ```
 
-2- Initialize a configuration object, read a file and pass it to Intelligence:
+B) Initialize a configuration object, read a file and pass it to Intelligence:
 
 *Swift:*
 
@@ -269,7 +269,7 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 
 ```
 
-3- Programmatically set the required parameters in the configuration, and initialize Intelligence with it.
+C) Programmatically set the required parameters in the configuration, and initialize Intelligence with it.
 
 *Swift:*
 
@@ -297,7 +297,9 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 ```
 
 
-#### B)- The class which instantiating the Intelligence should confirm to IntelligenceDelegate. ####
+#### 2. The class which instantiating the Intelligence should confirm to IntelligenceDelegate. ####
+
+*Swift:*
 
 ```
     extension YourClass : IntelligenceDelegate {
@@ -336,6 +338,40 @@ The Intelligence SDK requires a delegate and configuration variables in order to
 
 ```
 
+*Objective-C:*
+
+
+```
+
+/// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
+- (void)credentialsIncorrectForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// Account has been disabled and no longer active. Credentials are no longer valid.
+- (void)accountDisabledForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// Account has failed to authentication multiple times and is now locked. Requires an administrator to unlock the account.
+- (void)accountLockedForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// Token is invalid or expired, this may occur if your Application is configured incorrectly.
+- (void)tokenInvalidOrExpiredForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// Unable to create SDK user, this may occur if a user with the randomized credentials already exists (highly unlikely) or your Application is configured incorrectly and has the wrong permissions.
+- (void)userCreationFailedForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
+- (void)userLoginRequiredForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+/// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
+- (void)userRoleAssignmentFailedForIntelligence:(Intelligence * __nonnull)intelligence {
+}
+
+```
 
 ## IV. Startup ##
 
