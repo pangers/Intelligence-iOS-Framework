@@ -1,24 +1,69 @@
 # Using Carthage
 
-Intelligence is available via Carthage. If you're new to Carthage, check out their [documentation](https://github.com/Carthage/Carthage) first.
+Intelligence is available via Carthage.You can integrate Uber Rides into your project using Carthage. If you're new to Carthage, check out their [documentation](https://github.com/Carthage/Carthage) first.
 
-**Note:** Please make sure that you have Carthage version >= 0.19 installed. You can check your Carthage version with
-
-```
-Carthage version
-```
-### Here's what you have to add to your Cartfile:
+You can install Carthage (with XCode 7+) via homebrew:
 
 ```
+
+brew update
+brew install carthage
+
+```
+
+To install IntelligenceSDK via Carthage, you need to create a Cartfile. In the root directory of your project, run the following command:
+
+```
+
+touch cartfile
+
+```
+
+In the editor of your choice open the file and add the following:
+
+```
+
 binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
-```
-Using the above command Carthage will download the Intelligence version compatible with 1.0 and above.
-
-### To use the specific version of the library:
 
 ```
+
+### To use the specific version of the library(eg:1.0):
+
+```
+
 binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" == 1.0
-```
-Using the above Carthage will download the latest Intelligence framework of version 1.0.
 
+```
+
+
+Now run the following command to checkout & build our repo and dependencies.
+
+```
+
+carthage update 
+
+
+```
+
+You should now have a Carthage/Build folder in your project directory. Open your .xcodeproj and go to the General settings tab. In the Linked Frameworks and Libraries section, drag and drop each framework (in Carthage/Build/iOS)
+
+Now, open your application target's Build Phases settings tab, click the + icon, and select New Run Script Phase. Add the following to the script area:
+
+```
+
+/usr/local/bin/carthage copy-frameworks
+
+```
+
+and add the paths to the required frameworks in Input Files
+
+```
+
+$(SRCROOT)/Carthage/Build/iOS/IntelligenceSDK.framework
+
+```
+
+For Objective-C projects, set the Embedded Content Contains Swift Code flag in your project to Yes (found under Build Options in the Build Settings tab).
+
+Congratulations, you've added the Intelligence iOS SDK into your project using Carthage! 
 To Integrate Intelligence API, refer Intelligence [wiki](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK).
