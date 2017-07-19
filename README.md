@@ -12,26 +12,55 @@ We can import the SDK through Cocoapods, Carthage or Import Manually to your app
 
 #### Through Cocoapods ####
 
-We can install Intelligence SDK through [Cocoapods](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/CocoaPods/Swift/Intelligence/ReadMe.md). Open a terminal window and navigate to the root folder of your project.
-
-If you have not already created a Podfile for your application, create one now:
+Intelligence is available via CocoaPods. [Cocoapods](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/blob/Documentation/Examples/CocoaPods/Swift/Intelligence/ReadMe.md). If you're new to CocoaPods, You can install it with the following command:
 
 ```
-    pod init
+
+$ gem install cocoapods
+
+
+```
+
+For more info refer [Getting Started Guide](https://guides.cocoapods.org/using/using-cocoapods.html).
+
+To integrate IntelligenceSDK into your Xcode project, navigate to the directory that contains your project and create a new Podfile with pod init or open an existing one, then add pod 'IntelligenceSDK' to the main loop. If you are using the Swift SDK, make sure to add the line use_frameworks!.
+
+
+```
+
+$  pod init
+
+
 ```
 
 Open the Podfile created for your application and add the following to your target:
 
 ```
-    target :YourTargetName do
-        pod 'IntelligenceSDK'
-    end
+
+target 'YourTargetName' do
+    use_frameworks!
+    pod 'IntelligenceSDK'
+end
+
 ```
 
-Save the file and run:
+If you want to install specific version of cocoapod library (e.g. 1.0):
 
 ```
+
+target 'YourTargetName' do
+    use_frameworks!
+    pod 'IntelligenceSDK', '1.0'
+end
+
+```
+
+Then, run the following command to install the dependency:
+
+```
+   
     pod install
+
 ```
 
 This creates a .xcworkspace file for your application. Use this file for all future development on your application.
@@ -45,16 +74,83 @@ target :YourTargetName do
 end
 ```
 
+Remember to close any current XCode sessions and use the file ending in .xcworkspace after installation. If you open your .xcworkspace file, you should be able to see the IntelligenceSDK folder under the Pods folder.
+
+
+For Objective-C projects, set the Embedded Content Contains Swift Code flag in your project to Yes (found under Build Options in the Build Settings tab).
+
+
+Congratulations, you've added the Intelligence iOS SDK into your project using CocoaPods! Next, To Integrate Intelligence API's.
+
 #### Through Carthage ####
 
-Here what you need to add to your Cartfile. For more [detail](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK/tree/Documentation/Examples/Carthage/Swift/Intelligence/ReadMe.md).
+Intelligence is available via Carthage.You can integrate Intelligence into your project using Carthage. If you're new to Carthage, check out their [documentation](https://github.com/Carthage/Carthage) first.
+
+You can install Carthage (with XCode 7+) via homebrew:
 
 ```
-    binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+
+brew update
+brew install carthage
+
 ```
 
-If you're new to Carthage, check out their documentation first.
+To install IntelligenceSDK via Carthage, you need to create a Cartfile. In the root directory of your project, run the following command:
 
+```
+
+touch cartfile
+
+```
+
+In the editor of your choice open the file and add the following:
+
+```
+
+binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" ~> 1.0
+
+```
+
+### To use the specific version of the library(eg:1.0):
+
+```
+
+binary "https://s3-ap-southeast-1.amazonaws.com/chethansp007.sample/IntelligenceFramework.json" == 1.0
+
+```
+
+
+Now run the following command to checkout & build our repo and dependencies.
+
+```
+
+carthage update 
+
+
+```
+
+You should now have a Carthage/Build folder in your project directory. Open your .xcodeproj and go to the General settings tab. In the Linked Frameworks and Libraries section, drag and drop each framework (in Carthage/Build/iOS)
+
+Now, open your application target's Build Phases settings tab, click the + icon, and select New Run Script Phase. Add the following to the script area:
+
+```
+
+/usr/local/bin/carthage copy-frameworks
+
+```
+
+and add the paths to the required frameworks in Input Files
+
+```
+
+$(SRCROOT)/Carthage/Build/iOS/IntelligenceSDK.framework
+
+```
+
+For Objective-C projects, set the Embedded Content Contains Swift Code flag in your project to Yes (found under Build Options in the Build Settings tab).
+
+Congratulations, you've added the Intelligence iOS SDK into your project using Carthage! 
+To Integrate Intelligence API.
 
 #### Manual Integration ####
 

@@ -51,5 +51,31 @@ For Objective-C projects, set the Embedded Content Contains Swift Code flag in y
 
 
 
-Congratulations, you've added the Uber Rides iOS SDK into your project using CocoaPods! Next, To Integrate Intelligence API, refer Intelligence [wiki](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK).
+Congratulations, you've added the Uber Rides iOS SDK into your project using CocoaPods! 
+
+## API Integration
+
+1. Include the "IntelligenceManager.swift" [file](/Code-Snippet/Swift/IntelligenceManager.swift) into your project.
+
+2. Update the clientSecret,ClientID,ApplicationID and projectID in the IntelligenceManager.swift class.
+
+3. Statup the Intelligence in AppDelegate, application:didFinishLaunchingWithOptions method.  
+
+```
+
+IntelligenceManager.sharedInstance.startUp { (status, error) in
+assert(status,"Failed to Initilaize intelligence")
+}
+
+```
+
+4. Post event anywhere from your app using following snippet.
+
+```
+
+IntelligenceManager.sharedInstance.postEvent(name: "IOS-Event-2");
+
+```
+
+For more info on Intelligence API refer [wiki](https://git-apac.internal.tigerspike.com/phoenix/Phoenix-Intelligence-iOS-SDK).
 
