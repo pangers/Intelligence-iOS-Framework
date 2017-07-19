@@ -286,9 +286,7 @@ extension Intelligence {
                     lhs.projectID == rhs.projectID &&
                     lhs.applicationID == rhs.applicationID &&
                     lhs.region == rhs.region &&
-                    lhs.environment == rhs.environment &&
-                    lhs.userName == rhs.userName &&
-                    lhs.userPassword == rhs.userPassword
+                    lhs.environment == rhs.environment
         }
     }
 
