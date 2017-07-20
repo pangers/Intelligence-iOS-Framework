@@ -1,4 +1,4 @@
-# Intelligence SDK #
+# Intelligence IOS SDK #
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Intelligence platform's API's.
 
