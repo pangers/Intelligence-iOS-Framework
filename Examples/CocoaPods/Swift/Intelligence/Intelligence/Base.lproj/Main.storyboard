@@ -78,30 +78,6 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection id="PBi-wx-xY1">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="atY-iM-niH" style="IBUITableViewCellStyleDefault" id="eUj-H1-Lpy">
-                                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eUj-H1-Lpy" id="qZf-F2-BSC">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Location module" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="atY-iM-niH">
-                                                    <rect key="frame" x="15" y="0.0" width="325" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="UUu-MY-9cj" kind="show" id="wIT-Wz-Td5"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="4Zv-dv-08P" id="gi9-CW-p8v"/>
@@ -131,39 +107,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kZO-ma-S8e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="657" y="563"/>
-        </scene>
-        <!--Identity-->
-        <scene sceneID="vIV-JZ-MXl">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Identity" id="I3U-ag-Cbz" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ugG-NU-10g" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="DTR-UV-0Rz" style="IBUITableViewCellStyleDefault" id="H61-p4-4Uz">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H61-p4-4Uz" id="96n-lf-sq7">
-                        <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Identity module" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DTR-UV-0Rz">
-                                <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                    </tableViewCellContentView>
-                </tableViewCell>
-            </objects>
-            <point key="canvasLocation" x="1842" y="349"/>
-        </scene>
-        <!--Location-->
-        <scene sceneID="ZvU-cK-abL">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Location" id="UUu-MY-9cj" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ih1-Bf-hSs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1846" y="394"/>
         </scene>
         <!--Analytics-->
         <scene sceneID="e7p-Hj-p4Q">

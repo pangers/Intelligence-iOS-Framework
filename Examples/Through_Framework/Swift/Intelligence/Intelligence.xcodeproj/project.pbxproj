@@ -18,13 +18,9 @@
 		D675A1EA1EA7123B00949C4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A1E81EA7123B00949C4F /* LaunchScreen.storyboard */; };
 		D675A2031EA7158000949C4F /* AnalyticsCustomEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1F61EA7158000949C4F /* AnalyticsCustomEventViewController.swift */; };
 		D675A2041EA7158000949C4F /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1F71EA7158000949C4F /* ScreenViewedViewController.swift */; };
-		D675A2081EA7158000949C4F /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1FD1EA7158000949C4F /* IntelligenceLocationGeofenceQueryViewController.swift */; };
-		D675A2091EA7158000949C4F /* IntelligenceLocationModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A1FE1EA7158000949C4F /* IntelligenceLocationModuleViewController.swift */; };
 		D675A20A1EA7158000949C4F /* IntelligenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A2001EA7158000949C4F /* IntelligenceManager.swift */; };
 		D675A20B1EA7158000949C4F /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D675A2021EA7158000949C4F /* StartupViewController.swift */; };
-		D675A2141EA7158F00949C4F /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2101EA7158F00949C4F /* Location.storyboard */; };
 		D675A2171EA715E200949C4F /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2151EA715E200949C4F /* Analytics.storyboard */; };
-		D675A21A1EA715E900949C4F /* Location.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D675A2181EA715E900949C4F /* Location.storyboard */; };
 		D675A2201EA72AE500949C4F /* IntelligenceConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = D675A21F1EA72AE500949C4F /* IntelligenceConfiguration.json */; };
 		D6E782761EADB56C00ADCFC9 /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D675A1F21EA7129A00949C4F /* IntelligenceSDK.framework */; };
 		D6E7827A1EADB60200ADCFC9 /* IntelligenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6405E461EAC77CB005A735B /* IntelligenceTests.swift */; };
@@ -71,13 +67,9 @@
 		D675A1F21EA7129A00949C4F /* IntelligenceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = "<group>"; };
 		D675A1F61EA7158000949C4F /* AnalyticsCustomEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsCustomEventViewController.swift; sourceTree = "<group>"; };
 		D675A1F71EA7158000949C4F /* ScreenViewedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedViewController.swift; sourceTree = "<group>"; };
-		D675A1FD1EA7158000949C4F /* IntelligenceLocationGeofenceQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationGeofenceQueryViewController.swift; sourceTree = "<group>"; };
-		D675A1FE1EA7158000949C4F /* IntelligenceLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationModuleViewController.swift; sourceTree = "<group>"; };
 		D675A2001EA7158000949C4F /* IntelligenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceManager.swift; sourceTree = "<group>"; };
 		D675A2021EA7158000949C4F /* StartupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
-		D675A2111EA7158F00949C4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Location.storyboard; sourceTree = "<group>"; };
 		D675A2161EA715E200949C4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Intelligence/Base.lproj/Analytics.storyboard; sourceTree = SOURCE_ROOT; };
-		D675A2191EA715E900949C4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Intelligence/Base.lproj/Location.storyboard; sourceTree = SOURCE_ROOT; };
 		D675A21F1EA72AE500949C4F /* IntelligenceConfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = IntelligenceConfiguration.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,7 +136,6 @@
 				D675A1DF1EA7123B00949C4F /* AppDelegate.swift */,
 				D675A1E11EA7123B00949C4F /* ViewController.swift */,
 				D675A1E31EA7123B00949C4F /* Main.storyboard */,
-				D675A2101EA7158F00949C4F /* Location.storyboard */,
 				D675A1E61EA7123B00949C4F /* Assets.xcassets */,
 				D675A1E81EA7123B00949C4F /* LaunchScreen.storyboard */,
 				D675A1EB1EA7123B00949C4F /* Info.plist */,
@@ -166,7 +157,6 @@
 				D6405E3D1EAC6983005A735B /* Automation */,
 				D675A21E1EA72AE500949C4F /* Configuration */,
 				D675A1F51EA7158000949C4F /* Analytics */,
-				D675A1FC1EA7158000949C4F /* Location */,
 				D675A1FF1EA7158000949C4F /* Manager */,
 				D675A2011EA7158000949C4F /* Startup */,
 			);
@@ -181,16 +171,6 @@
 				D675A2151EA715E200949C4F /* Analytics.storyboard */,
 			);
 			path = Analytics;
-			sourceTree = "<group>";
-		};
-		D675A1FC1EA7158000949C4F /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				D675A1FD1EA7158000949C4F /* IntelligenceLocationGeofenceQueryViewController.swift */,
-				D675A1FE1EA7158000949C4F /* IntelligenceLocationModuleViewController.swift */,
-				D675A2181EA715E900949C4F /* Location.storyboard */,
-			);
-			path = Location;
 			sourceTree = "<group>";
 		};
 		D675A1FF1EA7158000949C4F /* Manager */ = {
@@ -314,8 +294,6 @@
 				D675A2171EA715E200949C4F /* Analytics.storyboard in Resources */,
 				D675A1EA1EA7123B00949C4F /* LaunchScreen.storyboard in Resources */,
 				D675A1E71EA7123B00949C4F /* Assets.xcassets in Resources */,
-				D675A21A1EA715E900949C4F /* Location.storyboard in Resources */,
-				D675A2141EA7158F00949C4F /* Location.storyboard in Resources */,
 				D675A2201EA72AE500949C4F /* IntelligenceConfiguration.json in Resources */,
 				D675A1E51EA7123B00949C4F /* Main.storyboard in Resources */,
 			);
@@ -344,9 +322,7 @@
 				D675A20B1EA7158000949C4F /* StartupViewController.swift in Sources */,
 				D6405E3F1EAC699C005A735B /* TestClass.swift in Sources */,
 				D675A1E01EA7123B00949C4F /* AppDelegate.swift in Sources */,
-				D675A2081EA7158000949C4F /* IntelligenceLocationGeofenceQueryViewController.swift in Sources */,
 				D675A2031EA7158000949C4F /* AnalyticsCustomEventViewController.swift in Sources */,
-				D675A2091EA7158000949C4F /* IntelligenceLocationModuleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,28 +353,12 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		D675A2101EA7158F00949C4F /* Location.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D675A2111EA7158F00949C4F /* Base */,
-			);
-			name = Location.storyboard;
-			sourceTree = "<group>";
-		};
 		D675A2151EA715E200949C4F /* Analytics.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D675A2161EA715E200949C4F /* Base */,
 			);
 			name = Analytics.storyboard;
-			sourceTree = "<group>";
-		};
-		D675A2181EA715E900949C4F /* Location.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D675A2191EA715E900949C4F /* Base */,
-			);
-			name = Location.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
