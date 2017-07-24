@@ -98,11 +98,11 @@
 		6DC34D6C1DDB288000FC3306 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D691DDB288000FC3306 /* config.json */; };
 		6DC34D6D1DDB288000FC3306 /* missingproperty.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6A1DDB288000FC3306 /* missingproperty.json */; };
 		6DC34D6E1DDB288000FC3306 /* wrongjson.json in Resources */ = {isa = PBXBuildFile; fileRef = 6DC34D6B1DDB288000FC3306 /* wrongjson.json */; };
+		D64407C91DF7B0CC00139B8E /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6CFCA881DF6A8CB009A754D /* OHHTTPStubs.framework */; };
 		D69B67DD1E2F1CF10087E585 /* UserCreated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DC1E2F1CF10087E585 /* UserCreated.swift */; };
 		D69B67DF1E2F45E30087E585 /* EventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DE1E2F45E30087E585 /* EventTypes.swift */; };
 		D69B67E11E2F4A6D0087E585 /* ApplicationInstall.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67E01E2F4A6D0087E585 /* ApplicationInstall.swift */; };
 		D69B67E31E2F4AC90087E585 /* ApplicationUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67E21E2F4AC90087E585 /* ApplicationUpdate.swift */; };
-		D64407C91DF7B0CC00139B8E /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6CFCA881DF6A8CB009A754D /* OHHTTPStubs.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1081,7 +1081,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1126,7 +1126,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

@@ -55,8 +55,6 @@ public extension Intelligence {
                 return "EU"
             case .singapore:
                 return "SG"
-            default:
-                return nil
             }
         }
     }
