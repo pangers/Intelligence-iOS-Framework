@@ -161,7 +161,7 @@ class TimeTracker: NSObject {
         timer = nil
     }
     
-    internal func runTimer(timer: Timer) {
+    @objc internal func runTimer(timer: Timer) {
         store(resume: true)
     }
 }
