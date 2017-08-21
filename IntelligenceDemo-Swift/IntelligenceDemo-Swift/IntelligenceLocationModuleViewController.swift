@@ -114,7 +114,7 @@ class IntelligenceLocationModuleViewController : UIViewController, UITableViewDa
         guard let geofences = geofences, error == nil else {
             if error != nil {
                 addRecord(text: "Error occured while downloading geofences")
-                addRecord(text: "\(error)")
+                addRecord(text: "\(String(describing: error))")
             }
             else {
                 addRecord(text: "No geofences fetched")
