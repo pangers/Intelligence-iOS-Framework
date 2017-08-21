@@ -137,12 +137,12 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         cfg.projectID = 0
         testConfigurationMissingPropertyError(cfg)
         
-        cfg = genericConfiguration()
-        cfg.region = nil
-        testConfigurationMissingPropertyError(cfg)
-        
-        cfg = genericConfiguration()
-        cfg.environment = nil
-        testConfigurationMissingPropertyError(cfg)
+//        cfg = genericConfiguration()
+//        cfg.region = nil
+//        testConfigurationMissingPropertyError(cfg)
+//        
+//        cfg = genericConfiguration()
+//        cfg.environment = nil
+//        testConfigurationMissingPropertyError(cfg)
     }
 }
