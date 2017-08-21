@@ -10,6 +10,8 @@ import UIKit
 
 import IntelligenceSDK
 
+let IntelligenceDemoStoredDeviceTokenKey = "IntelligenceDemoStoredDeviceTokenKey"
+
 class ScreenViewedViewController : UIViewController {
 	
 	@IBOutlet weak var clockLabel: UILabel!

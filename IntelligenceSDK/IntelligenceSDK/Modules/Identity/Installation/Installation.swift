@@ -46,7 +46,7 @@ internal struct Installation {
     private var installedVersion: String { return applicationVersion.int_applicationVersionString ?? "" }
     private var applicationId: Int { return configuration.applicationID }
     private var projectId: Int { return configuration.projectID }
-    private var userId: Int? { return oauthProvider.sdkUserOAuth.userId }
+    
     private var requestId: Int? { return installationStorage.int_installationRequestID }
     
     /// - Returns: True if valid to send an update with this object.
@@ -80,12 +80,7 @@ internal struct Installation {
             // Update installation (with previous installions id)
             json[Installation.Id] = requestId!
         }
-        
-        // Pass the userId if it is valid
-        if userId != nil {
-            json[Installation.UserId] = userId!
-        }
-        
+    
         return json
     }
     

@@ -38,22 +38,22 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
     }
     
     // Mock configuration fakes an invalid configuration
-    func testIntelligenceInitializerWithMockConfiguration() {
-        let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
-        
-        do {
-            let config = MockConfiguration()
-            config.mockInvalid = true
-            let _ = try Intelligence(withDelegate:delegateTester, configuration: config, oauthProvider: mockOAuthProvider)
-            XCTAssert(false, "No exception thrown")
-        }
-        catch IntelligenceSDK.ConfigurationError.missingPropertyError {
-            // correct path
-        }
-        catch {
-            XCTAssert(false, "Unexpected exception thrown")
-        }
-    }
+//    func testIntelligenceInitializerWithMockConfiguration() {
+//        let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
+//        
+//        do {
+//            let config = MockConfiguration()
+//            config.mockInvalid = true
+//            let _ = try Intelligence(withDelegate:delegateTester, configuration: config, oauthProvider: mockOAuthProvider)
+//            XCTAssert(false, "No exception thrown")
+//        }
+//        catch IntelligenceSDK.ConfigurationError.missingPropertyError {
+//            // correct path
+//        }
+//        catch {
+//            XCTAssert(false, "Unexpected exception thrown")
+//        }
+//    }
     
     // Mock configuration fakes an invalid configuration
     func testIntelligenceGetterSetterWorks() {

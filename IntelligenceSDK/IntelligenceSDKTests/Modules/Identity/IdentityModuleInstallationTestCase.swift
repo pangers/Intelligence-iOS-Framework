@@ -97,7 +97,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     // MARK:- Create Installation
     
     func testCreateInstallationSuccess() {
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForCreateInstallation()
@@ -122,7 +122,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     }
     
     func testCreateInstallationFailure() {
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForCreateInstallation()
@@ -145,7 +145,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testCreateInstallationParseFailure() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForCreateInstallation()
@@ -167,7 +167,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testCreateInstallationUnnecessary() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForCreateInstallation()
@@ -228,7 +228,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testUpdateInstallationSuccess() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForUpdateInstallation()
@@ -264,7 +264,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testUpdateInstallationFailure() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForUpdateInstallation()
@@ -287,7 +287,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testUpdateInstallationParseFailure() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForUpdateInstallation()
@@ -309,7 +309,7 @@ class IdentityModuleInstallationTestCase: IdentityModuleTestCase {
     
     func testUpdateInstallationUnnecessary() {
         // Mock request being authorized
-        let oauth = mockOAuthProvider.sdkUserOAuth
+        let oauth = mockOAuthProvider.applicationOAuth
         mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
         
         mockPrepareForUpdateInstallation()

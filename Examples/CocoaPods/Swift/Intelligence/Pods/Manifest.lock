@@ -1,0 +1,12 @@
+PODS:
+  - IntelligenceSDK (1.2.1)
+
+DEPENDENCIES:
+  - IntelligenceSDK
+
+SPEC CHECKSUMS:
+  IntelligenceSDK: a44e3dfdbfda094171d5eb9a3bf727d8400c0f3f
+
+PODFILE CHECKSUM: 38ee66ab88d16eb5147cc56de8a8fa5188b49113
+
+COCOAPODS: 1.2.1

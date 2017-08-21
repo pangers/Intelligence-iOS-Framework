@@ -28,18 +28,19 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
     internal var applicationOAuth: IntelligenceOAuthProtocol
     
     /// grant_type 'password' OAuth types.
-    internal var sdkUserOAuth: IntelligenceOAuthProtocol
+//    internal var sdkUserOAuth: IntelligenceOAuthProtocol
     internal var loggedInUserOAuth: IntelligenceOAuthProtocol
     
     /// Best OAuth we have for grant_type 'password'.
     internal var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
-        return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
+      //  return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
+        return applicationOAuth
     }
     internal var developerLoggedIn = false
     
     init() {
         applicationOAuth = IntelligenceOAuth(tokenType: .application, storage: MockSimpleStorage())
-        sdkUserOAuth = IntelligenceOAuth(tokenType: .sdkUser, storage: MockSimpleStorage())
+//        sdkUserOAuth = IntelligenceOAuth(tokenType: .sdkUser, storage: MockSimpleStorage())
         loggedInUserOAuth = IntelligenceOAuth(tokenType: .loggedInUser, storage: MockSimpleStorage())
     }
     
@@ -61,7 +62,7 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
     }
     
     func reset() {
-        reset(sdkUserOAuth)
+//        reset(sdkUserOAuth)
         reset(applicationOAuth)
         reset(loggedInUserOAuth)
     }

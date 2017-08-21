@@ -15,11 +15,12 @@ private enum ConfigurationKey: String {
     case clientSecret = "client_secret"
     case applicationID = "application_id"
     case projectID = "project_id"
+    
+    //optionals
     case region = "region"
     case environment = "environment"
-    case companyId = "company_id"
-    case sdkUserRole = "sdk_user_role"
-    case certificateTrustPolicy = "certificate_trust_policy"
+    case userName = "username"
+    case password = "password"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
@@ -77,17 +78,11 @@ extension Intelligence {
         /// The provider Id
         public let providerId = 300
 
-        /// The company Id
-        public var companyId = 0
-
         /// The project ID
         public var projectID = 0
 
         /// The application ID
         public var applicationID = 0
-
-        /// The role ID to assign to users the SDK creates
-        public var sdkUserRole = 0
 
         /// The trust policy to apply to server certificates.
         /// By default we will only trust valid certificates.
@@ -98,6 +93,12 @@ extension Intelligence {
 
         /// The environment to connect to
         public var environment: Environment?
+        
+        /// Intelligence Identity user.To track the events assosiated to user.
+        public var userName: String?
+        
+        /// password of Intelligence Identity user.To track the events assosiated to user.
+        public var userPassword: String?
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -135,9 +136,9 @@ extension Intelligence {
             copy.projectID = self.projectID
             copy.clientID = String(self.clientID)
             copy.clientSecret = String(self.clientSecret)
-            copy.companyId = companyId
-            copy.sdkUserRole = sdkUserRole
             copy.certificateTrustPolicy = self.certificateTrustPolicy
+            copy.userName = self.userName
+            copy.userPassword = self.userPassword
             return copy
         }
 
@@ -175,29 +176,30 @@ extension Intelligence {
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
 
-            guard let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents)) else {
-                sharedIntelligenceLogger.logger?.error("Invalid Intelligence propery")
-                throw ConfigurationError.invalidPropertyError
+
+            //Region
+            do {
+                let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents))
+                self.region = region
             }
-
-            self.region = region
-
-            guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                sharedIntelligenceLogger.logger?.error("Invalid Intelligence propery")
-                throw ConfigurationError.invalidPropertyError
+            catch {
+                self.region = Intelligence.Region.singapore
             }
-
-            self.environment = environment
-
-            self.companyId = try value(forKey: .companyId, inContents: contents)
-            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
-
-            guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
-                  let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration propery")
-                throw ConfigurationError.invalidPropertyError
+            
+            //Env
+            do {
+                let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
+                self.environment = environment
             }
-            self.certificateTrustPolicy = certificateTrustPolicy
+            catch {
+                self.environment = Environment.production
+            }
+            
+            //userName
+            self.userName = try? value(forKey: .userName, inContents: contents)
+          
+            //password
+            self.userPassword = try? value(forKey: .password, inContents: contents)
         }
 
 
@@ -231,30 +233,23 @@ extension Intelligence {
 
             self.region = region
 
-            guard let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents)) else {
-                sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration property")
-                throw ConfigurationError.invalidPropertyError
+
+            do {
+                let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
+                self.environment = environment
             }
-
-            self.environment = environment
-
-            self.companyId = try value(forKey: .companyId, inContents: contents)
-            self.sdkUserRole = try value(forKey: .sdkUserRole, inContents: contents)
-
-            guard let certificateTrustPolicyKey = contents[ConfigurationKey.certificateTrustPolicy.rawValue] as? String,
-                  let certificateTrustPolicy = CertificateTrustPolicy(key: certificateTrustPolicyKey) else {
-                  sharedIntelligenceLogger.logger?.error("Invalid Intelligence configration propery")
-                  throw ConfigurationError.invalidPropertyError
+            catch {
+                self.environment = Environment.production
             }
-
-            self.certificateTrustPolicy = certificateTrustPolicy
+            
+            self.userName = try? value(forKey: .userName, inContents: contents)
+            self.userPassword = try? value(forKey: .password, inContents: contents)
         }
 
         func getJsonData() -> Data? {
 
             guard let code = self.region?.regionCode,
-                  let envStr = self.environment?.envString,
-                  let policyStr = self.certificateTrustPolicy.stringType else {
+                  let envStr = self.environment?.envString else {
                 return nil
             }
 
@@ -267,11 +262,15 @@ extension Intelligence {
 
             dict[ConfigurationKey.region.rawValue] = code
             dict[ConfigurationKey.environment.rawValue] = envStr
-            dict[ConfigurationKey.certificateTrustPolicy.rawValue] = policyStr
-
-            dict[ConfigurationKey.companyId.rawValue] = self.companyId
-            dict[ConfigurationKey.sdkUserRole.rawValue] = self.sdkUserRole
-
+            
+            if let usrName = self.userName{
+                    dict[ConfigurationKey.userName.rawValue] = usrName
+            }
+            
+            if let password = self.userPassword{
+                dict[ConfigurationKey.password.rawValue] = password
+            }
+            
             let data = dict.int_toJSONData()
             return data
         }
@@ -286,7 +285,7 @@ extension Intelligence {
         /// - Returns: True if there is a missing property in the configuration
         @objc open var hasMissingProperty: Bool {
             return clientID.isEmpty || clientSecret.isEmpty || projectID <= 0 ||
-                    applicationID <= 0 || region == nil || environment == nil || companyId <= 0 || sdkUserRole <= 0
+                    applicationID <= 0 || region == nil || environment == nil
         }
 
         static func ==(lhs: Configuration, rhs: Configuration) -> Bool {
@@ -295,9 +294,7 @@ extension Intelligence {
                     lhs.projectID == rhs.projectID &&
                     lhs.applicationID == rhs.applicationID &&
                     lhs.region == rhs.region &&
-                    lhs.companyId == rhs.companyId &&
-                    lhs.environment == rhs.environment &&
-                    lhs.sdkUserRole == rhs.sdkUserRole
+                    lhs.environment == rhs.environment
         }
     }
 

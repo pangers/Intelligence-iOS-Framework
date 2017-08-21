@@ -25,7 +25,6 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
             XCTAssert(config.environment == cfg.environment, "The environment is incorrect")
             XCTAssert(config.applicationID == cfg.applicationID , "The application Id is incorrect")
             XCTAssert(config.projectID == cfg.projectID, "The project Id is incorrect")
-            XCTAssert(config.sdkUserRole == cfg.sdkUserRole, "User role not read correctly")
         }
         catch {
             // nop
@@ -37,13 +36,11 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         let configuration = Intelligence.Configuration()
         configuration.clientID = "CLIENT_ID" // as in file
         configuration.clientSecret = "CLIENT_SECRET" // as in file
-        configuration.region = .europe
+        configuration.region = .singapore
         configuration.environment = .production
         
         configuration.applicationID = 10
         configuration.projectID = 20
-        configuration.companyId = 1
-        configuration.sdkUserRole = 1008
         
         return configuration
     }
@@ -133,19 +130,11 @@ class IntelligenceConfigurationTestCase: IntelligenceBaseTestCase {
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
-        cfg.companyId = 0
-        testConfigurationMissingPropertyError(cfg)
-        
-        cfg = genericConfiguration()
         cfg.applicationID = 0
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()
         cfg.projectID = 0
-        testConfigurationMissingPropertyError(cfg)
-        
-        cfg = genericConfiguration()
-        cfg.sdkUserRole = 0
         testConfigurationMissingPropertyError(cfg)
         
         cfg = genericConfiguration()

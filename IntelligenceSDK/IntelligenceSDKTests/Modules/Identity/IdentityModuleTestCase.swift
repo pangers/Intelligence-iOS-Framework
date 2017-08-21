@@ -95,16 +95,16 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
     
     // MARK: - Mock
 
-    func mockGetUserResponse(_ userId: Int? = nil, status: HTTPStatusCode = .success, body: String? = nil) {
-        guard let userId = userId else {
-            return
-        }
-        
-        let guURL = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
-        mockResponseForURL(guURL,
-            method: .get,
-            response: getResponse(status, body: body ?? successfulResponseGetUser))
-    }
+//    func mockGetUserResponse(_ userId: Int? = nil, status: HTTPStatusCode = .success, body: String? = nil) {
+//        guard let userId = userId else {
+//            return
+//        }
+//        
+//        let guURL = URLRequest.int_URLRequestForGetUser(userId: userId, oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
+//        mockResponseForURL(guURL,
+//            method: .get,
+//            response: getResponse(status, body: body ?? successfulResponseGetUser))
+//    }
     
     func mockGetUserMeResponse(_ status: HTTPStatusCode = .success, body: String? = nil) {
         let guURL = URLRequest.int_URLRequestForUserMe(oauth: mockOAuthProvider.loggedInUserOAuth, configuration: mockConfiguration, network: mockNetwork).url
@@ -119,39 +119,39 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
             response: getResponse(status, body: body ?? validValidate))
     }
     
-    func mockUserCreationResponse(_ status: HTTPStatusCode = .success, body: String? = nil, identifier: String? = nil) {
-        mockResponseForURL(URLRequest.int_URLRequestForUserCreation(user: fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url,
-            method: .post,
-            response: getResponse(status, body: body ?? successfulResponseCreateUser), identifier: identifier)
-    }
+//    func mockUserCreationResponse(_ status: HTTPStatusCode = .success, body: String? = nil, identifier: String? = nil) {
+//        mockResponseForURL(URLRequest.int_URLRequestForUserCreation(user: fakeUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url,
+//            method: .post,
+//            response: getResponse(status, body: body ?? successfulResponseCreateUser), identifier: identifier)
+//    }
+//    
+//    func mockUserUpdateURL() -> URL {
+//        return URLRequest.int_URLRequestForUserUpdate(user: fakeUpdateUser,
+//            oauth: mockOAuthProvider.loggedInUserOAuth,
+//            configuration: mockConfiguration,
+//            network: mockNetwork).url!
+//    }
     
-    func mockUserUpdateURL() -> URL {
-        return URLRequest.int_URLRequestForUserUpdate(user: fakeUpdateUser,
-            oauth: mockOAuthProvider.loggedInUserOAuth,
-            configuration: mockConfiguration,
-            network: mockNetwork).url!
-    }
+//    func mockUserUpdateResponse(_ status: HTTPStatusCode = .success, body: String? = nil) {
+//        mockResponseForURL(mockUserUpdateURL(),
+//            method: .put,
+//            response: getResponse(status, body: body ?? successfulResponseCreateUser))
+//    }
     
-    func mockUserUpdateResponse(_ status: HTTPStatusCode = .success, body: String? = nil) {
-        mockResponseForURL(mockUserUpdateURL(),
-            method: .put,
-            response: getResponse(status, body: body ?? successfulResponseCreateUser))
-    }
+//    func mockUserUpdateResponses(_ status: HTTPStatusCode = .unauthorized,
+//        secondStatus: HTTPStatusCode = .success) -> [MockResponse] {
+//        let responses = [
+//            getResponse(status, body: successfulResponseCreateUser),
+//            getResponse(secondStatus, body: successfulResponseCreateUser)
+//        ]
+//        return responses
+//    }
     
-    func mockUserUpdateResponses(_ status: HTTPStatusCode = .unauthorized,
-        secondStatus: HTTPStatusCode = .success) -> [MockResponse] {
-        let responses = [
-            getResponse(status, body: successfulResponseCreateUser),
-            getResponse(secondStatus, body: successfulResponseCreateUser)
-        ]
-        return responses
-    }
-    
-    func mockUserAssignRoleResponse(_ status: HTTPStatusCode = .success, body: String? = nil, identifier: String? = nil) {
-        mockResponseForURL(URLRequest.int_URLRequestForUserRoleAssignment(roleId: mockConfiguration.sdkUserRole, user: fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url,
-            method: .post,
-            response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
-    }
+//    func mockUserAssignRoleResponse(_ status: HTTPStatusCode = .success, body: String? = nil, identifier: String? = nil) {
+//        mockResponseForURL(URLRequest.int_URLRequestForUserRoleAssignment(roleId: mockConfiguration.sdkUserRole, user: fakeUpdateUser, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url,
+//            method: .post,
+//            response: getResponse(status, body: body ?? successfulAssignRoleResponse), identifier: identifier)
+//    }
     
     func mockUserRevokeRoleResponse(_ roleId: Int, user: Intelligence.User, shouldFail: Bool = false, body: String? = nil, identifier: String? = nil) {
         var body = body
@@ -457,393 +457,393 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
 
     // MARK:- Get User
     
-    func testGetUserSuccess() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        let userId = fakeUser.userId
-        
-        // Create
-        mockGetUserResponse(userId)
-        
-        identity!.getUser(with: userId) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testGetUserSuccess() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        let userId = fakeUser.userId
+//        
+//        // Create
+//        mockGetUserResponse(userId)
+//        
+//        identity!.getUser(with: userId) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
     
     // MARK:- Create User
     
     // Assures that when the user is not valid to create, an error is returned.
-    func testCreateUserErrorOnUserCondition() {
-        let user = Intelligence.User(companyId: mockCompanyID, username: "", password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
-        let URL = URLRequest.int_URLRequestForUserCreation(user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url!
-        
-        assertURLNotCalled(URL)
-        
-        let expectation = self.expectation(description: "mock create user")
-        
-        identity!.createUser(user: user) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.invalidUserError.rawValue, "Unexpected error type raised")
-            
-            expectation.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserErrorOnUserCondition() {
+//        let user = Intelligence.User(companyId: mockCompanyID, username: "", password: "123", firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL)
+//        let URL = URLRequest.int_URLRequestForUserCreation(user: user, oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork).url!
+//        
+//        assertURLNotCalled(URL)
+//        
+//        let expectation = self.expectation(description: "mock create user")
+//        
+//        identity!.createUser(user: user) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == IdentityError.invalidUserError.rawValue, "Unexpected error type raised")
+//            
+//            expectation.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserSuccess() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        // Create
-        mockUserCreationResponse(.success)
-        mockUserAssignRoleResponse(.success)
-        
-        identity!.createUser(user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserSuccess() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        // Create
+//        mockUserCreationResponse(.success)
+//        mockUserAssignRoleResponse(.success)
+//        
+//        identity!.createUser(user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testAssignRoleFollowsCreateUserOnSuccess() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        let expectCreateUser = expectation(description: "Was expecting the createUser callback to be notified")
-        let expectAssignRole = expectation(description: "Was expecting the assignRole callback to be notified")
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        let createUserKey = "createUser"
-        let assignRoleKey = "assignRole"
-        
-        
-        var endpointsCalled : [String] = []
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        OHHTTPStubs.onStubActivation { (request, stub, stubResponse) in
-            guard let name = stub.name else {
-                return
-            }
-            
-            endpointsCalled.append(name)
-            
-            switch name {
-            case createUserKey:
-                expectCreateUser.fulfill()
-            case assignRoleKey:
-                expectAssignRole.fulfill()
-            default: break
-            }
-        }
-        
-        // Create
-        mockUserCreationResponse(.success, identifier: createUserKey)
-        mockUserAssignRoleResponse(.success, identifier: assignRoleKey)
-        
-        identity!.createUser(user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            XCTAssertEqual(endpointsCalled, [createUserKey, assignRoleKey], "Endpoints were not called in the correct order")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testAssignRoleFollowsCreateUserOnSuccess() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        let expectCreateUser = expectation(description: "Was expecting the createUser callback to be notified")
+//        let expectAssignRole = expectation(description: "Was expecting the assignRole callback to be notified")
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        let createUserKey = "createUser"
+//        let assignRoleKey = "assignRole"
+//        
+//        
+//        var endpointsCalled : [String] = []
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        OHHTTPStubs.onStubActivation { (request, stub, stubResponse) in
+//            guard let name = stub.name else {
+//                return
+//            }
+//            
+//            endpointsCalled.append(name)
+//            
+//            switch name {
+//            case createUserKey:
+//                expectCreateUser.fulfill()
+//            case assignRoleKey:
+//                expectAssignRole.fulfill()
+//            default: break
+//            }
+//        }
+//        
+//        // Create
+//        mockUserCreationResponse(.success, identifier: createUserKey)
+//        mockUserAssignRoleResponse(.success, identifier: assignRoleKey)
+//        
+//        identity!.createUser(user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            XCTAssertEqual(endpointsCalled, [createUserKey, assignRoleKey], "Endpoints were not called in the correct order")
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testAssignRoleDoesNotFollowCreateUserOnFailure() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        let expectCreateUser = expectation(description: "Was expecting the createUser callback to be notified")
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        let createUserKey = "createUser"
-        let assignRoleKey = "assignRole"
-        
-        
-        var endpointsCalled : [String] = []
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        OHHTTPStubs.onStubActivation { (request, stub, stubResponse) in
-            guard let name = stub.name else {
-                return
-            }
-            
-            endpointsCalled.append(name)
-            
-            switch name {
-            case createUserKey:
-                expectCreateUser.fulfill()
-            default: break
-            }
-        }
-        
-        // Create
-        mockUserCreationResponse(.badRequest, identifier: createUserKey)
-        
-        identity!.createUser(user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(!endpointsCalled.contains(assignRoleKey), "Assign Role should not be called")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testAssignRoleDoesNotFollowCreateUserOnFailure() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        let expectCreateUser = expectation(description: "Was expecting the createUser callback to be notified")
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        let createUserKey = "createUser"
+//        let assignRoleKey = "assignRole"
+//        
+//        
+//        var endpointsCalled : [String] = []
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        OHHTTPStubs.onStubActivation { (request, stub, stubResponse) in
+//            guard let name = stub.name else {
+//                return
+//            }
+//            
+//            endpointsCalled.append(name)
+//            
+//            switch name {
+//            case createUserKey:
+//                expectCreateUser.fulfill()
+//            default: break
+//            }
+//        }
+//        
+//        // Create
+//        mockUserCreationResponse(.badRequest, identifier: createUserKey)
+//        
+//        identity!.createUser(user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(!endpointsCalled.contains(assignRoleKey), "Assign Role should not be called")
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserSuccessAssignRoleFailure() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        let sdkUser = Intelligence.User(companyId: 1)
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        // Create
-        mockUserCreationResponse(.success)
-        mockUserAssignRoleResponse(.badRequest)
-        
-        identity!.createUser(user: sdkUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "User not found")
-            XCTAssert(error != nil, "Error occured while parsing a success request")
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserSuccessAssignRoleFailure() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        let sdkUser = Intelligence.User(companyId: 1)
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        // Create
+//        mockUserCreationResponse(.success)
+//        mockUserAssignRoleResponse(.badRequest)
+//        
+//        identity!.createUser(user: sdkUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "User not found")
+//            XCTAssert(error != nil, "Error occured while parsing a success request")
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserSuccessAssignRoleParseFailure() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        let sdkUser = Intelligence.User(companyId: 1)
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        // Create
-        mockUserCreationResponse(.success)
-        mockUserAssignRoleResponse(.success, body: badResponse)
-        
-        identity!.createUser(user: sdkUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "User not found")
-            XCTAssert(error != nil, "Error occured while parsing a success request")
-            XCTAssert(error?.code == RequestError.parseError.rawValue)
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserSuccessAssignRoleParseFailure() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        let sdkUser = Intelligence.User(companyId: 1)
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        // Create
+//        mockUserCreationResponse(.success)
+//        mockUserAssignRoleResponse(.success, body: badResponse)
+//        
+//        identity!.createUser(user: sdkUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "User not found")
+//            XCTAssert(error != nil, "Error occured while parsing a success request")
+//            XCTAssert(error?.code == RequestError.parseError.rawValue)
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserFailure() {
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        // Mock
-        mockUserCreationResponse(.badRequest)
-        
-        identity!.createUser(user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.badRequest.rawValue, "Expected a BadRequest (400) error")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserFailure() {
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        // Mock
+//        mockUserCreationResponse(.badRequest)
+//        
+//        identity!.createUser(user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+//            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.badRequest.rawValue, "Expected a BadRequest (400) error")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserParseFailure() {
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        // Mock auth
-        mockOAuthProvider.fakeAccessToken(oauth)
-        
-        // Mock
-        mockUserCreationResponse(.success, body: badResponse)
-        
-        identity!.createUser(user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == RequestError.parseError.rawValue, "Unexpected error type raised")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserParseFailure() {
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeAccessToken(oauth)
+//        
+//        // Mock
+//        mockUserCreationResponse(.success, body: badResponse)
+//        
+//        identity!.createUser(user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == RequestError.parseError.rawValue, "Unexpected error type raised")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testCreateUserFailureDueToPasswordSecurity() {
-        let oauth = mockOAuthProvider.loggedInUserOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let URL = URLRequest.int_URLRequestForUserCreation(user: fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
-        
-        // Assert that the call won't be done.
-        assertURLNotCalled(URL)
-        
-        identity!.createUser(user: userWeakPassword) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.weakPasswordError.rawValue, "Unexpected error type raised")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testCreateUserFailureDueToPasswordSecurity() {
+//        let oauth = mockOAuthProvider.loggedInUserOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let URL = URLRequest.int_URLRequestForUserCreation(user: fakeUser, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
+//        
+//        // Assert that the call won't be done.
+//        assertURLNotCalled(URL)
+//        
+//        identity!.createUser(user: userWeakPassword) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == IdentityError.weakPasswordError.rawValue, "Unexpected error type raised")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
     // MARK:- Role
     
-    func testRevokeRoleSuccess() {
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockUserRevokeRoleResponse(fakeRoleId, user: fakeUser)
-        
-        identity!.revokeRole(with: fakeRoleId, user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testRevokeRoleSuccess() {
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        // Mock
+//        mockUserRevokeRoleResponse(fakeRoleId, user: fakeUser)
+//        
+//        identity!.revokeRole(with: fakeRoleId, user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testRevokeInvalidRoleFailure() {
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let oauth = mockOAuthProvider.applicationOAuth
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockUserRevokeRoleResponse(invalidRoleId, user: fakeUser, shouldFail: true)
-        
-        identity!.revokeRole(with: invalidRoleId, user: fakeUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testRevokeInvalidRoleFailure() {
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        // Mock
+//        mockUserRevokeRoleResponse(invalidRoleId, user: fakeUser, shouldFail: true)
+//        
+//        identity!.revokeRole(with: invalidRoleId, user: fakeUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
 
     // MARK:- Update User
     
-    func testUpdateUserSuccess() {
-        let oauth = mockOAuthProvider.loggedInUserOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockUserUpdateResponse()
-        
-        XCTAssert(Intelligence.User.isUserIdValid(userId: fakeUpdateUser.userId))
-        
-        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testUpdateUserSuccess() {
+//        let oauth = mockOAuthProvider.loggedInUserOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        // Mock
+//        mockUserUpdateResponse()
+//        
+//        XCTAssert(Intelligence.User.isUserIdValid(userId: fakeUpdateUser.userId))
+//        
+//        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testUpdateUserFailure() {
-        let oauth = mockOAuthProvider.loggedInUserOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockUserUpdateResponse(.badRequest)
-        
-        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
-            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.badRequest.rawValue, "Expected a BadRequest (400) error")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testUpdateUserFailure() {
+//        let oauth = mockOAuthProvider.loggedInUserOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        // Mock
+//        mockUserUpdateResponse(.badRequest)
+//        
+//        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == RequestError.unhandledError.rawValue, "Expected an unhandleable error")
+//            XCTAssert(error?.httpStatusCode() == HTTPStatusCode.badRequest.rawValue, "Expected a BadRequest (400) error")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testUpdateUserParseFailure() {
-        let oauth = mockOAuthProvider.loggedInUserOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        // Mock
-        mockUserUpdateResponse(.success, body: badResponse)
-        
-        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == RequestError.parseError.rawValue, "Unexpected error type raised")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testUpdateUserParseFailure() {
+//        let oauth = mockOAuthProvider.loggedInUserOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        // Mock
+//        mockUserUpdateResponse(.success, body: badResponse)
+//        
+//        identity!.update(user:fakeUpdateUser) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == RequestError.parseError.rawValue, "Unexpected error type raised")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
-    func testUpdateUserFailureRefreshTokenPassedUpdateUserSuccess() {
-        let oauth = mockOAuthProvider.loggedInUserOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        
-        // Mock auth
-        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
-        
-        mockRefreshAndLoginResponse(.success, loginStatus: nil)
-        mockResponseForURL(mockUserUpdateURL(), method: .put, responses: mockUserUpdateResponses())
-        
-        identity?.update(user:fakeUpdateUser) { (user, error) -> Void in
-            XCTAssert(user != nil, "User not found")
-            XCTAssert(error == nil, "Error occured while parsing a success request")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testUpdateUserFailureRefreshTokenPassedUpdateUserSuccess() {
+//        let oauth = mockOAuthProvider.loggedInUserOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        
+//        // Mock auth
+//        mockOAuthProvider.fakeLoggedIn(oauth, fakeUser: fakeUser)
+//        
+//        mockRefreshAndLoginResponse(.success, loginStatus: nil)
+//        mockResponseForURL(mockUserUpdateURL(), method: .put, responses: mockUserUpdateResponses())
+//        
+//        identity?.update(user:fakeUpdateUser) { (user, error) -> Void in
+//            XCTAssert(user != nil, "User not found")
+//            XCTAssert(error == nil, "Error occured while parsing a success request")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
     // Test the method that is used to see if the user is valid to be created
     func testUpdateUserConditions() {
@@ -851,29 +851,28 @@ class IdentityModuleTestCase: IntelligenceBaseTestCase {
         XCTAssertFalse(Intelligence.User(userId: mockUserID,companyId: mockCompanyID, username: "", password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No username allows to create user")
         XCTAssertFalse(Intelligence.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: "", lastName: mockLastName, avatarURL: mockAvatarURL).isValidToUpdate, "No firstname allows to create user")
         XCTAssertFalse(Intelligence.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: "", avatarURL: mockAvatarURL).isValidToUpdate, "No lastname allows to create user")
-        XCTAssertTrue(Intelligence.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "").isValidToUpdate, "No Avatar blocks to create user")
         XCTAssert(Intelligence.User(userId: mockUserID,companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToUpdate, "Can't send a complete user")
         XCTAssertFalse(Intelligence.User(companyId: mockCompanyID, username: mockUsername, password: mockPassword, firstName: mockFirstName, lastName: mockLastName, avatarURL: "1").isValidToUpdate, "No user id")
     }
     
-    func testUpdateUserFailureDueToPasswordSecurity() {
-        let oauth = mockOAuthProvider.applicationOAuth
-        let expectCallback = expectation(description: "Was expecting a callback to be notified")
-        let URL = URLRequest.int_URLRequestForUserUpdate(user: updateUserWeakPassword, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
-        
-        // Assert that the call won't be done.
-        assertURLNotCalled(URL, method: .put)
-        
-        identity!.update(user:updateUserWeakPassword) { (user, error) -> Void in
-            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
-            XCTAssert(error != nil, "No error raised")
-            XCTAssert(error?.code == IdentityError.weakPasswordError.rawValue, "Unexpected error type raised")
-            
-            expectCallback.fulfill()
-        }
-        
-        waitForExpectations()
-    }
+//    func testUpdateUserFailureDueToPasswordSecurity() {
+//        let oauth = mockOAuthProvider.applicationOAuth
+//        let expectCallback = expectation(description: "Was expecting a callback to be notified")
+//        let URL = URLRequest.int_URLRequestForUserUpdate(user: updateUserWeakPassword, oauth: oauth, configuration: mockConfiguration, network: mockNetwork).url!
+//        
+//        // Assert that the call won't be done.
+//        assertURLNotCalled(URL, method: .put)
+//        
+//        identity!.update(user:updateUserWeakPassword) { (user, error) -> Void in
+//            XCTAssert(user == nil, "Didn't expect to get a user from a failed response")
+//            XCTAssert(error != nil, "No error raised")
+//            XCTAssert(error?.code == IdentityError.weakPasswordError.rawValue, "Unexpected error type raised")
+//            
+//            expectCallback.fulfill()
+//        }
+//        
+//        waitForExpectations()
+//    }
     
     // Test the method that is used to see if the user is valid to be created
     func testCreateUserConditions() {

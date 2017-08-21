@@ -234,7 +234,9 @@ internal extension URLRequest {
         var body = [String: String]()
         body[HTTPBodyClientIDKey] = configuration.clientID
         body[HTTPBodyClientSecretKey] = configuration.clientSecret
-        if oauth.tokenType == .application {
+       
+        if ((configuration.userName == nil || configuration.userPassword == nil) &&
+            oauth.tokenType == IntelligenceOAuthTokenType.application) {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypeClientCredentials
         } else {
             body[HTTPBodyGrantTypeKey] = HTTPBodyGrantTypePassword
@@ -343,47 +345,6 @@ internal extension URLRequest {
         return request
     }
     
-    /// Create a NSURLRequest for createUser.
-    /// - parameter user: The user we are creating.
-    /// - parameter oauth: The oauth values to use for this request.
-    /// - parameter configuration: The configuration values to use for this request.
-    /// - parameter network: The network the request will be queued on.
-    /// - returns: An NSURLRequest to create the given user.
-    static func int_URLRequestForUserCreation(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> URLRequest {
-        let url = URL(module: .identity, configuration: configuration)!
-            .int_URLByAppendingCompanies(companyID: configuration.companyId)
-            .int_URLByAppendingUsers()
-        var request = URLRequest(url: url)
-        
-        request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
-        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
-        
-        request.httpMethod = HTTPRequestMethod.post.rawValue
-        request.httpBody = [user.toJSON()].int_toJSONData()
-        
-        return request
-    }
-    
-    /// Create a NSURLRequest for getUser.
-    /// - parameter userId: The id for the user we are getting.
-    /// - parameter oauth: The oauth values to use for this request.
-    /// - parameter configuration: The configuration values to use for this request.
-    /// - parameter network: The network the request will be queued on.
-    /// - returns: An NSURLRequest to get the user with the used credentials.
-    static func int_URLRequestForGetUser(userId: Int, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> URLRequest {
-        let url = URL(module: .identity, configuration: configuration)!
-            .int_URLByAppendingCompanies(companyID: configuration.companyId)
-            .int_URLByAppendingUsers(userID: userId)
-        var request = URLRequest(url: url)
-        
-        request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
-        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
-        
-        request.httpMethod = HTTPRequestMethod.get.rawValue
-        
-        return request
-    }
-    
     /// Create a NSURLRequest for getUserMe.
     /// - parameter oauth: The oauth values to use for this request.
     /// - parameter configuration: The configuration values to use for this request.
@@ -403,27 +364,6 @@ internal extension URLRequest {
         return request
     }
     
-    /// Create a NSURLRequest for updateUser.
-    /// - parameter user: The user we are updating.
-    /// - parameter oauth: The oauth values to use for this request.
-    /// - parameter configuration: The configuration values to use for this request.
-    /// - parameter network: The network the request will be queued on.
-    /// - returns: An NSURLRequest to update the given user.
-    static func int_URLRequestForUserUpdate(user: Intelligence.User, oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, network: Network) -> URLRequest {
-        let url = URL(module: .identity, configuration: configuration)!
-            .int_URLByAppendingCompanies(companyID: configuration.companyId)
-            .int_URLByAppendingUsers()
-        var request = URLRequest(url: url)
-        
-        request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
-        request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
-        
-        request.httpMethod = HTTPRequestMethod.put.rawValue
-        request.httpBody = [user.toJSON()].int_toJSONData()
-        
-        return request
-    }
-    
     // MARK: Identifiers
     
     /// Create a NSURLRequest for createIdentifier.
@@ -438,18 +378,11 @@ internal extension URLRequest {
             .int_URLByAppendingIdentifiers()
         var request = URLRequest(url: url)
         
-        var json : [String : Any] = ["ApplicationId": configuration.applicationID,
+        let json : [String : Any] = ["ApplicationId": configuration.applicationID,
             "IdentifierTypeId": IdentifierType.iOSDeviceToken.rawValue,
             "IsConfirmed": true,
             "Value": tokenString]
-        
-        if let userId = network.oauthProvider.loggedInUserOAuth.userId {
-            json["UserId"] = userId
-        }
-        else if let userId = network.oauthProvider.sdkUserOAuth.userId {
-            json["UserId"] = userId
-        }
-        
+ 
         request.allHTTPHeaderFields = int_HTTPHeaders(bearerOAuth: oauth)
         request.addValue(HTTPHeaderApplicationJson, forHTTPHeaderField: HTTPHeaderContentTypeKey)
         

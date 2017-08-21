@@ -21,7 +21,7 @@ import IntelligenceSDK
         self.clientSecret = "123"
         self.projectID = 123
         self.applicationID = 123
-        self.companyId = 12
+//        self.companyId = 12
         self.region = .europe
         self.environment = .uat
     }
@@ -35,7 +35,7 @@ import IntelligenceSDK
         copy.projectID = self.projectID
         copy.clientID = String(self.clientID)
         copy.clientSecret = String(self.clientSecret)
-        copy.companyId = companyId
+//        copy.companyId = companyId
         copy.mockInvalid = mockInvalid
         copy.mockMissingProperty = mockMissingProperty
         return copy

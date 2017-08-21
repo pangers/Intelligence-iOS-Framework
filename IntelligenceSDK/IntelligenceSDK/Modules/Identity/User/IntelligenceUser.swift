@@ -91,26 +91,26 @@ public extension Intelligence {
         }
         
         /// Convenience initializer to create a user with random details, intended to be used for the SDK user account
-        convenience public init(companyId:Int) {
-            let username = UUID().uuidString
-            
-            let uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
-            let numbers = "0123456789"
-            
-            func selectRandomLetter(str: String) -> Character {
-                return str[Int(arc4random_uniform(UInt32(str.characters.count)))]
-            }
-            
-            let range = (0..<3)
-            let password = String(Array([
-                range.map({ _ in selectRandomLetter(str: uppercaseLetters) }),
-                range.map({ _ in selectRandomLetter(str: lowercaseLetters) }),
-                range.map({ _ in selectRandomLetter(str: numbers) })
-                ].flatMap({ $0 }).shuffled()))
-            
-            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
-        }
+//        convenience public init(companyId:Int) {
+//            let username = UUID().uuidString
+//            
+//            let uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+//            let lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"
+//            let numbers = "0123456789"
+//            
+//            func selectRandomLetter(str: String) -> Character {
+//                return str[Int(arc4random_uniform(UInt32(str.characters.count)))]
+//            }
+//            
+//            let range = (0..<3)
+//            let password = String(Array([
+//                range.map({ _ in selectRandomLetter(str: uppercaseLetters) }),
+//                range.map({ _ in selectRandomLetter(str: lowercaseLetters) }),
+//                range.map({ _ in selectRandomLetter(str: numbers) })
+//                ].flatMap({ $0 }).shuffled()))
+//            
+//            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
+//        }
         
         /// Convenience initializer with no user id.
         convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
@@ -127,11 +127,13 @@ public extension Intelligence {
             guard let json = json,
                 let userId = json[idKey] as? Int,
                 let username = json[usernameKey] as? String,
-                let firstName = json[firstNameKey] as? String else {
+                let firstName = json[firstNameKey] as? String,
+                let compID = json[companyIdKey] as? Int else {
                     return nil
             }
             let lastName = json[lastNameKey] as? String
-            self.init(userId:userId, companyId:configuration.companyId, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+        
+            self.init(userId:userId, companyId:compID, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
         }
         
         /// Checks if the user Id provided is a valid user Id.

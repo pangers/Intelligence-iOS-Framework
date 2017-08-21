@@ -28,7 +28,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
     // MARK:- Helpers
     
     func mockDownloadGeofencesResponse(_ status: HTTPStatusCode = .success, query: GeofenceQuery, body: String? = nil) {
-        mockResponseForURL(URLRequest.int_URLRequestForDownloadGeofences(oauth: mockOAuthProvider.sdkUserOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).url!,
+        mockResponseForURL(URLRequest.int_URLRequestForDownloadGeofences(oauth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration, network: mockNetwork, query: query).url!,
             method: .get,
             response: getResponse(status, body: body ?? geofencesResponse))
     }
@@ -42,7 +42,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
         mockDownloadGeofencesResponse(.success, query: query)
         
         // Mock a valid token
-        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.applicationOAuth, fakeUser: fakeUser)
         
         location!.downloadGeofences(queryDetails: query) { (geofences, error) -> Void in
             XCTAssert(geofences?.count == 2, "Geofences failed to load")
@@ -61,7 +61,7 @@ class IntelligenceLocationDownloadGeofencesSDKTests: IntelligenceLocationBaseTes
         mockDownloadGeofencesResponse(.success, query: query, body: errorResponse)
         
         // Mock a valid token
-        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.sdkUserOAuth, fakeUser: fakeUser)
+        mockOAuthProvider.fakeLoggedIn(mockOAuthProvider.applicationOAuth, fakeUser: fakeUser)
         
         location!.downloadGeofences(queryDetails: query) { (geofences, error) -> Void in
             XCTAssert(error != nil, "Error occured while parsing a success request")

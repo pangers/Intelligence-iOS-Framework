@@ -27,6 +27,7 @@ public class Event: NSObject {
     internal static let ProjectIdKey = "ProjectId"
     internal static let DeviceTypeKey = "DeviceType"
     internal static let OperationSystemVersionKey = "OperatingSystemVersion"
+    internal static let DeviceIDKey = "DeviceID"
     
     /// Type of Event we are trying to log.
     internal var eventType: String

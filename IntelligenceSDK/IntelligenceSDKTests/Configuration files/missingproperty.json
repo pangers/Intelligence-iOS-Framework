@@ -3,7 +3,7 @@
     "client_secret": "CLIENT_SECRET",
     "application_id": "adb",
     "project_id": 20,
-    "region": "EU",
+    "region": "SG",
     "environment": "production",
     "sdk_user_role": 1008,
     "certificate_trust_policy": "any",

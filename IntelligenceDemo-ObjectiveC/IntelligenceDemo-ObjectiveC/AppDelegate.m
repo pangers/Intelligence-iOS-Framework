@@ -200,6 +200,36 @@ NSString * const IntelligenceDemoStoredDeviceTokenKey = @"IntelligenceDemoStored
     [presenterViewController presentViewController:controller animated:YES completion:nil];
 }
 
+
+-(void)accountLockedFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)tokenInvalidOrExpiredFor:(Intelligence *)intelligence{
+    
+}
+
+
+-(void)accountDisabledFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)credentialsIncorrectFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userCreationFailedFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userLoginRequiredFor:(Intelligence *)intelligence{
+    
+}
+
+-(void)userRoleAssignmentFailedFor:(Intelligence *)intelligence{
+    
+}
+
 #pragma mark - INTIntelligenceDelegate
 
 /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.

@@ -69,15 +69,7 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
             
             this.track(event: OpenApplicationEvent(applicationID: this.configuration.applicationID))
             
-            //Posting the SDK user Event
-            if EventTypes.UserCreated.object() != nil{
-                let sdkUser = Intelligence.User(companyId: this.configuration.companyId)
-                let userCreatedEvent = UserCreatedEvent(user: sdkUser)
-                this.track(event: userCreatedEvent)
-                EventTypes.UserCreated.reset()
-            }
-     
-            //Posting app Install Event
+           //Posting app Install Event
             if EventTypes.ApplicationInstall.object() != nil{
                  this.track(event: ApplicationInstall())
                 EventTypes.ApplicationInstall.reset()
@@ -132,6 +124,7 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         dictionary[Event.ApplicationIdKey] = configuration.applicationID
         dictionary[Event.DeviceTypeKey] = UIDevice.current.model
         dictionary[Event.OperationSystemVersionKey] = UIDevice.current.systemVersion
+        dictionary[Event.DeviceIDKey] = UUID().uuidString
         
         // Set optional values (may fail for whatever reason).
         dictionary <-? (Event.ApplicationVersionKey, installation.applicationVersion.int_applicationVersionString)
@@ -169,7 +162,8 @@ internal final class AnalyticsModule: IntelligenceModule, AnalyticsModuleProtoco
         let str = String(format:"Sending Events : %@",eventNames.description)
         sharedIntelligenceLogger.logger?.info(str)
         
-        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.bestPasswordGrantOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
+        let operation = AnalyticsRequestOperation(json: events, oauth: network.oauthProvider.applicationOAuth, configuration: configuration, network: network, callback: { (returnedOperation: IntelligenceAPIOperation) -> () in
+
             let analyticsOperation = returnedOperation as! AnalyticsRequestOperation
             completion(analyticsOperation.output?.error)
         })

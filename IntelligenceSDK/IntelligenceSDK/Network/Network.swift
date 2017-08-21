@@ -72,9 +72,9 @@ internal final class Network: NSObject, URLSessionDelegate {
     
     /// Return all queued operations (excluding pipeline operations).
     internal func queuedPipelines() -> [IntelligenceAPIPipeline] {
+        
         return queue.operations.filter({
-            $0 is IntelligenceAPIOperation })
-            .flatMap({ $0 as? IntelligenceAPIPipeline })
+            $0 is IntelligenceAPIPipeline}) as! [IntelligenceAPIPipeline]
     }
     
     // MARK: Interception of responses
@@ -83,8 +83,9 @@ internal final class Network: NSObject, URLSessionDelegate {
     /// - parameter tokenType:  Type of token we need.
     /// - returns: Return IntelligenceAPIPipeline for given token type.
     internal func getPipeline(forOAuth oauth: IntelligenceOAuthProtocol, configuration: Intelligence.Configuration, shouldValidate: Bool = true, completion: (IntelligenceAPIPipeline?) -> ()) {
-        if oauth.tokenType == .sdkUser && (oauth.username == nil || oauth.password == nil) {
-            assertionFailure("User should have been created in startup()")
+
+        if oauth.tokenType == .loggedInUser && (oauth.username == nil || oauth.password == nil) {
+            assertionFailure("loggedInUser must have username and password!")
             completion(nil)
             return
         }
