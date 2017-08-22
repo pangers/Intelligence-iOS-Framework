@@ -23,8 +23,10 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
         output = session?.int_executeSynchronousDataTask(with: request)
         
         if handleError() {
+            
             let str = "\(oauth!.tokenType) Validate Failed \(String(describing: output?.error))"
             sharedIntelligenceLogger.logger?.error(str)
+
             return
         }
         
@@ -38,6 +40,7 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
             
             let str = String(format: "Validate Token Failed -- %@", (output?.error?.description)!)
             sharedIntelligenceLogger.logger?.error(str)
+
 
             self.shouldBreak = true
             return
