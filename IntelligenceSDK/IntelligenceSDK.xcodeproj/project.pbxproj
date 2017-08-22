@@ -124,7 +124,6 @@
 		D670E0531E9CD650007FC66B /* UserInfoHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670E03B1E9CD650007FC66B /* UserInfoHelpers.swift */; };
 		D670E0541E9CD650007FC66B /* XCGLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = D670E03C1E9CD650007FC66B /* XCGLogger.h */; };
 		D670E0551E9CD650007FC66B /* XCGLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670E03D1E9CD650007FC66B /* XCGLogger.swift */; };
-
 		D69B67DD1E2F1CF10087E585 /* UserCreated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DC1E2F1CF10087E585 /* UserCreated.swift */; };
 		D69B67DF1E2F45E30087E585 /* EventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67DE1E2F45E30087E585 /* EventTypes.swift */; };
 		D69B67E11E2F4A6D0087E585 /* ApplicationInstall.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69B67E01E2F4A6D0087E585 /* ApplicationInstall.swift */; };
@@ -1265,7 +1264,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1315,7 +1314,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
