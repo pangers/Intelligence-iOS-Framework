@@ -21,6 +21,7 @@ private enum ConfigurationKey: String {
     case environment = "environment"
     case userName = "username"
     case password = "password"
+    case password_md5 = "md5"
 }
 
 /// This enum represents the certificate trust policy to apply when the Intelligence SDK connects to the server.
@@ -99,6 +100,9 @@ extension Intelligence {
         
         /// password of Intelligence Identity user.To track the events assosiated to user.
         public var userPassword: String?
+        
+        /// password md5
+        public var password_md5: Bool = false
 
         /// Convenience initializer to load from a file.
         /// - Parameters:
@@ -139,6 +143,7 @@ extension Intelligence {
             copy.certificateTrustPolicy = self.certificateTrustPolicy
             copy.userName = self.userName
             copy.userPassword = self.userPassword
+            copy.password_md5 = self.password_md5
             return copy
         }
 
@@ -200,6 +205,15 @@ extension Intelligence {
           
             //password
             self.userPassword = try? value(forKey: .password, inContents: contents)
+            
+            
+            //md5
+            do {
+                self.password_md5 = try value(forKey: .password_md5, inContents: contents)
+            }
+            catch {
+                self.password_md5 = false
+            }
         }
 
 
@@ -244,6 +258,14 @@ extension Intelligence {
             
             self.userName = try? value(forKey: .userName, inContents: contents)
             self.userPassword = try? value(forKey: .password, inContents: contents)
+            
+            //md5
+            do {
+                self.password_md5 = try value(forKey: .password_md5, inContents: contents)
+            }
+            catch {
+                self.password_md5 = false
+            }
         }
 
         func getJsonData() -> Data? {
@@ -271,6 +293,8 @@ extension Intelligence {
                 dict[ConfigurationKey.password.rawValue] = password
             }
             
+            dict[ConfigurationKey.password_md5.rawValue] = self.password_md5
+
             let data = dict.int_toJSONData()
             return data
         }
