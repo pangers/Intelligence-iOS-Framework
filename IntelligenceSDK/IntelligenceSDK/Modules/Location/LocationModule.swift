@@ -143,7 +143,7 @@ public class Coordinate : NSObject {
     
     - returns: A newly initialized geofence.
     */
-    public init(withLatitude latitude:Double, longitude:Double) {
+    @objc public init(withLatitude latitude:Double, longitude:Double) {
         self.longitude = longitude
         self.latitude = latitude
     }

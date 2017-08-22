@@ -175,7 +175,6 @@ public class IntelligenceLogger : NSObject {
 
 
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
-
 open class Intelligence: NSObject {
     
     /// - Returns: A **copy** of the configuration.
@@ -331,7 +330,7 @@ open class Intelligence: NSObject {
     /// - parameter inBundle: The NSBundle to use. Defaults to the main bundle.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Intelligence SDK base class.
-    convenience public init(
+    @objc convenience public init(
             withDelegate delegate: IntelligenceDelegate,
             file: String,
             inBundle: Bundle = Bundle.main) throws {
@@ -428,6 +427,7 @@ open class Intelligence: NSObject {
 
     /// Shutdowns the Intelligence SDK modules. After shutting down, you'll have to
     /// startup again before being able to use Intelligence reliably again.
+    @objc (shutdown)
     public func shutdown() {
         modules.forEach {
             $0.shutdown()

@@ -30,7 +30,8 @@ import CoreLocation
     ///Default initializer. Requires location coordinates to query for list of geofences.
     /// - Parameters:
     ///     - location: location coordinates to look for geofences related to.
-    public init(location: Coordinate, radius: Double) {
+    
+    @objc public init(location: Coordinate, radius: Double) {
         longitude = location.longitude
         latitude = location.latitude
         self.radius = radius

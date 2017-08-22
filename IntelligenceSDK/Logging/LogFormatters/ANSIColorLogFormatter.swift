@@ -262,8 +262,13 @@ open class ANSIColorLogFormatter: LogFormatterProtocol, CustomDebugStringConvert
     ///
     open func colorize(level: XCGLogger.Level, custom: String) {
         if custom.hasPrefix(ANSIColorLogFormatter.escape) {
+        
             formatStrings[level] = "\(custom)"
-            descriptionStrings[level] = "Custom: \(custom.substring(from: custom.index(custom.startIndex, offsetBy: 2)))"
+        
+            let ind = custom.index(custom.startIndex, offsetBy: 2)
+            let subString = custom[ind ..< custom.endIndex]
+            
+            descriptionStrings[level] = "Custom: \(subString)"
         }
         else {
             formatStrings[level] = ANSIColorLogFormatter.escape + "\(custom)"

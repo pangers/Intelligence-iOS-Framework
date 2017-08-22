@@ -92,8 +92,7 @@
         }
         
         
-        INTCoordinate* coordinate = [[INTCoordinate alloc] initWithLatitude:latitude
-                                                                  longitude:longitude];
+        INTCoordinate* coordinate = [[INTCoordinate alloc] initWithLatitude:latitude longitude:longitude];
         
         INTGeofenceQuery* query = [[INTGeofenceQuery alloc] initWithLocation:coordinate radius:radius];
         

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal extension MutableCollection where Indices.Iterator.Element == Index {
+internal extension MutableCollection  {
     /// Shuffles the contents of this collection.
     mutating func shuffle() {
         let c = count
