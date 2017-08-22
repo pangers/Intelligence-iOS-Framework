@@ -179,7 +179,7 @@ class IntelligenceLocationModuleViewController : UIViewController, UITableViewDa
         }
     }
     
-    func refreshGeofences(){
+    @objc func refreshGeofences(){
         if let geofences = lastDownloadedGeofences {
             display(geofences: geofences)
         }

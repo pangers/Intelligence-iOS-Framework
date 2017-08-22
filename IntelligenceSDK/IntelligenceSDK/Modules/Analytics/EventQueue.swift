@@ -112,7 +112,7 @@ internal class EventQueue: NSObject {
     }
     
     /// Timer callback for executing `fire()` method. Must be marked @objc for NSTimer selector to work.
-    internal func runTimer(timer: Timer) {
+    @objc internal func runTimer(timer: Timer) {
         fire(withCompletion: nil)
     }
     

@@ -48,7 +48,7 @@ class ScreenViewedViewController : UIViewController {
 	
 	// MARK: - NSTimer
 	
-	func timerFired(timer: Timer) {
+    @objc func timerFired(timer: Timer) {
 		guard let startDate = self.startDate else {
 			return
 		}
@@ -59,7 +59,7 @@ class ScreenViewedViewController : UIViewController {
 	
 	// MARK: - Internal
 	
-	internal func restoreTimeAndStartClock() {
+    @objc internal func restoreTimeAndStartClock() {
 		let previousSeconds = UserDefaults.standard.double(forKey:
             self.title!)
 		self.clockLabel.text = self.clockTime(from: previousSeconds)
@@ -90,7 +90,7 @@ class ScreenViewedViewController : UIViewController {
 		self.timer = nil
 	}
 	
-	internal func stopClockAndStoreTime() {
+    @objc internal func stopClockAndStoreTime() {
 		guard let startDate = self.startDate else {
 			return
 		}
@@ -114,7 +114,7 @@ class ScreenViewedViewController : UIViewController {
 		return String(format: "%02.0lf:%02.0lf", minutes, seconds)
 	}
 	
-	internal func sendAnalytics() {
+    @objc internal func sendAnalytics() {
 		let viewingDuration = UserDefaults.standard.double(forKey: self.title!)
 		
         let event = ScreenViewedEvent(screenName: self.title!, viewingDuration: viewingDuration)
