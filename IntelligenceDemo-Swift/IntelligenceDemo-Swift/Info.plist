@@ -275,5 +275,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Intelligence wants to access your location for better service.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Intelligence wants to access your location for better service.</string>
 </dict>
 </plist>
