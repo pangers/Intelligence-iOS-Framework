@@ -47,7 +47,7 @@ class IntelligenceLocationGeofenceQueryViewController: UIViewController {
         }
     }
     
-    func resignResponders() {
+    @objc func resignResponders() {
         [latitudeText, longitudeText, pageSizeText, pageText, radiusText].forEach{
             $0.resignFirstResponder()
         }
