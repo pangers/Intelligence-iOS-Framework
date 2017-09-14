@@ -52,7 +52,7 @@ For **Swift-3.2** project with xcode 9.0.
 
 ```
 
-For more info on versioning [refer](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
+For more info on SDK version refer [here](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
 
 Then, run the following command to install the dependency:
 
@@ -113,6 +113,7 @@ In the editor of your choice open the file and add the following:
 
 ```
 
+For more info on SDK version refer [here](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
 
 Now run the following command to checkout & build our repo and dependencies.
 
