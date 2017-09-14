@@ -33,10 +33,26 @@ Open the Podfile created for your application and add the following to your targ
 ```
     target 'YourTargetName' do
         use_frameworks!
+        //For Swift-4.0 project.Should get IntelligenceSDK version 2.2.0.
         pod 'IntelligenceSDK'
     end
 
 ```
+
+For **Swift-3.1** project with xcode 8.3.
+
+```
+    pod 'IntelligenceSDK', '2.0.0'
+```
+
+For **Swift-3.2** project with xcode 9.0.
+
+```
+    pod 'IntelligenceSDK', '2.1.0'
+
+```
+
+For more info on versioning [refer](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
 
 Then, run the following command to install the dependency:
 
