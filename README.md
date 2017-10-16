@@ -488,6 +488,22 @@ intelligence.analytics.trackScreenViewed("Main Screen", viewingDuration: 5)
 
 ```
 
+***Event Names and Data***
+
+Event names assigned to the EventType attribute should follow dot notation convention. Names should contain only alpha-numeric characters.
+eg.
+```
+app.appointment.create
+ecom.cart.add.item
+support.page.submitbtn.clicked
+```
+
+The SDK will collect a default set of data for every event. Refer to [Intelligence SDK - iOS Default Events and Data ](https://sites.google.com/tigerspike.com/intelligence/all-about-sdks/ios) site for more information. 
+
+***Visualising your Events on Intelligence Dashboard***
+
+To visualise your collected events data, refer to the [Intelligence SDK - Visualising your Data](https://sites.google.com/tigerspike.com/intelligence/all-about-sdks) site for more information.
+
 
 ### Pause/Resume Tracking ###
 
