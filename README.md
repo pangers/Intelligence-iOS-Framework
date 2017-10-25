@@ -151,7 +151,7 @@ and add the paths to the required frameworks in Input Files
 
 For Objective-C projects, set the **"Embedded Content Contains Swift Code"** flag in your project to **Yes** (found under Build Options in the Build Settings tab).
 
-Congratulations! You've added the Intelligence iOS SDK into your project using CocoaPods.
+Congratulations! You've added the Intelligence iOS SDK into your project using Carthage.
 
 ### C) Manual Integration ###
 
@@ -203,7 +203,6 @@ All of these variables come from the Intelligence Platform and will need to be i
 As an example, create your configuration file(intelligence.json) should look something like below:
 
 ```
-
     {
         "client_id": "CLIENT_ID",
         "client_secret": "CLIENT_SECRET",
@@ -321,7 +320,7 @@ C) Programmatically set the required parameters in the configuration, and initia
 *Swift:*
 
 ```
-    extension YourClass : IntelligenceDelegate {
+extension YourClass : IntelligenceDelegate {
 
     /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
     func credentialsIncorrect(for intelligence: Intelligence) {
@@ -360,7 +359,6 @@ C) Programmatically set the required parameters in the configuration, and initia
 
 
 ```
-
 /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
 - (void)credentialsIncorrectForIntelligence:(Intelligence * __nonnull)intelligence {
 }
