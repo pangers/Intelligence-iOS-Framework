@@ -1,4 +1,4 @@
-# Intelligence IOS SDK #
+# Intelligence iOS SDK #
 
 The goal of this SDK is to encapsulate in a developer-friendly manner the Intelligence platform's API's.
 
@@ -21,19 +21,19 @@ Intelligence is available via CocoaPods. [Cocoapods](https://git-apac.internal.t
 
 For more info refer [Getting Started Guide](https://guides.cocoapods.org/using/using-cocoapods.html).
 
-To integrate IntelligenceSDK into your Xcode project, navigate to the directory that contains your project and create a new Podfile with **pod init** or open an existing one, then add **pod 'IntelligenceSDK'** to the main loop. If you are using the Swift SDK, make sure to add the line **use_frameworks!**.
+To integrate IntelligenceSDK into your Xcode project, navigate to the directory that contains your project and create a new Podfile with **pod init**:
 
 ```
     $  pod init
 
 ```
 
-Open the Podfile created for your application and add the following to your target:
+Or open an existing one, then add **pod 'IntelligenceSDK'** to the main loop. If you are using the Swift SDK, make sure to add the line **use_frameworks!**:
 
 ```
     target 'YourTargetName' do
         use_frameworks!
-        //For Swift-4.0 project.Should get IntelligenceSDK version 2.2.0.
+
         pod 'IntelligenceSDK'
     end
 
@@ -43,6 +43,7 @@ For **Swift-3.1** project with xcode 8.3.
 
 ```
     pod 'IntelligenceSDK', '2.0.0'
+
 ```
 
 For **Swift-3.2** project with xcode 9.0.
@@ -51,6 +52,15 @@ For **Swift-3.2** project with xcode 9.0.
     pod 'IntelligenceSDK', '2.1.0'
 
 ```
+
+For **Swift-4.0** project with xcode 9.0.
+
+```
+    pod 'IntelligenceSDK', '2.2.0'
+
+```
+
+To check your Swift version, go to project Target > Build Settings > Type 'Swift' to search box > double check 'Swift Language Version'
 
 For more info on SDK version refer [here](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
 
@@ -69,7 +79,7 @@ Remember to close any current XCode sessions and use the file ending in .xcworks
 For Objective-C projects, set the **"Embedded Content Contains Swift Code"** flag in your project to Yes (found under Build Options in the Build Settings tab).
 
 
-To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod install:
+To support Swift 2.0 and iOS deployment target 7.0 add the following and run pod install:
 
 ```
     target :YourTargetName do
@@ -78,7 +88,7 @@ To support Swift 2.0 and IOS deployment target 7.0 add the following and run pod
 
 ```
 
-Congratulations, you've added the Intelligence iOS SDK into your project using CocoaPods! Next, To Integrate Intelligence API's.
+Congratulations! You've added the Intelligence iOS SDK into your project using CocoaPods.
 
 ### B) Through Carthage ###
 
@@ -141,8 +151,7 @@ and add the paths to the required frameworks in Input Files
 
 For Objective-C projects, set the **"Embedded Content Contains Swift Code"** flag in your project to **Yes** (found under Build Options in the Build Settings tab).
 
-Congratulations, you've added the Intelligence iOS SDK into your project using Carthage! 
-To Integrate Intelligence API.
+Congratulations! You've added the Intelligence iOS SDK into your project using Carthage.
 
 ### C) Manual Integration ###
 
@@ -205,7 +214,7 @@ As an example, create your configuration file(intelligence.json) should look som
 
 ### III.2 Initialization ###
 
-The Intelligence SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again.
+The Intelligence SDK requires a delegate and configuration variables in order to initialize itself. The delegate will be called in cases where the SDK is incapable of continuing in a particular state, such as requesting that the user must login again. **Note:** The class which instantiating the Intelligence should conform to IntelligenceDelegate.
 
 
 #### 1. There are a few different ways of providing configuration to the SDK: ####
@@ -221,7 +230,7 @@ A)  Initialize Intelligence with a configuration file:
         let intelligence = try Intelligence(withDelegate: self, file: "IntelligenceConfiguration")
     }
     catch {
-    // Treat the error with care!
+    	// Treat the error with care!
     }
 
 ```
@@ -238,7 +247,7 @@ A)  Initialize Intelligence with a configuration file:
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
         // and generally indicate that something has gone wrong and needs to be resolved.
         NSLog(@"Error initialising Intelligence: %zd", err.code);
-        }
+    }
     NSParameterAssert(err == nil && intelligence != nil);
 
 ```
@@ -255,7 +264,7 @@ B) Initialize a configuration object, read a file and pass it to Intelligence:
         intelligence = try Intelligence(withDelegate: self, configuration: configuration)
     }
     catch {
-    // Treat the error with care!
+    	// Treat the error with care!
     }
 
 ```
@@ -269,10 +278,10 @@ B) Initialize a configuration object, read a file and pass it to Intelligence:
     NSError *err;
     INTConfiguration *configuration = [[INTConfiguration alloc] initFromFile:@"IntelligenceConfiguration" inBundle:[NSBundle mainBundle] error:&err];
     Intelligence *intelligence = [[Intelligence alloc] initWithDelegate: self configuration:configuration error:&err];
-        if (nil != err) {
+    if (nil != err) {
         // Handle error, developer needs to resolve any errors thrown here, these should not be visible to the user
-        // and generally indicate that something has gone wrong and needs to be resolved.
-        NSLog(@"Error initialising Intelligence: %zd", err.code);
+		// and generally indicate that something has gone wrong and needs to be resolved.
+		NSLog(@"Error initialising Intelligence: %zd", err.code);
     }
     NSParameterAssert(err == nil && intelligence != nil);
 
@@ -306,16 +315,15 @@ C) Programmatically set the required parameters in the configuration, and initia
 ```
 
 
-#### 2. The class which instantiating the Intelligence should confirm to IntelligenceDelegate. ####
+#### 2. The class which instantiating the Intelligence should conform to IntelligenceDelegate. ####
 
 *Swift:*
 
 ```
-    extension YourClass : IntelligenceDelegate {
+extension YourClass : IntelligenceDelegate {
 
     /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
-    func credentialsIncorrect(for intelligence:
-    Intelligence) {
+    func credentialsIncorrect(for intelligence: Intelligence) {
     }
 
     /// Account has been disabled and no longer active. Credentials are no longer valid.
@@ -336,7 +344,7 @@ C) Programmatically set the required parameters in the configuration, and initia
 
     /// User is required to login again, developer must implement this method you may present a 'Login Screen' or silently call identity.login with stored credentials.
     func userLoginRequired(for intelligence: Intelligence) {
-    // Present login screen or call identity.login with credentials stored in Keychain.
+    	// Present login screen or call identity.login with credentials stored in Keychain.
     }
 
     /// Unable to assign provided sdk_user_role to your newly created user. This may occur if the Application is configured incorrectly in the backend and doesn't have the correct permissions or the role doesn't exist.
@@ -351,7 +359,6 @@ C) Programmatically set the required parameters in the configuration, and initia
 
 
 ```
-
 /// Credentials provided are incorrect. Will not distinguish between incorrect client or user credentials.
 - (void)credentialsIncorrectForIntelligence:(Intelligence * __nonnull)intelligence {
 }
@@ -418,8 +425,8 @@ When your app is terminated you should call the shutdown method in order for the
 #!swift
 
     func applicationWillTerminate(application: UIApplication) {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    intelligence.shutdown()
+    	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    	intelligence.shutdown()
     }
 
 ```
@@ -430,9 +437,9 @@ When your app is terminated you should call the shutdown method in order for the
 #!objc
 
     - (void)applicationWillTerminate:(UIApplication *)application {
-    // Shutdown Intelligence in the applicationWillTerminate method so Intelligence has time
-    // to teardown properly.
-    [intelligence shutdown];
+	    // Shutdown Intelligence in the applicationWillTerminate method so Intelligence has time
+	    // to teardown properly.
+	    [intelligence shutdown];
     }
 
 ```
@@ -496,6 +503,7 @@ eg.
 app.appointment.create
 ecom.cart.add.item
 support.page.submitbtn.clicked
+
 ```
 
 The SDK will collect a default set of data for every event. Refer to [Intelligence SDK - iOS Default Events and Data ](https://sites.google.com/tigerspike.com/intelligence/all-about-sdks/ios) site for more information. 
@@ -558,13 +566,13 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-    IntelligenceManager.intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
-    if error != nil {
-    // Failed, handle error.
-    } else {
-    // Successful! Store tokenId in Keychain you will need the Id in order to unregister.
-    }
-    }
+		intelligence.identity.registerDeviceToken(deviceToken) { (tokenId, error) -> Void in
+		    if error != nil {
+		    	// Failed, handle error.
+		    } else {
+		    	// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+		    }
+	    }
     }
 
 ```
@@ -574,13 +582,13 @@ Here is an example of how to respond to the delegate method 'didRegisterForRemot
 #!objc
 
     - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[[INTIntelligenceManager intelligence] identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
-    if (error != nil) {
-    // Failed, handle error.
-    } else {
-    // Successful! Store tokenId in Keychain you will need the Id in order to unregister.
-    }
-    }];
+	    [[self identity] registerDeviceToken:deviceToken callback:^(NSInteger tokenId, NSError * _Nullable error) {
+		    if (error != nil) {
+		    	// Failed, handle error.
+		    } else {
+		    	// Successful! Store tokenId in Keychain you will need the Id in order to unregister.
+		    }
+	    }];
     }
 
 
@@ -598,12 +606,12 @@ The developer is responsible for unregistering device tokens, they can only be a
 ```
 #!swift
 
-    IntelligenceManager.intelligence.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
-    if error != nil {
-    // Failed, handle error.
-    } else {
-    // Successfully unregistered, clear anything stored in the keychain.
-    }
+	intelligence.identity.unregisterDeviceToken(withId: id, callback: { (error) -> Void in
+	    if error != nil {
+	    	// Failed, handle error.
+	    } else {
+	    	// Successfully unregistered, clear anything stored in the keychain.
+	    }
     })
 
 ```
@@ -612,12 +620,12 @@ The developer is responsible for unregistering device tokens, they can only be a
 ```
 #!objc
 
-    [[[INTIntelligenceManager intelligence] identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
-    if (error != nil) {
-    // Failed, handle error.
-    } else {
-    // Successfully unregistered, clear anything stored in the keychain.
-    }
+    [[self identity] unregisterDeviceTokenWithId:tokenId callback:^(NSError * _Nullable error) {
+	    if (error != nil) {
+	    	// Failed, handle error.
+	    } else {
+	    	// Successfully unregistered, clear anything stored in the keychain.
+	    }
     }];
 
 ```
