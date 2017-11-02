@@ -60,6 +60,13 @@ For **Swift-4.0** project with xcode 9.0.
 
 ```
 
+For **Swift-4.0.2** project with xcode 9.1.
+
+```
+pod 'IntelligenceSDK', '2.3.0'
+
+```
+
 To check your Swift version, go to project Target > Build Settings > Type 'Swift' to search box > double check 'Swift Language Version'
 
 For more info on SDK version refer [here](https://github.com/tigerspike/Intelligence-iOS-Framework/tree/master/SDK/Swift-3.0).
