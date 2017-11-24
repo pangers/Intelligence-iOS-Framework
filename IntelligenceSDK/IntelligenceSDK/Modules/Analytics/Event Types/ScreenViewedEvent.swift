@@ -14,7 +14,7 @@ import Foundation
     static let EventType = "Phoenix.Identity.Application.ScreenViewed"
     
     @objc public init(screenName: String, viewingDuration: TimeInterval) {
-        super.init(withType: ScreenViewedEvent.EventType, value:viewingDuration, targetId: screenName, metadata:nil)
+        super.init(withType: ScreenViewedEvent.EventType, value:viewingDuration, targetId: screenName, metadata:["Medium":"IOSSDK" as AnyObject])
     }
     
 }

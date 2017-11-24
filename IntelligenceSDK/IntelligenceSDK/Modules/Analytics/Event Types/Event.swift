@@ -28,7 +28,7 @@ public class Event: NSObject {
     internal static let DeviceTypeKey = "DeviceType"
     internal static let OperationSystemVersionKey = "OperatingSystemVersion"
     internal static let DeviceIDKey = "DeviceID"
-//    internal static let Platform = "Platform"
+    internal static let Platform = "platform"
     
     /// Type of Event we are trying to log.
     internal var eventType: String
@@ -53,7 +53,17 @@ public class Event: NSObject {
         self.value = value
         self.targetId = targetId
         self.eventDate = RFC3339DateFormatter.string(from: Date())
-        self.metadata = metadata
+        
+        if nil == metadata {
+            var data:[String:AnyObject] = [:]
+            data[Event.Platform] = UIDevice.platform as AnyObject
+            self.metadata = data
+        } else {
+            if var data = metadata{
+                data[Event.Platform] = UIDevice.platform as AnyObject
+                self.metadata = data
+            }
+        }
     }
     
     /// Convert Event object to JSON representation.
