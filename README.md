@@ -63,7 +63,7 @@ For **Swift-4.0** project with xcode 9.0.
 For **Swift-4.0.2** project with xcode 9.1.
 
 ```
-pod 'IntelligenceSDK', '2.3.0'
+pod 'IntelligenceSDK', '2.4.0'
 
 ```
 
