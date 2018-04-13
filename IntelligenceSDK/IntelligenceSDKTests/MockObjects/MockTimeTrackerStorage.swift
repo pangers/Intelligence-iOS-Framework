@@ -12,15 +12,15 @@ import Foundation
 
 class MockTimeTrackerStorage: TimeTrackerStorageProtocol {
     var duration: UInt64?
-    
+
     func reset() {
         duration = nil
     }
-    
+
     func update(seconds: UInt64) {
         duration = seconds
     }
-    
+
     func seconds() -> UInt64? {
         return duration
     }

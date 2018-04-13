@@ -10,26 +10,26 @@ import XCTest
 
 @testable import IntelligenceSDK
 
-class IntelligenceNetworkTestCase : IntelligenceBaseTestCase {
-    
+class IntelligenceNetworkTestCase: IntelligenceBaseTestCase {
+
     func testQueuedOperations() {
         let expectation = self.expectation(description: "Queue Test Expectation")
-        
+
         XCTAssert(mockNetwork.queuedOperations().count == 0)
         XCTAssert(mockNetwork.queuedPipelines().count == 0)
-        
+
         mockNetwork.queue.isSuspended = true
-        
-        mockNetwork.getPipeline(forOAuth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration) { [weak mockNetwork, weak self] (pipeline) -> () in
+
+        mockNetwork.getPipeline(forOAuth: mockOAuthProvider.applicationOAuth, configuration: mockConfiguration) { [weak mockNetwork, weak self] (pipeline) -> Void in
             XCTAssertNotNil(pipeline, "Cannot be nil")
-            
+
             mockNetwork?.enqueueOperation(operation: pipeline!)
             XCTAssert(mockNetwork?.queuedPipelines().count == 1)
 
             expectation.fulfill()
 
         }
-        
+
         waitForExpectations()
     }
 }

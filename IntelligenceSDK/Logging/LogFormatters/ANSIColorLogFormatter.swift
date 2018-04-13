@@ -220,10 +220,10 @@ open class ANSIColorLogFormatter: LogFormatterProtocol, CustomDebugStringConvert
     }
 
     /// Internal cache of the ANSI codes for each log level
-    internal var formatStrings: [XCGLogger.Level: String] = [:]
+    var formatStrings: [XCGLogger.Level: String] = [:]
 
     /// Internal cache of the description for each log level
-    internal var descriptionStrings: [XCGLogger.Level: String] = [:]
+    var descriptionStrings: [XCGLogger.Level: String] = [:]
 
     public init() {
         resetFormatting()
@@ -262,15 +262,14 @@ open class ANSIColorLogFormatter: LogFormatterProtocol, CustomDebugStringConvert
     ///
     open func colorize(level: XCGLogger.Level, custom: String) {
         if custom.hasPrefix(ANSIColorLogFormatter.escape) {
-        
+
             formatStrings[level] = "\(custom)"
-        
+
             let ind = custom.index(custom.startIndex, offsetBy: 2)
             let subString = custom[ind ..< custom.endIndex]
-            
+
             descriptionStrings[level] = "Custom: \(subString)"
-        }
-        else {
+        } else {
             formatStrings[level] = ANSIColorLogFormatter.escape + "\(custom)"
             descriptionStrings[level] = "Custom: \(custom)"
         }
@@ -283,7 +282,7 @@ open class ANSIColorLogFormatter: LogFormatterProtocol, CustomDebugStringConvert
     ///
     /// - Returns:  The ANSI codes for the specified log level.
     ///
-    internal func formatString(for level: XCGLogger.Level) -> String {
+    func formatString(for level: XCGLogger.Level) -> String {
         return formatStrings[level] ?? ANSIColorLogFormatter.reset
     }
 

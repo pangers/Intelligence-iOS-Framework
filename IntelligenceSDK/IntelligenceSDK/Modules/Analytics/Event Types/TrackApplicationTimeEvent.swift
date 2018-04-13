@@ -9,9 +9,9 @@
 import Foundation
 
 class TrackApplicationTimeEvent: Event {
-    
+
     static let EventType = "Intelligence.Analytics.Application.Time"
-    
+
     init(withSeconds seconds: UInt64) {
         super.init(withType: TrackApplicationTimeEvent.EventType)
         self.value = Double(seconds)

@@ -30,7 +30,7 @@ private let userTypeKey = "UserTypeId"
 private let regExpVerifyUserPassword = "(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}"
 
 /// The regular expression unwrapped. Shouldn't fail unless the pattern is modified.
-private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword , options: .allowCommentsAndWhitespace)
+private let passwordRegularExpression = try! NSRegularExpression(pattern: regExpVerifyUserPassword, options: .allowCommentsAndWhitespace)
 
 /// A constant to mark an invalid user Id.
 private let invalidUserId = Int.min
@@ -39,7 +39,7 @@ private let invalidUserId = Int.min
 private let strongPasswordCharacterCountThreshold = 8
 
 /// The user types that the SDK supports
-private enum UserType : Int {
+private enum UserType: Int {
     case Application = 5
     case User = 6
     case SuperUser = 7
@@ -48,29 +48,29 @@ private enum UserType : Int {
 public extension Intelligence {
 
     /// The user class implementation
-    @objc(INTUser) public final class User : NSObject {
-        
+    @objc(INTUser) public final class User: NSObject {
+
         /// The user Id as a let
-        @objc public let userId:Int
-        
+        @objc public let userId: Int
+
         /// The company Id as a let. Should be fetched from the Configuration of Intelligence.
-        @objc public  var companyId:Int
-        
+        @objc public  var companyId: Int
+
         /// The username
-        @objc public var username:String
-        
+        @objc public var username: String
+
         /// The password
-        @objc public var password:String?
-        
+        @objc public var password: String?
+
         /// The firstname
-        @objc public var firstName:String
-        
+        @objc public var firstName: String
+
         /// The last name
-        @objc public var lastName:String?
-        
+        @objc public var lastName: String?
+
         /// The avatar URL
-        @objc public var avatarURL:String?
-        
+        @objc public var avatarURL: String?
+
         /// Initializer a new User object.
         /// - parameter userId:    Id for this user, required for Update User call.
         /// - parameter companyId: Id of company this user belongs to.
@@ -80,7 +80,7 @@ public extension Intelligence {
         /// - parameter lastName:  Last name of this user.
         /// - parameter avatarURL: URL pointing at the users avatar.
         /// - returns: A new User object.
-        public init(userId:Int, companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
+        public init(userId: Int, companyId: Int, username: String, password: String?, firstName: String, lastName: String?, avatarURL: String?) {
             self.userId = userId
             self.companyId = companyId
             self.username = username
@@ -89,7 +89,7 @@ public extension Intelligence {
             self.lastName = lastName
             self.avatarURL = avatarURL
         }
-        
+
         /// Convenience initializer to create a user with random details, intended to be used for the SDK user account
 //        convenience public init(companyId:Int) {
 //            let username = UUID().uuidString
@@ -111,19 +111,19 @@ public extension Intelligence {
 //            
 //            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:"SDK", lastName:"User", avatarURL:"")
 //        }
-        
+
         /// Convenience initializer with no user id.
-        convenience public init(companyId:Int, username:String, password:String?, firstName:String, lastName:String?, avatarURL:String?) {
-            self.init(userId:invalidUserId, companyId:companyId, username:username, password:password, firstName:firstName, lastName:lastName, avatarURL:avatarURL)
+        convenience public init(companyId: Int, username: String, password: String?, firstName: String, lastName: String?, avatarURL: String?) {
+            self.init(userId: invalidUserId, companyId: companyId, username: username, password: password, firstName: firstName, lastName: lastName, avatarURL: avatarURL)
         }
-        
+
         /// Parses the JSON dictionary to create the User object. If it fails to
         /// parse all values, it will return nil.
         ///
         /// - Parameters:
         ///     - withJSON: The json dictionary as obtained from the backend.
         ///     - configuration: The configuration that holds the company Id.
-        convenience internal init?(withJSON json: JSONDictionary?, configuration: Intelligence.Configuration) {
+        convenience init?(withJSON json: JSONDictionary?, configuration: Intelligence.Configuration) {
             guard let json = json,
                 let userId = json[idKey] as? Int,
                 let username = json[usernameKey] as? String,
@@ -132,54 +132,54 @@ public extension Intelligence {
                     return nil
             }
             let lastName = json[lastNameKey] as? String
-        
-            self.init(userId:userId, companyId:compID, username:username, password:nil, firstName:firstName, lastName:lastName, avatarURL:nil)
+
+            self.init(userId: userId, companyId: compID, username: username, password: nil, firstName: firstName, lastName: lastName, avatarURL: nil)
         }
-        
+
         /// Checks if the user Id provided is a valid user Id.
-        class func isUserIdValid(userId:Int) -> Bool {
+        class func isUserIdValid(userId: Int) -> Bool {
             return userId != invalidUserId && userId >= 0
         }
-        
+
         /// The locking count will always be 0 and should be ignored by the developer
-        var lockingCount:Int {
+        var lockingCount: Int {
             return 0
         }
-        
+
         /// The reference will be empty and should be ignored by the developer
-        var reference:String {
+        var reference: String {
             let lastNameWithNoCharacters = (lastName == nil || lastName!.isEmpty)
             let referenceSuffix = (lastNameWithNoCharacters ? "" : "." + lastName!)
             return firstName + referenceSuffix
         }
-        
+
         /// Is active is true. Developers should ignore this value
-        var isActive:Bool {
+        var isActive: Bool {
             return true
         }
-        
+
         /// The metadata will be empty and should be ignored.
-        var metadata:String {
+        var metadata: String {
             return ""
         }
-        
-        var hashPassWord : String? {
-            
+
+        var hashPassWord: String? {
+
             guard  let password = password else {
                 return nil
             }
-            
+
             return MD5(password)
         }
-        
+
         /// The user type will always be User.
         var userTypeId: Int {
             return UserType.User.rawValue
         }
-        
+
         /// - Returns: Provides a JSONDictionary with the user data.
         func toJSON() -> JSONDictionary {
-            var dictionary:JSONDictionary = [
+            var dictionary: JSONDictionary = [
                 companyIdKey: companyId,
                 usernameKey: username,
                 firstNameKey: firstName,
@@ -187,48 +187,48 @@ public extension Intelligence {
                 referenceKey: reference,
                 isActiveKey: isActive,
                 metadataKey: metadata,
-                userTypeKey: userTypeId,
+                userTypeKey: userTypeId
             ]
-            
+
             // If we have the user Id add it.
             if userId != invalidUserId {
                 dictionary[idKey] = userId
             }
-            
+
             // Optionally add a bunch of key-values to the dictionary...
             dictionary <-? (lastNameKey, lastName)
             dictionary <-? (passwordKey, hashPassWord)
             dictionary <-? (avatarURLKey, avatarURL)
-            
+
             return dictionary
         }
-        
+
         /// - Returns: True if the user is valid to be sent to a create request.
-        var isValidToCreate:Bool {
+        var isValidToCreate: Bool {
             guard let password = password else {
                 return false
             }
-            
+
             let hasUsername = !username.isEmpty
             let hasPassword = !password.isEmpty
             let hasCompanyId = companyId > 0
             let hasFirstName = !firstName.isEmpty
-            
+
             return (hasCompanyId && hasUsername && hasPassword && hasFirstName)
         }
 
         /// - Returns: true if the user is valid to be updated. The requirements
         /// are the same as in isValidToCreate, but we also need to provide a valid userId.
-        var isValidToUpdate:Bool {
+        var isValidToUpdate: Bool {
             let hasCompanyId = companyId > 0
             let hasUsername = !username.isEmpty
             let hasFirstName = !firstName.isEmpty
             let hasLastName = lastName?.isEmpty == false
-            
+
             return (userId != invalidUserId && hasCompanyId &&
                 hasUsername && hasFirstName && hasLastName )
         }
-        
+
         /// A password is considered secure if it has at least 8 characters, and uses
         /// at least a number, a lowercase letter and an uppercase letter.
         /// - Returns: True if the password is secure.
@@ -236,8 +236,8 @@ public extension Intelligence {
             guard let password = self.password else {
                 return false
             }
-            
-            let matches = passwordRegularExpression.matches(in: password, options: .anchored, range:NSRange(location:0, length:password.characters.count))
+
+            let matches = passwordRegularExpression.matches(in: password, options: .anchored, range: NSRange(location: 0, length: password.count))
             return matches.count > 0
         }
 

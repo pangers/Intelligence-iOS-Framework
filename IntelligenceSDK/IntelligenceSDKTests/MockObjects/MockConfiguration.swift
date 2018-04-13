@@ -12,9 +12,9 @@ import IntelligenceSDK
 
   class MockConfiguration: Intelligence.Configuration {
 
-    open var mockInvalid:Bool = false
+    open var mockInvalid: Bool = false
     open var mockMissingProperty: Bool = false
-    
+
     override init() {
         super.init()
         self.clientID = "123"
@@ -25,7 +25,7 @@ import IntelligenceSDK
         self.region = .europe
         self.environment = .uat
     }
-    
+
     /// - Returns: A copy of the configuration object.
     override open func clone() -> MockConfiguration {
         let copy = MockConfiguration()
@@ -50,7 +50,7 @@ import IntelligenceSDK
         // For now only check if there is a missing property.
         return !super.isValid
     }
-    
+
     /// - Returns: True if there is a missing property in the configuration
     override open var hasMissingProperty: Bool {
         if mockMissingProperty {

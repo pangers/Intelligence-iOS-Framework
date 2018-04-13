@@ -46,7 +46,7 @@ public protocol IntelligenceDelegate {
 
 /// Wrapping protocol used by modules to pass back errors to Intelligence.
 
-internal protocol IntelligenceInternalDelegate {
+protocol IntelligenceInternalDelegate {
     // Implementation will call credentialsIncorrectForIntelligence
     func credentialsIncorrect()
     // Implementation will call accountDisabledForIntelligence
@@ -63,59 +63,58 @@ internal protocol IntelligenceInternalDelegate {
     func userRoleAssignmentFailed()
 }
 
-internal class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
+class IntelligenceDelegateWrapper: IntelligenceInternalDelegate {
 
     var intelligence: Intelligence!
     var delegate: IntelligenceDelegate!
 
-    // MARK:- IntelligenceInternalDelegate
+    // MARK: - IntelligenceInternalDelegate
 
-    internal func credentialsIncorrect() {
+    func credentialsIncorrect() {
         delegate.credentialsIncorrect(for: intelligence)
     }
 
-    internal func accountDisabled() {
+    func accountDisabled() {
         sharedIntelligenceLogger.logger?.error("Account disabled")
         delegate.accountDisabled(for: intelligence)
     }
 
-    internal func accountLocked() {
+    func accountLocked() {
         sharedIntelligenceLogger.logger?.error("Account Locked")
         delegate.accountLocked(for: intelligence)
     }
 
-    internal func tokenInvalidOrExpired() {
+    func tokenInvalidOrExpired() {
         sharedIntelligenceLogger.logger?.error("Token invalid/Expired")
         delegate.tokenInvalidOrExpired(for: intelligence)
     }
 
-    internal func userCreationFailed() {
+    func userCreationFailed() {
         sharedIntelligenceLogger.logger?.error("SDK User creation failed")
         delegate.userCreationFailed(for: intelligence)
     }
 
-    internal func userLoginRequired() {
+    func userLoginRequired() {
         sharedIntelligenceLogger.logger?.error("User login required")
         delegate.userLoginRequired(for: intelligence)
     }
 
-    internal func userRoleAssignmentFailed() {
+    func userRoleAssignmentFailed() {
         sharedIntelligenceLogger.logger?.error("User Role assignment failed")
         delegate.userRoleAssignmentFailed(for: intelligence)
     }
 
 }
 
+public let sharedIntelligenceLogger: IntelligenceLogger = IntelligenceLogger(enableLogging: false)
 
-public let sharedIntelligenceLogger:IntelligenceLogger = IntelligenceLogger(enableLogging:false)
+public class IntelligenceLogger: NSObject {
 
-public class IntelligenceLogger : NSObject {
-    
-    internal var logger : XCGLogger?
+    var logger: XCGLogger?
 
-    public var isLoggingEnabled : Bool
-    
-    public var logLevel : XCGLogger.Level = .debug {
+    public var isLoggingEnabled: Bool
+
+    public var logLevel: XCGLogger.Level = .debug {
          didSet {
             guard let logger = self.logger else {
                 return
@@ -124,43 +123,42 @@ public class IntelligenceLogger : NSObject {
         }
     }
 
-    public var enableLogging : Bool {
-        
-        get{
+    public var enableLogging: Bool {
+
+        get {
             guard  let _ = self.logger else {
                 return false
             }
             return self.isLoggingEnabled
         }
-        set{
+        set {
             #if DEBUG
-                if (self.logger == nil && newValue){
+                if (self.logger == nil && newValue) {
                     self.logger = XCGLogger.default
                     setupLogger()
-                }
-                else if (!newValue){
+                } else if (!newValue) {
                     self.logger = nil
                 }
-                self.isLoggingEnabled = newValue;
+                self.isLoggingEnabled = newValue
             #endif
         }
     }
 
-    internal init(enableLogging:Bool) {
-        self.isLoggingEnabled = false;
+    init(enableLogging: Bool) {
+        self.isLoggingEnabled = false
         super.init()
     }
 
-    public func setupLogger (){
-    
-        guard let logger = self.logger else{
+    public func setupLogger () {
+
+        guard let logger = self.logger else {
             return
         }
-        
+
         clearOldLogFiles()
-        
+
         let path = createLogFile(forDate: Date())
-        
+
         logger.setup(level: .debug,
                      showThreadName: false,
                      showLevel: false,
@@ -172,16 +170,14 @@ public class IntelligenceLogger : NSObject {
     }
 }
 
-
-
 /// Base class for initialization of the SDK. Developers must call 'startup' method to start modules.
 open class Intelligence: NSObject {
-    
+
     /// - Returns: A **copy** of the configuration.
     open let configuration: Intelligence.Configuration
-    
+
     /// Responsible for propogating events back to App.
-    internal var delegateWrapper: IntelligenceDelegateWrapper!
+    var delegateWrapper: IntelligenceDelegateWrapper!
 
     // MARK: - Modules
 
@@ -195,10 +191,10 @@ open class Intelligence: NSObject {
     @objc public internal(set) var location: LocationModuleProtocol!
 
     //Logger methods
-    public var IntelligenceLogger : IntelligenceLogger = sharedIntelligenceLogger
-    
+    public var IntelligenceLogger: IntelligenceLogger = sharedIntelligenceLogger
+
     /// Array of modules used for calling startup/shutdown methods easily.
-    internal var modules: [ModuleProtocol] {
+    var modules: [ModuleProtocol] {
         return [identity, location, analytics]
     }
 
@@ -214,7 +210,7 @@ open class Intelligence: NSObject {
     /// - parameter locationManager: Location manager responsible for handling location updates.
     /// - throws: **ConfigurationError** if the configuration is invalid.
     /// - returns: New instance of the Intelligence SDK base class.
-    internal init(
+    init(
             withDelegate delegate: IntelligenceDelegate,
             delegateWrapper: IntelligenceDelegateWrapper,
             network: Network? = nil,
@@ -225,15 +221,15 @@ open class Intelligence: NSObject {
     ) throws {
         self.configuration = intelligenceConfiguration.clone()
         super.init()
-        
-        if (intelligenceConfiguration.region == nil){
+
+        if (intelligenceConfiguration.region == nil) {
             intelligenceConfiguration.region = Region.singapore
         }
-        
-        if (intelligenceConfiguration.environment == nil){
+
+        if (intelligenceConfiguration.environment == nil) {
             intelligenceConfiguration.environment = Environment.production
         }
-        
+
         delegateWrapper.delegate = delegate
         delegateWrapper.intelligence = self
 
@@ -248,7 +244,7 @@ open class Intelligence: NSObject {
             sharedIntelligenceLogger.logger?.error("Missing Intelligence configration propery")
             throw ConfigurationError.invalidPropertyError
         }
-        
+
         // Create shared objects for modules
         let internalConfiguration = intelligenceConfiguration.clone()    // Copy for SDK
 
@@ -294,7 +290,7 @@ open class Intelligence: NSObject {
     /// - parameter oauthProvider:  Object responsible for storing OAuth information.
     /// - throws: **ConfigurationError** if the configuration is invalid or there is a problem reading the file.
     /// - returns: New instance of the Intelligence SDK base class.
-    convenience internal init(
+    convenience init(
             withDelegate delegate: IntelligenceDelegate,
             file: String,
             inBundle: Bundle = Bundle.main,
@@ -352,7 +348,7 @@ open class Intelligence: NSObject {
     /// before using any of the intelligence modules. If any action is performed while startup
     /// has not yet finished fully, an unexpected error is likely to occur.
     @objc(startup:)
-    public func startup(completion: @escaping (_ success: Bool) -> ()) {
+    public func startup(completion: @escaping (_ success: Bool) -> Void) {
         // Anonymously logins into the SDK then:
         // - Cannot request anything on behalf of the user.
         // - Calls Application Installed/Updated/Opened.
@@ -365,7 +361,7 @@ open class Intelligence: NSObject {
                 return
             }
 
-            modules[module].startup { (success) -> () in
+            modules[module].startup { (success) -> Void in
                 if (success) {
                     moduleToStartup(module: module + 1)
                 } else {
@@ -376,28 +372,26 @@ open class Intelligence: NSObject {
 
         moduleToStartup(module: 0)
     }
-    
+
     private func instantiateLoging() {
-        
+
     }
 
     //If there is a change in configuration.This method will reset all the token from the keychain.
     private func validateConfigration(config: Intelligence.Configuration, oauthProvider: IntelligenceOAuthDefaultProvider) {
 
-        
-        func clearAllData(){
-            
+        func clearAllData() {
+
             var keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.application.rawValue)
             keyChain.clearAllData()
-            
+
             keyChain = IntelligenceKeychain(account: IntelligenceOAuthTokenType.loggedInUser.rawValue)
             keyChain.clearAllData()
-            
+
             IntelligenceOAuth.reset(oauth: &oauthProvider.applicationOAuth)
             IntelligenceOAuth.reset(oauth: &oauthProvider.loggedInUserOAuth)
         }
-        
-        
+
         guard  let configData = UserDefaults.standard.object(forKey: "IntelligenceConfiguations") as? Data else {
             guard  let data = config.getJsonData() else {
                 return
@@ -405,7 +399,7 @@ open class Intelligence: NSObject {
             //Cases like,user deleted the app and install it back. Since data from 
             //Keychain nor get cleared.
             clearAllData()
-            
+
             UserDefaults.standard.set(data, forKey: "IntelligenceConfiguations")
             UserDefaults.standard.synchronize()
             return
@@ -414,7 +408,7 @@ open class Intelligence: NSObject {
         //read data from use default
         if let configuration = try? Configuration.init(fromData: configData) {
             if (!(config == configuration)) {
-               
+
                 clearAllData()
 
                 if let data = config.getJsonData() {

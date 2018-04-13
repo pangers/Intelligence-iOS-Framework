@@ -22,7 +22,7 @@ func extractTypeName(_ someObject: Any) -> String {
 /// - parameter name:     The name of the exception to throw
 /// - parameter message:  The message to include in the exception (why it occurred)
 /// - parameter userInfo: A dictionary with arbitrary info to be passed along with the exception
-func _try(_ tryClosure: @escaping () -> (), catch catchClosure: @escaping (_ exception: NSException) -> (), finally finallyClosure: (() -> ())? = nil) {
+func _try(_ tryClosure: @escaping () -> Void, catch catchClosure: @escaping (_ exception: NSException) -> Void, finally finallyClosure: (() -> Void)? = nil) {
     _try(tryClosure, catch: catchClosure, finally: finallyClosure ?? {})
 }
 

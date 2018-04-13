@@ -20,7 +20,7 @@ protocol IntelligenceOAuthProtocol {
     var refreshToken: String? { get set }
     var username: String? { get set }
     var userId: Int? { get set }
-    
+
     /// Password will be stored in Keychain for SDKUser and in memory only for LoggedInUser
     /// for the duration of the login method (cleared afterwards).
     var password: String? { get set }
@@ -31,10 +31,9 @@ protocol IntelligenceOAuthProtocol {
     func store()
 }
 
-
 /// This class supports the IntelligenceAPIPipeline
-internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
-    
+class IntelligenceOAuth: IntelligenceOAuthProtocol {
+
     var storage: IntelligenceOAuthStorage
     var tokenType: IntelligenceOAuthTokenType
     var accessToken: String?
@@ -42,12 +41,12 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
     var username: String?
     var userId: Int?
     var password: String?
-    
+
     convenience init(tokenType: IntelligenceOAuthTokenType) {
-        self.init(tokenType:tokenType, storage:IntelligenceKeychain(account: tokenType.rawValue))
+        self.init(tokenType: tokenType, storage: IntelligenceKeychain(account: tokenType.rawValue))
     }
-    
-    init(tokenType:IntelligenceOAuthTokenType, storage:IntelligenceOAuthStorage) {
+
+    init(tokenType: IntelligenceOAuthTokenType, storage: IntelligenceOAuthStorage) {
         self.tokenType = tokenType
         self.storage = storage
         accessToken = self.storage.accessToken
@@ -59,7 +58,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
             userId = self.storage.userId
         }
     }
-    
+
     func isAuthenticated() -> Bool {
         if accessToken == nil { return false }
         if tokenType != .application {
@@ -67,7 +66,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         }
         return true
     }
-    
+
     class func reset( oauth: inout IntelligenceOAuthProtocol) {
         oauth.accessToken = nil
         oauth.refreshToken = nil
@@ -76,7 +75,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         oauth.userId = nil
         oauth.store()
     }
-    
+
     func updateCredentials(withUsername username: String, password: String) {
         assert(tokenType != .application, "Invalid method for Application tokens")
         // Compare usernames, if they differ we must clear tokens so login will not validate as
@@ -92,7 +91,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         self.userId = nil
         store()
     }
-    
+
     func updateWithResponse(response: JSONDictionary?) -> Bool {
         // This method is only called by login and refreshToken
         // Validate is not handled (refreshToken is optional for validate).
@@ -110,7 +109,7 @@ internal class IntelligenceOAuth: IntelligenceOAuthProtocol {
         store()
         return true
     }
-    
+
     func store() {
         storage.accessToken = accessToken
         if tokenType != .application {

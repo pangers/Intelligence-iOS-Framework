@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal protocol IntelligenceOAuthProvider {
+protocol IntelligenceOAuthProvider {
     var applicationOAuth: IntelligenceOAuthProtocol { get set }
 //    var sdkUserOAuth: IntelligenceOAuthProtocol { get set }
     var loggedInUserOAuth: IntelligenceOAuthProtocol { get set }
@@ -16,20 +16,20 @@ internal protocol IntelligenceOAuthProvider {
     var developerLoggedIn: Bool { get set }
 }
 
-internal final class IntelligenceOAuthDefaultProvider: IntelligenceOAuthProvider {
-    
+final class IntelligenceOAuthDefaultProvider: IntelligenceOAuthProvider {
+
     /// grant_type 'client_credentials' OAuth type.
-    internal var applicationOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .application)
-    
+    var applicationOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .application)
+
     /// grant_type 'password' OAuth types.
-//    internal var sdkUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .sdkUser)
-    internal var loggedInUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .loggedInUser)
-    
+//    var sdkUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .sdkUser)
+    var loggedInUserOAuth: IntelligenceOAuthProtocol = IntelligenceOAuth(tokenType: .loggedInUser)
+
     /// Best OAuth we have for grant_type 'password'.
-    internal var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
+    var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
         return  applicationOAuth
         //return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
     }
-   
-    internal var developerLoggedIn = false
+
+    var developerLoggedIn = false
 }

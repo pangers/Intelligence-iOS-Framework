@@ -8,8 +8,8 @@
 
 import Foundation
 
-internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
-    
+class IntelligenceOAuthValidateOperation: IntelligenceOAuthOperation {
+
     override func main() {
         super.main()
         assert(oauth != nil && network != nil && configuration != nil)
@@ -21,26 +21,24 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
         sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = session?.int_executeSynchronousDataTask(with: request)
-        
+
         if handleError() {
-            
+
             let str = "\(oauth!.tokenType) Validate Failed \(String(describing: output?.error))"
             sharedIntelligenceLogger.logger?.error(str)
 
             return
         }
-        
+
         // Assumption: 200 status code means our token is valid, otherwise invalid.
         guard let httpResponse = output?.response as? HTTPURLResponse, httpResponse.statusCode == HTTPStatusCode.success.rawValue &&
-                output?.data?.int_jsonDictionary?[OAuthAccessTokenKey] != nil else
-        {
+                output?.data?.int_jsonDictionary?[OAuthAccessTokenKey] != nil else {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
-            
+
             let str = String(format: "Validate Token Failed -- %@", (output?.error?.description)!)
             sharedIntelligenceLogger.logger?.error(str)
-
 
             self.shouldBreak = true
             return
@@ -49,5 +47,5 @@ internal class IntelligenceOAuthValidateOperation : IntelligenceOAuthOperation {
         sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
 
     }
-    
+
 }

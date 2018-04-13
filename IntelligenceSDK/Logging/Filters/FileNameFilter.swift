@@ -113,8 +113,7 @@ open class FileNameFilter: FilterProtocol {
             var description: String = "\(extractTypeName(self)): " + (inverse ? "Including only matches for: " : "Excluding matches for: ")
             if fileNamesToMatch.count > 5 {
                 description += "\n\t- " + fileNamesToMatch.sorted().joined(separator: "\n\t- ")
-            }
-            else {
+            } else {
                 description += fileNamesToMatch.sorted().joined(separator: ", ")
             }
 

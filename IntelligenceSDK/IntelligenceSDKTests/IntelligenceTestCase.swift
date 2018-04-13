@@ -10,33 +10,31 @@ import XCTest
 @testable import IntelligenceSDK
 
 class IntelligenceTestCase: IntelligenceBaseTestCase {
-    
+
     func testIntelligenceInitializer() {
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
-        
+
         do {
             let intelligence = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: Bundle(for: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
             XCTAssert(intelligence.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
-        }
-        catch {
+        } catch {
             XCTAssert(false, "There was an error reading the file or initializing intelligence.")
         }
     }
-    
-    func testIntelligenceConfigurationInitializer(){
+
+    func testIntelligenceConfigurationInitializer() {
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
         let bundle = Bundle(for: IntelligenceTestCase.self)
-        
+
         do {
             let configuration = try Intelligence.Configuration(fromFile: "config", inBundle: bundle)
             let intelligence = try Intelligence(withDelegate: delegateTester, configuration: configuration, oauthProvider: mockOAuthProvider)
             XCTAssert(intelligence.configuration.clientID == "CLIENT_ID", "Invalid client ID read")
-        }
-        catch {
+        } catch {
             XCTAssert(false, "There was an error reading the file or initializing Intelligence")
         }
     }
-    
+
     // Mock configuration fakes an invalid configuration
 //    func testIntelligenceInitializerWithMockConfiguration() {
 //        let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
@@ -54,15 +52,14 @@ class IntelligenceTestCase: IntelligenceBaseTestCase {
 //            XCTAssert(false, "Unexpected exception thrown")
 //        }
 //    }
-    
+
     // Mock configuration fakes an invalid configuration
     func testIntelligenceGetterSetterWorks() {
         let delegateTester = MockIntelligenceDelegate(expectCreationFailed: false, expectLoginFailed: false, expectRoleFailed: false)
-        
+
         do {
             _ = try Intelligence(withDelegate: delegateTester, file: "config", inBundle: Bundle(for: IntelligenceTestCase.self), oauthProvider: mockOAuthProvider)
-        }
-        catch {
+        } catch {
             XCTAssert(false, "There was an error reading the file or initializing intelligence.")
         }
     }

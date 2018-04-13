@@ -11,7 +11,7 @@ import Foundation
 @testable import IntelligenceSDK
 
 class MockSimpleStorage: IntelligenceOAuthStorage {
-    
+
     fileprivate var storage: [String: AnyObject?] = [:]
 
     @objc subscript(index: String) -> Any? {
@@ -23,5 +23,5 @@ class MockSimpleStorage: IntelligenceOAuthStorage {
             storage[index] = newValue as AnyObject??
         }
     }
-    
+
 }

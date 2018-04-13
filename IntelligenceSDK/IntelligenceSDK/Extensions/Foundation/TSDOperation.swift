@@ -10,16 +10,16 @@ import Foundation
 
 /// Extensds NSOperation to provide an input, output and error to it.
 /// Uses generics to define the type of its input and output.
-internal class TSDOperation <TInput, TOutput> : Operation {
-    
+class TSDOperation <TInput, TOutput> : Operation {
+
     /// The input can be set from the caller. When running, the
     /// main method of the operation should read it.
     var input: TInput?
-    
+
     /// the output is only set by the class itself once it finishes.
     internal(set) var output: TOutput?
-    
+
     /// The error will be set by the operation if an error did occur.
     //internal(set) var error: NSError?
-    
+
 }

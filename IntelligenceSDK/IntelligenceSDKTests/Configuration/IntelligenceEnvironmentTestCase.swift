@@ -20,13 +20,13 @@ class IntelligenceEnvironmentTestCase: IntelligenceBaseTestCase {
             "integration" : Intelligence.Environment.integration,
             "uat" : Intelligence.Environment.uat,
             "staging" : Intelligence.Environment.staging,
-            "production" : Intelligence.Environment.production,
+            "production" : Intelligence.Environment.production
         ]
-        
+
         for (code, value) in correctAssignments {
-            XCTAssert(Intelligence.Environment(code:code) == value, "Incorrect enum value from string")
+            XCTAssert(Intelligence.Environment(code: code) == value, "Incorrect enum value from string")
         }
-        
-        XCTAssertNil(Intelligence.Environment(code:"Wrong code"), "Incorrect enum value from string")
+
+        XCTAssertNil(Intelligence.Environment(code: "Wrong code"), "Incorrect enum value from string")
     }
 }

@@ -16,14 +16,14 @@ class IntelligenceRegionTestCase: IntelligenceBaseTestCase {
             "US" : Intelligence.Region.unitedStates,
             "EU" : Intelligence.Region.europe,
             "SG" : Intelligence.Region.singapore,
-            "AU" : Intelligence.Region.australia,
+            "AU" : Intelligence.Region.australia
         ]
-        
+
         for (code, value) in correctAssignments {
-            XCTAssert(Intelligence.Region(code:code) == value, "Incorrect enum value from string")
+            XCTAssert(Intelligence.Region(code: code) == value, "Incorrect enum value from string")
         }
-        
-        XCTAssertNil(Intelligence.Region(code:"Wrong code"), "Incorrect enum value from string")
+
+        XCTAssertNil(Intelligence.Region(code: "Wrong code"), "Incorrect enum value from string")
 
     }
 }

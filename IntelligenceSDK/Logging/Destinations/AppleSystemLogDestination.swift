@@ -12,7 +12,7 @@
 open class AppleSystemLogDestination: BaseDestination {
     // MARK: - Properties
     /// The dispatch queue to process the log on
-    open var logQueue: DispatchQueue? = nil
+    open var logQueue: DispatchQueue?
 
     /// Option: whether or not to output the date the log was created (Always false for this destination)
     open override var showDate: Bool {
@@ -51,8 +51,7 @@ open class AppleSystemLogDestination: BaseDestination {
 
         if let logQueue = logQueue {
             logQueue.async(execute: outputClosure)
-        }
-        else {
+        } else {
             outputClosure()
         }
     }

@@ -92,7 +92,7 @@ open class XcodeColorsLogFormatter: LogFormatterProtocol, CustomDebugStringConve
             var blueComponent: CGFloat = 0
             var alphaComponent: CGFloat = 0
 
-            color.getRed(&redComponent, green: &greenComponent, blue: &blueComponent, alpha:&alphaComponent)
+            color.getRed(&redComponent, green: &greenComponent, blue: &blueComponent, alpha: &alphaComponent)
 
             self.red = Int(redComponent * 255)
             self.green = Int(greenComponent * 255)
@@ -140,10 +140,10 @@ open class XcodeColorsLogFormatter: LogFormatterProtocol, CustomDebugStringConve
     }
 
     /// Internal cache of the XcodeColors codes for each log level
-    internal var formatStrings: [XCGLogger.Level: String] = [:]
+    var formatStrings: [XCGLogger.Level: String] = [:]
 
     /// Internal cache of the description for each log level
-    internal var descriptionStrings: [XCGLogger.Level: String] = [:]
+    var descriptionStrings: [XCGLogger.Level: String] = [:]
 
     public init() {
         resetFormatting()
@@ -170,15 +170,13 @@ open class XcodeColorsLogFormatter: LogFormatterProtocol, CustomDebugStringConve
 
         if let foregroundColor = foregroundColor {
             formatString += "\(XcodeColorsLogFormatter.escape)fg\(foregroundColor.red),\(foregroundColor.green),\(foregroundColor.blue);"
-        }
-        else {
+        } else {
             formatString += XcodeColorsLogFormatter.resetForeground
         }
 
         if let backgroundColor = backgroundColor {
             formatString += "\(XcodeColorsLogFormatter.escape)bg\(backgroundColor.red),\(backgroundColor.green),\(backgroundColor.blue);"
-        }
-        else {
+        } else {
             formatString += XcodeColorsLogFormatter.resetBackground
         }
 
@@ -193,7 +191,7 @@ open class XcodeColorsLogFormatter: LogFormatterProtocol, CustomDebugStringConve
     ///
     /// - Returns:  The XcodeColors codes for the specified log level.
     ///
-    internal func formatString(for level: XCGLogger.Level) -> String {
+    func formatString(for level: XCGLogger.Level) -> String {
         return formatStrings[level] ?? XcodeColorsLogFormatter.reset
     }
 

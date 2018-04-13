@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Module : String {
+enum Module: String {
     case noModule = ""
     case authentication = "authentication"
     case identity = "identity"
@@ -20,7 +20,7 @@ enum Module : String {
 fileprivate extension Intelligence.Environment {
     fileprivate func urlComponent() -> String? {
         let urlComponent: String
-        
+
         switch (self) {
             case .local:
                 urlComponent = "local"
@@ -35,11 +35,10 @@ fileprivate extension Intelligence.Environment {
             case .production:
                 urlComponent = ""
         }
-        
-        if urlComponent.characters.count > 0 {
+
+        if urlComponent.count > 0 {
             return "-" + urlComponent
-        }
-        else {
+        } else {
             return urlComponent
         }
     }
@@ -62,40 +61,38 @@ fileprivate extension Intelligence.Region {
 }
 
 /// This extension is intended to provide all the various path components required to compose urls for enpoints.
-internal extension URL {
+extension URL {
     init?(module: Module, configuration: Intelligence.Configuration) {
         self.init(module: module, environment: configuration.environment, region: configuration.region)
     }
-    
+
     init?(module: Module, environment: Intelligence.Environment?, region: Intelligence.Region?) {
         let moduleInURL = module.rawValue
-        
+
         guard let environmentInURL = environment?.urlComponent() else {
             return nil
         }
-        
+
         guard let regionInURL = region?.urlComponent() else {
             return nil
         }
-        
-        
+
         let url = String(format: "https://\(moduleInURL)\(environmentInURL).phoenixplatform\(regionInURL)/v2",
             arguments: [moduleInURL, environmentInURL, regionInURL])
-        
-        
+
         self.init(string: url)
     }
-    
+
     /// - Returns: NSURL to obtain or refresh an OAuth token.
     func int_URLByAppendingOAuthTokenPath() -> URL {
         return appendingPathComponent("/token")
     }
-    
+
     /// - Returns: NSURL for validation of current OAuth token.
     func int_URLByAppendingOAuthValidatePath() -> URL {
         return appendingPathComponent("/validate")
     }
-    
+
     /// - Returns: NSURL with appended identifiers path.
     func int_URLByAppendingIdentifiers(tokenID: Int? = nil) -> URL {
         if let tokenID = tokenID {
@@ -103,32 +100,32 @@ internal extension URL {
         }
         return appendingPathComponent("/identifiers")
     }
-    
+
     /// - Returns: NSURL with appended installations path.
     func int_URLByAppendingInstallations() -> URL {
         return appendingPathComponent("/installations")
     }
-    
+
     /// - Returns: NSURL with appended installations path.
     func int_URLByAppendingEvents() -> URL {
         return appendingPathComponent("/events")
     }
-    
+
     /// - Returns: NSURL with appended geofences path.
     func int_URLByAppendingGeofences() -> URL {
         return appendingPathComponent("/geofences")
     }
-    
+
     /// - Returns: NSURL with appended assign role path.
     func int_URLByAppendingAssignRole() -> URL {
         return appendingPathComponent("/assignrole")
     }
-    
+
     /// - Returns: NSURL with appended revoke role path.
     func int_URLByAppendingRevokeRole() -> URL {
         return appendingPathComponent("/revokerole")
     }
-    
+
     /// - Returns: NSURL with appended providers path.
     func int_URLByAppendingProviders(providerId: Int? = nil) -> URL {
         if let providerId = providerId {
@@ -136,7 +133,7 @@ internal extension URL {
         }
         return appendingPathComponent("/providers")
     }
-    
+
     /// - Returns: NSURL with appended companies path.
     func int_URLByAppendingCompanies(companyID: Int? = nil) -> URL {
         if let companyID = companyID {
@@ -144,7 +141,7 @@ internal extension URL {
         }
         return appendingPathComponent("/companies")
     }
-    
+
     /// - Returns: NSURL with appended projects path.
     func int_URLByAppendingProjects(projectID: Int? = nil) -> URL {
         if let projectID = projectID {
@@ -152,7 +149,7 @@ internal extension URL {
         }
         return appendingPathComponent("/projects")
     }
-    
+
     /// - Returns: NSURL with appended users path.
     func int_URLByAppendingUsers(userID: Int? = nil) -> URL {
         if let userID = userID {
@@ -160,20 +157,19 @@ internal extension URL {
         }
         return appendingPathComponent("/users")
     }
-    
+
     /// - Returns: NSURL with appended '/users/me' path.
     func int_URLByAppendingUsersMe() -> URL {
         return appendingPathComponent("/users/me")
     }
-    
 
-    func int_URLByAppendingQueryString(queryString:String) -> URL? {
-        if queryString.characters.count == 0 {
+    func int_URLByAppendingQueryString(queryString: String) -> URL? {
+        if queryString.count == 0 {
             return self
         }
         let separator = (query?.isEmpty ?? true) ? "?" : "&"
         let URLString = "\(absoluteString)\(separator)\(queryString)"
-        
+
         return URL(string: URLString)
     }
 

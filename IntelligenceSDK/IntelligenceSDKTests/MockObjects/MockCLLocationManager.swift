@@ -10,36 +10,36 @@ import CoreLocation
 import IntelligenceSDK
 
 class MockCLLocationManager: CLLocationManager {
-    
+
     var regions = Set<CLRegion>()
-    
-    func fireEnterGeofence(_ geofence:Geofence) {
+
+    func fireEnterGeofence(_ geofence: Geofence) {
         guard let region = regionFromGeofence(geofence) else {
             return
         }
-        
+
         self.delegate!.locationManager!(self, didEnterRegion: region)
     }
 
-    func fireExitGeofence(_ geofence:Geofence) {
+    func fireExitGeofence(_ geofence: Geofence) {
         guard let region = regionFromGeofence(geofence) else {
             return
         }
-        
+
         self.delegate!.locationManager!(self, didExitRegion: region)
     }
 
-    func regionFromGeofence(_ geofence:Geofence) -> CLRegion? {
+    func regionFromGeofence(_ geofence: Geofence) -> CLRegion? {
         return regions.filter { (region) -> Bool in
             return region.identifier == String(geofence.id)
         }.first
     }
-    
+
     override func startMonitoring(for region: CLRegion) {
         regions.insert(region)
         self.delegate?.locationManager?(self, didStartMonitoringFor: region)
     }
-    
+
     override func stopMonitoring(for region: CLRegion) {
         regions.remove(region)
     }

@@ -9,8 +9,8 @@
 import Foundation
 
 /// Operation for Create Installation API.
-internal final class CreateInstallationRequestOperation : InstallationRequestOperation {
-    
+final class CreateInstallationRequestOperation: InstallationRequestOperation {
+
     /// The operation will run synchronously the data task and store the error and output.
     override func main() {
         super.main()
@@ -20,5 +20,5 @@ internal final class CreateInstallationRequestOperation : InstallationRequestOpe
         output = network?.sessionManager?.int_executeSynchronousDataTask(with: request)
         parse()
     }
-    
+
 }

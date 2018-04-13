@@ -9,8 +9,8 @@
 import Foundation
 
 /// Operation for Get Me API.
-internal final class GetUserMeRequestOperation : UserRequestOperation {
-    
+final class GetUserMeRequestOperation: UserRequestOperation {
+
     override func main() {
         super.main()
 //        assert(oauth?.tokenType != .application)
@@ -22,7 +22,7 @@ internal final class GetUserMeRequestOperation : UserRequestOperation {
 
     override func copy(with zone: NSZone? = nil) -> Any {
         let copy = type(of: self).init(user: sentUser, oauth: oauth!, configuration: configuration!, network: network!, callback: callback!)
-        
+
         return copy
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum GeofenceKey: String {
+enum GeofenceKey: String {
     /// Top level data key
     case dataKey = "Data"
     /// Identifier within a data object.
@@ -33,8 +33,8 @@ internal enum GeofenceKey: String {
     case longitudeKey = "Longitude"
 }
 
-internal extension Geofence {
-    
+extension Geofence {
+
     // For some reason this isn't working as a Dictionary extension with a where clause,
     // Apple may have broken that functionality in the current beta.
     /// - Returns: Value for a specific GeofenceKey in our JSONDictionary or throws a GeofenceError.
@@ -45,22 +45,22 @@ internal extension Geofence {
         }
         return output
     }
-    
+
     /// - Returns: Path to Geofences JSON file.
-    internal class func jsonPath() -> String? {
+    class func jsonPath() -> String? {
         guard let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else { return nil }
         return "\(path)/Geofences.json"
     }
-    
+
     /// Writes JSONDictionary to file.
     /// - Parameter json: Optional JSONDictionary object.
-    internal class func storeJSON(json: JSONDictionary?) throws {
+    class func storeJSON(json: JSONDictionary?) throws {
         guard let path = jsonPath(), let json = json?.int_toJSONData() else {
             throw RequestError.parseError
         }
         try json.write(to: URL(fileURLWithPath: path), options: .atomic)
     }
-    
+
     /// - Returns: Cached array of Geofence objects or nil.
     private class func readJSON() throws -> JSONDictionary? {
         guard let path = jsonPath(), let json = try? Data.init(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped).int_jsonDictionary else {
@@ -68,16 +68,16 @@ internal extension Geofence {
         }
         return json
     }
-    
+
     /// - Returns: An array of cached Geofence objects.
-    internal class func geofencesFromCache() throws -> [Geofence] {
+    class func geofencesFromCache() throws -> [Geofence] {
         return try geofences(withJSON: readJSON(), readFromCache: true)
     }
-    
+
     /// - Returns: An array of Geofence objects or throws a GeofenceError.
     /// - Parameter json: Optional JSONDictionary object.
     /// - Parameter readFromCache: If reading from cache we don't want to save `json` to file.
-    internal class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
+    class func geofences(withJSON json: JSONDictionary?, readFromCache: Bool? = false) throws -> [Geofence] {
         if readFromCache! == false {
             try storeJSON(json: json)
         }
@@ -87,10 +87,10 @@ internal extension Geofence {
         let data: JSONDictionaryArray = try geoValue(forKey: .dataKey, dictionary: json)
         return data.map({ geofence(withJSON: $0) }).filter({ $0 != nil }).map({ $0! })
     }
-    
+
     /// Initializes a Geofence object or throws a GeofenceError.
     /// - parameter json: Optional JSONDictionary object.
-    internal class func geofence(withJSON json: JSONDictionary) -> Geofence? {
+    class func geofence(withJSON json: JSONDictionary) -> Geofence? {
         do {
             let createDate: String = try geoValue(forKey: .dateCreatedKey, dictionary: json)
             let modifyDate: String = try geoValue(forKey: .dateUpdatedKey, dictionary: json)

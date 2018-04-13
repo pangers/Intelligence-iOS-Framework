@@ -73,11 +73,11 @@
 		455D85F71BC2D74100A64B96 /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
-				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
-				455D85F81BC2D87D00A64B96 /* INTScreenViewedViewController.h */,
-				455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */,
 				0B0AAE1C1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.h */,
+				455D85F81BC2D87D00A64B96 /* INTScreenViewedViewController.h */,
 				0B0AAE1D1CACA7DE0042A369 /* INTAnalyticsCustomEventViewController.m */,
+				455D85F91BC2D87D00A64B96 /* INTScreenViewedViewController.m */,
+				455D85F41BC2D73C00A64B96 /* Analytics.storyboard */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -93,11 +93,11 @@
 		7FDAAAF71B5D360800DF2BE6 = {
 			isa = PBXGroup;
 			children = (
-				BB77B94E1BC3BAF300B53ABE /* MapKit.framework */,
 				4542B5551C6BC9FD00763B76 /* IntelligenceSDK.framework */,
+				BB77B94E1BC3BAF300B53ABE /* MapKit.framework */,
+				6D1CFAA31DDEA50A00A0411A /* Frameworks */,
 				7FDAAB021B5D360800DF2BE6 /* IntelligenceDemo-ObjectiveC */,
 				7FDAAB011B5D360800DF2BE6 /* Products */,
-				6D1CFAA31DDEA50A00A0411A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,19 +112,19 @@
 		7FDAAB021B5D360800DF2BE6 /* IntelligenceDemo-ObjectiveC */ = {
 			isa = PBXGroup;
 			children = (
-				BB0A23791B70B89F00CE0C81 /* Intelligence */,
-				FE240A841C7629A100D2E336 /* Startup */,
-				BB77B9451BC3B76D00B53ABE /* Location */,
-				455D85F71BC2D74100A64B96 /* Analytics */,
-				FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */,
 				7FDAAB061B5D360800DF2BE6 /* AppDelegate.h */,
-				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
 				7FDAAB091B5D360800DF2BE6 /* ViewController.h */,
+				FE22F8871B5FEFF400711EBF /* IntelligenceConfiguration.json */,
+				7FDAAB071B5D360800DF2BE6 /* AppDelegate.m */,
 				7FDAAB0A1B5D360800DF2BE6 /* ViewController.m */,
-				7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */,
-				7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */,
-				7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */,
 				7FDAAB141B5D360800DF2BE6 /* Info.plist */,
+				7FDAAB0F1B5D360800DF2BE6 /* Assets.xcassets */,
+				455D85F71BC2D74100A64B96 /* Analytics */,
+				BB0A23791B70B89F00CE0C81 /* Intelligence */,
+				7FDAAB111B5D360800DF2BE6 /* LaunchScreen.storyboard */,
+				BB77B9451BC3B76D00B53ABE /* Location */,
+				7FDAAB0C1B5D360800DF2BE6 /* Main.storyboard */,
+				FE240A841C7629A100D2E336 /* Startup */,
 				7FDAAB031B5D360800DF2BE6 /* Supporting Files */,
 			);
 			path = "IntelligenceDemo-ObjectiveC";
@@ -150,11 +150,11 @@
 		BB77B9451BC3B76D00B53ABE /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				BB77B9461BC3B78400B53ABE /* Location.storyboard */,
-				BB77B9481BC3B7AC00B53ABE /* INTLocationModuleViewController.h */,
-				BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */,
 				BB77B94B1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.h */,
+				BB77B9481BC3B7AC00B53ABE /* INTLocationModuleViewController.h */,
 				BB77B94C1BC3B7BF00B53ABE /* INTLocationGeofenceQueryViewController.m */,
+				BB77B9491BC3B7AC00B53ABE /* INTLocationModuleViewController.m */,
+				BB77B9461BC3B78400B53ABE /* Location.storyboard */,
 			);
 			name = Location;
 			sourceTree = "<group>";

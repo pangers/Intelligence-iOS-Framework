@@ -8,19 +8,19 @@
 
 import Foundation
 
-internal class NetworkAuthenticationChallengeDelegate : NSObject, URLSessionDelegate {
+class NetworkAuthenticationChallengeDelegate: NSObject, URLSessionDelegate {
     let configuration: Intelligence.Configuration
-    
+
     init(configuration: Intelligence.Configuration) {
         self.configuration = configuration
     }
-    
+
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust {
             completionHandler(.performDefaultHandling, nil)
             return
         }
-        
+
         switch self.configuration.certificateTrustPolicy {
         case .valid:
             // Use the default handling

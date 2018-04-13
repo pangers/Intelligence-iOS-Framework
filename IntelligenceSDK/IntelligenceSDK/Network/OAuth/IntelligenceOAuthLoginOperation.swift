@@ -8,8 +8,8 @@
 
 import Foundation
 
-internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
-    
+class IntelligenceOAuthLoginOperation: IntelligenceOAuthOperation {
+
     override func main() {
         super.main()
         assert(oauth != nil && network != nil)
@@ -29,17 +29,16 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
         sharedIntelligenceLogger.logger?.debug(request.description)
 
         output = session?.int_executeSynchronousDataTask(with: request)
-        
+
         if handleError() {
 //            print("\(oauth!.tokenType) Login Failed \(output?.error)")
             sharedIntelligenceLogger.logger?.error(self.output?.error?.description)
             return
         }
-        
+
         // Assumption: 200 status code means our credentials are valid, otherwise invalid.
         guard let httpResponse = output?.response as? HTTPURLResponse, httpResponse.statusCode == HTTPStatusCode.success.rawValue &&
-                oauth?.updateWithResponse(response: output?.data?.int_jsonDictionary) == true else
-        {
+                oauth?.updateWithResponse(response: output?.data?.int_jsonDictionary) == true else {
             if output?.error == nil {
                 output?.error = NSError(code: RequestError.parseError.rawValue)
             }
@@ -50,5 +49,5 @@ internal class IntelligenceOAuthLoginOperation : IntelligenceOAuthOperation {
         sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
         print("\(oauth!.tokenType) Login Passed")
     }
-    
+
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal final class IntelligenceKeychain: TSDKeychain, IntelligenceOAuthStorage {
+final class IntelligenceKeychain: TSDKeychain, IntelligenceOAuthStorage {
 
     init(account: String = "IntelligenceSDK") {
         super.init(account, service: "com.tigerspike.IntelligenceSDK")

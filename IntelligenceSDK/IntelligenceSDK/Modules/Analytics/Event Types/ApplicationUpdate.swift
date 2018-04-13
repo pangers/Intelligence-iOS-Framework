@@ -9,10 +9,10 @@
 import Foundation
 
 /// Event that gets fired when a application get updated.
-internal class ApplicationUpdate: Event {
-    
+class ApplicationUpdate: Event {
+
     static let EventType = EventTypes.ApplicationUpdate.rawValue
-    
+
     init() {
         super.init(withType: ApplicationUpdate.EventType, value: 0, metadata: nil)
     }

@@ -26,7 +26,6 @@ public extension Intelligence {
         /// SG Region
         case singapore
 
-
         /// This init method should be used to extract the region from a configuration file and turn it into an enum value
         /// The values that should be used are "US", "AU", "EU" and "SG"
         /// If another value is used this will return nil

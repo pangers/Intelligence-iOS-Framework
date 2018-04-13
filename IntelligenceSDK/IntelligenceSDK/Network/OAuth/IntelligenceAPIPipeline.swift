@@ -8,18 +8,17 @@
 
 import Foundation
 
-internal class IntelligenceAPIPipeline: IntelligenceAPIOperation {
-    
+class IntelligenceAPIPipeline: IntelligenceAPIOperation {
+
     var operations: [IntelligenceAPIOperation]
-    
+
     init(withOperations operations: [IntelligenceAPIOperation],
         oauth: IntelligenceOAuthProtocol? = nil,
         configuration: Intelligence.Configuration,
-        network: Network)
-    {
+        network: Network) {
         self.operations = operations
         super.init()
-        self.input = operations.first!.input as IntelligenceAPIResponse!
+        self.input = operations.first!.input
         self.oauth = oauth
         self.configuration = configuration
         self.network = network
@@ -27,7 +26,7 @@ internal class IntelligenceAPIPipeline: IntelligenceAPIOperation {
             self?.complete()
         }
     }
-    
+
     override func main() {
         var previousOutput: IntelligenceAPIResponse? = nil
         while let operation = operations.first {

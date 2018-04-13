@@ -9,8 +9,8 @@
 import Foundation
 @testable import IntelligenceSDK
 
-class MockLocationProvider : LocationModuleProvider {
-    var userLocation:Coordinate? {
+class MockLocationProvider: LocationModuleProvider {
+    var userLocation: Coordinate? {
         return Coordinate(withLatitude: -70, longitude: 40)
     }
 }

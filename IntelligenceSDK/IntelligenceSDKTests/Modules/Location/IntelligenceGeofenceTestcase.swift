@@ -11,7 +11,7 @@ import XCTest
 @testable import IntelligenceSDK
 
 class IntelligenceGeofenceTestcase: XCTestCase {
-    
+
     func testEquality() {
         let geofenceA = Geofence()
         geofenceA.id = 1
@@ -19,9 +19,9 @@ class IntelligenceGeofenceTestcase: XCTestCase {
         geofenceB.id = 1
         let geofenceC = Geofence()
         geofenceC.id = 2
-        
-        let geofenceD:Geofence? = nil
-        
+
+        let geofenceD: Geofence? = nil
+
         XCTAssert(geofenceA == geofenceB)
         XCTAssert(geofenceA == geofenceA)
         XCTAssert(geofenceA != geofenceC)

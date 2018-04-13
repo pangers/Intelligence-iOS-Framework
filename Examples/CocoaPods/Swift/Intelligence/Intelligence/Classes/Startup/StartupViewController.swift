@@ -14,7 +14,7 @@ enum StartupState {
     case failed
 }
 
-class StartupViewController : UIViewController {
+class StartupViewController: UIViewController {
 
     @IBOutlet weak var loadingLabel: UILabel?
 
@@ -30,6 +30,5 @@ class StartupViewController : UIViewController {
             }
         }
     }
-
 
 }

@@ -24,10 +24,10 @@ open class BaseDestination: DestinationProtocol, CustomDebugStringConvertible {
     open var haveLoggedAppDetails: Bool = false
 
     /// Array of log formatters to apply to messages before they're output
-    open var formatters: [LogFormatterProtocol]? = nil
+    open var formatters: [LogFormatterProtocol]?
 
     /// Array of log filters to apply to messages before they're output
-    open var filters: [FilterProtocol]? = nil
+    open var filters: [FilterProtocol]?
 
     /// Option: whether or not to output the log identifier
     open var showLogIdentifier: Bool = false
@@ -94,15 +94,12 @@ open class BaseDestination: DestinationProtocol, CustomDebugStringConvertible {
         if showThreadName {
             if Thread.isMainThread {
                 extendedDetails += "[main] "
-            }
-            else {
+            } else {
                 if let threadName = Thread.current.name, !threadName.isEmpty {
                     extendedDetails += "[\(threadName)] "
-                }
-                else if let queueName = DispatchQueue.currentQueueLabel, !queueName.isEmpty {
+                } else if let queueName = DispatchQueue.currentQueueLabel, !queueName.isEmpty {
                     extendedDetails += "[\(queueName)] "
-                }
-                else {
+                } else {
                     extendedDetails += String(format: "[%p] ", Thread.current)
                 }
             }
@@ -110,8 +107,7 @@ open class BaseDestination: DestinationProtocol, CustomDebugStringConvertible {
 
         if showFileName {
             extendedDetails += "[\((logDetails.fileName as NSString).lastPathComponent)\((showLineNumber ? ":" + String(logDetails.lineNumber) : ""))] "
-        }
-        else if showLineNumber {
+        } else if showLineNumber {
             extendedDetails += "[\(logDetails.lineNumber)] "
         }
 

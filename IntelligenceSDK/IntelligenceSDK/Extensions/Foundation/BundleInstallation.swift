@@ -14,11 +14,11 @@ protocol IntelligenceApplicationVersionProtocol {
 }
 
 extension Bundle: IntelligenceApplicationVersionProtocol {
-    
+
     var int_applicationVersionString: String? {
         guard let version = infoDictionary?["CFBundleShortVersionString"] as? String,
             let build = infoDictionary?["CFBundleVersion"] as? String else { return nil }
         return "\(version) (\(build))"
     }
-    
+
 }

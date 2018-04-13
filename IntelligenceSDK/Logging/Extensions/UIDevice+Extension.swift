@@ -9,7 +9,7 @@
 import Foundation
 
 extension UIDevice {
-    public static var platform : String {
+    public static var platform: String {
         var platfrom = ""
         #if os(iOS)
             platfrom = "iOS"

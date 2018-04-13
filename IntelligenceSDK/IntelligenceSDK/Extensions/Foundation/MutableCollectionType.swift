@@ -8,14 +8,14 @@
 
 import Foundation
 
-internal extension MutableCollection  {
+extension MutableCollection {
     /// Shuffles the contents of this collection.
     mutating func shuffle() {
         let c = count
         guard c > 1 else { return }
-        
+
         for (unshuffledCount, firstUnshuffled) in zip(stride(from: c, to: 1, by: -1), indices) {
-            let d: IndexDistance = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
+            let d: Int = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
             guard d != 0 else { continue }
             let i = index(firstUnshuffled, offsetBy: d)
             self.swapAt(firstUnshuffled, i)
@@ -23,7 +23,7 @@ internal extension MutableCollection  {
     }
 }
 
-internal extension Sequence {
+extension Sequence {
     /// Returns an array with the contents of this sequence, shuffled.
     func shuffled() -> [Iterator.Element] {
         var result = Array(self)

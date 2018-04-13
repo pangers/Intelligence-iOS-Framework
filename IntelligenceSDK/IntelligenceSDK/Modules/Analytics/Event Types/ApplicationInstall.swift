@@ -9,10 +9,10 @@
 import Foundation
 
 /// Event that gets fired when a Application get installed.
-internal class ApplicationInstall: Event {
-    
+class ApplicationInstall: Event {
+
     static let EventType = EventTypes.ApplicationInstall.rawValue
-    
+
     init() {
         super.init(withType: ApplicationInstall.EventType, value: 0, metadata: nil)
     }

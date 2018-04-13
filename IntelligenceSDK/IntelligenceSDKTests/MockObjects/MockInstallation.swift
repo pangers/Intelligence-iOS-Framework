@@ -11,7 +11,7 @@ import XCTest
 @testable import IntelligenceSDK
 
 class MockInstallation {
-    
+
     class func newInstance(_ configuration: Intelligence.Configuration, storage: InstallationStorageProtocol, oauthProvider: IntelligenceOAuthProvider) -> Installation {
         let installation = Installation(configuration: configuration, applicationVersion: VersionClass(), installationStorage: storage, oauthProvider: oauthProvider)
         XCTAssert(installation.isUpdatedInstallation == false, "Should not be updated installation")
@@ -25,5 +25,5 @@ class MockInstallation {
         XCTAssert(installation.toJSON()[Installation.OperatingSystemVersion] as? String == UIDevice.current.systemVersion, "OS must be \(UIDevice.current.systemVersion)")
         return installation
     }
-    
+
 }

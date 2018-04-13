@@ -9,42 +9,42 @@
 import Foundation
 
 @objc public protocol ModuleProtocol {
-    
-    func startup(completion: @escaping (_ success: Bool) -> ())
-    
+
+    func startup(completion: @escaping (_ success: Bool) -> Void)
+
     func shutdown()
-    
+
 }
 
-internal class IntelligenceModule : NSObject, ModuleProtocol {
-    
-    internal var delegate: IntelligenceInternalDelegate!
-    
+class IntelligenceModule: NSObject, ModuleProtocol {
+
+    var delegate: IntelligenceInternalDelegate!
+
     /// A reference to the Network manager.
-    internal let network: Network
-    
+    let network: Network
+
     /// Configuration instance used for NSURLRequests.
-    internal let configuration: Intelligence.Configuration
-    
+    let configuration: Intelligence.Configuration
+
     /// Default initializer. Requires a network and configuration class and a geofence enter/exit callback.
     /// - parameter delegate:         Delegate used to notify developer of an event.
     /// - parameter network:          Instance of Network class to use.
     /// - parameter configuration:    Configuration used to configure requests.
     /// - returns: An initialized module.
-    internal init(withDelegate delegate: IntelligenceInternalDelegate, network: Network, configuration: Intelligence.Configuration) {
+    init(withDelegate delegate: IntelligenceInternalDelegate, network: Network, configuration: Intelligence.Configuration) {
         self.delegate = delegate
         self.network = network
         self.configuration = configuration
         super.init()
     }
-    
+
     /// Initialise this module, called for each module on SDK startup.
-    func startup(completion: @escaping (_ success: Bool) -> ()) {
+    func startup(completion: @escaping (_ success: Bool) -> Void) {
         completion(true)
     }
-    
+
     /// Terminate this module. Must call startup in order to resume, should only occur on SDK shutdown.
     func shutdown() {
-        
+
     }
 }

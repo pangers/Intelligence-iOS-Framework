@@ -32,7 +32,6 @@ public extension Intelligence {
         /// Production Environment
         case production
 
-
         /// This init method should be used to extract the environment from a configuration file and turn it into an enum value
         /// The values that should be used are "local", "development", "integration", "uat", "staging" and "production"
         /// If another value is used this will return nil

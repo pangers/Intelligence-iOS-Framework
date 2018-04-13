@@ -75,9 +75,9 @@
 		455D85F11BC2BFCB00A64B96 /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
-				455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */,
-				455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */,
 				0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */,
+				455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */,
+				455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -85,8 +85,8 @@
 		7FDAAAD01B5D35AE00DF2BE6 = {
 			isa = PBXGroup;
 			children = (
-				BBBB63591BC27BF700802EF9 /* MapKit.framework */,
 				4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */,
+				BBBB63591BC27BF700802EF9 /* MapKit.framework */,
 				7FDAAADB1B5D35AE00DF2BE6 /* IntelligenceDemo-Swift */,
 				7FDAAADA1B5D35AE00DF2BE6 /* Products */,
 			);
@@ -103,16 +103,16 @@
 		7FDAAADB1B5D35AE00DF2BE6 /* IntelligenceDemo-Swift */ = {
 			isa = PBXGroup;
 			children = (
-				BB0A23781B70B89600CE0C81 /* Intelligence */,
-				FE240A801C7623BB00D2E336 /* Startup */,
-				BBBB63581BC27AF500802EF9 /* Location */,
-				455D85F11BC2BFCB00A64B96 /* Analytics */,
 				BB2FD4681B6B9D46000E8070 /* IntelligenceConfiguration.json */,
-				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
-				7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */,
-				7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */,
-				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
 				7FDAAAE81B5D35AE00DF2BE6 /* Info.plist */,
+				7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */,
+				7FDAAAE31B5D35AE00DF2BE6 /* Assets.xcassets */,
+				455D85F11BC2BFCB00A64B96 /* Analytics */,
+				BB0A23781B70B89600CE0C81 /* Intelligence */,
+				7FDAAAE51B5D35AE00DF2BE6 /* LaunchScreen.storyboard */,
+				BBBB63581BC27AF500802EF9 /* Location */,
+				7FDAAAE01B5D35AE00DF2BE6 /* Main.storyboard */,
+				FE240A801C7623BB00D2E336 /* Startup */,
 			);
 			path = "IntelligenceDemo-Swift";
 			sourceTree = "<group>";
@@ -128,9 +128,9 @@
 		BBBB63581BC27AF500802EF9 /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				BBBB63551BC27AE800802EF9 /* Location.storyboard */,
-				BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */,
 				BB61731D1BC2D58D005D4C5B /* IntelligenceLocationGeofenceQueryViewController.swift */,
+				BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */,
+				BBBB63551BC27AE800802EF9 /* Location.storyboard */,
 			);
 			name = Location;
 			sourceTree = "<group>";

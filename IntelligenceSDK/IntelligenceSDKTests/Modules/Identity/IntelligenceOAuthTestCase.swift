@@ -11,8 +11,8 @@ import XCTest
 
 @testable import IntelligenceSDK
 
-class IntelligenceOAuthTestCase : XCTestCase {
-    
+class IntelligenceOAuthTestCase: XCTestCase {
+
 //    func testOAuthProvider() {
 //        
 //        let provider = IntelligenceOAuthDefaultProvider()
@@ -39,5 +39,5 @@ class IntelligenceOAuthTestCase : XCTestCase {
 //        
 //        provider.sdkUserOAuth.store()
 //    }
-    
+
 }

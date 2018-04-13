@@ -8,32 +8,32 @@
 
 import Foundation
 
-internal extension URLSession {
+extension URLSession {
 
     /// Executes synchronously the passed request.
     /// - Parameter request: The request to perform.
     /// - Returns: A struct containing the data, response and error of the request performed.
-    func int_executeSynchronousDataTask(with request: URLRequest) -> (data:Data?, response:URLResponse?, error: NSError?) {
+    func int_executeSynchronousDataTask(with request: URLRequest) -> (data: Data?, response: URLResponse?, error: NSError?) {
         let semaphore = DispatchSemaphore(value: 0)
-        
-        var taskData:Data?
-        var taskResponse:URLResponse?
-        var taskError:Error?
-        
-        let dataTask = self.dataTask(with: request){ (data, response, error) in
+
+        var taskData: Data?
+        var taskResponse: URLResponse?
+        var taskError: Error?
+
+        let dataTask = self.dataTask(with: request) { (data, response, error) in
             taskData = data
             taskResponse = response
             taskError = error
-            
+
             semaphore.signal()
         }
 
         dataTask.resume()
-        
+
         _ = semaphore.wait(timeout: DispatchTime.distantFuture)
 
-        return (taskData,taskResponse,taskError as
+        return (taskData, taskResponse, taskError as
             NSError?)
     }
-    
+
 }

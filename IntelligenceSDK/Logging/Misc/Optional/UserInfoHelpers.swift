@@ -101,20 +101,17 @@ public func |<Key: Hashable, Value: Any> (lhs: Dictionary<Key, Value>, rhs: Dict
             var mergedArray: [Any] = lhsValue
             mergedArray.append(contentsOf: rhsValue)
             mergedDictionary[key] = mergedArray
-        }
-        else if let lhsValue = lhsValue as? [Any] {
+        } else if let lhsValue = lhsValue as? [Any] {
             // array, item -> array
             var mergedArray: [Any] = lhsValue
             mergedArray.append(rhsValue)
             mergedDictionary[key] = mergedArray
-        }
-        else if let rhsValue = rhsValue as? [Any] {
+        } else if let rhsValue = rhsValue as? [Any] {
             // item, array -> array
             var mergedArray: [Any] = rhsValue
             mergedArray.append(lhsValue)
             mergedDictionary[key] = mergedArray
-        }
-        else {
+        } else {
             // two items -> array
             mergedDictionary[key] = [lhsValue, rhsValue]
         }

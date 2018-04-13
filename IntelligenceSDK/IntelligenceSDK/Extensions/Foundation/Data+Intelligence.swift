@@ -8,19 +8,19 @@
 
 import Foundation
 
-internal extension Data {
-    
+extension Data {
+
     func hexString() -> String {
         // Create a byte array our length
         var dataAsByteArray = [UInt8](repeating: 0x0, count: count)
-        
+
         // Copy our bytes into the byte array
         self.copyBytes(to: &dataAsByteArray, count: count)
-        
+
         // Create hex string
         let dataAsHexString = dataAsByteArray.map { String(format: "%02lx", $0) }.joined(separator: "")
-        
+
         return dataAsHexString
     }
-    
+
 }

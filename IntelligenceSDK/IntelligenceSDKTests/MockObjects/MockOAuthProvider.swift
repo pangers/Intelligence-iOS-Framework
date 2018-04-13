@@ -23,32 +23,32 @@ let mockLastName = "Surname"
 let mockAvatarURL = "http://tigerspike.com"
 
 class MockOAuthProvider: IntelligenceOAuthProvider {
-    
+
     /// grant_type 'client_credentials' OAuth type.
-    internal var applicationOAuth: IntelligenceOAuthProtocol
-    
+    var applicationOAuth: IntelligenceOAuthProtocol
+
     /// grant_type 'password' OAuth types.
-//    internal var sdkUserOAuth: IntelligenceOAuthProtocol
-    internal var loggedInUserOAuth: IntelligenceOAuthProtocol
-    
+//    var sdkUserOAuth: IntelligenceOAuthProtocol
+    var loggedInUserOAuth: IntelligenceOAuthProtocol
+
     /// Best OAuth we have for grant_type 'password'.
-    internal var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
+    var bestPasswordGrantOAuth: IntelligenceOAuthProtocol {
       //  return developerLoggedIn ? loggedInUserOAuth : sdkUserOAuth
         return applicationOAuth
     }
-    internal var developerLoggedIn = false
-    
+    var developerLoggedIn = false
+
     init() {
         applicationOAuth = IntelligenceOAuth(tokenType: .application, storage: MockSimpleStorage())
 //        sdkUserOAuth = IntelligenceOAuth(tokenType: .sdkUser, storage: MockSimpleStorage())
         loggedInUserOAuth = IntelligenceOAuth(tokenType: .loggedInUser, storage: MockSimpleStorage())
     }
-    
+
     func fakeAccessToken(_ oauth: IntelligenceOAuthProtocol) {
         var oauth = oauth
         oauth.accessToken = applicationAccessToken
     }
-    
+
     func fakeLoggedIn(_ oauth: IntelligenceOAuthProtocol, fakeUser: Intelligence.User) {
         var oauth = oauth
         oauth.username = fakeUser.username
@@ -60,13 +60,13 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
             developerLoggedIn = true
         }
     }
-    
+
     func reset() {
 //        reset(sdkUserOAuth)
         reset(applicationOAuth)
         reset(loggedInUserOAuth)
     }
-    
+
     func reset(_ oauth: IntelligenceOAuthProtocol) {
         var oauth = oauth
         IntelligenceOAuth.reset(oauth: &oauth)
@@ -74,20 +74,20 @@ class MockOAuthProvider: IntelligenceOAuthProvider {
             developerLoggedIn = false
         }
     }
-    
+
     func isAuthenticated() -> Bool {
         return true
     }
-    
+
     func updateCredentials(withUsername username: String, password: String) {
-        
+
     }
-    
+
     func updateWithResponse(_ response: JSONDictionary?) -> Bool {
         return true
     }
-    
+
     func store() {
-        
+
     }
 }

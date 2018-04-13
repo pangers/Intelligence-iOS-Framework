@@ -12,35 +12,35 @@ import CoreLocation
 /// Custom event which can be sent to the 'track:' method in the Analytics module.
 @objc(INTEvent)
 public class Event: NSObject {
-    internal static let EventTypeKey = "EventType"
-    internal static let EventValueKey = "EventValue"
-    internal static let EventDateKey = "EventDate"
-    internal static let TargetIdKey = "TargetId"
-    internal static let UserIdKey = "PhoenixIdentity_UserId"
-    internal static let GeolocationKey = "Geolocation"
-    internal static let GeolocationLatitudeKey = "Latitude"
-    internal static let GeolocationLongitudeKey = "Longitude"
-    internal static let MetadataKey = "Metadata"
-    internal static let InstallationIdKey = "PhoenixIdentity_InstallationId"
-    internal static let ApplicationIdKey = "PhoenixIdentity_ApplicationId"
-    internal static let ApplicationVersionKey = "ApplicationVersion"
-    internal static let ProjectIdKey = "ProjectId"
-    internal static let DeviceTypeKey = "DeviceType"
-    internal static let OperationSystemVersionKey = "OperatingSystemVersion"
-    internal static let DeviceIDKey = "DeviceID"
-    internal static let Platform = "platform"
-    
+    static let EventTypeKey = "EventType"
+    static let EventValueKey = "EventValue"
+    static let EventDateKey = "EventDate"
+    static let TargetIdKey = "TargetId"
+    static let UserIdKey = "PhoenixIdentity_UserId"
+    static let GeolocationKey = "Geolocation"
+    static let GeolocationLatitudeKey = "Latitude"
+    static let GeolocationLongitudeKey = "Longitude"
+    static let MetadataKey = "Metadata"
+    static let InstallationIdKey = "PhoenixIdentity_InstallationId"
+    static let ApplicationIdKey = "PhoenixIdentity_ApplicationId"
+    static let ApplicationVersionKey = "ApplicationVersion"
+    static let ProjectIdKey = "ProjectId"
+    static let DeviceTypeKey = "DeviceType"
+    static let OperationSystemVersionKey = "OperatingSystemVersion"
+    static let DeviceIDKey = "DeviceID"
+    static let Platform = "platform"
+
     /// Type of Event we are trying to log.
-    internal var eventType: String
+    var eventType: String
     /// Value related to this EventType. Defaults to zero.
-    internal var value: Double
+    var value: Double
     /// Optional identifier related to this EventType. Defaults to nil.
-    internal var targetId: String?
+    var targetId: String?
     /// Optional metadata values associated to this EventType.
-    internal var metadata: [String: AnyObject]?
+    var metadata: [String: AnyObject]?
     /// Prepopulated date.
-    internal var eventDate: String
-    
+    var eventDate: String
+
     /// Initializer for Event class.
     /// - parameter type:     Type of Event we are trying to track.
     /// - parameter value:    Value associated with Event. Defaults to 0.0.
@@ -53,33 +53,33 @@ public class Event: NSObject {
         self.value = value
         self.targetId = targetId
         self.eventDate = RFC3339DateFormatter.string(from: Date())
-        
+
         if nil == metadata {
-            var data:[String:AnyObject] = [:]
+            var data: [String: AnyObject] = [:]
             data[Event.Platform] = UIDevice.platform as AnyObject
             self.metadata = data
         } else {
-            if var data = metadata{
+            if var data = metadata {
                 data[Event.Platform] = UIDevice.platform as AnyObject
                 self.metadata = data
             }
         }
     }
-    
+
     /// Convert Event object to JSON representation.
     /// - returns: JSON Dictionary representation of this Event.
-    internal func toJSON() -> JSONDictionary {
+    func toJSON() -> JSONDictionary {
         var dictionary: [String: Any] = [Event.EventTypeKey: eventType, Event.EventValueKey: value, Event.EventDateKey: eventDate]
-        
+
         // Set keys with optional values.
         dictionary <-? (Event.TargetIdKey, targetId)
         dictionary <-? (Event.MetadataKey, metadata)
-        
+
         return dictionary
     }
-    
-    override public var description : String {
-        return String(format:"EventName : %@, Event Value : %f, MetaData : %@",self.eventType,self.value,self.metadata ?? "Empty meta data..." )
+
+    override public var description: String {
+        return String(format: "EventName : %@, Event Value : %f, MetaData : %@", self.eventType, self.value, self.metadata ?? "Empty meta data..." )
     }
 
 }

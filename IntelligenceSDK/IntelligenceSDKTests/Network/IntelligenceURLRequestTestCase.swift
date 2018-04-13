@@ -11,7 +11,7 @@ import XCTest
 @testable import IntelligenceSDK
 
 class IntelligenceURLRequestTestCase: IntelligenceBaseTestCase {
-    
+
 //    func testCreateUserRequest() {
 //        let companyId = 1
 //        let username = "123"
@@ -46,5 +46,5 @@ class IntelligenceURLRequestTestCase: IntelligenceBaseTestCase {
 //        XCTAssertEqual(userDictionary["Reference"] as? String, firstname + "." + lastname)
 //        
 //    }
-    
+
 }

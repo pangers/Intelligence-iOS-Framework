@@ -15,7 +15,7 @@ private enum ConfigurationKey: String {
     case clientSecret = "client_secret"
     case applicationID = "application_id"
     case projectID = "project_id"
-    
+
     //optionals
     case region = "region"
     case environment = "environment"
@@ -32,7 +32,6 @@ private enum ConfigurationKey: String {
     case valid /// Trust only certificates that are considered valid by iOS. This is the default value
     case any /// Trust any certificate, independently of iOS considering it valid or invalid
     case anyNonProduction /// Trust only non-production certificates, which implies that the certificates in the production server will need to be considered valid by iOS and any other will be trusted
-
 
     /// This init method should be used to extract certificate_trust_policy from a configuration file (if it exists) and turn it into an enum value
     /// The values that should be used are "valid", "any" and "any_non_production"
@@ -62,9 +61,8 @@ private enum ConfigurationKey: String {
     }
 }
 
-
 extension Intelligence {
-    
+
     /// This class holds the data to configure the intelligence SDK. It provides initialisers to
     /// read the configuration from a JSON file in an extension, and allows to validate that
     /// the data contained is valid to initialise the Intelligence SDK.
@@ -94,13 +92,13 @@ extension Intelligence {
 
         /// The environment to connect to
         public var environment: Environment?
-        
+
         /// Intelligence Identity user.To track the events assosiated to user.
         public var userName: String?
-        
+
         /// password of Intelligence Identity user.To track the events assosiated to user.
         public var userPassword: String?
-        
+
         /// password md5
         public var password_md5: Bool = false
 
@@ -181,41 +179,35 @@ extension Intelligence {
             self.projectID = try value(forKey: .projectID, inContents: contents)
             self.applicationID = try value(forKey: .applicationID, inContents: contents)
 
-
             //Region
             do {
                 let region = try Intelligence.Region(code: value(forKey: .region, inContents: contents))
                 self.region = region
-            }
-            catch {
+            } catch {
                 self.region = Intelligence.Region.singapore
             }
-            
+
             //Env
             do {
                 let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
                 self.environment = environment
-            }
-            catch {
+            } catch {
                 self.environment = Environment.production
             }
-            
+
             //userName
             self.userName = try? value(forKey: .userName, inContents: contents)
-          
+
             //password
             self.userPassword = try? value(forKey: .password, inContents: contents)
-            
-            
+
             //md5
             do {
                 self.password_md5 = try value(forKey: .password_md5, inContents: contents)
-            }
-            catch {
+            } catch {
                 self.password_md5 = false
             }
         }
-
 
         public func readFromData(data: Data) throws {
 
@@ -247,23 +239,20 @@ extension Intelligence {
 
             self.region = region
 
-
             do {
                 let environment = try Intelligence.Environment(code: value(forKey: .environment, inContents: contents))
                 self.environment = environment
-            }
-            catch {
+            } catch {
                 self.environment = Environment.production
             }
-            
+
             self.userName = try? value(forKey: .userName, inContents: contents)
             self.userPassword = try? value(forKey: .password, inContents: contents)
-            
+
             //md5
             do {
                 self.password_md5 = try value(forKey: .password_md5, inContents: contents)
-            }
-            catch {
+            } catch {
                 self.password_md5 = false
             }
         }
@@ -284,15 +273,15 @@ extension Intelligence {
 
             dict[ConfigurationKey.region.rawValue] = code
             dict[ConfigurationKey.environment.rawValue] = envStr
-            
-            if let usrName = self.userName{
+
+            if let usrName = self.userName {
                     dict[ConfigurationKey.userName.rawValue] = usrName
             }
-            
-            if let password = self.userPassword{
+
+            if let password = self.userPassword {
                 dict[ConfigurationKey.password.rawValue] = password
             }
-            
+
             dict[ConfigurationKey.password_md5.rawValue] = self.password_md5
 
             let data = dict.int_toJSONData()
@@ -323,6 +312,3 @@ extension Intelligence {
     }
 
 }
-
-
-

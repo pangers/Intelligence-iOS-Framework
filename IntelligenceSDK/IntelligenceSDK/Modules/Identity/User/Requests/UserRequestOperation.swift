@@ -9,13 +9,13 @@
 import Foundation
 
 /// Inheritors must ensure all relevent fields will be copied by copyWithZone(zone:), which must be overriden.
-class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
-    
+class UserRequestOperation: IntelligenceAPIOperation, NSCopying {
+
     /// Once successful, this will contain the user provided by the backend.
     var user: Intelligence.User?
-    
+
     let sentUser: Intelligence.User?
-    
+
     /// Initialize UserRequestOperation.
     /// - parameter user: The user to send during the operation.
     /// - parameter oauth: The oauth values to use for this operation.
@@ -30,17 +30,17 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
         self.configuration = configuration
         self.network = network
     }
-    
+
     override func main() {
         super.main()
     }
-    
+
     /// Parse.
     func parse() {
         if handleError() {
             return
         }
-        
+
         guard let receivedUser = Intelligence.User(withJSON: outputArrayFirstDictionary(), configuration: configuration!) else {
             output?.error = NSError(code: RequestError.parseError.rawValue)
             let str = String(format: "Parse error -- %@", (self.session?.description)!)
@@ -48,12 +48,12 @@ class UserRequestOperation : IntelligenceAPIOperation, NSCopying {
             return
         }
         user = receivedUser
-        
+
         if let httpResponse = output?.response as? HTTPURLResponse {
             sharedIntelligenceLogger.logger?.debug(httpResponse.debugInfo)
         }
     }
-    
+
     func copy(with zone: NSZone? = nil) -> Any {
         preconditionFailure("copyWithZone(zone:) sould never be called on UserRequestOperation, it needs to be overridden")
     }

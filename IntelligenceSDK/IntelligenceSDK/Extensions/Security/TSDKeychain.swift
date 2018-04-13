@@ -8,34 +8,34 @@
 
 import Foundation
 
-internal enum TSDKeychainRequestType {
+enum TSDKeychainRequestType {
     case delete, update, read
 }
 
-internal enum TSDKeychainError: Error {
+enum TSDKeychainError: Error {
     case errorCode(Int), notFoundError
 }
 
-internal class TSDKeychain {
-    
+class TSDKeychain {
+
     /// Value for kSecAttrAccount
     private let keychainAccount: String
-    
+
     /// Value for kSecAttrService
     private let keychainService: String
-    
+
     /// Create a new instance providing kSecAttrAccount and kSecAttrService.
     init(_ account: String, service: String) {
         keychainAccount = account
         keychainService = service
     }
-    
+
     private func performRequest(request: NSMutableDictionary, requestType: TSDKeychainRequestType) throws -> NSDictionary? {
         let type = requestType
         let requestReference = request as CFDictionary
         var result: AnyObject?
         var status: OSStatus?
-        
+
         switch type {
         case .read:
             status = withUnsafeMutablePointer(to: &result) { SecItemCopyMatching(requestReference, UnsafeMutablePointer($0)) }
@@ -45,7 +45,7 @@ internal class TSDKeychain {
             SecItemDelete(requestReference)
             status = withUnsafeMutablePointer(to: &result) { SecItemAdd(requestReference, UnsafeMutablePointer($0)) }
         }
-        
+
         if let status = status {
             let statusCode = Int(status)
             if statusCode != Int(errSecSuccess) {
@@ -64,7 +64,7 @@ internal class TSDKeychain {
             throw TSDKeychainError.notFoundError
         }
     }
-    
+
     private func createRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSMutableDictionary {
         let options = NSMutableDictionary()
         options[String(kSecAttrAccount)] = keychainAccount
@@ -84,7 +84,7 @@ internal class TSDKeychain {
         }
         return options
     }
-    
+
     /// Execute a new keychain storage request optionally providing key-values.
     /// Error will be thrown if something fails.
     /// - Parameters:
@@ -95,7 +95,7 @@ internal class TSDKeychain {
     func executeRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) throws -> NSDictionary? {
         return try performRequest(request: createRequest(requestType: requestType, keyValues: keyValues), requestType: requestType)
     }
-    
+
     /// Execute a new keychain storage request optionally providing key-values.
     /// Error will be consumed and ignored.
     /// - SeeAlso: executeRequest(requestType:keyValues:)
@@ -107,8 +107,7 @@ internal class TSDKeychain {
     func executeManagedRequest(requestType: TSDKeychainRequestType, keyValues: NSDictionary? = nil) -> NSDictionary? {
         do {
             return try executeRequest(requestType: requestType, keyValues: keyValues)
-        }
-        catch { }
+        } catch { }
         return nil
     }
 }
