@@ -2,15 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:README.md">
+      location = "group:IntelligenceSDK.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:IntelligenceSDK/IntelligenceSDK.xcodeproj">
+      location = "group:/Users/rynecheow/Desktop/IntelligenceSDK/IntelligenceSDK-ObjC/IntelligenceDemo-ObjC.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:IntelligenceDemo-Swift/IntelligenceDemo-Swift.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:IntelligenceDemo-ObjectiveC/IntelligenceDemo-ObjectiveC.xcodeproj">
+      location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

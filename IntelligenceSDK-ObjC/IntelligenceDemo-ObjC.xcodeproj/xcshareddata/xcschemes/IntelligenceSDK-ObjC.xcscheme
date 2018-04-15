@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6DFB9742208308A30007816B"
-               BuildableName = "IntelligenceDemo-Swift.app"
-               BlueprintName = "IntelligenceDemo-Swift"
-               ReferencedContainer = "container:IntelligenceDemo-Swift.xcodeproj">
+               BlueprintIdentifier = "6DFB979520830B380007816B"
+               BuildableName = "IntelligenceDemo-ObjC.app"
+               BlueprintName = "IntelligenceDemo-ObjC"
+               ReferencedContainer = "container:IntelligenceDemo-ObjC.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,20 +32,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6DFB9756208308A40007816B"
-               BuildableName = "IntelligenceDemo-SwiftTests.xctest"
-               BlueprintName = "IntelligenceDemo-SwiftTests"
-               ReferencedContainer = "container:IntelligenceDemo-Swift.xcodeproj">
+               BlueprintIdentifier = "6DFB97AD20830B390007816B"
+               BuildableName = "IntelligenceSDK-ObjCTests.xctest"
+               BlueprintName = "IntelligenceSDK-ObjCTests"
+               ReferencedContainer = "container:IntelligenceDemo-ObjC.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DFB9742208308A30007816B"
-            BuildableName = "IntelligenceDemo-Swift.app"
-            BlueprintName = "IntelligenceDemo-Swift"
-            ReferencedContainer = "container:IntelligenceDemo-Swift.xcodeproj">
+            BlueprintIdentifier = "6DFB979520830B380007816B"
+            BuildableName = "IntelligenceDemo-ObjC.app"
+            BlueprintName = "IntelligenceDemo-ObjC"
+            ReferencedContainer = "container:IntelligenceDemo-ObjC.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,10 +65,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DFB9742208308A30007816B"
-            BuildableName = "IntelligenceDemo-Swift.app"
-            BlueprintName = "IntelligenceDemo-Swift"
-            ReferencedContainer = "container:IntelligenceDemo-Swift.xcodeproj">
+            BlueprintIdentifier = "6DFB979520830B380007816B"
+            BuildableName = "IntelligenceDemo-ObjC.app"
+            BlueprintName = "IntelligenceDemo-ObjC"
+            ReferencedContainer = "container:IntelligenceDemo-ObjC.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -84,10 +84,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6DFB9742208308A30007816B"
-            BuildableName = "IntelligenceDemo-Swift.app"
-            BlueprintName = "IntelligenceDemo-Swift"
-            ReferencedContainer = "container:IntelligenceDemo-Swift.xcodeproj">
+            BlueprintIdentifier = "6DFB979520830B380007816B"
+            BuildableName = "IntelligenceDemo-ObjC.app"
+            BlueprintName = "IntelligenceDemo-ObjC"
+            ReferencedContainer = "container:IntelligenceDemo-ObjC.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

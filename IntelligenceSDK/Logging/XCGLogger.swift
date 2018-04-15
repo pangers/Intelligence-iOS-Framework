@@ -49,7 +49,7 @@ open class XCGLogger: CustomDebugStringConvertible {
         public static let versionString = "4.0.0"
 
         /// Internal userInfo
-        static let internalUserInfo: [String: Any] = [XCGLogger.Constants.userInfoKeyInternal: true]
+        internal static let internalUserInfo: [String: Any] = [XCGLogger.Constants.userInfoKeyInternal: true]
     }
 
     // MARK: - Enums
