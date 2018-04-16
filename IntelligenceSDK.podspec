@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
    s.name              = 'IntelligenceSDK'
-   s.version           = '2.7.0'
+   s.version           = '2.7.1'
    s.summary           = 'Intellignce framework is to encapsulate Intelligence platform\'\s API\'\s'
 
    s.documentation_url = 'https://github.com/tigerspike/Intelligence-iOS-Framework/wiki/Intelligence-iOS-Framework'
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
 
    s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
 
-   s.swift_version    = '>= 4.0'
+   s.swift_version    = '4.0'
 
    s.platform         = :ios
 
