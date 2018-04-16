@@ -27,10 +27,11 @@ Pod::Spec.new do |s|
 
    s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
 
-   s.swift_version    = '4.1'
-   s.platform          = :ios
+   s.swift_version    = '>= 4.0'
 
-   s.source            = { :git => 'https://github.com/tigerspike/Intelligence-iOS-Framework.git', :tag => s.version.to_s }
+   s.platform         = :ios
+
+   s.source           = { :git => 'https://github.com/tigerspike/Intelligence-iOS-Framework.git', :tag => s.version.to_s }
 
    s.ios.deployment_target = '9.0'
 
