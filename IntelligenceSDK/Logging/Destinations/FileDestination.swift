@@ -16,15 +16,14 @@ open class FileDestination: BaseDestination {
         didSet {
             if owner != nil {
                 openFile()
-            }
-            else {
+            } else {
                 closeFile()
             }
         }
     }
 
     /// The dispatch queue to process the log on
-    open var logQueue: DispatchQueue? = nil
+    open var logQueue: DispatchQueue?
 
     /// FileURL of the file to log to
     open var writeToFileURL: URL? = nil {
@@ -34,13 +33,13 @@ open class FileDestination: BaseDestination {
     }
 
     /// File handle for the log file
-    internal var logFileHandle: FileHandle? = nil
+    var logFileHandle: FileHandle?
 
     /// Option: whether or not to append to the log file if it already exists
-    internal var shouldAppend: Bool
+    var shouldAppend: Bool
 
     /// Option: if appending to the log file, the string to output at the start to mark where the append took place
-    internal var appendMarker: String?
+    var appendMarker: String?
 
     // MARK: - Life Cycle
     public init(owner: XCGLogger? = nil, writeToFile: Any, identifier: String = "", shouldAppend: Bool = true, appendMarker: String? = "-- ** ** ** --") {
@@ -49,11 +48,9 @@ open class FileDestination: BaseDestination {
 
         if writeToFile is NSString {
             writeToFileURL = URL(fileURLWithPath: writeToFile as! String)
-        }
-        else if writeToFile is URL {
+        } else if writeToFile is URL {
             writeToFileURL = writeToFile as? URL
-        }
-        else {
+        } else {
             writeToFileURL = nil
         }
 
@@ -108,8 +105,7 @@ open class FileDestination: BaseDestination {
 //                        })
                     }
                 }
-            }
-            catch let error as NSError {
+            } catch let error as NSError {
                 owner._logln("Attempt to open log file for \(fileExists && shouldAppend ? "appending" : "writing") failed: \(error.localizedDescription)", level: .error)
                 logFileHandle = nil
                 return
@@ -150,11 +146,9 @@ open class FileDestination: BaseDestination {
 
         if archiveToFile is NSString {
             archiveToFileURL = URL(fileURLWithPath: archiveToFile as! String)
-        }
-        else if archiveToFile is URL {
+        } else if archiveToFile is URL {
             archiveToFileURL = archiveToFile as? URL
-        }
-        else {
+        } else {
             return false
         }
 
@@ -169,8 +163,7 @@ open class FileDestination: BaseDestination {
 
             do {
                 try fileManager.moveItem(atPath: writeToFileURL.path, toPath: archiveToFileURL.path)
-            }
-            catch let error as NSError {
+            } catch let error as NSError {
                 openFile()
                 owner?._logln("Unable to rotate file \(writeToFileURL.path) to \(archiveToFileURL.path): \(error.localizedDescription)", level: .error)
                 return false
@@ -216,11 +209,10 @@ open class FileDestination: BaseDestination {
 //                })
             }
         }
-        
+
         if let logQueue = logQueue {
             logQueue.async(execute: outputClosure)
-        }
-        else {
+        } else {
             outputClosure()
         }
     }

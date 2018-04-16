@@ -115,10 +115,10 @@ open class XCGLogger: CustomDebugStringConvertible {
     open var levelDescriptions: [XCGLogger.Level: String] = [:]
 
     /// Array of log formatters to apply to messages before they're output
-    open var formatters: [LogFormatterProtocol]? = nil
+    open var formatters: [LogFormatterProtocol]?
 
     /// Array of log filters to apply to messages before they're output
-    open var filters: [FilterProtocol]? = nil
+    open var filters: [FilterProtocol]?
 
     /// The default dispatch queue used for logging
     open class var logQueue: DispatchQueue {
@@ -130,7 +130,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     }
 
     /// A custom date formatter object to use when displaying the dates of log messages (internal storage)
-    internal var _customDateFormatter: DateFormatter? = nil
+    var _customDateFormatter: DateFormatter?
     /// The date formatter object to use when displaying the dates of log messages
     open var dateFormatter: DateFormatter? {
         get {
@@ -349,7 +349,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func exec(_ level: Level = .debug, closure: () -> () = {}) {
+    open class func exec(_ level: Level = .debug, closure: () -> Void = {}) {
         self.default.exec(level, closure: closure)
     }
 
@@ -361,8 +361,8 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func exec(_ level: Level = .debug, closure: () -> () = {}) {
-        guard isEnabledFor(level:level) else { return }
+    open func exec(_ level: Level = .debug, closure: () -> Void = {}) {
+        guard isEnabledFor(level: level) else { return }
 
         closure()
     }
@@ -396,7 +396,7 @@ open class XCGLogger: CustomDebugStringConvertible {
 
         for var destination in (selectedDestination != nil ? [selectedDestination!] : destinations) where !destination.haveLoggedAppDetails {
             for logDetail in logDetails {
-                guard destination.isEnabledFor(level:.info) else { continue }
+                guard destination.isEnabledFor(level: .info) else { continue }
 
                 destination.haveLoggedAppDetails = true
                 destination.processInternal(logDetails: logDetail)
@@ -948,7 +948,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func verboseExec(_ closure: () -> () = {}) {
+    open class func verboseExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.verbose, closure: closure)
     }
 
@@ -959,7 +959,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func verboseExec(_ closure: () -> () = {}) {
+    open func verboseExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.verbose, closure: closure)
     }
 
@@ -971,7 +971,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func debugExec(_ closure: () -> () = {}) {
+    open class func debugExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.debug, closure: closure)
     }
 
@@ -982,7 +982,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func debugExec(_ closure: () -> () = {}) {
+    open func debugExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.debug, closure: closure)
     }
 
@@ -994,7 +994,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func infoExec(_ closure: () -> () = {}) {
+    open class func infoExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.info, closure: closure)
     }
 
@@ -1005,7 +1005,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func infoExec(_ closure: () -> () = {}) {
+    open func infoExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.info, closure: closure)
     }
 
@@ -1017,7 +1017,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func warningExec(_ closure: () -> () = {}) {
+    open class func warningExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.warning, closure: closure)
     }
 
@@ -1028,7 +1028,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func warningExec(_ closure: () -> () = {}) {
+    open func warningExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.warning, closure: closure)
     }
 
@@ -1040,7 +1040,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func errorExec(_ closure: () -> () = {}) {
+    open class func errorExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.error, closure: closure)
     }
 
@@ -1051,7 +1051,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func errorExec(_ closure: () -> () = {}) {
+    open func errorExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.error, closure: closure)
     }
 
@@ -1063,7 +1063,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open class func severeExec(_ closure: () -> () = {}) {
+    open class func severeExec(_ closure: () -> Void = {}) {
         self.default.exec(XCGLogger.Level.severe, closure: closure)
     }
 
@@ -1074,7 +1074,7 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing.
     ///
-    open func severeExec(_ closure: () -> () = {}) {
+    open func severeExec(_ closure: () -> Void = {}) {
         self.exec(XCGLogger.Level.severe, closure: closure)
     }
 
@@ -1182,11 +1182,11 @@ open class XCGLogger: CustomDebugStringConvertible {
     ///
     /// - Returns:  Nothing
     ///
-    internal func _logln(_ message: String, level: Level = .debug) {
+    func _logln(_ message: String, level: Level = .debug) {
 
         var logDetails: LogDetails? = nil
         for destination in self.destinations {
-            if (destination.isEnabledFor(level:level)) {
+            if (destination.isEnabledFor(level: level)) {
                 if logDetails == nil {
                     logDetails = LogDetails(level: level, date: Date(), message: message, functionName: "", fileName: "", lineNumber: 0, userInfo: XCGLogger.Constants.internalUserInfo)
                 }

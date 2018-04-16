@@ -12,7 +12,7 @@
 open class ConsoleDestination: BaseDestination {
     // MARK: - Properties
     /// The dispatch queue to process the log on
-    open var logQueue: DispatchQueue? = nil
+    open var logQueue: DispatchQueue?
 
     // MARK: - Overridden Methods
     /// Print the log to the console.
@@ -41,8 +41,7 @@ open class ConsoleDestination: BaseDestination {
 
         if let logQueue = logQueue {
             logQueue.async(execute: outputClosure)
-        }
-        else {
+        } else {
             outputClosure()
         }
     }

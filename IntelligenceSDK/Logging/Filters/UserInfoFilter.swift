@@ -110,11 +110,9 @@ open class UserInfoFilter: FilterProtocol {
         if let messageItemsObject = logDetails.userInfo[userInfoKey] {
             if let messageItemsSet: Set<String> = messageItemsObject as? Set<String> {
                 matched = itemsToMatch.intersection(messageItemsSet).count > 0
-            }
-            else if let messageItemsArray: Array<String> = messageItemsObject as? Array<String> {
+            } else if let messageItemsArray: Array<String> = messageItemsObject as? Array<String> {
                 matched = itemsToMatch.intersection(messageItemsArray).count > 0
-            }
-            else if let messageItem = messageItemsObject as? String {
+            } else if let messageItem = messageItemsObject as? String {
                 matched = itemsToMatch.contains(messageItem)
             }
         }
@@ -132,11 +130,10 @@ open class UserInfoFilter: FilterProtocol {
             var description: String = "\(extractTypeName(self)): \(applyFilterToInternalMessages ? "(Filtering Internal) " : "")" + (inverse ? "Including only matches for: " : "Excluding matches for: ")
             if itemsToMatch.count > 5 {
                 description += "\n\t- " + itemsToMatch.sorted().joined(separator: "\n\t- ")
-            }
-            else {
+            } else {
                 description += itemsToMatch.sorted().joined(separator: ", ")
             }
-            
+
             return description
         }
     }

@@ -12,7 +12,7 @@
 open class TestDestination: BaseDestination {
     // MARK: - Properties
     /// The dispatch queue to process the log on
-    open var logQueue: DispatchQueue? = nil
+    open var logQueue: DispatchQueue?
 
     /// Array of all expected log messages
     open var expectedLogMessages: [String] = []
@@ -54,13 +54,12 @@ open class TestDestination: BaseDestination {
     ///
     /// - Returns:  Nothing
     ///
-    fileprivate func sync(closure: () -> ()) {
+    fileprivate func sync(closure: () -> Void) {
         if let logQueue = logQueue {
             logQueue.sync {
                 closure()
             }
-        }
-        else {
+        } else {
             closure()
         }
     }
@@ -95,14 +94,13 @@ open class TestDestination: BaseDestination {
             if self.shouldExclude(logDetails: &logDetails, message: &message) {
                 return
             }
-            
+
             applyFormatters(logDetails: &logDetails, message: &message)
 
             let index = expectedLogMessages.index(of: message)
             if let index = index {
                 expectedLogMessages.remove(at: index)
-            }
-            else {
+            } else {
                 unexpectedLogMessages.append(message)
             }
         }

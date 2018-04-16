@@ -18,10 +18,10 @@
 open class PrePostFixLogFormatter: LogFormatterProtocol, CustomDebugStringConvertible {
 
     /// Internal cache of the prefix strings for each log level
-    internal var prefixStrings: [XCGLogger.Level: String] = [:]
+    var prefixStrings: [XCGLogger.Level: String] = [:]
 
     /// Internal cache of the postfix strings codes for each log level
-    internal var postfixStrings: [XCGLogger.Level: String] = [:]
+    var postfixStrings: [XCGLogger.Level: String] = [:]
 
     public init() {
     }
@@ -48,15 +48,13 @@ open class PrePostFixLogFormatter: LogFormatterProtocol, CustomDebugStringConver
 
         if let prefix = prefix {
             prefixStrings[level] = prefix
-        }
-        else {
+        } else {
             prefixStrings.removeValue(forKey: level)
         }
 
         if let postfix = postfix {
             postfixStrings[level] = postfix
-        }
-        else {
+        } else {
             postfixStrings.removeValue(forKey: level)
         }
     }
