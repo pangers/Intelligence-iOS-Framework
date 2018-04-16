@@ -5,10 +5,13 @@
       location = "group:IntelligenceSDK.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/rynecheow/Desktop/IntelligenceSDK/IntelligenceSDK-ObjC/IntelligenceDemo-ObjC.xcodeproj">
+      location = "group:Examples/Objective-C/IntelligenceDemo-ObjC.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:IntelligenceDemo-Swift/IntelligenceDemo-Swift.xcodeproj">
+      location = "group:Examples/Swift/IntelligenceDemo-Swift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/Carthage/Intelligence/Intelligence-Swift-Carthage-Example.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

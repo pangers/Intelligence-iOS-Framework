@@ -6,20 +6,6 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		6DFB978920830B120007816B /* IntelligenceSDK-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 6DFB978C20830B120007816B /* Build configuration list for PBXAggregateTarget "IntelligenceSDK-Universal" */;
-			buildPhases = (
-				6DFB984220830E8A0007816B /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = "IntelligenceSDK-Universal";
-			productName = "IntelligenceSDK-Universal";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		6DC96CCD3D266CD6B35510A0 /* Pods_IntelligenceSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8523A4E8A738BDEFCE7BEDB0 /* Pods_IntelligenceSDKTests.framework */; };
 		6DFB9610208304250007816B /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DFB9606208304240007816B /* IntelligenceSDK.framework */; };
@@ -833,9 +819,6 @@
 					6DFB960E208304250007816B = {
 						CreatedOnToolsVersion = 9.3;
 					};
-					6DFB978920830B120007816B = {
-						CreatedOnToolsVersion = 9.3;
-					};
 				};
 			};
 			buildConfigurationList = 6DFB9600208304240007816B /* Build configuration list for PBXProject "IntelligenceSDK" */;
@@ -852,7 +835,6 @@
 			targets = (
 				6DFB9605208304240007816B /* IntelligenceSDK */,
 				6DFB960E208304250007816B /* IntelligenceSDKTests */,
-				6DFB978920830B120007816B /* IntelligenceSDK-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -879,19 +861,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6DFB984220830E8A0007816B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "UNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# Make sure the output directory exists\n\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Next, work out if we're in SIM or DEVICE\n\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\nxcodebuild -target \"${PROJECT_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\n\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\n\nBUILD_PRODUCTS=\"${SYMROOT}/../../../../Products\"\n\ncp -R \"${BUILD_PRODUCTS}/Debug-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\n\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_PRODUCTS}/Debug-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\n\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
-		};
 		72D99EA5F9D8A6E051190002 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1282,24 +1251,6 @@
 			};
 			name = Release;
 		};
-		6DFB978A20830B120007816B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EEFYAPAVE2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		6DFB978B20830B120007816B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EEFYAPAVE2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1326,15 +1277,6 @@
 			buildConfigurations = (
 				6DFB961E208304250007816B /* Debug */,
 				6DFB961F208304250007816B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6DFB978C20830B120007816B /* Build configuration list for PBXAggregateTarget "IntelligenceSDK-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6DFB978A20830B120007816B /* Debug */,
-				6DFB978B20830B120007816B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
