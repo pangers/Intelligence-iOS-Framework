@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B0AAE1B1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */; };
-		4531DEEE1C6BCAC90065025A /* IntelligenceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; };
-		4531DEEF1C6BCAC90065025A /* IntelligenceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24EAA37050A92FD1246EA38C /* Pods_IntelligenceDemo_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FF1EE44959BB287277D5DB /* Pods_IntelligenceDemo_Swift.framework */; };
 		455D85F01BC2BFC400A64B96 /* Analytics.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455D85EE1BC2BFC400A64B96 /* Analytics.storyboard */; };
 		455D85F31BC2C1D200A64B96 /* ScreenViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */; };
 		7FDAAADD1B5D35AE00DF2BE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDAAADC1B5D35AE00DF2BE6 /* AppDelegate.swift */; };
@@ -32,7 +31,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4531DEEF1C6BCAC90065025A /* IntelligenceSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,7 +39,7 @@
 
 /* Begin PBXFileReference section */
 		0B0AAE1A1CAC9F150042A369 /* AnalyticsCustomEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsCustomEventViewController.swift; sourceTree = "<group>"; };
-		4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IntelligenceSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DC450D5DB2AF4622230C92E /* Pods-IntelligenceDemo-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntelligenceDemo-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-IntelligenceDemo-Swift/Pods-IntelligenceDemo-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		455D85EF1BC2BFC400A64B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Analytics.storyboard; sourceTree = "<group>"; };
 		455D85F21BC2C1D200A64B96 /* ScreenViewedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenViewedViewController.swift; sourceTree = "<group>"; };
 		7FDAAAD91B5D35AE00DF2BE6 /* IntelligenceDemo-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IntelligenceDemo-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +54,8 @@
 		BBBB63561BC27AE800802EF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Location.storyboard; sourceTree = "<group>"; };
 		BBBB63591BC27BF700802EF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		BBBB635D1BC27C3B00802EF9 /* IntelligenceLocationModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntelligenceLocationModuleViewController.swift; sourceTree = "<group>"; };
+		C3FF1EE44959BB287277D5DB /* Pods_IntelligenceDemo_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IntelligenceDemo_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8EE86467A5EBC9A95FA75EB /* Pods-IntelligenceDemo-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntelligenceDemo-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IntelligenceDemo-Swift/Pods-IntelligenceDemo-Swift.debug.xcconfig"; sourceTree = "<group>"; };
 		FE240A7E1C7623B700D2E336 /* StartupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,13 +65,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBBB635A1BC27BF700802EF9 /* MapKit.framework in Frameworks */,
-				4531DEEE1C6BCAC90065025A /* IntelligenceSDK.framework in Frameworks */,
+				24EAA37050A92FD1246EA38C /* Pods_IntelligenceDemo_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35290E1CBAAD3A95CA70C39D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E8EE86467A5EBC9A95FA75EB /* Pods-IntelligenceDemo-Swift.debug.xcconfig */,
+				2DC450D5DB2AF4622230C92E /* Pods-IntelligenceDemo-Swift.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		455D85F11BC2BFCB00A64B96 /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
@@ -86,9 +95,10 @@
 			isa = PBXGroup;
 			children = (
 				BBBB63591BC27BF700802EF9 /* MapKit.framework */,
-				4531DEED1C6BCAC90065025A /* IntelligenceSDK.framework */,
 				7FDAAADB1B5D35AE00DF2BE6 /* IntelligenceDemo-Swift */,
 				7FDAAADA1B5D35AE00DF2BE6 /* Products */,
+				35290E1CBAAD3A95CA70C39D /* Pods */,
+				D7A1F970ED797A3FC72FB4F9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +145,14 @@
 			name = Location;
 			sourceTree = "<group>";
 		};
+		D7A1F970ED797A3FC72FB4F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C3FF1EE44959BB287277D5DB /* Pods_IntelligenceDemo_Swift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FE240A801C7623BB00D2E336 /* Startup */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,10 +168,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7FDAAAEB1B5D35AE00DF2BE6 /* Build configuration list for PBXNativeTarget "IntelligenceDemo-Swift" */;
 			buildPhases = (
+				BE422CE137F11976A917D9CC /* [CP] Check Pods Manifest.lock */,
 				7FDAAAD51B5D35AE00DF2BE6 /* Sources */,
 				7FDAAAD61B5D35AE00DF2BE6 /* Frameworks */,
 				7FDAAAD71B5D35AE00DF2BE6 /* Resources */,
 				4531DEF01C6BCAC90065025A /* Embed Frameworks */,
+				89724D29F0C015252081F4B8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -213,6 +233,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		89724D29F0C015252081F4B8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-IntelligenceDemo-Swift/Pods-IntelligenceDemo-Swift-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IntelligenceSDK/IntelligenceSDK.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IntelligenceSDK.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-IntelligenceDemo-Swift/Pods-IntelligenceDemo-Swift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BE422CE137F11976A917D9CC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-IntelligenceDemo-Swift-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7FDAAAD51B5D35AE00DF2BE6 /* Sources */ = {
@@ -371,6 +430,7 @@
 		};
 		7FDAAAEC1B5D35AE00DF2BE6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8EE86467A5EBC9A95FA75EB /* Pods-IntelligenceDemo-Swift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -383,12 +443,14 @@
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
 				PROVISIONING_PROFILE = "4c03354a-7fb6-48c7-ab0b-8f986bdea5e4";
 				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo Swift";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		7FDAAAED1B5D35AE00DF2BE6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2DC450D5DB2AF4622230C92E /* Pods-IntelligenceDemo-Swift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: TigerSpike Pty Ltd";
@@ -400,6 +462,7 @@
 				PRODUCT_NAME = "IntelligenceDemo-Swift";
 				PROVISIONING_PROFILE = "fcfae170-695f-4eb7-8f20-c3c50eb3bd0b";
 				PROVISIONING_PROFILE_SPECIFIER = "Intelligence Demo Swift";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -1,0 +1,16 @@
+PODS:
+  - IntelligenceSDK (2.0.0)
+
+DEPENDENCIES:
+  - IntelligenceSDK (from `../`)
+
+EXTERNAL SOURCES:
+  IntelligenceSDK:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  IntelligenceSDK: bf1fd622ec1766203dc7b4e78b9d1f428333caf0
+
+PODFILE CHECKSUM: d469e56153691f50cd6c8c63039ab03ddc1ab021
+
+COCOAPODS: 1.5.0
